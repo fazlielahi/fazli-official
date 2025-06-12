@@ -1,0 +1,93 @@
+
+  <style>
+   
+ 
+    .marquee-slider {
+      padding: 100px 0;
+      background: #222;
+      width: 100%;
+      grid-column-gap: 1.6rem;
+      grid-row-gap: 1.6rem;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      position: relative;
+    }
+
+    .marquee-slider__list {
+      grid-column-gap: 1.6rem;
+      grid-row-gap: 1.6rem;
+      flex: none;
+      display: flex;
+      flex-flow: row;
+      align-items: stretch;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.38, 1.399);
+    }
+
+    .marquee-slider__list--item {
+      color: #fff;
+      width: 100%;
+      height: 100%;
+      max-width: 260px;
+      min-height: 260px;
+      grid-column-gap: 1.6rem;
+      border-radius: 0.8rem;
+      flex: none;
+      display: flex;
+      padding: 1.2rem;
+      position: relative;
+      align-items: center;
+      grid-row-gap: 1.6rem;
+      justify-content: center;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.08));
+    }
+
+  </style>
+</head>
+
+<body>
+
+
+  <div class="marquee-slider marquee-slider1"></div>
+  <div class="marquee-slider marquee-slider2">
+    <div class="marquee-slider__list">
+      <div class="marquee-slider__list--item">Item 1</div>
+      <div class="marquee-slider__list--item">Item 2</div>
+      <div class="marquee-slider__list--item">Item 3</div>
+      <div class="marquee-slider__list--item">Item 4</div>
+    </div>
+  </div>
+
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi excepturi minus sapiente. Quis voluptas rem
+    culpa iusto modi itaque cupiditate, quaerat corrupti, odit, amet officiis accusantium eius aperiam ex?</p>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi excepturi minus sapiente. Quis voluptas rem
+    culpa iusto modi itaque cupiditate, quaerat corrupti, odit, amet officiis accusantium eius aperiam ex?</p>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi excepturi minus sapiente. Quis voluptas rem
+    culpa iusto modi itaque cupiditate, quaerat corrupti, odit, amet officiis accusantium eius aperiam ex?</p>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi excepturi minus sapiente. Quis voluptas rem
+    culpa iusto modi itaque cupiditate, quaerat corrupti, odit, amet officiis accusantium eius aperiam ex?</p>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi excepturi minus sapiente. Quis voluptas rem
+    culpa iusto modi itaque cupiditate, quaerat corrupti, odit, amet officiis accusantium eius aperiam ex?</p>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi excepturi minus sapiente. Quis voluptas rem
+    culpa iusto modi itaque cupiditate, quaerat corrupti, odit, amet officiis accusantium eius aperiam ex?</p>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi excepturi minus sapiente. Quis voluptas rem
+    culpa iusto modi itaque cupiditate, quaerat corrupti, odit, amet officiis accusantium eius aperiam ex?</p>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi excepturi minus sapiente. Quis voluptas rem
+    culpa iusto modi itaque cupiditate, quaerat corrupti, odit, amet officiis accusantium eius aperiam ex?</p>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="marqueeSlider.js"></script>
+  <script>
+    $('.marquee-slider').marqueeSlider([
+      { sensitivity: 0.1, repeatItems: true },
+      { sensitivity: 0.5, repeatItems: true }]);
+  </script>
+
+</body>
+
+</html>

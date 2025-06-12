@@ -1,0 +1,206 @@
+
+    .photogallery-heading {
+    color: rgb(33, 207, 140);
+    margin: 30px 9%;
+    margin-bottom: 5px;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 26px;
+    }
+
+
+ /* sidebar Section styling */
+    .sidebar {
+     /* width: 270px;*/
+      width: 20%;
+      height: 460px;
+      padding: 20px;
+      background-color: #181818;
+      color: #fff;
+      float: left;
+      /*position: absolute;
+      left: 0;
+      bottom: 22px;
+      z-index: 2;*/
+
+    }
+
+/* Sidebar Heading Styling */
+.sidebar-heading {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    background: linear-gradient(135deg, #444, #222); /* Matches button style */
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+       .filter-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #444, #222); /* Stylish gradient */
+    color: white;
+    border: none;
+    padding: 12px;
+    margin: 8px 0;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.filter-btn:hover {
+    background: linear-gradient(135deg, #555, #333);
+    transform: scale(1.05); /* Slight zoom on hover */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+}
+ /* Gallery Section styling */
+    .gallery {
+      width: 80%;
+      height: 460px;
+      padding: 20px;
+      overflow-y: scroll; /* Enables vertical scrolling */
+      background-color: #181818;
+      color: #fff;
+      float: right;
+    }
+    
+    /* Grid layout for image cards */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    /* Image card frame styling */
+    .image-card {
+      background-color: #242424;
+      border: 1px solid #333;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    /* Styling for the image within the card */
+    .image-card img {
+      width: 100%;
+      display: block;
+    }
+    
+    /* Icon bar below the image for Like, Comment, and Share */
+    .icon-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      background-color: #1e1e1e;
+    }
+    
+    /* Styling for Like, Comment, and Share links */
+    .icon-bar a {
+      text-decoration: none;
+      color: #bbb;
+      font-size: 16px;
+    }
+    
+    .icon-bar a:hover {
+      color: #fff;
+    }
+
+
+/* Modal Background */
+.modal {
+    display: none; /* Initially hidden */
+    position: fixed; /* Fixed positioning for the modal */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    z-index: 1000; /* Ensure the modal appears above other content */
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* To allow scrolling if needed */
+}
+
+/* Modal Content Box */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto; /* Centering the modal */
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%; /* Width of the modal box */
+    max-width: 500px; /* Max width for larger screens */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Adding a shadow for better visibility */
+}
+
+/* Close Button */
+.close {
+    color: #aaa;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form Styling */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* File Input Styling */
+input[type="file"], input[type="text"] {
+    width: 100%; /* Make file input field span the entire width */
+    height: 45px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f8f8f8;
+    display: block;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    height: 46px;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+@media screen and (max-width: 1000px)
+{
+    .body{
+        background-attachment: fixed;
+    }
+}
+
+
+@media screen and (max-width: 1000px)
+{
+    .body{
+        background-attachment: fixed;
+    }
+}

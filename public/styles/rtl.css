@@ -1,0 +1,53 @@
+.main-header{
+    direction: rtl;
+}
+
+.about-top{
+    flex-direction: row-reverse;
+  }
+
+.about-top .main-heading{
+ text-align: right;
+ padding-right: 20px;
+ position: relative;
+}
+
+.about-top .cv-btn{
+    position: absolute;
+    right: 18px;
+    top: 219px;
+}
+
+.contact-controller{
+    direction: rtl;
+}
+
+.contact-controller .grid, p{
+    text-align: right;
+}
+
+.social-profiles, .skills-heading{
+    text-align: right;
+}
+.social-profiles .top{
+    flex-direction: row-reverse !important;
+}
+
+.social-profiles .profile-photo{
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 13px;
+}
+
+.heading-row2{
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 62px;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 1000px) {
+    .main-header .menu{
+        padding-right: 30px !important;
+    }
+
+}

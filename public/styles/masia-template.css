@@ -1,0 +1,510 @@
+*{
+
+    margin: 0;
+    padding: 0;
+}
+
+@font-face{
+
+
+    src: url('../fonts/SignikaNegative-VariableFont_wght.ttf');
+    font-family: myfont;
+
+}
+
+
+@font-face{
+
+
+    src: url('../fonts/NanumGothic-Bold.ttf');
+    font-family: myfont-tall;
+
+}
+
+
+@font-face{
+
+
+    src: url('../fonts/MPLUSRounded1c-Light.ttf');
+    font-family: myfontlight;
+
+}
+
+
+
+@font-face{
+
+
+    src: url('../fonts/MPLUSRounded1c-Medium.ttf');
+    font-family: myfontmedium;
+
+}
+
+
+body{
+
+    text-align: center;
+    font-family: myfont;
+}
+
+.header{
+
+    height: 125px;
+    text-align: left;
+    border-bottom: 1px solid rgb(233, 233, 233);
+    padding-top: 8px;
+}
+
+.header img{
+
+    width: 98px;
+    margin-left: 50px;
+    margin-top: 7px;
+    float: left;
+}
+
+.main-heading{
+
+    display: inline-block;
+    margin-top: 35px;
+    margin-left: 10px;
+    font-size: 30px;
+}
+
+.sub-heading{
+
+    margin-left: 10px;
+    color: rgb(85, 84, 84);
+    font-family: myfontmedium;
+    display: inline-block;
+    font-size: small;
+    font-weight: 700;
+}
+
+
+.icons-phone{
+
+    display: inline;
+    float: right;
+    margin-right: 60px;
+    margin-top: -53px;
+}
+
+.icons-phone .phone{
+
+    font-size: 20px;
+    letter-spacing: 4px;
+    margin-left: 5px;
+    color: rgb(22, 111, 175);
+}
+
+.header .whats, .insta, .twitt, .in, .fbook, .tube{
+
+    font-size: 18px;
+    margin: 5px; 
+    color: rgb(22, 111, 175);
+   
+}
+
+.menu{
+
+    border-bottom: 1px solid rgb(233, 233, 233);
+    height: 45px;
+    overflow: hidden;
+
+
+}
+
+
+.menu ul{
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu ul li{
+    
+    display: inline-block;
+    margin: 14px;
+
+}
+
+.menu ul li a{
+
+    text-decoration: none;
+    color: #444;
+    display: inline-block;
+    font-size: 16px;
+    font-family: myfontmedium;
+}
+
+.banner{
+
+    width: 100%;
+    margin-top: 10px;
+
+}
+
+
+.banner img{
+
+    width: 100% ;
+}
+
+
+.courses-heading{
+
+    font-family: myfont-tall;   
+    margin-top: 30px; 
+    font-size: 20px;
+    color: rgb(180, 14, 14);
+
+}
+
+
+.frames{
+
+    margin-top: 10px;
+    padding-left: 20px;
+    padding-right: 30px;
+    margin-bottom: 15px;
+    display: inline-block;
+    border-bottom: 1px solid lightgray;
+    height: 40px;
+    
+    
+}
+
+.frames .frame-icon{
+
+    color: rgb(6, 31, 43);
+    margin: 10px;
+    font-size: larger;
+}
+
+
+.course-sec{
+
+    text-align: center;
+
+}
+
+.course-sec .course-row{
+
+    width: 83%;
+    border: 1px solid rgb(230, 228, 228);
+    height: inherit;
+    display: inline-block;
+    text-align: center;
+    padding: 30px;
+    
+    margin: 7px 0px;
+    transition: 0.5s;
+    border-radius: 5px;
+    
+}
+
+
+.course-sec .course-row:hover{
+
+    border: 5px solid rgb(255, 72, 72);
+    transform: scale(1.1);
+    border-radius: 10px;
+    background-color: rgb(255, 250, 250); 
+}
+
+
+
+
+.course-sec .course-row img{
+
+        width: 150px;
+        float: left;
+        padding: 10px;
+
+}
+.course-sec .course-row:hover img{
+
+    border: 1px solid rgb(224, 224, 224);
+}
+
+.course-sec .course-row:hover .sidebox-text{
+
+    display: none;
+
+}
+
+.course-sec .course-row:hover .btn-apply{
+
+    display: block;
+  
+
+}
+
+.course-sec .course-row:hover .details-apply{
+
+    display: none;
+  
+
+}
+
+
+
+
+
+
+.course-sec .course-row h5{
+
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 28px;
+    margin-left: -170px;
+    font-family: myfontmedium;
+    
+
+}
+
+.course-row .prices{
+
+    margin-top: 10px;
+}
+
+.course-sec .course-row .price{
+
+
+    color: rgb(10, 115, 141);
+
+}
+
+.course-sec .course-row .price-strike{
+
+    text-decoration: line-through;
+    margin-left: -170px;
+    color: rgb(85, 84, 84);
+}
+
+
+.course-sec .course-row .course-desc{
+
+    margin-top: 5px;
+    color: rgb(85, 84, 84);
+    line-height: 25px;
+    width: 65%;
+    display: inline-block;
+    margin-left: -10px;
+    
+}
+
+
+.course-sec .course-row .sidebox{
+
+    border-left: 1px solid rgb(224, 224, 224);
+    float: right;
+    text-align: left;
+    padding-top : 40px;
+    padding-left : 10px;
+    margin-right: 0px;
+    margin-top: -60px;
+    height: 100px;
+    width: 180px;
+    
+   
+}
+
+.course-row .sidebox-desc{
+
+    display: none;
+}
+
+
+
+.details-apply{
+
+    color: rgb(10, 115, 141);
+
+}
+
+.course-row .sidebox-text{
+
+    color: #444;
+}
+
+.course-col .sidebox-text{
+
+    color: #444;
+	
+}
+
+
+
+
+.btn-apply{
+
+    
+    height: 40px;
+    width: 190px;
+    border: 5px solid rgb(255, 72, 72);
+    background-color: rgb(255, 250, 250);   
+    border-radius: 20px;
+    margin-top: 10px;
+    margin-right: -15px;
+    float: right;
+    display: none;
+    transition: 5s;
+
+}
+
+
+.course-sec .course-row .sidebox .btn-apply a{
+
+        text-decoration: none;
+        color: rgb(10, 115, 141);
+        font-family: myfont;
+
+}
+
+/*--------------*/
+
+.course-sec .course-col{
+
+    width: 225px;
+    border: 1px solid rgb(230, 228, 228);
+    height: 335px;
+    display: inline-block;
+    text-align: center;
+    padding: 30px;
+    padding-top: 35px;
+    margin-bottom: 35px;
+    transition: 0.5s;
+    border-radius: 5px;
+	margin: 30px 5px;
+    
+}
+
+
+.course-sec .course-col:hover{
+	
+    transform: scale(1.2);
+    border-radius: 10px;
+    background-color: rgb(255, 250, 250); 
+}
+
+
+
+
+.course-sec .course-col img{
+
+    width: 150px;
+    float: left;
+    padding: 10px;
+	margin-top: -30px;
+	margin-left: 25px;
+}
+
+.course-sec .course-col:hover img{
+
+    border: none;
+}
+
+.course-sec .course-col:hover .sidebox-text{
+
+    display: none;
+
+}
+
+.course-sec .course-col:hover .btn-apply{
+
+    display: block;
+	margin-top: 25px;
+	margin-right: -5px;
+  
+
+}
+
+.course-sec .course-col:hover .details-apply{
+
+    display: none;
+	color: rgb(180, 14, 14);
+
+}
+
+
+
+
+
+
+.course-sec .course-col .course-heading{
+
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 28px;
+    margin-left: -170px;
+    font-family: myfontmedium;
+	margin-top: 140px; 
+    margin-left: 0; 
+	display: block;
+    
+
+}
+
+
+.course-sec .course-col .price{
+
+
+    color: rgb(10, 115, 141);
+
+}
+
+.course-col .prices{
+
+    padding-left: 170px;
+	text-align: center;
+}
+
+.course-sec .price-strike{
+
+    text-decoration: line-through;
+    margin-left: 0px;
+    color: rgb(85, 84, 84);
+}
+
+
+.course-sec .course-col .course-desc{
+
+   display: none;
+}
+
+
+.course-sec .course-col .sidebox{
+
+    border: none;
+    float: right;
+    text-align: center;
+    padding-top : 40px;
+    padding-left : 10px;
+    margin-right: 23px;
+    margin-top: -60px;
+    height: 100px;
+    width: 180px;
+    display: block;
+   
+}
+
+.course-col .sidebox-desc{
+
+    display: block;
+    margin-top: 15px;
+    color: rgb(10, 115, 141);
+}
+
+
+
+
+.course-sec .course-col .sidebox .btn-apply a{
+
+        text-decoration: none;
+        color: rgb(10, 115, 141);
+        font-family: myfont;
+
+}

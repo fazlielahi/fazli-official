@@ -1,0 +1,70 @@
+/* Default to dark theme with Pavor Black background */
+:root {
+    --primary: rgb(24, 163, 110);
+    --pavor-black: #000000;
+    --background: var(--pavor-black);
+    --text: #ddd;
+    --radius: 8px;
+  }
+  /* Light theme overrides */
+  [data-theme="light"] {
+    --background: #f9f9f9;
+    --text: #333;
+    --primary: rgb(24, 163, 110);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: var(--background); color: var(--text); transition: background 0.3s, color 0.3s; line-height: 1.6; }
+  .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  h1 { font-size: 2.5rem;font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; color: var(--primary); }
+  .theme-toggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text); }
+  p { margin-bottom: 1rem; }
+  .grid { display: grid; gap: 2rem; }
+  .grid-2 { grid-template-columns: 2fr 1fr; }
+  form { background: var(--background); padding: 2rem; border-radius: var(--radius); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+  .form-group { margin-bottom: 1.2rem; }
+  label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+  input, textarea { width: 100%; padding: 0.75rem; border: 1px solid #555; border-radius: var(--radius); background: var(--background); color: var(--text); }
+  textarea { resize: vertical; min-height: 150px; }
+  button[type="submit"] { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary); color: #fff; border: none; padding: 0.75rem 1.5rem; border-radius: var(--radius); cursor: pointer; font-size: 1rem; transition: background 0.3s; }
+  button[type="submit"]:hover { background: #357ab8; }
+  .sidebar { background: var(--background); padding: 2rem; border-radius: var(--radius); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+  .sidebar h3 { margin-bottom: 1rem; color: var(--primary); font-size: 1.25rem; }
+  .info-group { margin-bottom: 1.5rem; }
+  .info-group p { margin: 0.25rem 0; }
+  .social-icons a { margin-right: 0.5rem; font-size: 1.25rem; color: var(--text); text-decoration: none; transition: color 0.3s; }
+  .social-icons a:hover { color: var(--primary); }
+
+.sidebar a{
+    text-decoration: dashed;
+    color: white;
+}
+
+.qr-code{
+  color: #2e2ed7;
+  font-size: small;
+}
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000; 
+  left: 0; top: 0;
+  width: 100%; height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.modal-content {
+  margin: 10% auto; 
+  display: block;
+  max-width: 300px;
+}
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}

@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800|Poppins&display=swap');
+
+.api-heading{
+
+    color: rgb(33, 207, 140);
+    margin: 30px 9%;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 26px;
+    
+}
+
+.api-card{
+  text-align: center;
+  display: inline-block;
+  padding: 30px 20px;
+  padding-bottom: 10px;
+  border: 2px solid white;
+  border-radius: 4px;
+  transition: all .3s ease;
+  max-width: 500px;
+  margin: 10px;
+  vertical-align: top;
+  min-height: 291px;
+  position: relative;
+}
+
+.api-cards-section{
+
+    text-align: center;
+}
+
+
+.api-card h2{
+
+    color: #fff;
+}
+.api-card .fab{
+  font-size: 70px;
+  margin: 16px 0;
+}
+
+.api-card:hover a{
+  border-color: #99f536;
+  border-width: 5px;
+  background: white;
+}
+
+.api-card p{
+  font-size: 17px;
+  font-family: 'Poppins',sans-serif;
+  color: white;
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+.api-card a{
+  margin: 22px 0;
+  background: white;
+  color: black;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: 5px solid black;
+  padding: 15px 0;
+  border-radius: 25px;
+  transition: .3s ease;
+  display: block;
+  
+  width: 91%;
+  position: absolute;
+  bottom: 0;
+}
+.api-card a:hover{
+  border-radius: 4px;
+}
+
+
+@media screen and (max-width: 500px)
+{
+    .api-cards-section{
+
+        text-align: left;
+    }
+
+    .api-card p{
+        color: white;
+    }
+}

@@ -1,0 +1,28 @@
+.template-heading{
+
+    color: rgb(33, 207, 140);
+    margin: 30px 9%;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 26px;
+    
+}
+
+.card-section .card{
+    border: 1px solid rgba(59, 255, 196, 0.39);
+  }
+
+@media screen and (max-width: 1000px)
+{
+    .body{
+        background-attachment: fixed;
+    }
+}
+
+
+@media screen and (max-width: 1000px)
+{
+    .body{
+        background-attachment: fixed;
+    }
+}
