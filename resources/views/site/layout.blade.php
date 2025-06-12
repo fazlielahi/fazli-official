@@ -49,16 +49,9 @@
     </div>
     </div>
 
-@yield('script')
-</body>
-</html>
-
-
     @include("site.inc.footer")   
 
     @yield('script')
-
-    <script src="{{ asset('js/app.js') }}"></script>
 
 </body>
 </html>

@@ -133,7 +133,10 @@
    }
 
     .main-header .bars-icon{
-        display: block;   
+        display: block; 
+        text-align: left;
+        position: absolute;
+        left: 20px;  
     }
 
    .main-header .menu {
