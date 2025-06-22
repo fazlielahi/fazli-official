@@ -111,14 +111,14 @@ body {
 .main-heading h1 {
 
     font-family: mainheading_font;
-    font-size: 60px;
+    font-size: 75px;
     color: #ffffff;
 }
 
 .main-heading .heading-row1 {
 
     display: block;
-    color: rgb(42, 255, 71);
+    color: #21cf8c;
 }
 
 
@@ -126,7 +126,7 @@ body {
 
     font-family: mainheading_font;
     font-size: 20px;
-    color: rgb(42, 255, 71);
+    color: #21cf8c;
 }
 
 .main-heading .subtitle1 {
@@ -303,7 +303,7 @@ body {
    .section-heading{
 
     background-color: #000000;
-    color: rgb(33, 207, 140);
+    color: #21cf8c;
     text-decoration: underline;
     font-size: 22px;
     padding: 15px 0px;
@@ -315,7 +315,7 @@ body {
   
    .skills-heading{
 
-    color: rgb(33, 207, 140);
+    color: #21cf8c;
     text-decoration: underline;
     font-size: 22px;
     position: sticky;
@@ -334,7 +334,7 @@ body {
 
   .experience .section-heading{
     background-color: #00000000;
-    color: rgb(33, 207, 140);
+    color: #21cf8c;
     text-decoration: underline;
     font-size: 22px;
     position: sticky;

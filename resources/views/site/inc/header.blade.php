@@ -1,10 +1,12 @@
 <div class="main-header">
 
     <div class="logo">
-        fazlielahi.web
+        fazli.web
     </div>
 
     <div class="menu" id="menu">
+        <a href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.home') ? 'active' : '' }}">{{ __('lang.Home') }}</a>
+
         <a href="{{ route('localized.about', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.about') ? 'active' : '' }}">{{ __('lang.About') }}</a>
         <!-- <div class="dropdown">
             <a href="#" class="dropdown-toggle {{ request()->is('about*') ? 'active' : '' }}">

@@ -1,0 +1,122 @@
+/*header*/
+
+header{
+    direction: rtl;
+}
+
+.main-menu__contact-list li+li{
+    margin-right: 46px;
+}
+
+
+.main-menu__contact-list li::before {
+    content: "";
+   display: none;
+}
+
+.main-menu__contact-list li:after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    right: -23px;
+    width: 1px;
+    background-color: rgba(var(--fistudy-white-rgb), .30);
+}
+
+.icon-contact:before, .icon-email:before, .icon-location:before{
+    padding-left: 10px;
+
+}
+
+.main-banner{
+    flex-direction: row-reverse !important;
+}
+
+.main-banner .col-xl-6{
+
+    text-align: right !important;
+}
+
+.main-banner .banner-one__thm-and-other-btn-box{
+    justify-content: flex-end !important;
+}
+
+.current{
+    float: right;
+}
+.Features{
+    float: left !important;
+}
+
+.banner-one__category-select-box .select-box .nice-select:after{
+    right: auto !important;
+    left: 30px !important;
+}
+
+.course-list__showing-sort .select-box .nice-select:after {
+    right: auto !important;
+    left: 0px !important;
+}
+
+.page-header__img{
+    right: auto !important;
+    left: 0px !important;
+}
+
+.page-header__shape-5, .page-header__shape-4{
+    left: auto;
+    right: 110px;
+}
+
+.page-header__social{
+    left: auto;
+    right: -159px;
+}
+
+.about-rtl .about-one__icon-and-title, .live-class-one__class-time{
+    justify-content: flex-end;
+}
+
+.about-rtl, .testimonial-one__single, 
+.live-class-row,
+.site-footer__logo-and-contact-box-inner,
+.footer-row,
+.site-footer__contact-info-icon,
+.site-footer__links-list li a,
+.site-footer__bottom-inner,
+.about-one__experience-box-inner,
+.about-one__awards-count-box,
+.page-header__inner,
+.courses-row,
+.list-unstyled,
+.contact-form,
+input,
+textarea{
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.courses-one__single, .blog-one__single, .why-choose-us, .nice-select .option{
+    text-align: right;
+}
+
+.courses-one__tag-and-meta,
+.courses-one__btn-and-doller-box,
+.blog-one__meta,
+.course-grid__list-item li {
+    flex-direction: row-reverse;
+}
+
+.why-choose-one__right .section-title {
+    margin-right: 0;
+}
+
+.reviews-title, .courses-two__single{
+    direction: rtl;
+}
+
+.pg-pagination {
+    text-align: left;
+}
+

@@ -15,9 +15,9 @@
     @endif
 
     <!-- jquery ui -->
-    <link rel="stylesheet" href="lib/jquery-ui.css">
-    <script src="lib/jquery-3.6.0.js"></script>
-    <script src="lib/jquery-ui.js"></script>
+    <link rel="stylesheet" href="{{ asset('lib/jquery-ui.css')}}">
+    <script src="{{ asset('lib/jquery-3.6.0.js')}}"></script>
+    <script src="{{ asset('lib/jquery-ui.js')}}"></script>
 
     @yield('head')
 
@@ -29,25 +29,20 @@
     @include("site.inc.header")
     @include("site.inc.cv")
 
+    <!--Start Preloader-->
+    <div class="loader js-preloader">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!--End Preloader-->
     @yield('content')
 
-    {{-- Loading Overlay --}}
-    <div id="page-loader">
-    <div class="loader-content">
-        {{-- Animated SVG Graphic --}}
-        <svg class="loader-graphic" viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r="30" stroke="rgba(24,163,110,0.3)" stroke-width="8" fill="none"/>
-        <circle cx="50" cy="50" r="30" stroke="rgb(24,163,110)" stroke-width="8" fill="none"
-            stroke-dasharray="47 188" stroke-linecap="round"/>
-        </svg>
-
-        {{-- Spinner Fallback --}}
-        <div class="spinner"></div>
-
-        {{-- Loading Text + Pulsing Dots --}}
-        <p>fazli.web<span class="dots">...</span></p>
-    </div>
-    </div>
+    <a href="#" data-target="html" class="scroll-to-target scroll-to-top">
+        <span class="scroll-to-top__wrapper"><span class="scroll-to-top__inner"></span></span>
+        <span class="scroll-to-top__text"> Go Back Top</span>
+    </a>
 
     @include("site.inc.footer")   
 
