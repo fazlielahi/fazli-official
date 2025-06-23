@@ -399,15 +399,20 @@
 }
 
 .blog-two__title {
-    font-size: 25px;
+    font-size: 22px;
     font-weight: 500;
     line-height: 32px;
     margin-top: 13px;
     margin-bottom: 11px;
+    padding: 0 13px;
 }
 
 .blog-two__title a {
     color: #fff;
+}
+
+.blog-two__text{
+    padding: 0 13px;
 }
 
 .blog-two__title a:hover {
@@ -1839,6 +1844,23 @@
     padding: 45px 0 0px;
 }
 
+.blog-card{
+    width: 45% !important;
+    display: inline-block;
+    margin: 0 18px;
+}
+
+.left-sidebar{
+    padding: 0 0 0 30px;
+    width: 30%;
+    display: inline-block;
+}
+
+.blogs-section{
+    vertical-align: top;
+    width: 68%;
+    display: inline-block;
+}
 
 
 

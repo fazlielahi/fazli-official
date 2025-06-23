@@ -1,7 +1,7 @@
 <div class="main-header">
 
     <div class="logo">
-        fazli.web
+        thefazli.com
     </div>
 
     <div class="menu" id="menu">
@@ -18,6 +18,7 @@
             </div>
         </div> -->
         <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.contact') ? 'active' : '' }}"> {{ __('lang.Contact') }} </a>
+        <a href="{{ route('localized.blogs', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.blogs') ? 'active' : '' }}"> {{ __('lang.Blogs') }} </a>
         
         @if ($locale === 'en')
             <a href="{{ route('lang.switch', 'ar') }}" class="language-icon">

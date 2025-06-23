@@ -1,5 +1,5 @@
 body,
-body .courses-one__single,
+body .blogs-one__single,
 .owl-carousel .owl-nav button.owl-prev,
 .owl-carousel .owl-nav button.owl-next,
 .owl-theme .owl-dots .owl-dot span,
@@ -31,7 +31,7 @@ body .courses-one__single,
 
 .blog-one,
 .why-choose-one__client-box,
-.courses-one {
+.blogs-one {
     background: #011834;
 }
 
@@ -56,7 +56,7 @@ body .courses-one__single,
 .testimonial-one__client-name a,
 .owl-carousel .owl-nav button.owl-prev,
 .owl-carousel .owl-nav button.owl-next,
-.courses-one__title a,
+.blogs-one__title a,
 .about-one__icon-and-title h3,
 .section-title__title,
 .section-title__tagline,
@@ -107,15 +107,15 @@ body .courses-one__single,
 .owl-carousel .owl-nav button.owl-prev,
 .owl-carousel .owl-nav button.owl-next,
 .owl-theme .owl-dots .owl-dot span,
-.courses-one__heart a,
-.courses-one__single {
+.blogs-one__heart a,
+.blogs-one__single {
     border: 1px solid rgba(var(--fistudy-white-rgb), .10);
 }
 
 
 
 .blog-one__meta,
-.courses-one__ratting-and-heart-box {
+.blogs-one__ratting-and-heart-box {
     border-bottom: 1px solid rgba(var(--fistudy-white-rgb), .10);
 }
 
@@ -159,7 +159,7 @@ body .courses-one__single,
 .about-one .thm-btn:hover::before,
 .why-choose-one .thm-btn:hover::before,
 .blog-one .thm-btn:hover::before,
-.courses-one .thm-btn:hover::before {
+.blogs-one .thm-btn:hover::before {
     background-color: var(--fistudy-white);
 }
 
@@ -172,7 +172,7 @@ body .courses-one__single,
 .why-choose-one .thm-btn:hover,
 .blog-one .thm-btn:hover,
 .about-one .thm-btn:hover,
-.courses-one .thm-btn:hover {
+.blogs-one .thm-btn:hover {
     color: var(--fistudy-base);
 }
 

@@ -177,8 +177,8 @@
 
 
   //Courses One Carousel
-  if ($(".courses-one__carousel").length) {
-    $(".courses-one__carousel").owlCarousel({
+  if ($(".blogs-one__carousel").length) {
+    $(".blogs-one__carousel").owlCarousel({
       loop: true,
       margin: 24,
       nav: true,

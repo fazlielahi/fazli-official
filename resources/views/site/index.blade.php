@@ -1,4 +1,4 @@
-    @extends('site.layout')
+@extends('site.layout')
 
 @section('title', __('lang.PORTFOLIO_TITLE'))
 
@@ -16,11 +16,6 @@
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" /> <!-- main heading css -->
     <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicons/apple-touch-icon.png') }}" />
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicons/favicon-32x32.png') }}" />
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicons/favicon-16x16.png') }}" />
-    <link rel="manifest" href="{{ asset('assets/images/favicons/site.webmanifest') }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -290,7 +285,7 @@
             <!-- About One End -->
 
             <!-- Services One Start -->
-            <section class="courses-one" >
+            <section class="blogs-one" >
                 <div class="container">
                     <div class="section-title text-center sec-title-animation animation-style1" id="services-section">
                         <div class="section-title__tagline-box">
@@ -300,38 +295,38 @@
                         <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.More Than Web:') }} <br>{{ __('lang.One Place,') }}
                             <span class="solution">{{ __('lang.Many Solutions.') }} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></span></h2>
                     </div>
-                    <div class="courses-one__carousel owl-theme owl-carousel">
-                        <!--Courses One Single Start-->
+                    <div class="blogs-one__carousel owl-theme owl-carousel">
+                        <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="courses-one__single">
-                                <div class="courses-one__img-box">
-                                    <div class="courses-one__img">
+                            <div class="blogs-one__single">
+                                <div class="blogs-one__img-box">
+                                    <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/web-development.jpg') }}" alt="">
                                     </div>
                                 </div>
-                                <div class="courses-one__content">
+                                <div class="blogs-one__content">
                                  
-                                    <h3 class="courses-one__title">
-                                        <a href="course-details.html">{{ __('lang.Web Design & Development') }}</a>
+                                    <h3 class="blogs-one__title">
+                                        <a href="#">{{ __('lang.Web Design & Development') }}</a>
                                     </h3>
-                                    <div class="courses-one__ratting-and-heart-box">
-                                        <div class="courses-one__ratting-box">
-                                            <ul class="courses-one__ratting list-unstyled">
+                                    <div class="blogs-one__ratting-and-heart-box">
+                                        <div class="blogs-one__ratting-box">
+                                            <ul class="blogs-one__ratting list-unstyled">
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                             </ul>
-                                            <p class="courses-one__ratting-text">{{ __('lang.32 Reviews') }}</p>
+                                            <p class="blogs-one__ratting-text">{{ __('lang.32 Reviews') }}</p>
                                         </div>
-                                        <div class="courses-one__heart">
+                                        <div class="blogs-one__heart">
                                             <a href="#"><span class="icon-heart"></span></a>
                                         </div>
                                     </div>
-                                    <div class="courses-one__btn-and-doller-box">
-                                        <div class="courses-one__btn-box">
-                                            <a href="course-details.html" class="courses-one__btn thm-btn">
+                                    <div class="blogs-one__btn-and-doller-box">
+                                        <div class="blogs-one__btn-box">
+                                            <a href="#" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -339,39 +334,39 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Courses One Single End-->
+                        <!--blogs One Single End-->
 
-                        <!--Courses One Single Start-->
+                        <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="courses-one__single">
-                                <div class="courses-one__img-box">
-                                    <div class="courses-one__img">
+                            <div class="blogs-one__single">
+                                <div class="blogs-one__img-box">
+                                    <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/coorporate-identity.jpg') }}" alt="">
                                     </div>
                                 </div>
-                                <div class="courses-one__content">
+                                <div class="blogs-one__content">
                                  
-                                    <h3 class="courses-one__title">
-                                        <a href="course-details.html">{{ __('lang.Corporate Identity') }}</a>
+                                    <h3 class="blogs-one__title">
+                                        <a href="#">{{ __('lang.Corporate Identity') }}</a>
                                     </h3>
-                                    <div class="courses-one__ratting-and-heart-box">
-                                        <div class="courses-one__ratting-box">
-                                            <ul class="courses-one__ratting list-unstyled">
+                                    <div class="blogs-one__ratting-and-heart-box">
+                                        <div class="blogs-one__ratting-box">
+                                            <ul class="blogs-one__ratting list-unstyled">
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                             </ul>
-                                            <p class="courses-one__ratting-text">{{ __('lang.25 Reviews') }}</p>
+                                            <p class="blogs-one__ratting-text">{{ __('lang.25 Reviews') }}</p>
                                         </div>
-                                        <div class="courses-one__heart">
+                                        <div class="blogs-one__heart">
                                             <a href="#"><span class="icon-heart"></span></a>
                                         </div>
                                     </div>
-                                    <div class="courses-one__btn-and-doller-box">
-                                        <div class="courses-one__btn-box">
-                                            <a href="course-details.html" class="courses-one__btn thm-btn">
+                                    <div class="blogs-one__btn-and-doller-box">
+                                        <div class="blogs-one__btn-box">
+                                            <a href="#" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -379,39 +374,39 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Courses One Single End-->
+                        <!--blogs One Single End-->
 
-                        <!--Courses One Single Start-->
+                        <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="courses-one__single">
-                                <div class="courses-one__img-box">
-                                    <div class="courses-one__img">
+                            <div class="blogs-one__single">
+                                <div class="blogs-one__img-box">
+                                    <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/digital-marketing.jpg') }}" alt="">
                                     </div>
                                 </div>
-                                <div class="courses-one__content">
+                                <div class="blogs-one__content">
                                  
-                                    <h3 class="courses-one__title">
-                                        <a href="course-details.html">{{ __('lang.Digital Marketing') }}</a>
+                                    <h3 class="blogs-one__title">
+                                        <a href="#">{{ __('lang.Digital Marketing') }}</a>
                                     </h3>
-                                    <div class="courses-one__ratting-and-heart-box">
-                                        <div class="courses-one__ratting-box">
-                                            <ul class="courses-one__ratting list-unstyled">
+                                    <div class="blogs-one__ratting-and-heart-box">
+                                        <div class="blogs-one__ratting-box">
+                                            <ul class="blogs-one__ratting list-unstyled">
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                             </ul>
-                                            <p class="courses-one__ratting-text">{{ __('lang.30 Reviews') }}</p>
+                                            <p class="blogs-one__ratting-text">{{ __('lang.30 Reviews') }}</p>
                                         </div>
-                                        <div class="courses-one__heart">
+                                        <div class="blogs-one__heart">
                                             <a href="#"><span class="icon-heart"></span></a>
                                         </div>
                                     </div>
-                                    <div class="courses-one__btn-and-doller-box">
-                                        <div class="courses-one__btn-box">
-                                            <a href="course-details.html" class="courses-one__btn thm-btn">
+                                    <div class="blogs-one__btn-and-doller-box">
+                                        <div class="blogs-one__btn-box">
+                                            <a href="#" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -419,39 +414,39 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Courses One Single End-->
+                        <!--blogs One Single End-->
 
-                        <!--Courses One Single Start-->
+                        <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="courses-one__single">
-                                <div class="courses-one__img-box">
-                                    <div class="courses-one__img">
+                            <div class="blogs-one__single">
+                                <div class="blogs-one__img-box">
+                                    <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/ecommerce.jpg') }}" alt="">
                                     </div>
                                 </div>
-                                <div class="courses-one__content">
+                                <div class="blogs-one__content">
                                  
-                                    <h3 class="courses-one__title">
-                                        <a href="course-details.html">{{ __('lang.Ecommerce Development') }}</a>
+                                    <h3 class="blogs-one__title">
+                                        <a href="#">{{ __('lang.Ecommerce Development') }}</a>
                                     </h3>
-                                    <div class="courses-one__ratting-and-heart-box">
-                                        <div class="courses-one__ratting-box">
-                                            <ul class="courses-one__ratting list-unstyled">
+                                    <div class="blogs-one__ratting-and-heart-box">
+                                        <div class="blogs-one__ratting-box">
+                                            <ul class="blogs-one__ratting list-unstyled">
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                             </ul>
-                                            <p class="courses-one__ratting-text">{{ __('lang.27 Reviews') }}</p>
+                                            <p class="blogs-one__ratting-text">{{ __('lang.27 Reviews') }}</p>
                                         </div>
-                                        <div class="courses-one__heart">
+                                        <div class="blogs-one__heart">
                                             <a href="#"><span class="icon-heart"></span></a>
                                         </div>
                                     </div>
-                                    <div class="courses-one__btn-and-doller-box">
-                                        <div class="courses-one__btn-box">
-                                            <a href="course-details.html" class="courses-one__btn thm-btn">
+                                    <div class="blogs-one__btn-and-doller-box">
+                                        <div class="blogs-one__btn-box">
+                                            <a href="#" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -459,39 +454,39 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Courses One Single End-->
+                        <!--blogs One Single End-->
 
-                        <!--Courses One Single Start-->
+                        <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="courses-one__single">
-                                <div class="courses-one__img-box">
-                                    <div class="courses-one__img">
+                            <div class="blogs-one__single">
+                                <div class="blogs-one__img-box">
+                                    <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/social-media-marketing.jpg') }}" alt="">
                                     </div>
                                 </div>
-                                <div class="courses-one__content">
+                                <div class="blogs-one__content">
                                  
-                                    <h3 class="courses-one__title">
-                                        <a href="course-details.html">{{ __('lang.Social Media Marketing') }}</a>
+                                    <h3 class="blogs-one__title">
+                                        <a href="#">{{ __('lang.Social Media Marketing') }}</a>
                                     </h3>
-                                    <div class="courses-one__ratting-and-heart-box">
-                                        <div class="courses-one__ratting-box">
-                                            <ul class="courses-one__ratting list-unstyled">
+                                    <div class="blogs-one__ratting-and-heart-box">
+                                        <div class="blogs-one__ratting-box">
+                                            <ul class="blogs-one__ratting list-unstyled">
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                             </ul>
-                                            <p class="courses-one__ratting-text">{{ __('lang.24 Reviews') }}</p>
+                                            <p class="blogs-one__ratting-text">{{ __('lang.24 Reviews') }}</p>
                                         </div>
-                                        <div class="courses-one__heart">
+                                        <div class="blogs-one__heart">
                                             <a href="#"><span class="icon-heart"></span></a>
                                         </div>
                                     </div>
-                                    <div class="courses-one__btn-and-doller-box">
-                                        <div class="courses-one__btn-box">
-                                            <a href="course-details.html" class="courses-one__btn thm-btn">
+                                    <div class="blogs-one__btn-and-doller-box">
+                                        <div class="blogs-one__btn-box">
+                                            <a href="#" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -499,39 +494,39 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Courses One Single End-->
+                        <!--blogs One Single End-->
 
-                        <!--Courses One Single Start-->
+                        <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="courses-one__single">
-                                <div class="courses-one__img-box">
-                                    <div class="courses-one__img">
+                            <div class="blogs-one__single">
+                                <div class="blogs-one__img-box">
+                                    <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/wordpress.jpg') }}" alt="">
                                     </div>
                                 </div>
-                                <div class="courses-one__content">
+                                <div class="blogs-one__content">
                                  
-                                    <h3 class="courses-one__title">
-                                        <a href="course-details.html">{{ __('lang.WordPress Development') }}</a>
+                                    <h3 class="blogs-one__title">
+                                        <a href="#">{{ __('lang.WordPress Development') }}</a>
                                     </h3>
-                                    <div class="courses-one__ratting-and-heart-box">
-                                        <div class="courses-one__ratting-box">
-                                            <ul class="courses-one__ratting list-unstyled">
+                                    <div class="blogs-one__ratting-and-heart-box">
+                                        <div class="blogs-one__ratting-box">
+                                            <ul class="blogs-one__ratting list-unstyled">
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                             </ul>
-                                            <p class="courses-one__ratting-text">{{ __('lang.22 Reviews') }}</p>
+                                            <p class="blogs-one__ratting-text">{{ __('lang.22 Reviews') }}</p>
                                         </div>
-                                        <div class="courses-one__heart">
+                                        <div class="blogs-one__heart">
                                             <a href="#"><span class="icon-heart"></span></a>
                                         </div>
                                     </div>
-                                    <div class="courses-one__btn-and-doller-box">
-                                        <div class="courses-one__btn-box">
-                                            <a href="course-details.html" class="courses-one__btn thm-btn">
+                                    <div class="blogs-one__btn-and-doller-box">
+                                        <div class="blogs-one__btn-box">
+                                            <a href="#" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -539,39 +534,39 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Courses One Single End-->
+                        <!--blogs One Single End-->
 
-                        <!--Courses One Single Start-->
+                        <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="courses-one__single">
-                                <div class="courses-one__img-box">
-                                    <div class="courses-one__img">
+                            <div class="blogs-one__single">
+                                <div class="blogs-one__img-box">
+                                    <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/seo-training.jpg') }}" alt="">
                                     </div>
                                 </div>
-                                <div class="courses-one__content">
+                                <div class="blogs-one__content">
                                  
-                                    <h3 class="courses-one__title">
-                                        <a href="course-details.html">{{ __('lang.SEO Training') }}</a>
+                                    <h3 class="blogs-one__title">
+                                        <a href="#">{{ __('lang.SEO Training') }}</a>
                                     </h3>
-                                    <div class="courses-one__ratting-and-heart-box">
-                                        <div class="courses-one__ratting-box">
-                                            <ul class="courses-one__ratting list-unstyled">
+                                    <div class="blogs-one__ratting-and-heart-box">
+                                        <div class="blogs-one__ratting-box">
+                                            <ul class="blogs-one__ratting list-unstyled">
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                                 <li><span class="icon-star"></span></li>
                                             </ul>
-                                            <p class="courses-one__ratting-text">{{ __('lang.20 Reviews') }}</p>
+                                            <p class="blogs-one__ratting-text">{{ __('lang.20 Reviews') }}</p>
                                         </div>
-                                        <div class="courses-one__heart">
+                                        <div class="blogs-one__heart">
                                             <a href="#"><span class="icon-heart"></span></a>
                                         </div>
                                     </div>
-                                    <div class="courses-one__btn-and-doller-box">
-                                        <div class="courses-one__btn-box">
-                                            <a href="course-details.html" class="courses-one__btn thm-btn">
+                                    <div class="blogs-one__btn-and-doller-box">
+                                        <div class="blogs-one__btn-box">
+                                            <a href="#" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -579,7 +574,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Courses One Single End-->
+                        <!--blogs One Single End-->
                     </div>
                 </div>
             </section>
@@ -1093,7 +1088,7 @@
         <script>
             $(document).ready(function() {
                 // Heart icon toggle functionality
-                $('.courses-one__heart a').on('click', function(e) {
+                $('.blogs-one__heart a').on('click', function(e) {
                     e.preventDefault();
                     var $heartIcon = $(this).find('.icon-heart');
                     

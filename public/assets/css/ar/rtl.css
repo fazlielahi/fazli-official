@@ -97,12 +97,12 @@ textarea{
     text-align: right;
 }
 
-.courses-one__single, .blog-one__single, .why-choose-us, .nice-select .option{
+.blogs-one__single, .blog-one__single, .why-choose-us, .nice-select .option{
     text-align: right;
 }
 
-.courses-one__tag-and-meta,
-.courses-one__btn-and-doller-box,
+.blogs-one__tag-and-meta,
+.blogs-one__btn-and-doller-box,
 .blog-one__meta,
 .course-grid__list-item li {
     flex-direction: row-reverse;
