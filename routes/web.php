@@ -6,6 +6,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\UserController;
 
 // 1) Root — redirect "/" to the current locale's home
     Route::get('/', [HomeController::class, 'index'])->name('root.redirect');
@@ -28,6 +29,13 @@ Route::group([
     //courses
     Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs');
     Route::get('/blogs-details', [BlogsController::class, 'blogDetails'])->name('blog-details');
+
+    //user login and register routes
+    Route::post('/register', [UserController::class, 'register']);
+    Route::post('/login', [UserController::class, 'login']);
+    Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
+    Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
+    Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 
    // Admin protected routes

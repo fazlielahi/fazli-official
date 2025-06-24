@@ -9,7 +9,9 @@
     @yield('meta')
 
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-
+    
+    @php $locale = app()->getLocale(); @endphp
+    
     @if($locale == 'ar')
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif

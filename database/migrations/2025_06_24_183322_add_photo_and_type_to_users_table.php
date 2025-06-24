@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('blogs', function (Blueprint $table) {
-            $table->unsignedBigInteger('rejected_by')->nullable()->after('rejection_message');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('photo')->nullable()->after('password');
+            $table->enum('type', ['user', 'admin', 'super_admin'])->default('admin')->after('photo');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('blogs', function (Blueprint $table) {
-            $table->dropColumn('rejected_by');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['photo', 'type']);
         });
     }
 };

@@ -558,7 +558,7 @@ ul {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: #000000ad;
   z-index: 20000;
   overflow-x: hidden !important;
   display: flex;

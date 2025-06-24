@@ -1,0 +1,25 @@
+.register, .login-form{
+
+    width: 50%;
+    margin: 100px auto;
+    background: #000000b8;
+    padding: 25px;
+    border-radius: 6px;
+}
+
+.register input, .login-form input{
+    
+    background-color: #ffffff00 !important;
+    color: #fffffff3 !important;
+}
+
+.register label, .login-form label{
+    
+    color: #fffffff8 !important;
+}
+
+#remember{
+    
+    border: 1px solid #fff;
+}
+
