@@ -6,7 +6,7 @@
  
 <div id="main-content">
         <div class="container-fluid">
-            <form action="{{ route('localized.admin.blog.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('localized.admin.blog.store', ['lang' => app()->getLocale()]) }}" method="post" enctype="multipart/form-data">
 
              @csrf
             <div class="block-header">
@@ -22,7 +22,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="d-flex flex-row-reverse">
                             <div class="page_action">
-                                <a href="{{route('localized.admin.dashboard')}}" class="btn btn-secondary" title="new post">{{ __('lang.Dashboard') }}</a>
+                                <a href="{{route('localized.admin.dashboard', ['lang' => app()->getLocale()])}}" class="btn btn-secondary" title="new post">{{ __('lang.Dashboard') }}</a>
                             </div>
                             <div class="p-2 d-flex">
                                 
@@ -99,7 +99,7 @@
             removeFormatAttributes: '',
             image_prefillDimensions: true, 
             allowedContent: true, 
-            filebrowserUploadUrl: "{{ route('localized.admin.ckeditor.upload') }}?_token={{ csrf_token() }}",
+            filebrowserUploadUrl: "{{ route('localized.admin.ckeditor.upload', ['lang' => app()->getLocale()]) }}?_token={{ csrf_token() }}",
             filebrowserUploadMethod: 'form',
             filebrowserUploadMethod: 'xhr'
             

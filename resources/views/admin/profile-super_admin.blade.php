@@ -18,7 +18,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="d-flex flex-row-reverse">
                         <div class="page_action">
-                             <a class="btn btn-primary" href="{{ route('localized.admin.dashboard') }}"> <i class="fa fa-dashboard"></i> {{ __('lang.Dashboard') }}</a>
+                             <a class="btn btn-primary" href="{{ route('localized.admin.dashboard', ['lang' => app()->getLocale()]) }}"> <i class="fa fa-dashboard"></i> {{ __('lang.Dashboard') }}</a>
                         </div>
                         <div class="p-2 d-flex">
 
@@ -42,7 +42,7 @@
                     <div class="tab-content">
 
                         <div class="tab-pane active" id="Settings">
-                    <form method="POST" action="{{route('localized.profile-update')}}" enctype="multipart/form-data" >
+                    <form method="POST" action="{{route('localized.profile-update', ['lang' => app()->getLocale()])}}" enctype="multipart/form-data" >
                     @csrf
                             <div class="body">
                                 <h6>{{ __('lang.Profile Photo') }}</h6>
@@ -71,7 +71,7 @@
                                 <button type="submit" class="btn btn-primary">{{ __('lang.Update') }}</button> &nbsp;&nbsp;
                             </form>
                                 <p class="mt-3" style="font-size: 14px;">
-                                    {{-- <a href="{{ route('localized.password.request') }}" style="color: #335214; font-weight: 500; text-decoration: underline;">{{ __('lang.Change password') }}</a> --}}
+                                    {{-- <a href="{{ route('password.request', ['lang' => app()->getLocale()]) }}" style="color: #335214; font-weight: 500; text-decoration: underline;">{{ __('lang.Change password') }}</a> --}}
                                 </p>
                             </div>
 
@@ -89,10 +89,10 @@
                                                  <a href="javascript:void(0);">
                                                      <div class="action">
                                                          
-                                                         <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['blog' => $blog->id]) }}"><i class="fa fa-edit"></i></a>
+                                                         <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) }}"><i class="fa fa-edit"></i></a>
                                                          
                                                          <form id="delete-form-{{ $blog->id }}" 
-                                                             action="{{ route('localized.admin.blog.destroy', ['id' => $blog->id]) }}" 
+                                                             action="{{ route('localized.admin.blog.destroy', ['lang' => app()->getLocale(), $blog->id]) }}" 
                                                              method="POST" 
                                                              style="display:inline;">
                                                              @csrf

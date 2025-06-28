@@ -232,7 +232,7 @@
     border-radius: 20px;
 }
 
-..profile-container {
+.profile-container {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -247,10 +247,10 @@
     border: 2px solid #ccc;
   }
 
-  .username {
+  .username a{
     font-size: 16px;
     font-weight: 600;
-    color: #eee;
+    color: #eee !important;
     margin: 0 4px;
   }
 
@@ -268,6 +268,7 @@
     overflow: hidden;
     border-radius: 20px;
     z-index: 1;
+    height: 260px;
 }
 
 .blog-two__img:before {
@@ -308,7 +309,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    background-color: var(--fistudy-base);
+    background-color: #0b281d99;
     padding: 14px 20px 14px;
     border-top: 2px solid var(--fistudy-white);
     border-right: 2px solid var(--fistudy-white);
@@ -1862,12 +1863,129 @@
     display: inline-block;
 }
 
+.like-btn{
+    cursor: pointer;
+}
 
+.modal{
+    background-color: #00000096 !important;
+}
 
+.modal-backdrop {
+    display: none !important;
+}
 
+.comment-modal .btn-close {
+    position: absolute;
+    top: 30px;
+    right: 30px !important;
+    z-index: 10;
+    border: 1px solid ;
+}
 
+.comment-modal .blog-two__single{
+    border-bottom: 1px dashed;
+    width: 100%;
+}
 
+.share-btn{
+    cursor: pointer;
+}
 
+.comment-modal .bg-secondary{
+    background-color: #6c757d75 !important;
+}
+
+.comment-modal .modal-dialog{
+    margin-top: 2px !important;
+}
+
+.comment-modal .modal-body{
+    padding: 0 1rem !important;
+}
+
+.comment-modal .modal-header {
+    border-bottom: 0 !important;
+}
+
+/* Comments Section Styling */
+.comment-modal .comments-list {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: #FFC224 #222;
+}
+
+.comment-modal .comments-list::-webkit-scrollbar {
+    width: 8px;
+    background: #222;
+}
+.comment-modal .comments-list::-webkit-scrollbar-thumb {
+    background: #FFC224;
+    border-radius: 4px;
+}
+
+.comment-modal .comment-card {
+    background: rgba(40, 40, 40, 0.95);
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #00000022;
+    margin-bottom: 1rem;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.comment-modal .comment-card .user-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FFC224;
+    margin-right: 0.75rem;
+}
+
+.comment-modal .comment-card .comment-content {
+    flex: 1;
+}
+
+.comment-modal .comment-card .username {
+    font-weight: 700;
+    color: #FFC224;
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+    display: block;
+}
+
+.comment-modal .comment-card .timestamp {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+.comment-modal .comment-card .comment-text {
+    color: #eee;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.comment-modal .no-comments {
+    text-align: center;
+    color: #FFC224;
+    font-size: 1.1rem;
+    margin: 2rem 0;
+}
+
+.profile-sidebar{
+    background: #24242480;
+    padding: 12px;
+    border-radius: 5px;
+}
 
 /*--------------------------------------------------------------
 # End

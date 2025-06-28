@@ -14,9 +14,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet">
 
     <!-- External CDN CSS (Simple Line Icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css">
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
 
         <style>
@@ -58,6 +59,25 @@
                 top: 7px;
             }
 
+            .page-loader-wrapper{
+                
+                background: #080808e3 !important;
+            }
+
+            .page-loader-wrapper p {
+                color: var(--font-white);
+                font-size: 35px !important;
+                font-weight: bold !important;
+            }
+
+            .user-account .user-photo {
+                height: 50px !important;
+            }
+
+            .cke_notifications_area{
+                display: none !important;
+            }
+
     </style>
 </head>
 <body data-theme="light" class="font-nunito">
@@ -67,7 +87,7 @@
             <!-- Page Loader -->
             <div class="page-loader-wrapper">
                 <div class="loader">
-                    <div class="m-t-30"><img src="{{ asset('assets/img/pec.png') }}" width="158" height="48" alt="Iconic"></div>
+                    <div class="m-t-30"><img src="{{ asset('images/thefazli.com.png') }}" width="258" alt="thefazli.com"></div>
                     <p>{{ __('lang.Please wait...') }}</p>
                 </div>
             </div>
@@ -76,9 +96,9 @@
             <nav class="navbar navbar-fixed-top">
                 <div class="container-fluid">
                     <div class="navbar-brand">
-                        <button type="button" class="btn-toggle-fullwidth"><i class="fa fa-bars"></i></button>
                         <button type="button" class="btn-toggle-offcanvas"><i class="fa fa-bars"></i></button>
-                        <a href="index.html">{{ __('lang.Almanther') }}</a> 
+                        <button type="button" class="btn-toggle-fullwidth"><i class="fa fa-bars"></i></button>
+                        <a href="{{route('localized.home', ['lang' => app()->getlocale()] )}}">{{ __('lang.thefazli.com') }}</a> 
                     </div>
                     
                     <div class="navbar-right">
@@ -95,21 +115,14 @@
                 <button type="button" class="btn-toggle-offcanvas"><i class="fa fa-arrow-left"></i></button>
                 <div class="sidebar-scroll">
                     <div class="user-account">
-                        @php
-                            $photoPath = public_path('images/' . $user->photo);
-                        @endphp
-
-                        <img 
-                            src="{{ file_exists($photoPath) ? asset('images/' . $user->photo) : asset('assets/admin/images/user.png') }}" 
-                            class="rounded-circle user-photo" 
-                            alt="User Profile Picture">
+                    <img src="{{ asset('images/' . ($user->photo ?? 'default.png')) }}" class="rounded-circle user-photo" alt="Profile Picture">
                         <div class="dropdown">
                             <span>{{ __('lang.Welcome') }},</span>
                             <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown"><strong>{{ $user->name }}</strong></a>
                             <ul class="dropdown-menu dropdown-menu-right account">
-                                <li><a href="{{route('localized.admin.profile')}}" ><i class="icon-user"></i>{{ __('lang.My Profile') }}</a></li>
+                                <li><a href="{{route('localized.admin.profile', ['lang' => app()->getLocale()])}}" ><i class="icon-user"></i>{{ __('lang.My Profile') }}</a></li>
                                 <li class="divider"></li>
-                                <li><a href="{{route('localized.logout')}}"><i class="icon-power"></i>{{ __('lang.Logout') }}</a></li>
+                                <li><a href="{{route('localized.logout', ['lang' => app()->getLocale()])}}"><i class="icon-power"></i>{{ __('lang.Logout') }}</a></li>
                             </ul>
                         </div>
                         <hr>
@@ -119,11 +132,11 @@
                     <ul class="nav nav-tabs">
                         <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#menu">{{ __('lang.Menu') }}</a></li>
                         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#setting"><i class="icon-settings"></i></a></li>
-                        @if (app()->getLocale() == 'en')
-                            <li class="nav-item"><a href="{{ switch_locale_url('ar') }}" class="nav-link"><i class="fa fa-language"></i></a></li>
-                        @else
-                        <li class="nav-item"><a href="{{ switch_locale_url('en') }}" class="nav-link"><i class="fa fa-language"></i></a></li>
-                        @endif
+                        @php 
+                        // Get current locale
+                        $locale = App::getLocale();
+                        @endphp  
+                        <li class="nav-item"><a href="{{ route('lang.switch', $locale === 'en' ? 'ar' : 'en') }}" class="nav-link"><i class="fa fa-language"></i></a></li>
                         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#question"><i class="icon-question"></i></a></li>                
                     </ul>
                         
@@ -133,22 +146,22 @@
                             <nav id="left-sidebar-nav" class="sidebar-nav">
                                 <ul id="main-menu" class="metismenu li_animation_delay">
                                     <li>
-                                        <a href="{{route('localized.admin.dashboard')}}"><i class="fa fa-dashboard"></i><span>{{ __('lang.Dashboard') }}</span></a>
+                                        <a href="{{route('localized.admin.dashboard', ['lang' => app()->getLocale()])}}"><i class="fa fa-dashboard"></i><span>{{ __('lang.Dashboard') }}</span></a>
                                     </li>
                                     <li>
-                                        <a href="/"><i class="icon-speedometer"></i> &nbsp; <span>{{ __('lang.Website') }}</span>
+                                        <a href="{{route('localized.blogs', ['lang' => app()->getLocale()])}}"><i class="icon-speedometer"></i> &nbsp; <span>{{ __('lang.Website') }}</span>
                                     </li>
                                     <li class="active">
                                         <a href="#App" class="has-arrow"><i class="fa fa-th-large"></i><span>{{ __('lang.Blogs') }}</span></a>
                                         <ul>
-                                            <li><a href="{{route('localized.admin.blog')}}">{{ __('lang.Published Blogs') }}</a></li>
+                                            <li><a href="{{route('localized.admin.blog', ['lang' => app()->getLocale()])}}">{{ __('lang.Published Blogs') }}</a></li>
                                              @if($user->type === 'super_admin')
-                                                <li><a href="{{ route('localized.admin.request-blogs')}}#request-section">{{ __('lang.Request') }}</a></li>
-                                                <li><a href="{{ route('localized.admin.request-blogs')}}#draft-section">{{ __('lang.Draft') }}</a></li>
+                                                <li><a href="{{ route('localized.admin.request-blogs', ['lang' => app()->getLocale()])}}#request-section">{{ __('lang.Request') }}</a></li>
+                                                <li><a href="{{ route('localized.admin.request-blogs', ['lang' => app()->getLocale()])}}#draft-section">{{ __('lang.Draft') }}</a></li>
                                             @else
-                                            <li><a href="{{ route('localized.admin.request-blogs')}}">{{ __('lang.Draft') }}</a></li>
+                                            <li><a href="{{ route('localized.admin.request-blogs', ['lang' => app()->getLocale()])}}">{{ __('lang.Draft') }}</a></li>
                                             @endif
-                                            <li><a href="{{ route('localized.admin.blog-create')}}">{{ __('lang.Create Blog') }}</a></li>
+                                            <li><a href="{{ route('localized.admin.blog-create', ['lang' => app()->getLocale()])}}">{{ __('lang.Create Blog') }}</a></li>
                                         </ul>
                                     </li>
                                 

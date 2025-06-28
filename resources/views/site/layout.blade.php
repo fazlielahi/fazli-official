@@ -5,6 +5,7 @@
    
     <title>@yield('title', __('lang.DEFAULT_TITLE'))</title>
     <link rel="icon" href="{{ asset('images/favicon.png') }}" >
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @yield('meta')
 
@@ -49,6 +50,15 @@
     @include("site.inc.footer")   
 
     @yield('script')
+
+    <div id="comment-success-message" style="display:none; position:fixed; top:30px; left:50%; transform:translateX(-50%); z-index:9999; background:#1da370; color:#fff; padding:12px 32px; border-radius:8px; font-size:1.1rem; box-shadow:0 2px 8px #0002;">
+        {{ __('lang.Comment added successfully!') }}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('js/like.js') }}"></script>
+    <script src="{{ asset('js/comment.js') }}"></script>
+    <script src="{{ asset('js/share-blog.js') }}"></script>
 
 </body>
 </html>

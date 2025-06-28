@@ -6,7 +6,7 @@
 
 <div id="main-content">
         <div class="container-fluid">
-            <form action="{{ route('localized.admin.blog.update', ['id' => $blog->id]) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('localized.admin.blog.update', ['lang' => app()->getLocale(), $blog->id]) }}" method="post" enctype="multipart/form-data">
 
                 @csrf 
                 @method('PUT')
@@ -23,7 +23,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="d-flex flex-row-reverse">
                             <div class="page_action">
-                                <a href="{{route('localized.admin.blog')}}" class="btn btn-secondary" title="new post">{{ __('lang.Back to Blogs') }}</a>
+                                <a href="{{route('localized.admin.blog', ['lang' => app()->getLocale()])}}" class="btn btn-secondary" title="new post">{{ __('lang.Back to Blogs') }}</a>
                             </div>
                         </div>
                     </div>
@@ -77,15 +77,13 @@
                             <textarea name="content">
                                 {{ old('content', $blog->content) }}
                             </textarea>
- 
-                                @if($blog->status === 'draft')
-                                <label class="mt-3">{{ __('lang.Status') }}</label>
-                                <select name="status" class="form-control show-tick">
-                                    <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
-                                    <option value="published" @if($blog->status == 'published') selected @endif>{{ __('lang.Publish') }}</option>
-                                </select>
-                                @else
-                                    <input type="hidden" name="status" value="published" />
+                            
+                                @if($blog->status != 'published')
+                                    <label class="mt-3">{{ __('lang.Status') }}</label>
+                                    <select name="status" class="form-control show-tick">
+                                        <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
+                                        <option value="published" @if($blog->status == 'published') selected @endif>{{ __('lang.Publish') }}</option>
+                                    </select>
                                 @endif
                             <button type="submit" class="btn btn-block btn-primary   m-t-20">{{ __('lang.Update') }}</button>
                         </div>
@@ -103,7 +101,7 @@
             removeFormatAttributes: '',
             image_prefillDimensions: true, 
             allowedContent: true, 
-            filebrowserUploadUrl: "{{ route('localized.admin.ckeditor.upload') }}?_token={{ csrf_token() }}",
+            filebrowserUploadUrl: "{{ route('localized.admin.ckeditor.upload', ['lang' => app()->getLocale()]) }}?_token={{ csrf_token() }}",
             filebrowserUploadMethod: 'form',
             filebrowserUploadMethod: 'xhr'
             

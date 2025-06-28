@@ -12,10 +12,8 @@
     <link rel="preload" href="{{ asset('assets/css/style.css') }}" as="style" />
     <link rel="preload" href="{{ asset('assets/css/responsive.css') }}" as="style" />
 
-    
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" /> <!-- main heading css -->
     <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
-
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -67,9 +65,7 @@
     <link rel="stylesheet" href="{{ asset('styles/login-register.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
-
 @endsection
-
 
 @section('content')
 
@@ -97,9 +93,9 @@
             <label for="email">{{ __('lang.Email') }}</label>
             <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="{{ __('lang.Enter Your Email') }}">
             @error('email')
-                <p style="color: rgb(160, 40, 50);"> {{ $message }}</p>
+                <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
                 <style>
-                    #email{
+                    #email {
                         border-color: rgb(160, 40, 50) !important;
                     }
                 </style>
@@ -110,9 +106,9 @@
             <label for="password">{{ __('lang.Password') }}</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="{{ __('lang.Enter Your Password') }}">
             @error('password')
-                <p style="color: rgb(160, 40, 50);"> {{ $message }}</p>
+                <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
                 <style>
-                    #password{
+                    #password {
                         border-color: rgb(160, 40, 50) !important;
                     }
                 </style>
@@ -147,56 +143,54 @@
 @endsection
 
 @section('script')
-{{-- Core JS --}}
-        <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
-        <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    {{-- Core JS --}}
+    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 
-        {{-- Plugins --}}
-        <script src="{{ asset('assets/js/jarallax.min.js') }}"></script>
-        <script src="{{ asset('assets/js/jquery.ajaxchimp.min.js') }}"></script>
-        <script src="{{ asset('assets/js/jquery.appear.min.js') }}"></script>
-        <script src="{{ asset('assets/js/swiper.min.js') }}"></script>
-        <script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
-        <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
-        <script src="{{ asset('assets/js/odometer.min.js') }}"></script>
-        <script src="{{ asset('assets/js/wNumb.min.js') }}"></script>
-        <script src="{{ asset('assets/js/wow.js') }}"></script>
-        <script src="{{ asset('assets/js/isotope.js') }}"></script>
-        <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
-        <script src="{{ asset('assets/js/jquery-ui.js') }}"></script>
-        <script src="{{ asset('assets/js/jquery.nice-select.min.js') }}"></script>
-        <script src="{{ asset('assets/js/marquee.min.js') }}"></script>
-        <script src="{{ asset('assets/js/aos.js') }}"></script>
+    {{-- Plugins --}}
+    <script src="{{ asset('assets/js/jarallax.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.ajaxchimp.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.appear.min.js') }}"></script>
+    <script src="{{ asset('assets/js/swiper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/js/odometer.min.js') }}"></script>
+    <script src="{{ asset('assets/js/wNumb.min.js') }}"></script>
+    <script src="{{ asset('assets/js/wow.js') }}"></script>
+    <script src="{{ asset('assets/js/isotope.js') }}"></script>
+    <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-ui.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ asset('assets/js/marquee.min.js') }}"></script>
+    <script src="{{ asset('assets/js/aos.js') }}"></script>
 
-        {{-- GSAP --}}
-        <script src="{{ asset('assets/js/gsap/gsap.js') }}"></script>
-        <script src="{{ asset('assets/js/gsap/ScrollTrigger.js') }}"></script>
-        <script src="{{ asset('assets/js/gsap/SplitText.js') }}"></script>
+    {{-- GSAP --}}
+    <script src="{{ asset('assets/js/gsap/gsap.js') }}"></script>
+    <script src="{{ asset('assets/js/gsap/ScrollTrigger.js') }}"></script>
+    <script src="{{ asset('assets/js/gsap/SplitText.js') }}"></script>
 
-        {{-- Custom Template JS --}}
-        <script src="{{ asset('assets/js/script.js') }}"></script>
+    {{-- Custom Template JS --}}
+    <script src="{{ asset('assets/js/script.js') }}"></script>
 
-        {{-- Heart Icon Toggle Script --}}
-        <script>
-            $(document).ready(function() {
-                // Heart icon toggle functionality
-                $('.blogs-one__heart a').on('click', function(e) {
-                    e.preventDefault();
-                    var $heartIcon = $(this).find('.icon-heart');
-                    
-                    // Toggle the active class
-                    $heartIcon.toggleClass('active');
-                    
-                    // Optional: Add animation effect
-                    if ($heartIcon.hasClass('active')) {
-                        $heartIcon.addClass('heart-beat');
-                        setTimeout(function() {
-                            $heartIcon.removeClass('heart-beat');
-                        }, 300);
-                    }
-                });
+    {{-- Heart Icon Toggle Script --}}
+    <script>
+        $(document).ready(function() {
+            // Heart icon toggle functionality
+            $('.blogs-one__heart a').on('click', function(e) {
+                e.preventDefault();
+                var $heartIcon = $(this).find('.icon-heart');
+
+                // Toggle the active class
+                $heartIcon.toggleClass('active');
+
+                // Optional: Add animation effect
+                if ($heartIcon.hasClass('active')) {
+                    $heartIcon.addClass('heart-beat');
+                    setTimeout(function() {
+                        $heartIcon.removeClass('heart-beat');
+                    }, 300);
+                }
             });
-        </script>
-
-
+        });
+    </script>
 @endsection

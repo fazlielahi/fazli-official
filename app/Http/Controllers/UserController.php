@@ -122,7 +122,11 @@ class UserController extends Controller
                 }
 
                 // Redirect based on user type/status
-                return redirect()->route('localized.admin.dashboard', ['lang' => app()->getLocale()])->with('success', 'You Are logedin.');
+                if ($user->type === 'admin') {
+                    return redirect()->route('localized.profile', ['lang' => app()->getLocale()]);
+                } else {
+                    return redirect()->route('localized.admin.dashboard', ['lang' => app()->getLocale()]);
+                }
 
             }else {
                 // Incorrect password

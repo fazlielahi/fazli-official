@@ -18,7 +18,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="d-flex flex-row-reverse">
                             <div class="page_action">
-                                <a class="btn btn-secondary" href="{{ route('localized.admin.blog-create')}}" >{{ __('lang.Post New') }}</a>
+                                <a class="btn btn-secondary" href="{{ route('localized.admin.blog-create', ['lang' => app()->getLocale()])}}" >{{ __('lang.Post New') }}</a>
                             </div>
                             <div class="p-2 d-flex">
                                 
@@ -36,10 +36,10 @@
                             <a href="javascript:void(0);">
                                 <div class="action">
                                     
-                                    <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['blog' => $blog->id]) }}"><i class="fa fa-edit"></i></a>
+                                    <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) }}"><i class="fa fa-edit"></i></a>
                                     
                                     <form id="delete-form-{{ $blog->id }}" 
-                                        action="{{ route('localized.admin.blog.destroy', ['id' => $blog->id]) }}" 
+                                        action="{{ route('localized.admin.blog.destroy', ['lang' => app()->getLocale(), $blog->id]) }}" 
                                         method="POST" 
                                         style="display:inline;">
                                         @csrf
