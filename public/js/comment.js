@@ -4,7 +4,6 @@ $(document).ready(function () {
         const blogId = $(this).data('blog-id');
 
         $('#show-comments-' + blogId).stop(true, true).slideDown('slow');
-        $('#blog-image-' + blogId).stop(true, true).slideUp('slow');
         $(this).closest('.read-comments-wrapper').fadeOut('fast');
     });
 
@@ -18,8 +17,22 @@ $(document).ready(function () {
             const blogId = blogIdMatch[1];
 
             $('#show-comments-' + blogId).hide(); // Hide comments
-            $('#blog-image-' + blogId).slideDown('fast'); // Show image again
             modal.find('.read-comments-wrapper').fadeIn('fast'); // Restore the button
+        }
+    });
+
+    // Ensure comments are hidden when modal is shown
+    $('.modal').on('shown.bs.modal', function () {
+        const modal = $(this);
+
+        // Find blog ID from modal ID (editModal{id})
+        const blogIdMatch = modal.attr('id').match(/editModal(\d+)/);
+        if (blogIdMatch) {
+            const blogId = blogIdMatch[1];
+
+            // Ensure comments are hidden
+            $('#show-comments-' + blogId).hide();
+            modal.find('.read-comments-wrapper').show();
         }
     });
 });
@@ -63,13 +76,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     const noComments = commentsList.querySelector('.no-comments');
                     if (noComments) noComments.remove();
                     commentsList.insertAdjacentHTML('afterbegin', data.html);
+                    
+                    // Show the comments list since we now have comments
+                    commentsList.style.display = 'block';
                 }
                 
                 // Update modal footer - remove "Be the first to comment!" and add "Read all comments" button
                 const modal = document.getElementById('editModal' + blogId);
                 if (modal) {
-                    const footer = modal.querySelector('.modal-footer');
-                    const firstCommentSpan = footer.querySelector('.text-light');
+                    const commentFormSection = modal.querySelector('.d-flex.justify-content-between');
+                    const firstCommentSpan = commentFormSection.querySelector('.text-light');
                     if (firstCommentSpan && firstCommentSpan.textContent.includes('Be the first to comment')) {
                         firstCommentSpan.remove();
                         const readCommentsWrapper = document.createElement('div');
@@ -79,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 Read all comments <i class="fa-solid fa-arrow-down-wide-short" style="color: #FFC224;"></i>
                             </a>
                         `;
-                        footer.insertBefore(readCommentsWrapper, footer.querySelector('div'));
+                        commentFormSection.insertBefore(readCommentsWrapper, commentFormSection.querySelector('button'));
                         
                         // Add event listener to the new button
                         const newReadBtn = readCommentsWrapper.querySelector('.read-comments-btn');
@@ -88,11 +104,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 e.preventDefault();
                                 const blogId = this.getAttribute('data-blog-id');
                                 const commentsList = document.getElementById('show-comments-' + blogId);
-                                const blogImage = document.getElementById('blog-image-' + blogId);
                                 
-                                if (commentsList && blogImage) {
+                                if (commentsList) {
                                     commentsList.style.display = 'block';
-                                    blogImage.style.display = 'none';
                                     this.closest('.read-comments-wrapper').style.display = 'none';
                                 }
                             });

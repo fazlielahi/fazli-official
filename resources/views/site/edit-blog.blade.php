@@ -1,6 +1,6 @@
 @extends('site.profile')
 
-@section('title', __('lang.Create Blog'))
+@section('title', __('lang.Edit Blog'))
 
 @section('head')
     <!-- Preload critical CSS -->
@@ -82,14 +82,6 @@
             box-shadow: 0px 0px 5px 1px #3333331f;
         }
 
-        .cke_notifications_area{
-            display: none;
-        }
-
-        #cke_1_bottom{
-            background: #0c0c0c;
-        }
-
         .col-md-10 {
             flex: 0 0 auto;
             width: 79.333333%;
@@ -105,10 +97,6 @@
             border: 1px solid;
             line-height: 23px !important;
             border-radius: 4px;
-        }
-
-        h3{
-            color: #eee;
         }
 
         input, textarea{
@@ -195,140 +183,119 @@
             display: inline-block;
             margin-right: 10px;
         }
+        
     </style>
 
     <div class="col-12 col-md-10" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
         <div class="form mb-4">
-            <h3>New Post</h3>
+            <h3>Edit Post</h3>
 
-            @if(session('success'))
-                <p style="color: #21cf8c">{{ session('success') }}</p>
-            @endif
+            <!-- display validation errors -->
+            <hr style="border-top: 1px dashed #424242; margin: 10px 0;">
 
-            @if (session('status'))
-                <span style="color:rgb(29, 89, 179);" role="alert">
-                    {{ session('status') }}
-                </span>
+            @if($errors->any())
+            <ul>
+
+                @foreach($errors->all() as $error)
+                <li style="color:red; display: block !important"> {{ $error }} </li>
+                @endforeach
+
+            </ul>
             @endif
 
             <!-- Registration form -->
 
-            <form action="{{ route('localized.admin.blog.store', ['lang' => app()->getLocale()]) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('localized.admin.blog.update', ['lang' => app()->getLocale(), $blog->id]) }}" method="post" enctype="multipart/form-data">
 
-                @csrf
-
-            <div class="row clearfix">
+                @csrf 
+                @method('PUT')
+            
+                <div class="row clearfix">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="body">
-    
-                            <div class="form-group">
-                                <label for="title">Title</label>
-                                <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-control" placeholder="Enter Blog title" />
-                                @error('title')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    <style>
-                                        #title {
-                                            border-color: rgb(160, 40, 50) !important;
-                                        }
-                                    </style>
-                                @enderror
-                            </div>
                             
-                            <div class="form-group m-t-20 m-b-20 my-2">
-                                <label for="thumb">Thumbnail</label>
-                                <input type="file" name="thumb" id="thumb" class="image-input-thumb form-control-file d-block" 
-                                style="font-size: small !important;" value="{{ old('thumb') }}" aria-describedby="fileHelp">
-                                <small id="fileHelp" class="form-text text-muted">Dimensions: 600x340</small>
-                                @error('thumb')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    <style>
-                                        #thumb {
-                                            border-color: rgb(160, 40, 50) !important;
-                                        }
-                                    </style>
-                                @enderror
-                                <div class="photo-preview-container" id="thumb-preview-container"></div>
-                            </div>
+                            {{--Display validation errors if any--}}
 
-                            <div class="form-group m-t-20 m-b-20 my-2">
-                                <label for="image">Main Image</label>
-                                <input type="file" name="image" id="image" class="image-input-main form-control-file d-block" 
-                                style="font-size: small !important;" value="{{ old('image') }}" aria-describedby="fileHelp">
-                                <small id="fileHelp" class="form-text text-muted">Dimensions: 1920x500</small>
-                                @error('image')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    <style>
-                                        #image {
-                                            border-color: rgb(160, 40, 50) !important;
-                                        }
-                                    </style>
-                                @enderror
-                                <div class="photo-preview-container" id="image-preview-container"></div>
-                            </div>
+                            @if($errors->any())
 
-                            <div class="form-group">
-                                <label for="content">Content</label>
-                                <textarea id="content" name="content">
-                                    {{ old('content') }}
-                                </textarea>
-                                @error('content')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    <style>
-                                        #content {
-                                            border-color: rgb(160, 40, 50) !important;
-                                        }
-                                    </style>
-                                @enderror
-                            </div>
+                                @foreach($errors->all() as $error)
 
-                            
-                                @if($user->type === 'super_admin')
-                                <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <select name="status" id="status" class="form-control show-tick" style="height: 36px;">
-                                        <option value="draft">{{__('lang.Draft')}}</option>
-                                        <option value="published">{{__('lang.Published')}}</option>
-                                    </select>
-                                    @error('status')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        <style>
-                                            #status {
-                                                border-color: rgb(160, 40, 50) !important;
-                                            }
-                                        </style>
-                                    @enderror
-                                </div>
-                            @else
-                                <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <select name="status" id="status" class="form-control show-tick" style="height: 36px;">
-                                        <option selected value="draft">{{__('lang.Draft')}}</option>
-                                        <option value="request">Request for review</option>
-                                    </select>
-                                    @error('status')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        <style>
-                                            #status {
-                                                border-color: rgb(160, 40, 50) !important;
-                                            }
-                                        </style>
-                                    @enderror
-                                </div>
+                                    <p class="text-danger">{{ $error }}</p>
+
+                                @endforeach
+
                             @endif
 
-                            <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">Post</button>
+                            <div class="form-group my-2">
+                                <input type="text"  name="title" value="{{ old('title', $blog->title) }}" class="form-control" placeholder="Enter Blog title" />
+                            </div>
+                            <div class="form-group my-2">
+                                <label>Change Thumbnail </label> <small id="fileHelp" class="form-text text-muted"> (Dimensions: 600x340)</small>
+                                <input type="file"  name="thumb" class="image-input-thumb form-control-file d-block" value="{{ old('image', $blog->thumb) }}"  id="exampleInputFile" aria-describedby="fileHelp">
+                                
+                                <div class="photo-preview-container" id="thumb-preview-container">
+                                    @if($blog->thumb)
+                                        <div class="preview-wrapper">
+                                            <img src="{{ asset('storage/' . $blog->thumb) }}" alt="Blog Thumbnail" class="preview-image">
+                                            <button type="button" class="remove-preview" onclick="removeCurrentThumb()">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="form-group my-2">
+                                <label>Change Main Image </label> <small id="fileHelp" class="form-text text-muted"> (Dimensions: 1920x500)</small>
+                                <input type="file"  name="image" class="image-input-main form-control-file d-block" value="{{ old('image', $blog->image) }}"  id="exampleInputFile" aria-describedby="fileHelp">
+                                
+                                <div class="photo-preview-container" id="image-preview-container">
+                                    @if($blog->image)
+                                        <div class="preview-wrapper">
+                                            <img src="{{ asset('storage/' . $blog->image) }}" alt="Blog Image" class="preview-image">
+                                            <button type="button" class="remove-preview" onclick="removeCurrentImage()">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <textarea name="content" class="my-2">
+                                {{ old('content', $blog->content) }}
+                            </textarea>
+                            
+                            @if($user->type === 'super_admin')
+                                <label class="mt-3"> Status </label>
+                                <select name="status" class="form-control show-tick">
+                                    <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
+                                    <option disabled value="request" @if($blog->status == 'request') selected @endif>Request for review</option>
+                                    <option value="published" @if($blog->status == 'published') selected @endif>{{__('lang.Published')}}</option>
+                                </select>
+                            @else
+                                @if($blog->status === 'draft')
+                                <label class="mt-3"> Status </label>
+                                <select name="status" class="form-control show-tick">
+                                    <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
+                                    <option value="request" @if($blog->status == 'request') selected @endif>Request for review</option>
+                                </select>
+                                @elseif($blog->status === 'request')
+                                    <label class="mt-3 text-danger d-block"> The blog has been requested for review! </label>
+                                    <input type="hidden" name="status" value="request">
+                                @else
+                                    <input type="hidden" name="status" value="published">
+                                @endif
+                            @endif
+                            <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">Update</button>
                         </div>
                     </div>
                 </div>            
-            </div>
-        </form>
+                </div>
+                </form>
         </div>
     </div>
 
 
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         CKEDITOR.replace('content', {
                 extraAllowedContent: 'img[width,height]{width,height}', // Allow width & height as attributes and styles
@@ -398,7 +365,34 @@
             input.value = ''; // Clear file input
             preview.innerHTML = ''; // Clear preview
         };
+
+        // Function to remove current thumbnail
+        window.removeCurrentThumb = function() {
+            // Add a hidden input to indicate thumbnail removal
+            const removeThumbInput = document.createElement('input');
+            removeThumbInput.type = 'hidden';
+            removeThumbInput.name = 'remove_thumb';
+            removeThumbInput.value = '1';
+            document.querySelector('.image-input-thumb').parentNode.appendChild(removeThumbInput);
+            
+            document.getElementById('thumb-preview-container').innerHTML = '';
+            alert('Current thumbnail will be removed on save.');
+        };
+
+        // Function to remove current main image
+        window.removeCurrentImage = function() {
+            // Add a hidden input to indicate main image removal
+            const removeImageInput = document.createElement('input');
+            removeImageInput.type = 'hidden';
+            removeImageInput.name = 'remove_image';
+            removeImageInput.value = '1';
+            document.querySelector('.image-input-main').parentNode.appendChild(removeImageInput);
+            
+            document.getElementById('image-preview-container').innerHTML = '';
+            alert('Current main image will be removed on save.');
+        };
     </script>
+
 
 @endsection
 
@@ -443,4 +437,3 @@
         });
     </script>
 @endsection
-

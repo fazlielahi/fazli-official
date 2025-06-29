@@ -92,43 +92,55 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp mb-3 blog-card" data-wow-delay=".7s">
-                        <div class="news-card-items style-2 mt-0">
-                            <div class="author-section">
-                                <div class="author-image">
-                                    <img 
-                                    src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('assets/img/user-image.png') }}"
-                                    alt="img" width="100%" class="user-image">
+ <!--Blog Two Single Start -->
+ <div class="wow fadeInLeft blog-card" data-wow-delay="100ms">
+                        <div class="blog-two__single">
+                            <div class="blog-two__img">
+                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                    <img src="{{ asset('storage/' . $blog->thumb) }}" alt="">
+                                </a>
+                                <div class="blog-two__date">
+                                    <span class="icon-calendar"></span>
+                                    <p>{{ $blog->created_at->format('F d, Y h:i A') }}</p>
                                 </div>
-                                <div class="user-name">
-                                    <h3>{{ $blog->creater->name ?? "unknown"}}</h3>
-                                    <p>{{ $blog->created_at->format('F d, Y h:i A')}}</p>
-                                </div>
-                                
-                            </div>
-                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                <div class="news-image custom-size"  style="background-image: url('{{ asset('storage/' . $blog->thumb) }}'); position: relative;">
+                                @php
+                                    $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
+                                @endphp
+                                @if(($user && $user->id == $blog->created_by))
                                     <div class="action">
-                                        
-                                        <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) }}"><i class="fa fa-edit"></i></a>
+                                        <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
                                         
                                         <form id="delete-form-{{ $blog->id }}" 
-                                            action="{{ route('localized.admin.blog.destroy', ['lang' => app()->getLocale(), $blog->id]) }}" 
-                                            method="POST" 
-                                            style="display:inline;">
+                                              action="{{ route('localized.admin.blog.destroy', ['lang' => app()->getLocale(), $blog->id]) }}" 
+                                              method="POST" 
+                                              style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-icon btn-danger" onclick="confirmDelete({{ $blog->id }})"><i class="fa fa-trash"></i></button>
+                                            <button type="button" class="btn btn-icon btn-danger" onclick="confirmDelete({{ $blog->id }})">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
                                         </form>
                                     </div>
+                                @endif
+                            </div>
+                            <div class="blog-two__content">
+                                <div class="blog-two__meta-box blog-profile">
+                                    <div class="profile-container">
+                                        <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
+                                            <img src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" alt="img" width="100%" class="profile-pic">
+                                        </a>
+                                        <span class="username">
+                                            <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
+                                                {{ $blog->creater->name ?? "unknown" }}
+                                            </a>
+                                        </span>
+                                    </div>
                                 </div>
-                            </a>
-                            <div class="news-content pt-1">
-                            
-                                <div style="display: block; font-size: 16px;">
-                                    {{ $blog->title }}
-                                </div>
-                                
+                                <h4 class="blog-two__title">
+                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
+                                </h4>
                             </div>
                         </div>
                     </div>

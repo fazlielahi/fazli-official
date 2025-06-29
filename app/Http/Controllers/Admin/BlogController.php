@@ -233,7 +233,7 @@ class BlogController extends Controller
             {
                 return view('admin.edit-blog', compact('blog', 'user'));
             }else{
-                return view('sections.edit-blog', compact('blog', 'user'));
+                return view('site.edit-blog', compact('blog', 'user'));
             }            
     }
 

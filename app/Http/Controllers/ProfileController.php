@@ -47,7 +47,7 @@ class ProfileController extends Controller
             $user = User::find($request->session()->get('user_id'));
             $locale = App::getLocale(); 
 
-            return view('sections.edit-profile', compact('user')); 
+            return view('site.edit-profile', compact('user')); 
         }
 
         public function updateProfile(Request $request)

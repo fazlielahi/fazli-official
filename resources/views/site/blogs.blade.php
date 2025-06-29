@@ -73,23 +73,23 @@
     <section class="page-header">
         <div class="page-header__bg" style="background-image: url('{{ asset('assets/images/shapes/page-header-bg-shape.png') }}');"></div>
         <div class="page-header__shape-4">
-            <img src="{{ asset('assets/images/shapes/page-header-shape-4.png') }}" alt="">
+            <img src="{{ asset('assets/images/shapes/page-header-shape-4.png') }}" >
         </div>
         <div class="page-header__shape-5">
-            <img src="{{ asset('assets/images/shapes/page-header-shape-5.png') }}" alt="">
+            <img src="{{ asset('assets/images/shapes/page-header-shape-5.png') }}" >
         </div>
         <div class="container">
             <div class="page-header__inner">
                 <div class="page-header__img">
-                    <img src="{{ asset('assets/images/resources/page-header-img-1.png') }}" alt="">
+                    <img src="{{ asset('assets/images/resources/page-header-img-1.png') }}" >
                     <div class="page-header__shape-1">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-1.png') }}" alt="">
+                        <img src="{{ asset('assets/images/shapes/page-header-shape-1.png') }}" >
                     </div>
                     <div class="page-header__shape-2">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-2.png') }}" alt="">
+                        <img src="{{ asset('assets/images/shapes/page-header-shape-2.png') }}" >
                     </div>
                     <div class="page-header__shape-3">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-3.png') }}" alt="">
+                        <img src="{{ asset('assets/images/shapes/page-header-shape-3.png') }}" >
                     </div>
                 </div>
                 <h2>{{ __('lang.Blogs Corner') }}</h2>
@@ -115,7 +115,7 @@
                             <div class="blog-grid__title-box">
                                 <h3 class="blog-grid__title">{{ __('lang.Categories') }}</h3>
                                 <div class="blog-grid__title-shape-1">
-                                    <img src="{{ asset('assets/images/shapes/blog-grid-title-shape-1.png') }}" alt="">
+                                    <img src="{{ asset('assets/images/shapes/blog-grid-title-shape-1.png') }}" >
                                 </div>
                             </div>
                             <ul class="list-unstyled blog-grid__list-item">
@@ -154,7 +154,7 @@
                             <h4 class="blog-grid__discount-title">{{ __('lang.20% Discount') }}</h4>
                             <p class="blog-grid__discount-text">{{ __('lang.is simply dummy text of the printing') }} <br> {{ __('lang.and typesetting industry') }}</p>
                             <div class="blog-grid__discount-img">
-                                <img src="{{ asset('assets/images/resources/blog-grid-discount-img-1.png') }}" alt="">
+                                <img src="{{ asset('assets/images/resources/blog-grid-discount-img-1.png') }}" >
                             </div>
                             <div class="blog-grid__discount-coupon">
                                 <p>{{ __('lang.Use Coupon') }}</p>
@@ -195,7 +195,7 @@
                         <div class="blog-two__single">
                             <div class="blog-two__img">
                                 <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                    <img src="{{ asset('storage/' . $blog->thumb) }}" alt="">
+                                    <img src="{{ asset('storage/' . $blog->thumb) }}" >
                                 </a>        
                                 <div class="blog-two__date">
                                     <span class="icon-calendar"></span>
@@ -207,8 +207,8 @@
                                     <div class="profile-container">
                                         <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
                                             <img
-                                                src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('assets/img/user-image.png') }}"
-                                                alt="img" width="100%" class="profile-pic">
+                                                src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}"
+                                                width="100%" class="profile-pic">
                                         </a>
                                         <span class="username">
                                             <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
@@ -252,93 +252,111 @@
 
                     <!-- Comment Modal -->
                     <div class="modal fade comment-modal" id="editModal{{ $blog->id }}" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog" style="max-width: 44% !important; height: 770px; overflow: auto; scroll-behavior: smooth; border-radius: 20px">
+                        <div class="modal-dialog" style="max-width: 80% !important; height: 100vh; overflow: auto; scroll-behavior: smooth; border-radius: 10px !important">
                             <form id="comment-form-{{ $blog->id }}" class="ajax-comment-form" method="POST" action="{{ route('localized.blog.comment', ['lang' => app()->getLocale(), $blog->id]) }}">
                                 @csrf
                                 <div class="modal-content bg-dark text-light">
                                     <div class="modal-header pb-0 bg-dark text-light border-secondary">
-                                        <div class="blog-two__single">
-                                            <div class="blog-two__img" id="blog-image-{{ $blog->id }}">
-                                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                                    <img src="{{ asset('storage/' . $blog->thumb) }}" alt="">
-                                                </a>        
-                                                <div class="blog-two__date">
-                                                    <span class="icon-calendar"></span>
-                                                    <p>{{ $blog->created_at->format('F d, Y h:i A')}}</p>
-                                                </div>
-                                            </div>
-                                            <div class="blog-two__content">
-                                                <div class="blog-two__meta-box blog-profile">
-                                                    <div class="profile-container">
-                                                        <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
-                                                            <img
-                                                                src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('assets/img/user-image.png') }}"
-                                                                alt="img" width="100%" class="profile-pic">
-                                                        </a>
-                                                        <span class="username">
-                                                            <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
-                                                                {{ $blog->creater->name ?? "unknown"}}
-                                                            </a>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <h4 class="blog-two__title">
-                                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
-                                                </h4>
-                                            </div>
-                                        </div>
+                                        <h5 class="modal-title">{{ __('lang.Comments') }}</h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                     </div>
-                                    <div class="modal-body bg-dark text-light">
-                                        @php 
-                                            $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
-                                        @endphp
-                                        
-                                        @if((!isset($user) || !$user) && (!Cookie::get('visiter_token') || !\App\Models\Comment::where('visiter_token', Cookie::get('visiter_token'))->exists()))
-                                            <div class="mb-3">
-                                                <label for="title{{ $blog->id }}" class="form-label text-light">{{__('lang.Your Name')}}</label>
-                                                <input type="text" class="form-control bg-secondary text-light border-0" name="name" value="{{ old('name') }}" required>
-                                            </div>
-                                        @endif
-                                        <div class="mb-3">
-                                            <textarea class="form-control bg-secondary text-light border-0" name="comment" rows="4" placeholder="{{__('lang.Add a comment')}}" required>{{ old('comment') }}</textarea>
-                                        </div>
-                                        <div class="ajax-comment-error text-danger"></div>
-                                    </div>
-                                    <div class="modal-footer bg-dark border-secondary">
-                                        @if($blog->comments->count() < 1)
-                                            <span class="text-light">{{__('lang.Be the first to comment!')}}</span>
-                                        @else
-                                            <div class="read-comments-wrapper">
-                                                <a class="read-comments-btn" href="#show-comments-{{ $blog->id }}" data-blog-id="{{ $blog->id }}" style="color: #FFC224;">
-                                                    {{__('lang.Read all comments')}} <i class="fa-solid fa-arrow-down-wide-short" style="color: #FFC224;"></i>
-                                                </a>
-                                            </div>
-                                        @endif
-                                        <div>
-                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">{{__('lang.Cancel')}}</button>
-                                            <button type="submit" class="btn btn-sm text-light" style="background-color: var(--fistudy-base);">{{__('lang.Comment')}}</button>
-                                        </div>
-                                    </div>
-
-                                    <div class="comments-list m-2" id="show-comments-{{ $blog->id }}">
-                                        @if($blog->comments->count() < 1)
-                                            <div class="no-comments">{{__('lang.Be the first to comment!')}}</div>
-                                        @else
-                                            @foreach($blog->comments->sortByDesc('created_at') as $comment)
-                                                @php $user = $comment->user; @endphp
-                                                <div class="comment-card">
-                                                    <img
-                                                        src="{{ $user && $user->photo ? asset('images/' . $user->photo) : asset('assets/img/user-image.png') }}"
-                                                        alt="img" class="user-image">
-                                                    <div class="comment-content">
-                                                        <span class="username">{{ $comment->name }}</span>
-                                                        <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>
-                                                        <div class="comment-text">{{ $comment->comment }}</div>
+                                    <div class="modal-body bg-dark text-light p-0">
+                                        <div class="row g-0 h-100">
+                                            <!-- Left Side - Blog Post -->
+                                            <div class="col-md-6 border-end border-secondary">
+                                                <div class="p-3">
+                                                    <div class="blog-two__single">
+                                                        <div class="blog-two__img" id="blog-image-{{ $blog->id }}">
+                                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                                                <img src="{{ asset('storage/' . $blog->thumb) }}"  class="img-fluid rounded">
+                                                            </a>        
+                                                            <div class="blog-two__date">
+                                                                <span class="icon-calendar"></span>
+                                                                <p>{{ $blog->created_at->format('F d, Y h:i A')}}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="blog-two__content">
+                                                            <div class="blog-two__meta-box blog-profile">
+                                                                <div class="profile-container">
+                                                                    <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
+                                                                        <img
+                                                                            src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}"
+                                                                             width="100%" class="profile-pic">
+                                                                    </a>
+                                                                    <span class="username">
+                                                                        <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
+                                                                            {{ $blog->creater->name ?? "unknown"}}
+                                                                        </a>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <h4 class="blog-two__title">
+                                                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
+                                                            </h4>
+                                                            <p class="blog-two__text"> 
+                                                                {{ Str::limit(html_entity_decode(strip_tags($blog->content)), 150) }} 
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            @endforeach
-                                        @endif
+                                            </div>
+                                            
+                                            <!-- Right Side - Comments Section -->
+                                            <div class="col-md-6">
+                                                <div class="d-flex flex-column h-100">
+                                                    <!-- Comment Form -->
+                                                    <div class="p-3 border-bottom border-secondary">
+                                                        @php 
+                                                            $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
+                                                        @endphp
+                                                        
+                                                        @if((!isset($user) || !$user) && (!Cookie::get('visiter_token') || !\App\Models\Comment::where('visiter_token', Cookie::get('visiter_token'))->exists()))
+                                                            <div class="mb-3">
+                                                                <label for="title{{ $blog->id }}" class="form-label text-light">{{__('lang.Your Name')}}</label>
+                                                                <input type="text" class="form-control bg-secondary text-light border-0" name="name" value="{{ old('name') }}" required>
+                                                            </div>
+                                                        @endif
+                                                        <div class="mb-3">
+                                                            <textarea class="form-control bg-secondary text-light border-0" name="comment" rows="3" placeholder="{{__('lang.Add a comment')}}" required>{{ old('comment') }}</textarea>
+                                                        </div>
+                                                        <div class="ajax-comment-error text-danger"></div>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            @if($blog->comments->count() < 1)
+                                                                <span class="text-light">{{__('lang.Be the first to comment!')}}</span>
+                                                            @else
+                                                                <div class="read-comments-wrapper">
+                                                                    <a class="read-comments-btn" href="#show-comments-{{ $blog->id }}" data-blog-id="{{ $blog->id }}" style="color: #FFC224;">
+                                                                        {{__('lang.Read all comments')}} <i class="fa-solid fa-arrow-down-wide-short" style="color: #FFC224;"></i>
+                                                                    </a>
+                                                                </div>
+                                                            @endif
+                                                            <button type="submit" class="btn btn-sm text-light" style="background-color: var(--fistudy-base);">{{__('lang.Comment')}}</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Comments List -->
+                                                    <div class="comments-list flex-grow-1 p-3" id="show-comments-{{ $blog->id }}" style="display: none;">
+                                                        @if($blog->comments->count() < 1)
+                                                            <div class="no-comments">{{__('lang.Be the first to comment!')}}</div>
+                                                        @else
+                                                            @foreach($blog->comments->sortByDesc('created_at') as $comment)
+                                                                @php $user = $comment->user; @endphp
+                                                                <div class="comment-card">
+                                                                    <img
+                                                                        src="{{ $user && $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
+                                                                         class="user-image">
+                                                                    <div class="comment-content">
+                                                                        <span class="username">{{ $comment->name }}</span>
+                                                                        <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>
+                                                                        <div class="comment-text">{{ $comment->comment }}</div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
