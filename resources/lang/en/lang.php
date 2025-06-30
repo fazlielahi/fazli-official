@@ -177,7 +177,7 @@ return [
     'testimonial_hamza_title' => 'Autocad Draftsman at Samaa Engineering Consultation Co.',
     'testimonial_hamza_text' => 'Fazli has a great ability to break down technical concepts for non-developers like me. As a draftsman, I appreciated how clearly they communicated and how quickly they delivered results. Smart, adaptable, and very easy to work with.',
     'From Concepts to Live Projects' => 'From Concepts to Live Projects',
-    'See What I\'ve Built.' => 'See What I\'ve Built.',
+    'See What I\'ve Built.' => 'See <span style="color: #fff"> What I\'ve Built. </span>',
     'Completed!' => 'Completed!',
     'Ongoing!' => 'Ongoing!',
     'Read More' => 'Read More',

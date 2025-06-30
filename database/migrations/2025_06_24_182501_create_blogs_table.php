@@ -16,8 +16,8 @@ class CreateBlogsTable extends Migration
             $table->text('created_by')->nullable();
             $table->string('title', 255);
             $table->text('content');
-            $table->text('image')->nullable();
-            $table->text('thumb')->nullable();
+            $table->text('image')->nullable()->default('blog-default.jpg');
+            $table->text('thumb')->nullable()->default('blog-thumb-default.jpg');;
             $table->enum('status', ['published', 'draft', 'request', 'rejected']);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
@@ -25,6 +25,7 @@ class CreateBlogsTable extends Migration
             $table->timestamp('approved_at')->nullable();
             $table->text('approval_message')->nullable();
             $table->text('rejection_message')->nullable();
+            $table->unsignedBigInteger('rejected_by')->nullable();
         });
     }
 

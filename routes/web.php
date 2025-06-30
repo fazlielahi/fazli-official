@@ -31,7 +31,7 @@ Route::group([
     Route::get('/about', [AboutController::class, 'index'])->name('about');
 
     //Blogs
-    Route::get('/blogs', [BlogsController::class, 'blog'])->name('blogs');
+    Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs');
     Route::get('/blogs-details/{blog}', [BlogsController::class, 'blogDetails'])->name('blog-details');
 
     // like and comment
@@ -52,7 +52,7 @@ Route::group([
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile-update');
     Route::get('/profile/request-blogs', [BlogController::class, 'requestBlogs'])->name('profile-request-blogs');
     Route::get('/profile/draft-blogs', [BlogController::class, 'draftBlogs'])->name('profile-draft-blogs');
-    Route::get('/profile/rejected-blogs', [BlogController::class, 'rejectedBlogs'])->name('profile-rejected-blogs');
+    Route::get('/profile/rejected-blogs', [BlogsController::class, 'rejectedBlogs'])->name('profile-rejected-blogs');
     Route::get('/create-blog', [BlogController::class, 'create'])->name('blog-create');
 
     // show blogs of user whose profile is cliked

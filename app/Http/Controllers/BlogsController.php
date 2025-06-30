@@ -15,7 +15,7 @@ use Illuminate\Http\JsonResponse;
 
 class BlogsController extends Controller
 {
-    public function blog(Request $request){
+    public function index(Request $request){
 
         $blogs = Blog::where('status', 'published')->get();
 
@@ -33,7 +33,7 @@ class BlogsController extends Controller
         $user = User::find($request->session()->get('user_id'));
 
         $blogs = Blog::all()->where('status', 'rejected'); 
-        return view('sections.rejected_blogs', compact('blogs', 'user'));
+        return view('site.rejected_blogs', compact('blogs', 'user'));
     }
 
     public function blogDetails($locale, $id)

@@ -1994,7 +1994,11 @@
 
 .comment-modal .modal-header {
     border-bottom: 1px solid #333;
-    padding: 1rem 1.5rem;
+    padding: 1rem 25px;
+}
+
+.comment-modal .modal-header .modal-title{
+    color: white !important;
 }
 
 .comment-modal .modal-body {
@@ -2007,6 +2011,7 @@
 
 .comment-modal .border-end {
     border-color: #333 !important;
+    width: 45% !important;
 }
 
 .comment-modal .blog-two__img img {
@@ -2020,11 +2025,17 @@
     font-size: 0.95rem;
     line-height: 1.6;
     margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .comment-modal .flex-grow-1 {
     overflow-y: auto;
-    max-height: calc(80vh - 200px);
+    max-height: 100%;
+    margin: 30px 0 !important;
+}
+
+.comment-row{
+    justify-content: space-around;
 }
 
 /* Responsive adjustments */
@@ -2057,6 +2068,20 @@
     background: #24242480;
     padding: 12px;
     border-radius: 5px;
+}
+
+@media screen and (min-width: 1400px){
+    .comment-modal .blog-two__img{
+        height: 300px !important;
+    }
+
+    .main-banner{
+        width: 100% !important;
+    }
+
+    .main-banner-container{
+        max-width: 1500px !important;
+    }
 }
 
 /*--------------------------------------------------------------

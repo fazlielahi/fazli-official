@@ -77,7 +77,7 @@
             <section class="banner-one" style="padding-top: 50px !important">
         
                 
-                <div class="container">
+                <div class="container main-banner-container">
                     <div class="row main-banner">
                         <div class="col-xl-6">
                             <div class="banner-one__left">
@@ -876,7 +876,7 @@
                         <div class="section-title__tagline-shape"></div>
                         <span class="section-title__tagline" id="portfolio-sec">{{ __('lang.Portfolio') }}</span>
                     </div>
-                    <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.From Concepts to Live Projects') }} <br> {{ __('lang.See What I\'ve Built.') }} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></h2>
+                    <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.From Concepts to Live Projects') }} <br>  {!! __('lang.See What I\'ve Built.') !!} </sapn> <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></h2>
                 </div>
                 <div class="blog-one__carousel owl-theme owl-carousel">
                     <!-- Blog One Single Start -->

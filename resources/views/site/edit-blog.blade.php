@@ -264,14 +264,7 @@
                                 {{ old('content', $blog->content) }}
                             </textarea>
                             
-                            @if($user->type === 'super_admin')
-                                <label class="mt-3"> Status </label>
-                                <select name="status" class="form-control show-tick">
-                                    <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
-                                    <option disabled value="request" @if($blog->status == 'request') selected @endif>Request for review</option>
-                                    <option value="published" @if($blog->status == 'published') selected @endif>{{__('lang.Published')}}</option>
-                                </select>
-                            @else
+
                                 @if($blog->status === 'draft')
                                 <label class="mt-3"> Status </label>
                                 <select name="status" class="form-control show-tick">
@@ -281,10 +274,15 @@
                                 @elseif($blog->status === 'request')
                                     <label class="mt-3 text-danger d-block"> The blog has been requested for review! </label>
                                     <input type="hidden" name="status" value="request">
-                                @else
-                                    <input type="hidden" name="status" value="published">
+                                @elseif($blog->status === 'rejected')
+                                <label class="mt-3"> Status </label>
+                                <select name="status" class="form-control show-tick">
+                                    <option value="rejected" @if($blog->status == 'rejected') selected @endif>{{__('lang.Keep as Rejected')}}</option>
+                                    <option value="request" @if($blog->status == 'request') selected @endif>Request for review</option>
+                                    <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
+                                </select>
                                 @endif
-                            @endif
+
                             <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">Update</button>
                         </div>
                     </div>

@@ -145,7 +145,7 @@ return [
     'testimonial_hamza_title' => 'رسام أوتوكاد في شركة سما للاستشارات الهندسية',
     'testimonial_hamza_text' => 'يمتلك فظلي قدرة رائعة على تبسيط المفاهيم التقنية لغير المطورين مثلي. كرسام، قدرت مدى وضوح تواصله وسرعة إنجازه. ذكي، متكيف، وسهل التعامل للغاية.',
     'From Concepts to Live Projects' => 'من الأفكار إلى المشاريع الحية',
-    'See What I\'ve Built.' => 'شاهد ما أنجزته.',
+    'See What I\'ve Built.' => 'شاهد <span style="color: #fff">ما أنجزته. </span>',
     'Completed!' => 'تم الإنجاز!',
     'Ongoing!' => 'قيد التنفيذ!',
     'Read More' => 'اقرأ المزيد',

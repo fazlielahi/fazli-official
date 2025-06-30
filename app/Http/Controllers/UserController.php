@@ -65,6 +65,8 @@ class UserController extends Controller
             $photoName = time() . '.' . $photo->getClientOriginalExtension();
             $photo->move(public_path('images'), $photoName);
             $user->photo = $photoName;
+        } else {
+            $user->photo = 'images/default.png';
         }
 
         // Flash the success message to the session

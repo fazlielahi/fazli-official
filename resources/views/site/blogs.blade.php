@@ -165,6 +165,7 @@
                 </div>
             </div>
             <div class="blogs-section">
+                @if($blogs->count() > 0)
                 @foreach($blogs->sortByDesc('id') as $blog)
                     <!-- Share Modal -->
                     <div class="modal fade" id="shareModalTest" tabindex="-1">
@@ -251,11 +252,11 @@
                     </div>
 
                     <!-- Comment Modal -->
-                    <div class="modal fade comment-modal" id="editModal{{ $blog->id }}" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog" style="max-width: 80% !important; height: 100vh; overflow: auto; scroll-behavior: smooth; border-radius: 10px !important">
+                    <div class="modal fade comment-modal" id="editModal{{ $blog->id }}" tabindex="-1" aria-hidden="true" style="height: 100vh; overflow: hidden">
+                        <div class="modal-dialog modal-fullscreen" style="height: 100vh; max-width: 80% !important; margin: 0 auto;">
                             <form id="comment-form-{{ $blog->id }}" class="ajax-comment-form" method="POST" action="{{ route('localized.blog.comment', ['lang' => app()->getLocale(), $blog->id]) }}">
                                 @csrf
-                                <div class="modal-content bg-dark text-light">
+                                <div class="modal-content bg-dark text-light" style="height: 100vh; display: flex; flex-direction: column;">
                                     <div class="modal-header pb-0 bg-dark text-light border-secondary">
                                         <h5 class="modal-title">{{ __('lang.Comments') }}</h5>
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -293,9 +294,6 @@
                                                             <h4 class="blog-two__title">
                                                                 <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
                                                             </h4>
-                                                            <p class="blog-two__text"> 
-                                                                {{ Str::limit(html_entity_decode(strip_tags($blog->content)), 150) }} 
-                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -340,17 +338,32 @@
                                                             <div class="no-comments">{{__('lang.Be the first to comment!')}}</div>
                                                         @else
                                                             @foreach($blog->comments->sortByDesc('created_at') as $comment)
+
                                                                 @php $user = $comment->user; @endphp
-                                                                <div class="comment-card">
-                                                                    <img
-                                                                        src="{{ $user && $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
-                                                                         class="user-image">
-                                                                    <div class="comment-content">
-                                                                        <span class="username">{{ $comment->name }}</span>
-                                                                        <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>
-                                                                        <div class="comment-text">{{ $comment->comment }}</div>
+                                                                @if($user)
+                                                                    <div class="comment-card">
+                                                                        <img
+                                                                            src="{{ $user && $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
+                                                                            class="user-image">
+                                                                        <div class="comment-content">
+                                                                            <span class="username">{{ $comment->name }}</span>
+                                                                            <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>
+                                                                            <div class="comment-text">{{ $comment->comment }}</div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
+                                                                @else
+                                                                    <div class="comment-card">
+                                                                        <img
+                                                                            src="{{ $comment && $comment->photo ? asset('images/' . $comment->photo) : asset('images/default.png') }}"
+                                                                            class="user-image">
+                                                                        <div class="comment-content">
+                                                                            <span class="username">{{ $comment->name }}</span>
+                                                                            <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>
+                                                                            <div class="comment-text">{{ $comment->comment }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+
                                                             @endforeach
                                                         @endif
                                                     </div>
@@ -363,6 +376,15 @@
                         </div>
                     </div>
                 @endforeach
+                @else
+                <div class="col-12 text-center py-5">
+                    <div class="no-blogs-message">
+                        <i class="fas fa-blog fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">{{ __('lang.No blogs uploaded yet') }} </h4>
+                        <p class="text-muted">{{ __('lang.There are no blogs available at the moment.') }}</p>
+                    </div>
+                </div>
+            @endif
             </div>
         </div>
     </section>

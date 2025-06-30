@@ -19,7 +19,6 @@ class BlogController extends Controller
             return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
         }
 
-        auth()->check();
         $user = User::find($request->session()->get('user_id'));
 
         if($user->type === 'super_admin')
@@ -93,7 +92,6 @@ class BlogController extends Controller
             return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
         }
 
-        auth()->check();
         $user = User::find($request->session()->get('user_id'));
 
         $blogs = Blog::all()->whereIn('status', ['request', 'draft']);
@@ -113,7 +111,6 @@ class BlogController extends Controller
             return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
         }
 
-        auth()->check();
         $user = User::find($request->session()->get('user_id'));
 
         $blogs = Blog::all()->where('status', 'draft');     
@@ -128,8 +125,6 @@ class BlogController extends Controller
             return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
         }
         
-        // auth()->user();
-        auth()->check();
         $user = User::find($request->session()->get('user_id'));
             if($user->type === 'super_admin')
             {
@@ -166,11 +161,15 @@ class BlogController extends Controller
         if($request->hasFile('image')){
             $image = $request->file('image');
             $imagePath = $image->store('uploads', 'public');
+        } else {
+            $imagePath = 'blog-default.jpg';
         }
 
         if($request->hasFile('thumb')){
             $thumb = $request->file('thumb');
             $thumbPath = $thumb->store('uploads', 'public');
+        } else {
+            $thumbPath = 'blog-thumb-default.jpg';
         }
         
         // dd($request->session()->get('user_id'));
@@ -219,8 +218,6 @@ class BlogController extends Controller
 
         $blog = Blog::findOrFail($id);
 
-          // auth()->user();
-        auth()->check();
         $user = User::find($request->session()->get('user_id'));
 
         // check if user is allowed to edit this blog
@@ -294,7 +291,6 @@ class BlogController extends Controller
             'status' => $request->status,
         ]);
 
-        auth()->check();
         $user = User::find($request->session()->get('user_id'));
 
         if($user->type === 'super_admin')
@@ -332,7 +328,6 @@ class BlogController extends Controller
 
         $blog->delete();
 
-        auth()->check();
         $user = User::find($request->session()->get('user_id'));
 
         if($user->type === 'super_admin')

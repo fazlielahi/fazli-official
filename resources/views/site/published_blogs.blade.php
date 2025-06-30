@@ -169,17 +169,17 @@
                 </div>
 
                 <!-- Comment Modal -->
-                <div class="modal fade comment-modal" id="editModal{{ $blog->id }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog" style="max-width: 80% !important; height: 100vh; overflow: auto; scroll-behavior: smooth; border-radius: 10px !important">
+                <div class="modal fade comment-modal" id="editModal{{ $blog->id }}" tabindex="-1" aria-hidden="true" style="height: 100vh; overflow: hidden">
+                    <div class="modal-dialog modal-fullscreen" style="height: 100vh; max-width: 80% !important; margin: 0 auto;">
                         <form id="comment-form-{{ $blog->id }}" class="ajax-comment-form" method="POST" action="{{ route('localized.blog.comment', ['lang' => app()->getLocale(), $blog->id]) }}">
                             @csrf
-                            <div class="modal-content bg-dark text-light">
+                            <div class="modal-content bg-dark text-light" style="height: 100vh; display: flex; flex-direction: column;">
                                 <div class="modal-header pb-0 bg-dark text-light border-secondary">
                                     <h5 class="modal-title">{{ __('lang.Comments') }}</h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body bg-dark text-light p-0">
-                                    <div class="row g-0 h-100">
+                                    <div class="row g-0 h-100 comment-row">
                                         <!-- Left Side - Blog Post -->
                                         <div class="col-md-6 border-end border-secondary">
                                             <div class="p-3">
@@ -212,7 +212,10 @@
                                                             <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
                                                         </h4>
                                                         <p class="blog-two__text"> 
-                                                            {{ Str::limit(html_entity_decode(strip_tags($blog->content)), 150) }} 
+                                                            {{ Str::limit(html_entity_decode(strip_tags($blog->content)), 350) }} 
+                                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}" class="link-btn">
+                                                                Read! <span class="icon-clock"></span>
+                                                            </a>
                                                         </p>
                                                     </div>
                                                 </div>

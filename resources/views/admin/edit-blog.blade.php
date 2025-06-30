@@ -78,7 +78,9 @@
                                 {{ old('content', $blog->content) }}
                             </textarea>
                             
-                                @if($blog->status != 'published')
+                                @if($blog->status == 'published')
+                                    <input type="hidden" name="status" value="published" />
+                                @else
                                     <label class="mt-3">{{ __('lang.Status') }}</label>
                                     <select name="status" class="form-control show-tick">
                                         <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>

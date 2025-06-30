@@ -1,6 +1,6 @@
 <div class="comment-card">
     <img
-        src="{{ $user && $user->photo ? asset('images/' . $user->photo) : asset('assets/img/user-image.png') }}"
+        src="{{ $user && $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
         alt="img" class="user-image">
     <div class="comment-content">
         <span class="username">{{ $comment->name }}</span>
