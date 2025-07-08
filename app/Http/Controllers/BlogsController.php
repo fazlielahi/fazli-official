@@ -40,7 +40,7 @@ class BlogsController extends Controller
     {
         $blog = Blog::findOrFail($id);
         $popular_blogs = Blog::where('id', '!=', $id)->where('status', 'published')->latest()->take(10)->get();
-        return view('sections.blog-details_en', compact('blog', 'popular_blogs'));
+        return view('site.blog-details', compact('blog', 'popular_blogs'));
     }
 
     //comment on blog post

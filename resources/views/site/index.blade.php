@@ -74,9 +74,7 @@
     <div class="page-wrapper">
         <main>
             <!-- Banner One Start -->
-            <section class="banner-one" style="padding-top: 50px !important">
-        
-                
+            <section class="banner-one" style="padding-top: 0px !important">            
                 <div class="container main-banner-container">
                     <div class="row main-banner">
                         <div class="col-xl-6">
