@@ -43,13 +43,22 @@
                 </li>
             </ul>
         </div>
-        <div class="header-button">
+        <div class="header-button d-flex align-items-center">
+            <!-- Theme Toggle -->
+            <div class="theme-toggle-container">
+                <span class="theme-toggle-label d-none d-md-inline">{{ __('lang.Theme') }}</span>
+                <div class="theme-toggle" data-theme="dark">
+                    <i class="fas fa-sun icon sun-icon"></i>
+                    <i class="fas fa-moon icon moon-icon"></i>
+                </div>
+            </div>
+            
             @php 
                 $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
             @endphp
 
             @if($user)
-                <div class="dropdown">
+                <div class="dropdown ms-3">
                     <button class="btn dropdown-toggle d-flex align-items-center justify-content-between w-100" 
                             style="background-color:rgb(238, 238, 238);min-width: 159px !important; color: #444; justify-content: flex-end !important;"
                             type="button" id="userDropdown" 
@@ -79,10 +88,10 @@
                     </ul>
                 </div>
             @else
-                <a href="{{ route('localized.register', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 text-light">
+                <a href="{{ route('localized.register', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 text-light ms-3">
                     <i class="fas fa-user-plus me-1"></i>Sign Up
                 </a>
-                <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 text-light">
+                <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 text-light ms-2">
                     <i class="fas fa-sign-in-alt me-1"></i>Login
                 </a>
             @endif

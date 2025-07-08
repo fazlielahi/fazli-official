@@ -66,6 +66,9 @@
     <!-- Template styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
+    
+    <!-- Theme styles -->
+    <link rel="stylesheet" href="{{ asset('styles/theme.css') }}" />
 @endsection
 
 @section('content')

@@ -1,0 +1,398 @@
+/* Theme Management System - Light Mode Only */
+:root {
+  /* Light Mode Variables */
+  --light-bg-primary: #ffffff;
+  --light-bg-secondary: #f8f9fa;
+  --light-bg-tertiary: #e9ecef;
+  --light-text-primary: #212529;
+  --light-text-secondary: #6c757d;
+  --light-text-muted: #adb5bd;
+  --light-border: #dee2e6;
+  --light-border-light: #f1f3f4;
+  --light-shadow: rgba(0, 0, 0, 0.1);
+  --light-shadow-light: rgba(0, 0, 0, 0.05);
+  --light-card-bg: #ffffff;
+  --light-navbar-bg: rgba(255, 255, 255, 0.95);
+  --light-modal-bg: #ffffff;
+  --light-input-bg: #ffffff;
+  --light-input-border: #ced4da;
+  --light-input-text: #495057;
+}
+
+/* Light mode only - your existing dark mode styles remain unchanged */
+body[data-theme="light"] {
+  background-color: var(--light-bg-primary);
+  color: var(--light-text-primary);
+  background-image: none !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: relative;
+  width: 50px;
+  height: 25px;
+  background: #2a2a2a;
+  border-radius: 25px;
+  border: 2px solid #495057;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  background: var(--fistudy-base);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  left: 2px;
+}
+
+.theme-toggle[data-theme="light"]::before {
+  transform: translateX(25px);
+}
+
+.theme-toggle .icon {
+  position: absolute;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.theme-toggle .sun-icon {
+  left: 6px;
+  color: #ffd700;
+  opacity: 0;
+}
+
+.theme-toggle .moon-icon {
+  right: 6px;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.theme-toggle[data-theme="light"] .sun-icon {
+  opacity: 1;
+}
+
+.theme-toggle[data-theme="light"] .moon-icon {
+  opacity: 0;
+}
+
+/* Light mode specific styles */
+body[data-theme="light"] .navbar {
+  background-color: var(--light-navbar-bg) !important;
+  border-bottom: 1px solid var(--light-border);
+}
+
+body[data-theme="light"] .navbar-nav .nav-item a {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .navbar-nav .nav-item a:hover {
+  color: var(--fistudy-base) !important;
+}
+
+body[data-theme="light"] .navbar-nav .nav-item a.active {
+  color: var(--fistudy-base) !important;
+}
+
+/* Cards and containers */
+body[data-theme="light"] .card, 
+body[data-theme="light"] .blog-two__single, 
+body[data-theme="light"] .blog-grid__single {
+  background-color: var(--light-card-bg) !important;
+  border: 1px solid var(--light-border);
+  box-shadow: 0 2px 8px var(--light-shadow-light);
+}
+
+/* Forms */
+body[data-theme="light"] .form-control, 
+body[data-theme="light"] input, 
+body[data-theme="light"] textarea, 
+body[data-theme="light"] select {
+  background-color: var(--light-input-bg) !important;
+  border: 1px solid var(--light-input-border) !important;
+  color: var(--light-input-text) !important;
+}
+
+body[data-theme="light"] .form-control:focus, 
+body[data-theme="light"] input:focus, 
+body[data-theme="light"] textarea:focus, 
+body[data-theme="light"] select:focus {
+  border-color: var(--fistudy-base) !important;
+  box-shadow: 0 0 0 0.2rem rgba(29, 163, 112, 0.25) !important;
+}
+
+/* Modals */
+body[data-theme="light"] .modal-content {
+  background-color: var(--light-modal-bg) !important;
+  border: 1px solid var(--light-border);
+}
+
+body[data-theme="light"] .modal-header {
+  border-bottom: 1px solid var(--light-border);
+}
+
+body[data-theme="light"] .modal-footer {
+  border-top: 1px solid var(--light-border);
+}
+
+/* Dropdowns */
+body[data-theme="light"] .dropdown-menu {
+  background-color: var(--light-card-bg) !important;
+  border: 1px solid var(--light-border);
+  box-shadow: 0 4px 12px var(--light-shadow);
+}
+
+body[data-theme="light"] .dropdown-item {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .dropdown-item:hover {
+  background-color: var(--light-bg-secondary) !important;
+  color: var(--light-text-primary) !important;
+}
+
+/* Buttons */
+body[data-theme="light"] .btn-light {
+  background-color: var(--light-bg-secondary) !important;
+  border-color: var(--light-border) !important;
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .btn-light:hover {
+  background-color: var(--light-bg-tertiary) !important;
+  border-color: var(--light-border) !important;
+  color: var(--light-text-primary) !important;
+}
+
+/* Text colors */
+body[data-theme="light"] h1, 
+body[data-theme="light"] h2, 
+body[data-theme="light"] h3, 
+body[data-theme="light"] h4, 
+body[data-theme="light"] h5, 
+body[data-theme="light"] h6 {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] p, 
+body[data-theme="light"] span, 
+body[data-theme="light"] div {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .text-muted {
+  color: var(--light-text-muted) !important;
+}
+
+/* Borders */
+body[data-theme="light"] .border, 
+body[data-theme="light"] .border-top, 
+body[data-theme="light"] .border-bottom, 
+body[data-theme="light"] .border-left, 
+body[data-theme="light"] .border-right {
+  border-color: var(--light-border) !important;
+}
+
+/* Shadows */
+body[data-theme="light"] .shadow {
+  box-shadow: 0 0.5rem 1rem var(--light-shadow) !important;
+}
+
+body[data-theme="light"] .shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem var(--light-shadow-light) !important;
+}
+
+/* Background utilities */
+body[data-theme="light"] .bg-light {
+  background-color: var(--light-bg-secondary) !important;
+}
+
+body[data-theme="light"] .bg-dark {
+  background-color: var(--light-bg-primary) !important;
+}
+
+/* Blog specific theme styles */
+body[data-theme="light"] .blog-two__content h4 a {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .blog-two__text {
+  color: var(--light-text-secondary) !important;
+}
+
+body[data-theme="light"] .blog-two__meta-box {
+  color: var(--light-text-secondary) !important;
+}
+
+body[data-theme="light"] .blog-two__meta li a {
+  color: var(--light-text-secondary) !important;
+}
+
+body[data-theme="light"] .blog-two__meta li a:hover {
+  color: var(--fistudy-base) !important;
+}
+
+body[data-theme="light"] .blog-grid__title {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .blog-grid__list-text {
+  color: var(--light-text-secondary) !important;
+}
+
+body[data-theme="light"] .blog-grid__discount {
+  background-color: var(--light-bg-secondary) !important;
+}
+
+body[data-theme="light"] .blog-grid__discount-title {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .blog-grid__discount-text {
+  color: var(--light-text-secondary) !important;
+}
+
+/* Page header theme styles */
+body[data-theme="light"] .page-header {
+  background-color: var(--light-bg-secondary) !important;
+}
+
+body[data-theme="light"] .page-header h2 {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .thm-breadcrumb li a {
+  color: var(--light-text-secondary) !important;
+}
+
+body[data-theme="light"] .thm-breadcrumb li span {
+  color: var(--light-text-muted) !important;
+}
+
+/* Comment modal theme styles */
+body[data-theme="light"] .comment-modal .modal-content {
+  background-color: var(--light-modal-bg) !important;
+}
+
+body[data-theme="light"] .comment-modal .modal-header {
+  background-color: var(--light-bg-secondary) !important;
+  border-bottom: 1px solid var(--light-border) !important;
+}
+
+body[data-theme="light"] .comment-modal .modal-body {
+  background-color: var(--light-modal-bg) !important;
+}
+
+body[data-theme="light"] .comment-modal .border-secondary {
+  border-color: var(--light-border) !important;
+}
+
+body[data-theme="light"] .comment-modal .text-light {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .comment-modal .bg-secondary {
+  background-color: var(--light-bg-secondary) !important;
+}
+
+body[data-theme="light"] .comment-modal .bg-dark {
+  background-color: var(--light-bg-primary) !important;
+}
+
+/* Profile and user elements */
+body[data-theme="light"] .profile-container .username a {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .comment-card .username {
+  color: var(--light-text-primary) !important;
+}
+
+body[data-theme="light"] .comment-card .comment-text {
+  color: var(--light-text-secondary) !important;
+}
+
+body[data-theme="light"] .comment-card .timestamp {
+  color: var(--light-text-muted) !important;
+}
+
+/* Theme toggle container */
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.theme-toggle-label {
+  font-size: 12px;
+  color: #e9ecef;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+/* Responsive theme toggle */
+@media (max-width: 768px) {
+  .theme-toggle-container {
+    margin-left: 10px;
+  }
+  
+  .theme-toggle {
+    width: 45px;
+    height: 22px;
+  }
+  
+  .theme-toggle::before {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .theme-toggle[data-theme="light"]::before {
+    transform: translateX(23px);
+  }
+  
+  .theme-toggle .icon {
+    font-size: 10px;
+  }
+  
+  .theme-toggle .sun-icon {
+    left: 5px;
+  }
+  
+  .theme-toggle .moon-icon {
+    right: 5px;
+  }
+}
+
+/* Animation for theme transition */
+.theme-toggle {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hover effects */
+.theme-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+} 
