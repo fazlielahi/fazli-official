@@ -198,6 +198,7 @@ return [
     'Welcome' => 'Welcome',
     'My Profile' => 'My Profile',
     'Logout' => 'Logout',
+    'Theme' => 'Theme',
     'Menu' => 'Menu',
     'Website' => 'Website',
     'Dashboard' => 'Dashboard',

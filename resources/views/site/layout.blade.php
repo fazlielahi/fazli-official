@@ -10,6 +10,7 @@
     @yield('meta')
 
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/theme.css') }}">
     
     @php $locale = app()->getLocale(); @endphp
     
@@ -56,6 +57,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('js/theme.js') }}"></script>
     <script src="{{ asset('js/like.js') }}"></script>
     <script src="{{ asset('js/comment.js') }}"></script>
     <script src="{{ asset('js/share-blog.js') }}"></script>
