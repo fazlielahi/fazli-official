@@ -72,39 +72,32 @@
 @endsection
 
 @section('content')
+
     <!--Page Header Start-->
     <section class="page-header">
-        <div class="page-header__bg" style="background-image: url('{{ asset('assets/images/shapes/page-header-bg-shape.png') }}');"></div>
-        <div class="page-header__shape-4">
-            <img src="{{ asset('assets/images/shapes/page-header-shape-4.png') }}" >
-        </div>
-        <div class="page-header__shape-5">
-            <img src="{{ asset('assets/images/shapes/page-header-shape-5.png') }}" >
-        </div>
-        <div class="container">
-            <div class="page-header__inner">
-                <div class="page-header__img">
-                    <img src="{{ asset('assets/images/resources/page-header-img-1.png') }}" >
-                    <div class="page-header__shape-1">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-1.png') }}" >
+    <div class="breadcrumb-wrapper bg-cover">
+                <div class="container">
+                    <div class="page-heading">
+                        <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('lang.Blogs Corner') }}</h1>
+                        <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
+                            <li>
+                                <a href="{{ route('localized.home', ['lang' => app()->getLocale()])}}">
+                                    {{ __('lang.Home')}}
+                                </a>
+                            </li>
+                            <li>
+                                <i class="fas fa-chevron-right"></i>
+                            </li>
+                            <li>
+                                {{ __('lang.Blogs')}}
+                            </li>
+                        </ul>
                     </div>
-                    <div class="page-header__shape-2">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-2.png') }}" >
+                    <div class="blog-image-container">
+                        <img src="" width="100%"/>
                     </div>
-                    <div class="page-header__shape-3">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-3.png') }}" >
-                    </div>
-                </div>
-                <h2>{{ __('lang.Blogs Corner') }}</h2>
-                <div class="thm-breadcrumb__box">
-                    <ul class="thm-breadcrumb list-unstyled">
-                        <li><a href="{{ url('/') }}">{{ __('lang.Home') }}</a></li>
-                        <li><span>//</span></li>
-                        <li>{{ __('lang.Blofs') }}</li>
-                    </ul>
                 </div>
             </div>
-        </div>
     </section>
     <!--Page Header End-->
 
@@ -171,41 +164,44 @@
                 @if($blogs->count() > 0)
                 @foreach($blogs->sortByDesc('id') as $blog)
                     <!-- Share Modal -->
+                    <!-- Share Modal -->
                     <div class="modal fade" id="shareModalTest" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered" style="max-width: 320px;">
-                            <div class="modal-content">
+                            <div class="modal-content share-modal">
                                 <div class="modal-header">
                                     <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
-                                <div id="copyMessage" style="color: #1da370; display:none; position: absolute; top: 85px; right: 27px; background: #f8f9fa; padding: 8px 12px; border-radius: 6px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); z-index: 1000;">{{ __('lang.Link copied!') }}</div>
-
-                                <div class="modal-body">
-                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')">
-                                        <i class="fa-regular fa-copy text-secondary"></i> {{ __('lang.Copy Link') }}
+                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">Link copied!</div>
+                                <div class="modal-body share-icons-row">
+                                    <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')" title="{{ __('lang.Copy Link') }}">
+                                        <i class="fa-regular fa-copy text-secondary share-icon"></i>
                                     </a>
-                                </div>
-                                <div class="modal-body">
-                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}">
-                                        <i class="fa-brands fa-whatsapp text-success"></i> {{ __('lang.Share on WhatsApp') }}
+                                    <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share on WhatsApp') }}">
+                                        <i class="fa-brands fa-whatsapp text-success share-icon"></i>
+                                    </a>
+                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
+                                        <i class="fa-brands fa-linkedin text-primary share-icon"></i>
+                                    </a>
+                                    <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share via Email') }}">
+                                        <i class="fa-regular fa-envelope text-danger share-icon"></i>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!--Blog Two Single Start -->
                     <div class="wow fadeInLeft blog-card" data-wow-delay="100ms">
                         <div class="blog-two__single">
+                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
                             <div class="blog-two__img">
-                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                    <img src="{{ asset('storage/' . $blog->thumb) }}" >
-                                </a>        
+                                    <img src="{{ asset('storage/' . $blog->thumb) }}" >       
                                 <div class="blog-two__date">
                                     <span class="icon-calendar"></span>
-                                    <p>{{ $blog->created_at->format('F d, Y h:i A')}}</p>
+                                    <p>{{ $blog->created_at->diffForHumans() }}</p>
                                 </div>
                             </div>
+                            </a> 
                             <div class="blog-two__content">
                                 <div class="blog-two__meta-box blog-profile">
                                     <div class="profile-container">
@@ -317,8 +313,80 @@
                                                                 <input type="text" class="form-control bg-secondary text-light border-0" name="name" value="{{ old('name') }}" required>
                                                             </div>
                                                         @endif
-                                                        <div class="mb-3">
-                                                            <textarea class="form-control bg-secondary text-light border-0" name="comment" rows="3" placeholder="{{__('lang.Add a comment')}}" required>{{ old('comment') }}</textarea>
+                                                        <div class="mb-3" style="position: relative;">
+                                                            <textarea class="form-control bg-secondary text-light border-0" name="comment" id="comment-textarea-{{ $blog->id }}" rows="3" placeholder="{{__('lang.Add a comment')}}" required style="padding-bottom: 50px; padding-right: 80px;">{{ old('comment') }}</textarea>
+                                                            
+                                                            <!-- Emoji Picker Container -->
+                                                            <div class="emoji-picker-container" style="position: absolute; bottom: 10px; left: 10px; z-index: 10;">
+                                                                <button type="button" class="emoji-toggle-btn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666; padding: 5px; border-radius: 50%; transition: all 0.3s ease;">
+                                                                    😊
+                                                                </button>
+                                                                <div class="emoji-panel" style="display: none; position: absolute; left: 0; background: white; border: 1px solid #ddd; border-radius: 8px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 240px; max-height: 200px; overflow-y: auto; margin-bottom: 5px;">
+                                                                    <div class="emoji-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
+                                                                        <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😂">😂</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😍">😍</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😎">😎</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤔">🤔</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="👎">👎</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="💯">💯</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="✨">✨</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🎉">🎉</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🙏">🙏</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😭">😭</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😡">😡</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😱">😱</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😴">😴</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤗">🤗</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😇">😇</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤩">🤩</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😋">😋</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤪">🤪</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😝">😝</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤓">🤓</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😤">😤</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😪">😪</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤐">🤐</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😷">😷</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤒">🤒</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤕">🤕</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤢">🤢</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤮">🤮</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤧">🤧</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😈">😈</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="👿">👿</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="👹">👹</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="👺">👺</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="💀">💀</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="☠️">☠️</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="👻">👻</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="👽">👽</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🤖">🤖</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="💩">💩</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😺">😺</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😸">😸</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😹">😹</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😻">😻</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😼">😼</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😽">😽</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="🙀">🙀</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😿">😿</button>
+                                                                        <button type="button" class="emoji-btn" data-emoji="😾">😾</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Comment Button Inside Textarea -->
+                                                            <div class="comment-btn-container" style="position: absolute; bottom: 10px; right: 10px; z-index: 10;">
+                                                                <button type="submit" class="comment-btn-inside" style="background: linear-gradient(135deg, #1da370 0%, #0d8a5a 100%); color: white; border: none; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(29, 163, 112, 0.3);">
+                                                                    <span class="icon-arrow-circle" style="margin-right: 5px;"></span>
+                                                                    Comment
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                         <div class="ajax-comment-error text-danger"></div>
                                                         <div class="d-flex justify-content-between align-items-center">
@@ -331,7 +399,6 @@
                                                                     </a>
                                                                 </div>
                                                             @endif
-                                                            <button type="submit" class="btn btn-sm text-light" style="background-color: var(--fistudy-base);">{{__('lang.Comment')}}</button>
                                                         </div>
                                                     </div>
 
@@ -432,6 +499,111 @@
                     }
                 });
             });
+
+            // Emoji Picker Functionality for Blogs
+            $('.emoji-toggle-btn').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $panel = $(this).siblings('.emoji-panel');
+                $('.emoji-panel').not($panel).hide();
+                $panel.toggle();
+            });
+
+            // Close emoji panel when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.emoji-picker-container').length) {
+                    $('.emoji-panel').hide();
+                }
+            });
+
+            // Insert emoji into textarea
+            $('.emoji-btn').on('click', function(e) {
+                e.preventDefault();
+                var emoji = $(this).data('emoji');
+                var $textarea = $(this).closest('.mb-3').find('textarea');
+                var cursorPos = $textarea[0].selectionStart;
+                var textBefore = $textarea.val().substring(0, cursorPos);
+                var textAfter = $textarea.val().substring(cursorPos);
+                
+                $textarea.val(textBefore + emoji + textAfter);
+                
+                // Set cursor position after the inserted emoji
+                var newCursorPos = cursorPos + emoji.length;
+                $textarea[0].setSelectionRange(newCursorPos, newCursorPos);
+                $textarea.focus();
+                
+                // Hide the emoji panel
+                $('.emoji-panel').hide();
+            });
+
+            // Emoji button hover effects
+            $('.emoji-btn').on('mouseenter', function() {
+                $(this).css({
+                    'transform': 'scale(1.2)',
+                    'transition': 'transform 0.2s ease'
+                });
+            }).on('mouseleave', function() {
+                $(this).css({
+                    'transform': 'scale(1)',
+                    'transition': 'transform 0.2s ease'
+                });
+            });
         });
     </script>
+
+    <style>
+        .emoji-toggle-btn:hover {
+            background-color: rgba(255,255,255,0.1) !important;
+            transform: scale(1.1);
+        }
+        
+        .emoji-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .emoji-btn:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.2);
+        }
+        
+        .emoji-panel {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95) !important;
+        }
+        
+        .comment-btn-inside:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 163, 112, 0.4) !important;
+        }
+        
+        @media (max-width: 768px) {
+            .emoji-panel {
+                min-width: 200px !important;
+            }
+            .emoji-grid {
+                grid-template-columns: repeat(5, 1fr) !important;
+                gap: 6px !important;
+            }
+            .emoji-btn {
+                width: 25px;
+                height: 25px;
+                font-size: 16px;
+            }
+            .comment-btn-inside {
+                padding: 6px 12px !important;
+                font-size: 12px !important;
+            }
+        }
+    </style>
 @endsection

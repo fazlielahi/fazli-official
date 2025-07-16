@@ -38,53 +38,75 @@ $(document).ready(function () {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle both regular submit buttons and buttons inside textarea
     document.querySelectorAll('.ajax-comment-form').forEach(function(form) {
+        // Handle form submit event
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            const blogId = form.id.replace('comment-form-', '');
-            const url = form.action;
-            const formData = new FormData(form);
-            const errorDiv = form.querySelector('.ajax-comment-error');
+            handleCommentSubmission(this);
+        });
+        
+        // Handle button clicks inside textarea
+        const commentBtnInside = form.querySelector('.comment-btn-inside');
+        if (commentBtnInside) {
+            console.log('Found comment button inside:', commentBtnInside);
+            commentBtnInside.addEventListener('click', function(e) {
+                console.log('Comment button clicked');
+                e.preventDefault();
+                handleCommentSubmission(form);
+            });
+        }
+    });
+    
+    function handleCommentSubmission(form) {
+        console.log('handleCommentSubmission called with form:', form);
+        const blogId = form.id.replace('comment-form-', '');
+        const url = form.action;
+        const formData = new FormData(form);
+        const errorDiv = form.querySelector('.ajax-comment-error');
+        if (errorDiv) {
             errorDiv.textContent = '';
+        }
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(async res => {
-                if (!res.ok) {
-                    const data = await res.json();
-                    if (data.errors && data.errors.comment) {
-                        errorDiv.textContent = data.errors.comment[0];
-                    } else {
-                        errorDiv.textContent = 'An error occurred.';
-                    }
-                    throw new Error('Validation error');
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(async res => {
+            if (!res.ok) {
+                const data = await res.json();
+                if (data.errors && data.errors.comment) {
+                    errorDiv.textContent = data.errors.comment[0];
+                } else {
+                    errorDiv.textContent = 'An error occurred.';
                 }
-                return res.json();
-            })
-            .then(data => {
-                // Prepend the new comment to the list
-                const commentsList = document.getElementById('show-comments-' + blogId);
-                if (commentsList) {
-                    // Remove 'no-comments' message if present
-                    const noComments = commentsList.querySelector('.no-comments');
-                    if (noComments) noComments.remove();
-                    commentsList.insertAdjacentHTML('afterbegin', data.html);
-                    
-                    // Show the comments list since we now have comments
-                    commentsList.style.display = 'block';
-                }
+                throw new Error('Validation error');
+            }
+            return res.json();
+        })
+        .then(data => {
+            // Prepend the new comment to the list
+            const commentsList = document.getElementById('show-comments-' + blogId);
+            if (commentsList) {
+                // Remove 'no-comments' message if present
+                const noComments = commentsList.querySelector('.no-comments');
+                if (noComments) noComments.remove();
+                commentsList.insertAdjacentHTML('afterbegin', data.html);
                 
-                // Update modal footer - remove "Be the first to comment!" and add "Read all comments" button
-                const modal = document.getElementById('editModal' + blogId);
-                if (modal) {
-                    const commentFormSection = modal.querySelector('.d-flex.justify-content-between');
+                // Show the comments list since we now have comments
+                commentsList.style.display = 'block';
+            }
+            
+            // Update modal footer - remove "Be the first to comment!" and add "Read all comments" button
+            const modal = document.getElementById('editModal' + blogId);
+            if (modal) {
+                const commentFormSection = modal.querySelector('.d-flex.justify-content-between');
+                if (commentFormSection) {
                     const firstCommentSpan = commentFormSection.querySelector('.text-light');
                     if (firstCommentSpan && firstCommentSpan.textContent.includes('Be the first to comment')) {
                         firstCommentSpan.remove();
@@ -113,20 +135,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                 }
-                
-                // Clear textarea
-                form.querySelector('textarea[name="comment"]').value = '';
+            }
+            
+            // Clear textarea
+            const textarea = form.querySelector('textarea[name="comment"]');
+            if (textarea) {
+                textarea.value = '';
+            }
 
-                // Show success message
-                const msg = document.getElementById('comment-success-message');
-                if (msg) {
-                    msg.style.display = 'block';
-                    setTimeout(() => { msg.style.display = 'none'; }, 2000);
-                }
-            })
-            .catch(err => {
-                // Already handled above
-            });
+            // Show success message
+            const msg = document.getElementById('comment-success-message');
+            if (msg) {
+                msg.style.display = 'block';
+                setTimeout(() => { msg.style.display = 'none'; }, 2000);
+            }
+        })
+        .catch(err => {
+            // Already handled above
         });
-    });
+    }
 });

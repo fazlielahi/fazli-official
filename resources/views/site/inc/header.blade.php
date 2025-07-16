@@ -4,7 +4,8 @@
             <img src="{{ asset('images/thefazli.com.png') }}" alt="thefazli.com" class="main-logo"/>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <!-- fallback icon if the above is invisible -->
+        <i class="fas fa-bars header-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
@@ -60,7 +61,7 @@
             @if($user)
                 <div class="dropdown ms-3">
                     <button class="btn dropdown-toggle d-flex align-items-center justify-content-between w-100" 
-                            style="background-color:rgb(238, 238, 238);min-width: 159px !important; color: #444; justify-content: flex-end !important;"
+                            style="background-color:rgb(0, 0, 0);min-width: 159px !important; color: #fff; justify-content: flex-end !important;"
                             type="button" id="userDropdown" 
                             data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="me-2">{{ $user->name }}</span>
@@ -88,10 +89,10 @@
                     </ul>
                 </div>
             @else
-                <a href="{{ route('localized.register', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 text-light ms-3">
+                <a href="{{ route('localized.register', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 register-btn ms-3">
                     <i class="fas fa-user-plus me-1"></i>Sign Up
                 </a>
-                <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 text-light ms-2">
+                <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 login-btn ms-2">
                     <i class="fas fa-sign-in-alt me-1"></i>Login
                 </a>
             @endif

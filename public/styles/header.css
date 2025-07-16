@@ -1,6 +1,19 @@
 .navbar{
-    background-color: #00000052 !important;
+    background-color: #1b1f23;
     padding-bottom: 0 !important;
+    box-shadow: 0px 0px 3px 0px #000000;
+}
+
+.dropdown-menu {
+    background-color: #000000 !important;
+}
+
+.dropdown-item {
+    color: #fff !important;
+}
+
+.dropdown-divider{
+    border-top: 1px solid rgba(255, 255, 255, 0.178) !important;
 }
 
 .navbar .main-logo {

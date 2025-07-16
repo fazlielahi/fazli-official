@@ -282,24 +282,6 @@
                                 @enderror
                             </div>
 
-                            
-                                @if($user->type === 'super_admin')
-                                <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <select name="status" id="status" class="form-control show-tick" style="height: 36px;">
-                                        <option value="draft">{{__('lang.Draft')}}</option>
-                                        <option value="published">{{__('lang.Published')}}</option>
-                                    </select>
-                                    @error('status')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        <style>
-                                            #status {
-                                                border-color: rgb(160, 40, 50) !important;
-                                            }
-                                        </style>
-                                    @enderror
-                                </div>
-                            @else
                                 <div class="form-group">
                                     <label for="status">Status</label>
                                     <select name="status" id="status" class="form-control show-tick" style="height: 36px;">
@@ -315,8 +297,6 @@
                                         </style>
                                     @enderror
                                 </div>
-                            @endif
-
                             <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">Post</button>
                         </div>
                     </div>

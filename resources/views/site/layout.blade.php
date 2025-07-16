@@ -11,12 +11,16 @@
 
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/theme.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     @php $locale = app()->getLocale(); @endphp
     
     @if($locale == 'ar')
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif
+
+    <!-- responsive css -->
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-header.css')}}">
 
     <!-- jquery ui -->
     <link rel="stylesheet" href="{{ asset('lib/jquery-ui.css')}}">

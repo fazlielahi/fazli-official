@@ -6,6 +6,7 @@
     <title>@yield('title', __('lang.DEFAULT_TITLE'))</title>
     <link rel="icon" href="{{ asset('images/favicon.png') }}" >
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     @yield('meta')
 
@@ -17,8 +18,14 @@
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif
 
+    
+    <!-- responsive css -->
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-header.css')}}">
+
     <!-- jquery ui -->
     <link rel="stylesheet" href="{{ asset('lib/jquery-ui.css')}}">
+    
+    <link rel="stylesheet" href="{{ asset('styles/theme.css') }}">
     <script src="{{ asset('lib/jquery-3.6.0.js')}}"></script>
     <script src="{{ asset('lib/jquery-ui.js')}}"></script>
 
@@ -180,6 +187,10 @@
         .swal2-icon.swal2-warning {
             border-color: #ffa500 !important;
             color: #ffa500 !important;
+        }
+
+        .cke_notifications_area{
+            display: none !important;
         }
 
     </style>
@@ -368,6 +379,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('js/theme.js') }}"></script>
     <script src="{{ asset('js/like.js') }}"></script>
     <script src="{{ asset('js/comment.js') }}"></script>
     <script src="{{ asset('js/share-blog.js') }}"></script>

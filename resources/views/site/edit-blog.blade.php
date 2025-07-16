@@ -214,19 +214,6 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="body">
-                            
-                            {{--Display validation errors if any--}}
-
-                            @if($errors->any())
-
-                                @foreach($errors->all() as $error)
-
-                                    <p class="text-danger">{{ $error }}</p>
-
-                                @endforeach
-
-                            @endif
-
                             <div class="form-group my-2">
                                 <input type="text"  name="title" value="{{ old('title', $blog->title) }}" class="form-control" placeholder="Enter Blog title" />
                             </div>
@@ -281,6 +268,8 @@
                                     <option value="request" @if($blog->status == 'request') selected @endif>Request for review</option>
                                     <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
                                 </select>
+                                @elseif($blog->status === 'published')
+                                    <input type="hidden" name="status" value="published" selected />
                                 @endif
 
                             <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">Update</button>

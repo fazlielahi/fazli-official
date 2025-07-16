@@ -98,11 +98,16 @@ class BlogsController extends Controller
         ]);
     }
 
-        if ($request->ajax()) {
-            // Return the rendered HTML for the new comment
+        // Check if it's an AJAX request
+        if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             $user = $comment->user;
-            $html = view('site.partials.comment_card', compact('comment', 'user'))->render();
-            return response()->json(['html' => $html]);
+            $html = view('site.partials.comment', compact('comment', 'user'))->render();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment submitted successfully!',
+                'html' => $html
+            ]);
         }
 
         return redirect()->back();
