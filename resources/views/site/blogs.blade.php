@@ -69,6 +69,13 @@
     
     <!-- Theme styles -->
     <link rel="stylesheet" href="{{ asset('styles/theme.css') }}" />
+
+    <style>
+        .blog-two__title  {
+            height: 64px;
+        }
+    </style>
+
 @endsection
 
 @section('content')
@@ -218,14 +225,9 @@
                                     </div>
                                 </div>
                                 <h4 class="blog-two__title">
-                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
+                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                    {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
                                 </h4>
-                                <p class="blog-two__text"> 
-                                    {{ Str::limit(html_entity_decode(strip_tags($blog->content)), 50) }} 
-                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}" class="link-btn">
-                                        Read! <span class="icon-clock"></span>
-                                    </a>
-                                </p>
                             </div>
                             <div class="blog-two__meta-box comment-sec">
                                 <ul class="blog-two__meta list-unstyled">
@@ -238,7 +240,7 @@
                                         Like <span class="like-count">{{ $blog->likes->count() }}</span>
                                     </li>
                                     <li>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#editModal{{ $blog->id }}">
+                                        <a href="#" data-bs-toggle="modal" style="margin-left: 30px;" data-bs-target="#editModal{{ $blog->id }}">
                                             <span class="icon-comments"></span>Comments
                                         </a>
                                     </li>

@@ -30,6 +30,23 @@
             
              <h5 id="request-section">{{ __('lang.Request for review') }}</h5>
              <hr>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <form method="GET" action="">
+                        <div class="input-group">
+                            <select name="category_id" class="form-control" onchange="this.form.submit()">
+                                <option value="">All Categories</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ (isset($selectedCategory) && $selectedCategory == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary d-none" type="submit">Filter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="row clearfix">
                @foreach($blogs->sortByDesc('created_at') as $blog)
                 @if($blog->status === 'request')

@@ -102,14 +102,14 @@
                             </a>
                             <div class="blog-two__date">
                                 <span class="icon-calendar"></span>
-                                <p>{{ $blog->created_at->format('F d, Y h:i A') }}</p>
+                                <p>{{ $blog->created_at->diffForHumans() }}</p>
                             </div>
                             @php
                                 $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
                             @endphp
                             @if(($user && $user->id == $blog->created_by))
                                 <div class="action">
-                                    <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                    <a class="btn btn-icon btn-info" href="{{ $user && $user->type === 'super_admin' ? route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) : route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) }}">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                     
@@ -151,7 +151,7 @@
                                     @if(App\Models\Likes::where('blog_id', $blog->id)->exists())
                                         <i class="heart-icon fa-solid fa-heart" style="color: #1da370;"></i>
                                     @else
-                                        <i class="heart-icon fa-regular fa-heart" style="color: #1da370;"></i>
+                                        <i class="heart-icon fa-regular fa-heart" style="color: #0c6164;"></i>
                                     @endif
                                     <span class="like-count">{{ $blog->likes->count() }}</span>
                                 </li>
@@ -161,7 +161,7 @@
                                     </a>
                                 </li>
                                 <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest">
-                                    <i class="far fa-share-square" style="color: #1da370;"></i>
+                                    <i class="far fa-share-square" style="color: #0c6164;"></i>
                                 </li>
                             </ul>
                         </div>
@@ -289,7 +289,7 @@
                 <div class="no-blogs-message">
                     <i class="fas fa-blog fa-3x text-muted mb-3"></i>
                     <h4 class="text-muted">{{ __('lang.No blogs uploaded by') }} <u> {{ explode(' ', $user->name)[0] }} </u> </h4>
-                    <p class="text-muted">{{ __('lang.There are no blogs available at the moment.') }}</p>
+                    <p class="text-muted">{{ __('lang.There are no blogs available in selected category.') }}</p>
                 </div>
             </div>
         @endif

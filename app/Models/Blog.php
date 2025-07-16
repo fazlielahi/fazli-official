@@ -18,7 +18,8 @@ class Blog extends Model
         'approved_by',
         'rejected_by',
         'approval_message',
-        'rejection_message'
+        'rejection_message',
+        'category_id',
     ];
 
     public function creater()
@@ -39,5 +40,10 @@ class Blog extends Model
     public function rejected_by_user()
     {
         return $this->belongsTo(User::class, 'rejected_by');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

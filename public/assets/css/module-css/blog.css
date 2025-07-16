@@ -228,7 +228,7 @@
     position: relative;
     display: block;
     margin-bottom: 23px;
-    background-color: rgba(0, 0, 0, 0.322);
+    background-color: rgb(27 31 35);
     border-radius: 20px;
 }
 
@@ -2239,4 +2239,31 @@ h1, h2, h3, h4, h5, h6 {
 
 .blog-details__left{
     overflow: hidden;
+}
+
+.input-group{
+    
+    position: absolute !important;
+    width: 350px !important;
+    right: 31px;
+    top: 174px;
+}
+
+.nice-select{
+    height: 40px !important;
+    line-height: 31px !important;
+    border-radius: 7px !important;
+    background: #1b1f23;
+    color: #fff;        
+    border: 1px solid #5b6167 !important;
+}
+
+.nice-select .list{
+    width: 100%;
+    height: 200px;
+    overflow-y: scroll !important;
+}
+
+.current{
+    line-height: 31px !important;
 }

@@ -132,10 +132,6 @@
             height: 237px !important;
         }
 
-        .blog-two__single{
-            padding-bottom: 4px;
-        }
-
         .action{
             z-index: 5;
         }
@@ -315,6 +311,24 @@
                         @endif
                     </div>
                 </div>
+
+                <div class="row mb-4">
+        <div class="col-md-4">
+            <form method="GET" action="">
+                <div class="input-group">
+                    <select name="category_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ (isset($selectedCategory) && $selectedCategory == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary d-none" type="submit">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
                 <div class="row g-4 blog-boxes mt-1" style="justify-content: space-between !important;">
                 

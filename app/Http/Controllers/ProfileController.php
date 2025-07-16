@@ -21,11 +21,16 @@ class ProfileController extends Controller
             if (!$user) {
                 return redirect()->back()->with('error', 'Session expired.');
             }
-            
-            $blogs = Blog::where('created_by', $user->id)->where('status', 'published')->get();
+            $categories = \App\Models\Category::all();
+            $selectedCategory = $request->input('category_id');
+            $blogs = \App\Models\Blog::where('created_by', $user->id)
+                ->where('status', 'published');
+            if ($selectedCategory) {
+                $blogs = $blogs->where('category_id', $selectedCategory);
+            }
+            $blogs = $blogs->get();
             $clickedUser = null;
-
-            return view('site.published_blogs', compact('blogs', 'user', 'clickedUser')); 
+            return view('site.published_blogs', compact('blogs', 'user', 'clickedUser', 'categories', 'selectedCategory'));
         }
 
         public function adminProfile(Request $request)

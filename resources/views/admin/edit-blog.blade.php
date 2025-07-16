@@ -74,6 +74,18 @@
                                 
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="category_id">{{ __('lang.Category') }}</label>
+                                <select name="category_id" id="category_id" class="form-control" required>
+                                    <option value="">{{ __('lang.Select Category') }}</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ (old('category_id', $blog->category_id) == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                             <textarea name="content">
                                 {{ old('content', $blog->content) }}
                             </textarea>

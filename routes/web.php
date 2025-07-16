@@ -83,6 +83,15 @@ Route::group([
         Route::post('/blog/{blog}/reject', [BlogController::class, 'rejectBlog'])->name('admin.blog.reject');
         Route::get('/profile', [ProfileController::class, 'adminProfile'])->name('admin.profile');
         Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('admin.profile-update');
+
+        // categories routes
+        Route::get('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories.index');
+        Route::get('/categories/create', [\App\Http\Controllers\Admin\CategoryController::class, 'create'])->name('admin.categories.create');
+        Route::post('/categories', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('admin.categories.store');
+        Route::get('/categories/{category}/edit', [\App\Http\Controllers\Admin\CategoryController::class, 'edit'])->name('admin.categories.edit');
+        Route::put('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('admin.categories.update');
+        Route::delete('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+
        
     });
     

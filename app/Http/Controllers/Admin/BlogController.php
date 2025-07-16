@@ -20,17 +20,25 @@ class BlogController extends Controller
         }
 
         $user = User::find($request->session()->get('user_id'));
+        $categories = \App\Models\Category::all();
+        $selectedCategory = $request->input('category_id');
 
         if($user->type === 'super_admin')
         {
-            $blogs = Blog::all()->where('status', 'published');
+            $blogs = \App\Models\Blog::query();
+            if ($selectedCategory) {
+                $blogs = $blogs->where('category_id', $selectedCategory);
+            }
+            $blogs = $blogs->where('status', 'published')->get();
         }else{
-            $blogs = Blog::where('created_by', $user->id)
-             ->where('status', 'published')
-             ->get();
+            $blogs = \App\Models\Blog::where('created_by', $user->id)
+             ->where('status', 'published');
+            if ($selectedCategory) {
+                $blogs = $blogs->where('category_id', $selectedCategory);
+            }
+            $blogs = $blogs->get();
         }
-      
-            return view('admin.blog', compact('blogs', 'user')); 
+        return view('admin.blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
     }
 
 
@@ -93,14 +101,20 @@ class BlogController extends Controller
         }
 
         $user = User::find($request->session()->get('user_id'));
+        $categories = \App\Models\Category::all();
+        $selectedCategory = $request->input('category_id');
 
-        $blogs = Blog::all()->whereIn('status', ['request', 'draft']);
+        $blogs = \App\Models\Blog::query()->whereIn('status', ['request', 'draft']);
+        if ($selectedCategory) {
+            $blogs = $blogs->where('category_id', $selectedCategory);
+        }
+        $blogs = $blogs->get();
 
             if($user->type === 'super_admin')
             {
-                return view('admin.request-blog', compact('blogs', 'user')); 
+                return view('admin.request-blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
             }else{
-                return view('site.request-blog', compact('blogs', 'user')); 
+                return view('site.request-blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
             }
     } 
 
@@ -120,39 +134,39 @@ class BlogController extends Controller
 
     public function create(Request $request)
     {
-        // Check if the user is logged in: either session or cookie has 'user_id'
         if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
             return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
         }
-        
         $user = User::find($request->session()->get('user_id'));
-            if($user->type === 'super_admin')
-            {
-                return view('admin.create-blog', compact('user'));
-            }else{
-                return view('site.create-blog', compact('user'));
-            }
+        $categories = \App\Models\Category::all();
+        if($user->type === 'super_admin')
+        {
+            return view('admin.create-blog', compact('user', 'categories'));
+        }else{
+            return view('site.create-blog', compact('user', 'categories'));
+        }
     }
     
     //form submission for new blog post
 
     public function store(Request $request)
     {
-        // dd($request);
         $request->validate([
             'title' => 'required|string',
             'content' => 'required|string',
             'status' => 'nullable',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2028', //validate image as an array
-            'thumb' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2028', //validate image as an array
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2028',
+            'thumb' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2028',
+            'category_id' => 'required|exists:categories,id',
         ],
         [
             'title.required' => "Please write a title",
             'content.required' => "Please add some contents",
-
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be a file of type: jpg, jpeg, png, gif.',
             'image.max' => 'The image must not be larger than 2MB.',
+            'category_id.required' => 'Please select a category.',
+            'category_id.exists' => 'Selected category does not exist.',
         ]);
 
           $imagePath = null;
@@ -180,7 +194,8 @@ class BlogController extends Controller
             'status' => $request->input('status') ?? 'draft',
             'image' =>  $imagePath,
             'thumb' =>  $thumbPath,
-            'created_by' => $request->session()->get('user_id'), // This sets the current user's ID
+            'created_by' => $request->session()->get('user_id'),
+            'category_id' => $request->input('category_id'),
         ]);
 
         $user = User::find($request->session()->get('user_id'));
@@ -219,6 +234,7 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
 
         $user = User::find($request->session()->get('user_id'));
+        $categories = \App\Models\Category::all();
 
         // check if user is allowed to edit this blog
         if($blog->type === 'super_admin' && $blog->created_by !== $user->id)
@@ -228,9 +244,9 @@ class BlogController extends Controller
 
             if($user->type === 'super_admin')
             {
-                return view('admin.edit-blog', compact('blog', 'user'));
+                return view('admin.edit-blog', compact('blog', 'user', 'categories'));
             }else{
-                return view('site.edit-blog', compact('blog', 'user'));
+                return view('site.edit-blog', compact('blog', 'user', 'categories'));
             }            
     }
 
@@ -244,6 +260,7 @@ class BlogController extends Controller
             'status' => 'nullable',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'thumb' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'category_id' => 'required|exists:categories,id',
         ],
         [
             'title.required' => "Please write a title",
@@ -289,6 +306,7 @@ class BlogController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'status' => $request->status,
+            'category_id' => $request->input('category_id'),
         ]);
 
         $user = User::find($request->session()->get('user_id'));

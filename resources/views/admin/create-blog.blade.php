@@ -64,6 +64,18 @@
                                 <small id="fileHelp" class="form-text text-muted">{{ __('lang.Dimensions: 1920x500') }}</small>
                                 <div id="image-preview-container"></div>
                             </div>
+                            <div class="form-group">
+                                <label for="category_id">{{ __('lang.Category') }}</label>
+                                <select name="category_id" id="category_id" class="form-control" required>
+                                    <option value="">{{ __('lang.Select Category') }}</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                             <textarea  id="content" name="content">
                                 {{ old('content') }}
                             </textarea>

@@ -149,22 +149,21 @@
                                         <a href="{{route('localized.admin.dashboard', ['lang' => app()->getLocale()])}}"><i class="fa fa-dashboard"></i><span>{{ __('lang.Dashboard') }}</span></a>
                                     </li>
                                     <li>
-                                        <a href="{{route('localized.blogs', ['lang' => app()->getLocale()])}}"><i class="icon-speedometer"></i> &nbsp; <span>{{ __('lang.Website') }}</span>
+                                        <a href="{{route('localized.blogs', ['lang' => app()->getLocale()])}}"><i class="icon-speedometer"></i> &nbsp; <span>{{ __('lang.Website') }}</span></a>
                                     </li>
-                                    <li class="active">
+                                    <li>
+                                        <a href="{{ route('localized.admin.categories.index', ['lang' => app()->getLocale()]) }}" ><i class="fas fa-folder"></i><span>{{ __('lang.Categories') }}</span></a>
+                                    </li>
+                                    <li class="active mb-3">
                                         <a href="#App" class="has-arrow"><i class="fa fa-th-large"></i><span>{{ __('lang.Blogs') }}</span></a>
                                         <ul>
                                             <li><a href="{{route('localized.admin.blog', ['lang' => app()->getLocale()])}}">{{ __('lang.Published Blogs') }}</a></li>
-                                             @if($user->type === 'super_admin')
                                                 <li><a href="{{ route('localized.admin.request-blogs', ['lang' => app()->getLocale()])}}#request-section">{{ __('lang.Request') }}</a></li>
                                                 <li><a href="{{ route('localized.admin.request-blogs', ['lang' => app()->getLocale()])}}#draft-section">{{ __('lang.Draft') }}</a></li>
-                                            @else
-                                            <li><a href="{{ route('localized.admin.request-blogs', ['lang' => app()->getLocale()])}}">{{ __('lang.Draft') }}</a></li>
-                                            @endif
+                                          
                                             <li><a href="{{ route('localized.admin.blog-create', ['lang' => app()->getLocale()])}}">{{ __('lang.Create Blog') }}</a></li>
                                         </ul>
-                                    </li>
-                                
+                                    </li>                                
                                 </ul>
                             </nav>
                         </div>
