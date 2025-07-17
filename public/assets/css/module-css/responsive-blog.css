@@ -1,0 +1,113 @@
+@media screen and (max-width: 700px) {
+
+    .blog-row {
+        flex-direction: column;
+    }
+
+    .blogs-section{
+        width: 100%;
+    }
+    
+    .blog-card {
+        width: 100% !important;
+        margin: 0;
+    }
+
+    .blog-two__img img, .blog-two__single,
+    .blog-two__img {
+        border-radius: 0px;
+    }
+
+    .blog-two__single{
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+    }
+
+    .categories-toggle-btn{
+        width: fit-content;
+        z-index: 1;
+    }
+
+        .left-sidebar {
+            display: none !important;
+        }
+        .blog-grid__left{
+            width: 100%;
+        }
+        .categories-toggle-btn {
+            display: block !important;
+            background: #1da370;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .offcanvas-sidebar {
+            display: block !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1001;
+            pointer-events: none;
+        }
+        .offcanvas-sidebar .offcanvas-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.4);
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .offcanvas-sidebar.active .offcanvas-overlay {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .offcanvas-sidebar .offcanvas-content {
+            position: fixed;
+            top: 0; left: -80vw;
+            width: 80vw;
+            max-width: 320px;
+            height: 100vh;
+            background: #1b1f23;
+            z-index: 1002;
+            box-shadow: 2px 0 16px rgba(0,0,0,0.15);
+            transition: left 0.3s;
+            overflow-y: auto;
+            padding: 24px 0px 16px 0px;
+            overflow-x: hidden;
+        }
+        .offcanvas-sidebar.active .offcanvas-content {
+            left: 0;
+            pointer-events: auto;
+        }
+        .offcanvas-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 28px;
+            color: #1da370;
+            cursor: pointer;
+            z-index: 1003;
+            background: none;
+            border: none;
+        }
+    }
+  
+
+    @media screen and (min-width: 701px) {
+        .categories-toggle-btn,
+        .offcanvas-sidebar {
+            display: none !important;
+        }
+        .left-sidebar {
+            display: block !important;
+        }
+    }

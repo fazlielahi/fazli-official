@@ -16,10 +16,14 @@ use Illuminate\Http\JsonResponse;
 class BlogsController extends Controller
 {
     public function index(Request $request){
-
-        $blogs = Blog::where('status', 'published')->get();
-
-        return view('site.blogs', compact('blogs'));
+        $categories = \App\Models\Category::all();
+        $selectedCategory = $request->input('category_id');
+        $blogs = \App\Models\Blog::where('status', 'published');
+        if ($selectedCategory) {
+            $blogs = $blogs->where('category_id', $selectedCategory);
+        }
+        $blogs = $blogs->get();
+        return view('site.blogs', compact('blogs', 'categories', 'selectedCategory'));
     }
 
     public function rejectedBlogs(Request $request)
@@ -40,7 +44,9 @@ class BlogsController extends Controller
     {
         $blog = Blog::findOrFail($id);
         $popular_blogs = Blog::where('id', '!=', $id)->where('status', 'published')->latest()->take(10)->get();
-        return view('site.blog-details', compact('blog', 'popular_blogs'));
+        $categories = \App\Models\Category::all();
+        $selectedCategory = $blog->category_id;
+        return view('site.blog-details', compact('blog', 'popular_blogs', 'categories', 'selectedCategory'));
     }
 
     //comment on blog post

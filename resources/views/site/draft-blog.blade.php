@@ -151,7 +151,7 @@
                     <h4 class="text-muted">
                         <u>{{ explode(' ', $user->name)[0] }}</u> {{ __('lang.has no draft blogs') }}
                     </h4>
-                    <p class="text-muted">{{ __('lang.There are no draft blog posts at the moment.') }}</p>
+                    <p class="text-muted">{{ __('lang.There are no blogs available in selected category.') }}</p>
                 </div>
             </div>
         @endif

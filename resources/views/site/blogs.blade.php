@@ -70,6 +70,10 @@
     <!-- Theme styles -->
     <link rel="stylesheet" href="{{ asset('styles/theme.css') }}" />
 
+    
+    <!-- responsive design -->
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-blog.css') }}" />
+
     <style>
         .blog-two__title  {
             height: 64px;
@@ -111,57 +115,50 @@
     <!--Blogs Grid Start-->
     <section class="blog-grid">
         <div class="blog-row">
-            <div class="left-sidebar">
-                <div class="blog-grid__left">
-                    <div class="blog-grid__sidebar">
-                        <div class="blog-grid__categories blog-grid__single">
-                            <div class="blog-grid__title-box">
-                                <h3 class="blog-grid__title">{{ __('lang.Categories') }}</h3>
-                                <div class="blog-grid__title-shape-1">
-                                    <img src="{{ asset('assets/images/shapes/blog-grid-title-shape-1.png') }}" >
+            <!-- Add this button just before the left-sidebar div -->
+            <button class="categories-toggle-btn d-block d-md-none" type="button" style="margin: 16px;">
+                <i class="fa fa-list"></i> {{ __('lang.Topics') }}
+            </button>
+
+            <!-- Offcanvas Sidebar -->
+            <div class="left-sidebar offcanvas-sidebar">
+                <div class="offcanvas-overlay"></div>
+                <div class="offcanvas-content">
+                    <span class="offcanvas-close">&times;</span>
+                    <div class="blog-grid__left">
+                        <div class="blog-grid__sidebar">
+                            <div class="blog-grid__categories blog-grid__single">
+                                <div class="blog-grid__title-box">
+                                    <h3 class="blog-grid__title">{{ __('lang.What Interests You?') }}</h3>
                                 </div>
+                                <ul class="list-unstyled blog-grid__list-item">
+                                    <li>
+                                        <a href="?" class="blog-grid__list-text {{ empty($selectedCategory) ? 'active' : '' }}">
+                                            <span class="blog-grid__list-check" style="margin-top: -7px;display:inline-block;width:18px;height:18px;border:1.5px solid #1da370;border-radius:4px;text-align:center;line-height:16px;font-size:14px;color:#1da370;vertical-align:middle;">
+                                                @if(empty($selectedCategory))
+                                                    <i class="fa fa-check"></i>
+                                                @endif
+                                            </span>
+                                            {{ __('lang.All Categories') }}
+                                        </a>
+                                    </li>
+                                    @foreach($categories as $category)
+                                        <li>
+                                            <a href="?category_id={{ $category->id }}" class="blog-grid__list-text {{ (isset($selectedCategory) && $selectedCategory == $category->id) ? 'active' : '' }}">
+                                                <span class="blog-grid__list-check" style="margin-top: -7px;display:inline-block;width:18px;height:18px;border:1.5px solid #1da370;border-radius:4px;text-align:center;line-height:16px;font-size:14px;color:#1da370;vertical-align:middle;">
+                                                    @if(isset($selectedCategory) && $selectedCategory == $category->id)
+                                                        <i class="fa fa-check"></i>
+                                                    @endif
+                                                </span>
+                                                {{ $category->name }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
-                            <ul class="list-unstyled blog-grid__list-item">
-                                <li>
-                                    <div class="blog-grid__list-check"></div>
-                                    <p class="blog-grid__list-text">{{ __('lang.Accounting & Finance (12)') }}</p>
-                                </li>
-                                <li>
-                                    <div class="blog-grid__list-check"></div>
-                                    <p class="blog-grid__list-text">{{ __('lang.Programming & Tech (25)') }}</p>
-                                </li>
-                                <li>
-                                    <div class="blog-grid__list-check"></div>
-                                    <p class="blog-grid__list-text">{{ __('lang.Art & Design (59)') }}</p>
-                                </li>
-                                <li>
-                                    <div class="blog-grid__list-check"></div>
-                                    <p class="blog-grid__list-text">{{ __('lang.Health & Fitness (24)') }}</p>
-                                </li>
-                                <li>
-                                    <div class="blog-grid__list-check"></div>
-                                    <p class="blog-grid__list-text">{{ __('lang.Sales & Marketing (40)') }}</p>
-                                </li>
-                                <li>
-                                    <div class="blog-grid__list-check"></div>
-                                    <p class="blog-grid__list-text">{{ __('lang.User Research (40)') }}</p>
-                                </li>
-                                <li>
-                                    <div class="blog-grid__list-check"></div>
-                                    <p class="blog-grid__list-text">{{ __('lang.Business Development (30)') }}</p>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="blog-grid__discount blog-grid__single">
-                            <div class="blog-grid__discount-shape-bg" style="background-image: url('{{ asset('assets/images/shapes/blog-grid-discount-shape-bg.png') }}');"></div>
-                            <h4 class="blog-grid__discount-title">{{ __('lang.20% Discount') }}</h4>
-                            <p class="blog-grid__discount-text">{{ __('lang.is simply dummy text of the printing') }} <br> {{ __('lang.and typesetting industry') }}</p>
-                            <div class="blog-grid__discount-img">
-                                <img src="{{ asset('assets/images/resources/blog-grid-discount-img-1.png') }}" >
-                            </div>
-                            <div class="blog-grid__discount-coupon">
-                                <p>{{ __('lang.Use Coupon') }}</p>
-                                <h5>#FuStudy56</h5>
+                            <div class="blog-grid__discount blog-grid__single">
+                                <h4 class="sponser-header">{{ __('lang.Sponser') }}</h4>
+                               
                             </div>
                         </div>
                     </div>
@@ -170,7 +167,6 @@
             <div class="blogs-section">
                 @if($blogs->count() > 0)
                 @foreach($blogs->sortByDesc('id') as $blog)
-                    <!-- Share Modal -->
                     <!-- Share Modal -->
                     <div class="modal fade" id="shareModalTest" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered" style="max-width: 320px;">
@@ -202,7 +198,7 @@
                         <div class="blog-two__single">
                         <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
                             <div class="blog-two__img">
-                                    <img src="{{ asset('storage/' . $blog->thumb) }}" >       
+                            <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" >       
                                 <div class="blog-two__date">
                                     <span class="icon-calendar"></span>
                                     <p>{{ $blog->created_at->diffForHumans() }}</p>
@@ -219,7 +215,7 @@
                                         </a>
                                         <span class="username">
                                             <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
-                                                {{ $blog->creater->name ?? "unknown"}}
+                                                {{ $blog->creater->name ?? __('lang.unknown') }}
                                             </a>
                                         </span>
                                     </div>
@@ -233,19 +229,19 @@
                                 <ul class="blog-two__meta list-unstyled">
                                     <li class="like-btn" data-url="{{ route('localized.blog.like', [app()->getLocale(), $blog->id]) }}">
                                         @if(App\Models\Likes::where('blog_id', $blog->id)->exists())
-                                            <i class="heart-icon fa-solid fa-heart" style="color: #1da370;"></i>
+                                            <i class="heart-icon fa-solid fa-heart" style="color: #0c6164;"></i>
                                         @else
-                                            <i class="heart-icon fa-regular fa-heart" style="color: #1da370;"></i>
+                                            <i class="heart-icon fa-regular fa-heart" style="color: #0c6164;"></i>
                                         @endif 
-                                        Like <span class="like-count">{{ $blog->likes->count() }}</span>
+                                        {{ __('lang.Like') }} <span class="like-count">{{ $blog->likes->count() }}</span>
                                     </li>
                                     <li>
                                         <a href="#" data-bs-toggle="modal" style="margin-left: 30px;" data-bs-target="#editModal{{ $blog->id }}">
-                                            <span class="icon-comments"></span>Comments
+                                            <span class="icon-comments"></span>{{ __('lang.Comments') }}
                                         </a>
                                     </li>
-                                    <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest">
-                                        {{__('lang.Share')}} <i class="far fa-share-square" style="color: #1da370;"></i>
+                                    <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest" style="color: #1da370;">
+                                    <i class="far fa-share-square mx-1" style="color: #0c6164;"></i>{{ __('lang.Share') }} 
                                     </li>
                                 </ul>
                             </div>
@@ -274,7 +270,7 @@
                                                             </a>        
                                                             <div class="blog-two__date">
                                                                 <span class="icon-calendar"></span>
-                                                                <p>{{ $blog->created_at->format('F d, Y h:i A')}}</p>
+                                                                <p>{{ $blog->created_at->diffForHumans() }}</p>
                                                             </div>
                                                         </div>
                                                         <div class="blog-two__content">
@@ -287,13 +283,16 @@
                                                                     </a>
                                                                     <span class="username">
                                                                         <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
-                                                                            {{ $blog->creater->name ?? "unknown"}}
+                                                                            {{ $blog->creater->name ?? __('lang.unknown') }}
                                                                         </a>
                                                                     </span>
                                                                 </div>
                                                             </div>
                                                             <h4 class="blog-two__title">
-                                                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
+                                                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                                                {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
+
+                                                                </a>
                                                             </h4>
                                                         </div>
                                                     </div>
@@ -386,18 +385,18 @@
                                                             <div class="comment-btn-container" style="position: absolute; bottom: 10px; right: 10px; z-index: 10;">
                                                                 <button type="submit" class="comment-btn-inside" style="background: linear-gradient(135deg, #1da370 0%, #0d8a5a 100%); color: white; border: none; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(29, 163, 112, 0.3);">
                                                                     <span class="icon-arrow-circle" style="margin-right: 5px;"></span>
-                                                                    Comment
+                                                                    {{ __('lang.Comment') }}
                                                                 </button>
                                                             </div>
                                                         </div>
                                                         <div class="ajax-comment-error text-danger"></div>
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             @if($blog->comments->count() < 1)
-                                                                <span class="text-light">{{__('lang.Be the first to comment!')}}</span>
+                                                                <span class="text-light">{{ __('lang.Be the first to comment!') }}</span>
                                                             @else
                                                                 <div class="read-comments-wrapper">
                                                                     <a class="read-comments-btn" href="#show-comments-{{ $blog->id }}" data-blog-id="{{ $blog->id }}" style="color: #FFC224;">
-                                                                        {{__('lang.Read all comments')}} <i class="fa-solid fa-arrow-down-wide-short" style="color: #FFC224;"></i>
+                                                                        {{ __('lang.Read all comments') }} <i class="fa-solid fa-arrow-down-wide-short" style="color: #FFC224;"></i>
                                                                     </a>
                                                                 </div>
                                                             @endif
@@ -407,7 +406,7 @@
                                                     <!-- Comments List -->
                                                     <div class="comments-list flex-grow-1 p-3" id="show-comments-{{ $blog->id }}" style="display: none;">
                                                         @if($blog->comments->count() < 1)
-                                                            <div class="no-comments">{{__('lang.Be the first to comment!')}}</div>
+                                                            <div class="no-comments">{{ __('lang.Be the first to comment!') }}</div>
                                                         @else
                                                             @foreach($blog->comments->sortByDesc('created_at') as $comment)
 
@@ -453,7 +452,7 @@
                     <div class="no-blogs-message">
                         <i class="fas fa-blog fa-3x text-muted mb-3"></i>
                         <h4 class="text-muted">{{ __('lang.No blogs uploaded yet') }} </h4>
-                        <p class="text-muted">{{ __('lang.There are no blogs available at the moment.') }}</p>
+                        <p class="text-muted">{{ __('lang.There are no blogs available in the selected category.') }}</p>
                     </div>
                 </div>
             @endif
@@ -550,6 +549,31 @@
                     'transition': 'transform 0.2s ease'
                 });
             });
+
+            // Offcanvas for Categories
+            const toggleBtn = document.querySelector('.categories-toggle-btn');
+            const offcanvasSidebar = document.querySelector('.offcanvas-sidebar');
+            const offcanvasOverlay = document.querySelector('.offcanvas-overlay');
+            const offcanvasClose = document.querySelector('.offcanvas-close');
+
+            function openOffcanvas() {
+                offcanvasSidebar.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeOffcanvas() {
+                offcanvasSidebar.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            if (toggleBtn && offcanvasSidebar) {
+                toggleBtn.addEventListener('click', openOffcanvas);
+            }
+            if (offcanvasOverlay) {
+                offcanvasOverlay.addEventListener('click', closeOffcanvas);
+            }
+            if (offcanvasClose) {
+                offcanvasClose.addEventListener('click', closeOffcanvas);
+            }
         });
     </script>
 

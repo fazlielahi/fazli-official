@@ -109,6 +109,31 @@ body[data-theme="light"] .breadcrumb-wrapper  {
 
 }
 
+body[data-theme="light"] .show-more-btn  {
+
+  color: #198b60;
+
+}
+
+body[data-theme="light"] .category-buttons {
+
+  background-color: #f2f4f7 !important;
+  color: #000 !important;
+
+}
+
+body[data-theme="light"] .btn-close-category{
+
+  color: #1f1f1f !important;
+
+}
+
+body[data-theme="light"] .sidebar__post-title a   {
+
+  color: #198b60;
+
+}
+
 
 
 body[data-theme="light"] .sidebar__post, .sidebar__newsletter {

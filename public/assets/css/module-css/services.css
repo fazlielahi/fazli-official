@@ -1203,7 +1203,7 @@
     display: block;
     background: linear-gradient(141.93deg, #2140F5 2.62%, #687EFF 97.82%);
     border-radius: 20px;
-    padding: 36px 24px 0;
+    padding: 12px 24px;
     overflow: hidden;
     z-index: 1;
 }

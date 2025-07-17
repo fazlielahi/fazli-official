@@ -98,7 +98,7 @@
                     <div class="blog-two__single">
                         <div class="blog-two__img">
                             <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                <img src="{{ asset('storage/' . $blog->thumb) }}" >
+                                <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" >
                             </a>
                             <div class="blog-two__date">
                                 <span class="icon-calendar"></span>
@@ -186,7 +186,7 @@
                                                 <div class="blog-two__single">
                                                     <div class="blog-two__img" id="blog-image-{{ $blog->id }}">
                                                         <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                                            <img src="{{ asset('storage/' . $blog->thumb) }}"  class="img-fluid rounded">
+                                                            <img src="{{ asset('storage/' . $blog->thumb) }}" onerror="this.onerror=null;this.src='{{ asset('images/default.png') }}';" class="img-fluid rounded">
                                                         </a>        
                                                         <div class="blog-two__date">
                                                             <span class="icon-calendar"></span>

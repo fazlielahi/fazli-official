@@ -886,7 +886,7 @@
                             <div class="blog-one__content">
                                 <ul class="blog-one__meta list-unstyled">
                                     <li>
-                                        <a href="#"><span class="icon-calendar"></span>Apr 25, 2025</a>
+                                        <a href="#"><span class="icon-calendar"></span>{{ __('lang.Apr 25, 2025') }}</a>
                                     </li>
                                     <li>
                                         <a href="#" class="mx-2"> <span class="icon-comment"></span> {{ __('lang.Completed!') }}</a>
@@ -910,7 +910,7 @@
                             <div class="blog-one__content">
                                 <ul class="blog-one__meta list-unstyled">
                                     <li>
-                                        <a href="#"><span class="icon-calendar"></span>Marvh 18, 2025</a>
+                                        <a href="#"><span class="icon-calendar"></span>{{ __('lang.Marvh 18, 2025') }}</a>
                                     </li>
                                     <li>
                                         <a href="#"><span class="icon-comment"></span>{{ __('lang.Ongoing!') }}</a>
@@ -931,7 +931,7 @@
                             <div class="blog-one__content">
                                 <ul class="blog-one__meta list-unstyled">
                                     <li>
-                                        <a href="#"><span class="icon-calendar"></span>Jan 01, 2025</a>
+                                        <a href="#"><span class="icon-calendar"></span>{{ __('lang.Jan 01, 2025') }}</a>
                                     </li>
                                     <li>
                                         <a href="#"><span class="icon-comment"></span>{{ __('lang.Completed!') }}</a>
@@ -954,7 +954,7 @@
                             <div class="blog-one__content">
                                 <ul class="blog-one__meta list-unstyled">
                                     <li>
-                                        <a href="new.tamakantech.com"><span class="icon-calendar"></span>August 25, 2024</a>
+                                        <a href="new.tamakantech.com"><span class="icon-calendar"></span>{{ __('lang.August 25, 2024') }}</a>
                                     </li>
                                     <li>
                                         <a href="blog-details.html"><span class="icon-comment"></span>{{ __('lang.Completed!') }}</a>
@@ -995,8 +995,8 @@
                         <div class="section-title__tagline-shape"></div>
                         <span class="section-title__tagline">{{ __('lang.Blogs') }}</span>
                     </div>
-                    <h2 class="section-title-two__title title-animation">Knowledge That Powers Growth - <br> My
-                        <span style="color: #fff">Blog Corner</span>
+                    <h2 class="section-title-two__title title-animation">{{ __('lang.Knowledge That Powers Growth -') }} <br> {{ __('lang.My') }}
+                        <span style="color: #fff">{{ __('lang.Blog Corner') }}</span>
                     </h2>
                 </div>
                 <div class="row">
@@ -1007,7 +1007,7 @@
                                 <img src="{{ asset('assets/images/blog/blog-2-1.jpg') }}" alt="">
                                 <div class="blog-two__date">
                                     <span class="icon-calendar"></span>
-                                    <p>Nov 02, 2025</p>
+                                    <p>{{ __('lang.Nov 02, 2025') }}</p>
                                 </div>
                             </div>
                             <div class="blog-two__content">
@@ -1025,17 +1025,16 @@
                                 <div class="blog-two__meta-box comment-sec">
                                     <ul class="blog-two__meta list-unstyled">
                                         <li>
-                                            <a href="blog-details.html"><span class="icon-tags"></span>Like</a>
+                                            <a href="blog-details.html"><span class="icon-tags"></span>{{ __('lang.Like') }}</a>
                                         </li>
                                         <li>
                                             <a href="blog-details.html">
-                                                <span
-                                                    class="icon-comments">
-                                                </span>Comments
+                                                <span class="icon-comments">
+                                                </span>{{ __('lang.Comments') }}
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="blog-details.html"><span class="icon-clock"></span>Read!</a>
+                                            <a href="blog-details.html"><span class="icon-clock"></span>{{ __('lang.Read!') }}</a>
                                         </li>
                                     </ul>
                                 </div>

@@ -120,16 +120,19 @@ class BlogController extends Controller
 
     public function draftBlogs(Request $request)
     {
-        // Check if the user is logged in: either session or cookie has 'user_id'
         if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
             return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
         }
 
         $user = User::find($request->session()->get('user_id'));
-
-        $blogs = Blog::all()->where('status', 'draft');     
-        
-        return view('site.draft-blog', compact('blogs', 'user'));         
+        $categories = \App\Models\Category::all();
+        $selectedCategory = $request->input('category_id');
+        $blogs = \App\Models\Blog::where('status', 'draft')->where('created_by', $user->id);
+        if ($selectedCategory) {
+            $blogs = $blogs->where('category_id', $selectedCategory);
+        }
+        $blogs = $blogs->get();
+        return view('site.draft-blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
     }   
 
     public function create(Request $request)

@@ -184,7 +184,14 @@
             margin-right: 10px;
         }
         
-    </style>
+        .category-dropdown{
+            display: none;
+        }
+
+        nice-select form-control{
+            margin-bottom: 20px;
+        }
+</style>
 
     <div class="col-12 col-md-10" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
         <div class="form mb-4">
@@ -224,7 +231,7 @@
                                 <div class="photo-preview-container" id="thumb-preview-container">
                                     @if($blog->thumb)
                                         <div class="preview-wrapper">
-                                            <img src="{{ asset('storage/' . $blog->thumb) }}" alt="Blog Thumbnail" class="preview-image">
+                                        <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" class="preview-image">
                                             <button type="button" class="remove-preview" onclick="removeCurrentThumb()">
                                                 <i class="fas fa-times"></i>
                                             </button>
@@ -239,7 +246,7 @@
                                 <div class="photo-preview-container" id="image-preview-container">
                                     @if($blog->image)
                                         <div class="preview-wrapper">
-                                            <img src="{{ asset('storage/' . $blog->image) }}" alt="Blog Image" class="preview-image">
+                                        <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->image)) ? asset('storage/' . $blog->image) : asset('images/blog-default.jpg') }}" class="preview-image">
                                             <button type="button" class="remove-preview" onclick="removeCurrentImage()">
                                                 <i class="fas fa-times"></i>
                                             </button>
@@ -259,6 +266,7 @@
                                     <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <label class="mt-3"> Add Contents </label>
                             <textarea name="content" class="my-2">
                                 {{ old('content', $blog->content) }}
                             </textarea>

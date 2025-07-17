@@ -72,6 +72,11 @@
         }
         
         .extra-comment { display: none; }
+
+        .categ-btn{
+            text-align: right;
+        }
+
     </style>
 
 @endsection
@@ -178,7 +183,7 @@
 
                         <div class="comment-one" id="comments-section">
                             <h3 class="comment-one__title">
-                                 {{ __('lang.Comments')}} ( {{$blog->comments->count()}} )
+                                 {{ __('lang.Comments')}} 
                                 </h3>
                                 <div id="show-comments-{{ $blog->id }}"  class="comment-one__list-wrapper" style="max-height: 500px; overflow: auto;">
                                 @foreach($blog->comments->sortByDesc('created_at')->values() as $index => $comment)
@@ -363,67 +368,63 @@
             </div>
             <div class="col-xl-4 col-lg-5 categories-section">
                 <div class="sidebar">
-
-                    <div class="sidebar__single sidebar__category">
-                        <div class="sidebar__title-box">
-                            <div class="sidebar__title-icon">
-                                <img src="assets/images/icon/sidebar-title-icon.png" alt="">
-                            </div>
-                            <h3 class="sidebar__title">{{ __('lang.What Interests You?') }}</h3>
+                    <div class="offcanvas offcanvas-end bg-dark text-light" tabindex="-1" id="categoriesOffcanvas" aria-labelledby="categoriesOffcanvasLabel" data-bs-backdrop="false">
+                        <div class="offcanvas-header border-bottom border-secondary">
+                            <h5 class="offcanvas-title text-light" id="categoriesOffcanvasLabel">{{ __('lang.What Interests You?') }}</h5>
+                            <button type="button" class="btn-close-category" data-bs-dismiss="offcanvas" aria-label="{{ __('lang.Close') }}"> <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                        <ul class="sidebar__category-list list-unstyled">
-                            <li>
-                                <a href="blog-details.html">{{ __('lang.Digital Marketing') }} - (45)<span
-                                        class="fas fa-arrow-right"></span></a>
-                            </li>
-                            <li>
-                                <a href="blog-details.html">{{ __('lang.Health & Fitness') }} - (12)<span
-                                        class="fas fa-arrow-right"></span></a>
-                            </li>
-                            <li class="active">
-                                <a href="blog-details.html">{{ __('lang.Programming & Tech') }} - (78)<span
-                                        class="fas fa-arrow-right"></span></a>
-                            </li>
-                            <li>
-                                <a href="blog-details.html">{{ __('lang.Product Design') }} - (45)<span
-                                        class="fas fa-arrow-right"></span></a>
-                            </li>
-                            <li>
-                                <a href="blog-details.html">{{ __('lang.Online Chef') }} - (12)<span
-                                        class="fas fa-arrow-right"></span></a>
-                            </li>
-                        </ul>
+                        <div class="offcanvas-body">
+                            <ul class="sidebar__category-list list-unstyled">
+                                <li>
+                                    <a href="{{ route('localized.blogs', ['lang' => app()->getLocale()]) }}" class="{{ empty($selectedCategory) ? 'active' : '' }} text-light category-buttons">
+                                        {{ __('lang.All') }}
+                                        <span class="fas fa-arrow-right"></span>
+                                    </a>
+                                </li>
+                                @foreach($categories as $category)
+                                    <li class="{{ $selectedCategory == $category->id ? 'active' : '' }}">
+                                        <a href="{{ route('localized.blogs', ['lang' => app()->getLocale()]) }}?category_id={{ $category->id }}" class="text-light category-buttons">
+                                            {{ $category->name }}
+                                            <span class="fas fa-arrow-right"></span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
+                    <!-- Replace the sidebar category section with just the button for mobile, keep sidebar for desktop -->
                     <div class="sidebar__single sidebar__post">
-                        <div class="sidebar__title-box">
-                            <div class="sidebar__title-icon">
-                                <img src="assets/images/icon/sidebar-title-icon.png" alt="">
-                            </div>
+                        <div class="sidebar__title-box mb-0 latest-post-box">
+                              <!-- Categories Button and Offcanvas -->
                             <h3 class="sidebar__title">{{ __('lang.What’s New') }}</h3>
+                            <button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoriesOffcanvas" aria-controls="categoriesOffcanvas">
+                                    <i class="fa fa-list"></i> {{ __('lang.Topics') }}
+                                </button>
                         </div>
                         <ul class="sidebar__post-list list-unstyled">
                         @foreach($popular_blogs as $popular_blog)
+                            <ul class="sidebar__post-meta list-unstyled mt-3">
+                                            <li>
+                                                <p><span class="icon-tags"></span>{{ $popular_blog->category ? $popular_blog->category->name : __('lang.Development') }}</p>
+                                            </li>
+                                            <li>
+                                                <p><span class="icon-clock"></span>{{$popular_blog->created_at->diffForHumans() }}</p>
+                                            </li>
+                                        </ul>
                             <li>
                                 <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $popular_blog->id]) }}">
                                     <div class="sidebar__post-image">
-                                        <img src="{{ asset('storage/' . $popular_blog->thumb) }}" alt="">
+                                        <img src="{{ $popular_blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $popular_blog->thumb) : asset('images/blog-default.jpg') }}" >       
                                     </div>
-                                </a>
                                 <div class="sidebar__post-content">
-                                    <ul class="sidebar__post-meta list-unstyled">
-                                        <li>
-                                            <p><span class="icon-tags"></span>{{ __('lang.Development') }}</p>
-                                        </li>
-                                        <li>
-                                            <p><span class="icon-clock"></span>{{$popular_blog->created_at->format('F d, Y h:i A')}}</p>
-                                        </li>
-                                    </ul>
                                     <h3 class="sidebar__post-title">
                                         <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $popular_blog->id]) }}">
-                                            {{$popular_blog->title}}
+                                            {{ Str::limit(html_entity_decode(strip_tags($popular_blog->title)), 45) }}
                                         </a>
                                     </h3>
                                 </div>
+                                </a>
                             </li>
                         @endforeach
                         </ul>
@@ -503,39 +504,42 @@
 <script>
 
     // Emoji Picker Functionality
-    $('.emoji-toggle-btn').on('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var $panel = $(this).siblings('.emoji-panel');
-        $('.emoji-panel').not($panel).hide();
-        $panel.toggle();
-    });
+    $(document).ready(function() {
+        // Emoji Picker Functionality
+        $(document).on('click', '.emoji-toggle-btn', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var $panel = $(this).siblings('.emoji-panel');
+            $('.emoji-panel').not($panel).hide();
+            $panel.toggle();
+        });
 
-    // Close emoji panel when clicking outside
-    $(document).on('click', function(e) {
-        if (!$(e.target).closest('.emoji-picker-container').length) {
+        // Close emoji panel when clicking outside
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.emoji-picker-container').length) {
+                $('.emoji-panel').hide();
+            }
+        });
+
+        // Insert emoji into textarea
+        $(document).on('click', '.emoji-btn', function(e) {
+            e.preventDefault();
+            var emoji = $(this).data('emoji');
+            var $textarea = $('#comment-textarea');
+            var cursorPos = $textarea[0].selectionStart;
+            var textBefore = $textarea.val().substring(0, cursorPos);
+            var textAfter = $textarea.val().substring(cursorPos);
+
+            $textarea.val(textBefore + emoji + textAfter);
+
+            // Set cursor position after the inserted emoji
+            var newCursorPos = cursorPos + emoji.length;
+            $textarea[0].setSelectionRange(newCursorPos, newCursorPos);
+            $textarea.focus();
+
+            // Hide the emoji panel
             $('.emoji-panel').hide();
-        }
-    });
-
-    // Insert emoji into textarea
-    $('.emoji-btn').on('click', function(e) {
-        e.preventDefault();
-        var emoji = $(this).data('emoji');
-        var $textarea = $('#comment-textarea');
-        var cursorPos = $textarea[0].selectionStart;
-        var textBefore = $textarea.val().substring(0, cursorPos);
-        var textAfter = $textarea.val().substring(cursorPos);
-        
-        $textarea.val(textBefore + emoji + textAfter);
-        
-        // Set cursor position after the inserted emoji
-        var newCursorPos = cursorPos + emoji.length;
-        $textarea[0].setSelectionRange(newCursorPos, newCursorPos);
-        $textarea.focus();
-        
-        // Hide the emoji panel
-        $('.emoji-panel').hide();
+        });
     });
 
     // Emoji button hover effects
@@ -550,7 +554,6 @@
             'transition': 'transform 0.2s ease'
         });
     });
-});
 </script>
 
 <script>
