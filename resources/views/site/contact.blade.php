@@ -99,7 +99,7 @@
                 <h2>{{ __('lang.Contact Me') }}</h2>
                 <div class="thm-breadcrumb__box">
                     <ul class="thm-breadcrumb list-unstyled">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html">{{ __('lang.Home') }}</a></li>
                         <li><span>//</span></li>
                         <li>{{ __('lang.Contact Me') }}</li>
                     </ul>
@@ -175,7 +175,7 @@
                                
                                 <span class="section-title-two__tagline">{{ __('lang.Get in Touch') }}</span>
                             </div>
-                            <h2 class="section-title-two__title title-animation">{{ __('lang.I am Here to Help and Ready to Hear from You') }}
+                            <h2 class="section-title-two__title">{{ __('lang.I am Here to Help and Ready to Hear from You') }}
                             </h2>
                         </div>
                         <form class="contact-form-validated contact-three__form" action="{{ asset('assets/inc/sendemail.php') }}"

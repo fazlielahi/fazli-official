@@ -1,5 +1,145 @@
-.main-header{
+body,
+.section-title__title span{
+    font-family: "Noto Kufi Arabic" !important;
+}
+
+.main-header, .navbar,
+.share-modal,
+.modal-header,
+.login-form, .register,
+.profile-sidebar,
+.form {
     direction: rtl;
+}
+
+
+.breadcrumb-wrapper .container,
+.blog-row,
+.profile-container,
+.blog-details .row,
+.blog-details .blog-details__client-and-meta,
+.blog-details .blog-details__client-box,
+.blog-details .sidebar__title-box,
+.blog-details .sidebar__post-list>li,
+.sidebar__post-meta p,
+.banner-one__student-trained-count-box-inner,
+.dropdown-toggle,
+.profile-header,
+.profile-photo-box,
+.comment-modal .comment-card
+ {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.blog-grid__list-text, .comment-card,
+.comment-creater,
+.comment-pic,
+.im,
+.blogs-one__ratting-and-heart-box,
+.member-since{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.dropdown-item{
+    display: flex !important;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.section-title__title span img{
+    right: auto;
+    left: 6px;
+}
+
+.input-group{
+    right: auto !important;
+    left: 31px;
+}
+
+    
+.profile-sidebar .badge{
+    top: 8px !important;
+    right: auto !important;
+    left: -15px;
+}
+
+.why-choose-one__right .section-title
+{
+    margin-right: 0 !important;
+}
+
+.blog-two__title{
+    text-align: right;
+}
+
+.banner-one__udemy-review
+{
+    max-width: 193px !important;
+}
+
+.banner-one__student-trained-list{
+    flex-direction: row !important;
+}
+
+.offcanvas-end{
+    left: 0;
+    right: auto;
+    direction: rtl;
+}
+
+.blog-details__left {
+    margin-left: 107px;
+    margin-right: 0 !important;
+}
+
+.comment-modal .fa-close-btn {
+    right: auto !important;
+    left: 20px !important;
+}
+
+.comment-textarea{
+    padding-right: 10px !important;
+    padding-top: 10px !important;
+    padding-left: 2px;
+}
+
+.comment-btn-container{
+    right: auto !important;
+    left: 10px;
+}
+
+.emoji-picker-container{
+    left: auto !important;
+    right: 10px;
+}
+
+.comment-a{
+    margin-right: 30px;
+}
+
+.navbar-nav .fas,
+.theme-toggle-label,
+.blog-grid__list-check,
+.timestamp,
+.user-image{
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.comment-creater{
+    margin-top: 7px;
+}
+
+.emoji-panel{
+    left: -210px;
+}
+
+.register-btn{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .about-top{
@@ -16,6 +156,23 @@
     position: absolute;
     right: 18px;
     top: 219px;
+}
+
+.nice-select:after{
+right: auto !important;
+left: 17px !important;
+}
+
+.nice-select .option{
+    text-align: right !important;
+}
+
+.form-check{
+    display: flex !important;
+}
+
+.remember-me{
+    margin-right: 28px;
 }
 
 .contact-controller{
@@ -120,7 +277,11 @@
     justify-content: flex-end;
 }
 
-.about-rtl, .testimonial-one__single, 
+.about-rtl{
+    text-align: right;
+}
+
+.testimonial-one__single, 
 .live-class-row,
 .site-footer__logo-and-contact-box-inner,
 .footer-row,
@@ -162,11 +323,18 @@ textarea{
     text-align: left;
 }
 
+.banner-one__title-clr-1, .banner-one__title-clr-2{
+    font-family: "Noto Kufi Arabic" !important;
+}
 
+.banner-one__title-box-shape
+ {
+    left: auto;
+    right: 0;
+}
 
 @media screen and (max-width: 1000px) {
     .main-header .menu{
         padding-right: 30px !important;
     }
-
 }

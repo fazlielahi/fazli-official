@@ -229,7 +229,7 @@
     display: block;
     margin-bottom: 23px;
     background-color: rgb(27 31 35);
-    border-radius: 20px;
+    border-radius: 10px;
 }
 
 .profile-container {
@@ -247,11 +247,28 @@
     border: 2px solid #ccc;
   }
 
+  .profile-container .username{
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 2px;
+    line-height: 0;
+  }
+
   .username a{
     font-size: 16px;
     font-weight: 600;
     color: #eee !important;
-    margin: 0 4px;
+    margin: 0;
+    transition: 0.5s;
+  }
+
+  .username a:hover{
+    color: #18835a !important;
+    text-decoration: underline;
+  }
+
+  .share-model .btn-close{
+    margin: 0 !important;
   }
 
 .comment-sec{
@@ -266,7 +283,8 @@
     position: relative;
     display: block;
     overflow: hidden;
-    border-radius: 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     z-index: 1;
     height: 260px;
 }
@@ -292,7 +310,8 @@
 
 .blog-two__img img {
     width: 100%;
-    border-radius: 20px;
+    height: 100%;
+    object-fit: cover;
     transform: scale3d(1, 1, 1);
     transition: transform 1s ease-in-out;
 }
@@ -341,8 +360,8 @@
 .blog-two__meta-box {
     position: relative;
     display: block;
-    padding: 14px 15px 14px;
-    border-radius: 12px;
+    padding: 5px 15px 5px;
+    border-radius: 10px;
 }
 
 .blog-profile{
@@ -1157,7 +1176,7 @@
 }
 
 .sidebar__single+.sidebar__single {
-    margin-top: 40px;
+    margin-top: 15px;
 }
 
 .sidebar {
@@ -1850,8 +1869,22 @@
     padding: 45px 0 0px;
 }
 
-.blog-card{
+.blog-card-home{
     width: 45% !important;
+    display: inline-block;
+    margin: 0 18px;
+    vertical-align: top;
+}
+
+.blog-card-blogs{
+    width: 45% !important;
+    display: inline-block;
+    margin: 0 18px;
+    vertical-align: top;
+}
+
+.blog-card{
+    width: 30%;
     display: inline-block;
     margin: 0 18px;
     vertical-align: top;
@@ -1881,12 +1914,19 @@
     display: none !important;
 }
 
-.comment-modal .btn-close {
+.comment-modal .fa-close-btn {
     position: absolute;
-    top: 30px;
-    right: 30px !important;
+    top: 11px;
+    right: 20px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
     z-index: 10;
-    border: 1px solid ;
+}
+
+.comment-modal .row{
+    width: 100%;
+    margin: auto;
+    background-color: #000000;
 }
 
 .comment-modal .blog-two__single{
@@ -1910,16 +1950,11 @@
     padding: 0 1rem !important;
 }
 
-.comment-modal .modal-header {
-    border-bottom: 0 !important;
-}
-
 /* Comments Section Styling */
 .comment-modal .comments-list {
     max-height: 100%;
     overflow-y: auto;
     padding-right: 8px;
-    margin-top: 1rem;
     margin-bottom: 1rem;
     scrollbar-width: thin;
     scrollbar-color: #FFC224 #222;
@@ -1935,7 +1970,7 @@
 }
 
 .comment-modal .comment-card {
-    background: rgba(40, 40, 40, 0.95);
+    background: rgb(27 31 35);
     border: 1px solid #333;
     border-radius: 12px;
     box-shadow: 0 2px 8px #00000022;
@@ -1952,11 +1987,12 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #FFC224;
-    margin-right: 0.75rem;
+    margin: 0;
 }
 
 .comment-modal .comment-card .comment-content {
     flex: 1;
+    margin-top: 13px;
 }
 
 .comment-modal .comment-card .username {
@@ -1964,6 +2000,8 @@
     color: #FFC224;
     font-size: 1.1rem;
     margin-bottom: 0.2rem;
+    line-height: 0;
+    margin-bottom: 6px;
     display: block;
 }
 
@@ -1994,11 +2032,10 @@
 
 .comment-modal .modal-content {
     border: none;
-    border-radius: 20px;
 }
 
 .comment-modal .modal-header {
-    border-bottom: 1px solid #333;
+    border-bottom: 0 !important;
     padding: 1rem 25px;
 }
 
@@ -2036,17 +2073,20 @@
 .comment-modal .flex-grow-1 {
     overflow-y: auto;
     max-height: 100%;
-    margin: 30px 0 !important;
+    background: #1b1f23;
 }
 
 .comment-row{
     justify-content: space-around;
 }
 
+.comment-modal .flex-grow-1 {
+    max-height: calc(100vh - 250px);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .comment-modal .modal-dialog {
-        max-width: 95% !important;
         margin: 1rem auto;
     }
     
@@ -2057,16 +2097,13 @@
     .comment-modal .col-md-6 {
         width: 100%;
         border-right: none !important;
-        border-bottom: 1px solid #333;
     }
     
     .comment-modal .modal-body {
         min-height: 70vh;
     }
     
-    .comment-modal .flex-grow-1 {
-        max-height: calc(70vh - 250px);
-    }
+
 }
 
 .profile-sidebar{
@@ -2245,12 +2282,12 @@ h1, h2, h3, h4, h5, h6 {
     overflow: hidden;
 }
 
-.input-group{
+.category-dropdown .input-group{
     
-    position: absolute !important;
-    width: 350px !important;
+    position: absolute;
+    width: 350px;
     right: 31px;
-    top: 174px;
+    top: 185px;
 }
 
 .nice-select{
@@ -2294,4 +2331,94 @@ h1, h2, h3, h4, h5, h6 {
 
 .blog-row{
     display: flex;
+}
+
+.offcanvas-close{
+    display: none;
+}
+
+.comment-a{
+    margin-left: 30px;
+}
+
+.blog-grid__discount {
+    margin: 11px 0px;
+    margin-right: 34px;
+}
+
+.ads-section-mobile{
+    display: none;
+}
+
+.no-more-blog{
+    position: absolute;
+    bottom: 0 !important;
+    text-align: center;
+    width: 100%;
+}
+
+.no-more-blog h4{
+    color: rgb(170, 170, 170) !important;
+}
+
+.modal-fullscreen{
+    max-width: 80%;
+}
+
+.post-interactions .share-btn, .like-btn, .comment-a, .post-interactions .comment, .icon-comments{
+    color: #1da370 !important;
+}
+
+.post-interactions i{
+    color: #1da370 !important;
+}
+
+.read-comments-btn{
+    color: #FFC224;
+}
+
+.comment-textarea{
+    padding-bottom: 17px;
+    padding-right: 1.comment-modal .fa-close-btn0px;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.comment-btn-container{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.emoji-picker-container{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 10;
+}
+
+.comment-emoji{
+    background-color: #323639;
+    width: 100%;
+    height: 60px;
+}
+
+.emoji-panel{
+    position: absolute;
+    bottom: 100%;
+    left: 0px;
+    background: white;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 12px;
+    min-width: 240px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 5px;
+}
+
+.profile-header{
+    align-items: center;
 }

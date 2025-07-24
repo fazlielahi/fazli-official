@@ -66,6 +66,11 @@
         .category-dropdown{
             display: none;
         }
+
+        .row{
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
     </style>
 
 @endsection
@@ -84,9 +89,10 @@
             width: 100% !important;
             background: #0c0c0c;
             padding: 11px;
-            border-radius: 16px;
+            border-radius: 4px;
             padding-top: 20px;
             box-shadow: 0px 0px 5px 1px #3333331f;
+            margin-top: 20px;
         }
 
         .cke_notifications_area{
@@ -97,9 +103,9 @@
             background: #0c0c0c;
         }
 
-        .col-md-10 {
-            flex: 0 0 auto;
-            width: 79.333333%;
+        .image-input-thumb,
+        .image-input-main {
+            padding: 10px;
         }
 
         .card{
@@ -107,7 +113,6 @@
         }
 
         .nice-select{
-            height: auto !important;
             background: #0c0c0c !important;
             border: 1px solid;
             line-height: 23px !important;
@@ -202,11 +207,15 @@
             display: inline-block;
             margin-right: 10px;
         }
+
     </style>
 
-    <div class="col-12 col-md-10" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
+    <div class="col-12" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
         <div class="form mb-4">
-            <h3>New Post</h3>
+            <h3>{{ __('lang.New Post') }}</h3>
+
+            
+        <hr style="border-top: 1px dashed #424242; margin: 10px 0;">
 
             @if(session('success'))
                 <p style="color: #21cf8c">{{ session('success') }}</p>
@@ -229,95 +238,84 @@
                     <div class="card">
                         <div class="body">
     
-                            <div class="form-group">
-                                <label for="title">Title</label>
-                                <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-control" placeholder="Enter Blog title" />
-                                @error('title')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    <style>
-                                        #title {
-                                            border-color: rgb(160, 40, 50) !important;
-                                        }
-                                    </style>
-                                @enderror
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="title">{{ __('lang.Title') }}</label>
+                                    <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-control" placeholder="{{ __('lang.Enter Blog title') }}" />
+                                    @error('title')
+                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                        <style>
+                                            #title { border-color: rgb(160, 40, 50) !important; }
+                                        </style>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="category_id">{{ __('lang.Category') }}</label>
+                                    <select name="category_id" id="category_id" class="form-control" required>
+                                        <option value="">{{ __('lang.Select Category') }}</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id')
+                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
-                            
-                            <div class="form-group m-t-20 m-b-20 my-2">
-                                <label for="thumb">Thumbnail</label>
-                                <input type="file" name="thumb" id="thumb" class="image-input-thumb form-control-file d-block" 
-                                style="font-size: small !important;" value="{{ old('thumb') }}" aria-describedby="fileHelp">
-                                <small id="fileHelp" class="form-text text-muted">Dimensions: 600x340</small>
-                                @error('thumb')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    <style>
-                                        #thumb {
-                                            border-color: rgb(160, 40, 50) !important;
-                                        }
-                                    </style>
-                                @enderror
-                                <div class="photo-preview-container" id="thumb-preview-container"></div>
+                            <div class="row">
+                                <div class="form-group col-md-6 mt-3">
+                                    <label for="thumb">{{ __('lang.Thumbnail') }}</label>
+                                    <input type="file" name="thumb" id="thumb" class="image-input-thumb form-control d-block" style="font-size: small !important;" value="{{ old('thumb') }}" aria-describedby="fileHelp">
+                                    <small id="fileHelp" class="form-text text-muted">{{ __('lang.Dimensions: 600x340') }}</small>
+                                    @error('thumb')
+                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                        <style>
+                                            #thumb { border-color: rgb(160, 40, 50) !important; }
+                                        </style>
+                                    @enderror
+                                    <div class="photo-preview-container" id="thumb-preview-container"></div>
+                                </div>
+                                <div class="form-group col-md-6 mt-3">
+                                    <label for="image">{{ __('lang.Main Image') }}</label>
+                                    <input type="file" name="image" id="image" class="image-input-main form-control d-block" style="font-size: small !important;" value="{{ old('image') }}" aria-describedby="fileHelp">
+                                    <small id="fileHelp" class="form-text text-muted">{{ __('lang.Dimensions: 1920x500') }}</small>
+                                    @error('image')
+                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                        <style>
+                                            #image { border-color: rgb(160, 40, 50) !important; }
+                                        </style>
+                                    @enderror
+                                    <div class="photo-preview-container" id="image-preview-container"></div>
+                                </div>
                             </div>
-
-                            <div class="form-group m-t-20 m-b-20 my-2">
-                                <label for="image">Main Image</label>
-                                <input type="file" name="image" id="image" class="image-input-main form-control-file d-block" 
-                                style="font-size: small !important;" value="{{ old('image') }}" aria-describedby="fileHelp">
-                                <small id="fileHelp" class="form-text text-muted">Dimensions: 1920x500</small>
-                                @error('image')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    <style>
-                                        #image {
-                                            border-color: rgb(160, 40, 50) !important;
-                                        }
-                                    </style>
-                                @enderror
-                                <div class="photo-preview-container" id="image-preview-container"></div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="category_id">Category</label>
-                                <select name="category_id" id="category_id" class="form-control" required>
-                                    <option value="">Select Category</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('category_id')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <label for="content">Content</label>
-                                <textarea id="content" name="content">
-                                    {{ old('content') }}
-                                </textarea>
-                                @error('content')
-                                    <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    <style>
-                                        #content {
-                                            border-color: rgb(160, 40, 50) !important;
-                                        }
-                                    </style>
-                                @enderror
-                            </div>
-
-                                <div class="form-group">
-                                    <label for="status">Status</label>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="status">{{ __('lang.Status') }}</label>
                                     <select name="status" id="status" class="form-control show-tick" style="height: 36px;">
                                         <option selected value="draft">{{__('lang.Draft')}}</option>
-                                        <option value="request">Request for review</option>
+                                        <option value="request">{{ __('lang.Request for review') }}</option>
                                     </select>
                                     @error('status')
                                         <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
                                         <style>
-                                            #status {
-                                                border-color: rgb(160, 40, 50) !important;
-                                            }
+                                            #status { border-color: rgb(160, 40, 50) !important; }
                                         </style>
                                     @enderror
                                 </div>
-                            <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">Post</button>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12 mt-3">
+                                    <label for="content">{{ __('lang.Content') }}</label>
+                                    <textarea id="content" name="content">{{ old('content') }}</textarea>
+                                    @error('content')
+                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                        <style>
+                                            #content { border-color: rgb(160, 40, 50) !important; }
+                                        </style>
+                                    @enderror
+                                </div>
+                            </div>
+                            <button type="submit" class="btn text-light btn-sm my-3 mx-3" style="color: #222 !important; background: #21cf8c;">{{ __('lang.Post') }}</button>
                         </div>
                     </div>
                 </div>            
@@ -329,17 +327,18 @@
 
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @php $locale = app()->getLocale(); @endphp
     <script>
         CKEDITOR.replace('content', {
-                extraAllowedContent: 'img[width,height]{width,height}', // Allow width & height as attributes and styles
-                removeFormatAttributes: '',
-                image_prefillDimensions: true, 
-                allowedContent: true, 
-                filebrowserUploadUrl: "{{ route('localized.admin.ckeditor.upload', ['lang' => app()->getLocale()]) }}?_token={{ csrf_token() }}",
-                filebrowserUploadMethod: 'form',
-                filebrowserUploadMethod: 'xhr'
-                
-            });
+            extraAllowedContent: 'img[width,height]{width,height}', // Allow width & height as attributes and styles
+            removeFormatAttributes: '',
+            image_prefillDimensions: true, 
+            allowedContent: true, 
+            filebrowserUploadUrl: "{{ route('localized.admin.ckeditor.upload', ['lang' => app()->getLocale()]) }}?_token={{ csrf_token() }}",
+            filebrowserUploadMethod: 'form',
+            filebrowserUploadMethod: 'xhr',
+            contentsLangDirection: '{{ $locale === 'ar' ? 'rtl' : 'ltr' }}', // Set direction based on locale
+        });
     </script>
 
     <script>
@@ -356,7 +355,7 @@
 
                 // Validate file type
                 if (!file.type.startsWith('image/')) {
-                    alert('Please select a valid image file.');
+                    alert('{{ __('lang.Please select a valid image file.') }}');
                     input.value = '';
                     return;
                 }
@@ -364,7 +363,7 @@
                 // Validate file size (5MB limit)
                 const maxSize = 5 * 1024 * 1024; // 5MB
                 if (file.size > maxSize) {
-                    alert('File size must be less than 5MB.');
+                    alert('{{ __('lang.File size must be less than 5MB.') }}');
                     input.value = '';
                     return;
                 }

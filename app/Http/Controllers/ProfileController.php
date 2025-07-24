@@ -94,15 +94,15 @@ class ProfileController extends Controller
             app()->setLocale($lang);
             
             // Find the user or return 404
-            $clickedUser = \App\User::findOrFail($id);
+            $clickedUser = \App\Models\User::findOrFail($id);
             // info($lang);
             // Get all blogs by this user, ordered by newest first
-            $blogs = \App\Blog::where('created_by', $id)
+            $blogs = \App\Models\Blog::where('created_by', $id)
                             ->where('status', 'published')
                             ->orderBy('created_at', 'desc')
                             ->get();
         
-            $latestBlogs = \App\Blog::where('created_by', $id)
+            $latestBlogs = \App\Models\Blog::where('created_by', $id)
             ->where('status', 'published')
             ->orderBy('created_at', 'desc')
             ->take(10)
@@ -110,6 +110,6 @@ class ProfileController extends Controller
             
 
             // Return the view with user and their blogs
-            return view('sections.published_blogs', compact('clickedUser', 'blogs', 'latestBlogs'));
+            return view('site.published_blogs', compact('clickedUser', 'blogs', 'latestBlogs'));
         }
 }

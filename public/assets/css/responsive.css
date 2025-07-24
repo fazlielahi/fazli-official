@@ -1852,11 +1852,6 @@
         display: none;
     }
 
-    .page-header__inner h2 {
-        font-size: 25px;
-        line-height: 35px;
-    }
-
     .page-header__inner {
         padding: 92px 0 92px;
     }

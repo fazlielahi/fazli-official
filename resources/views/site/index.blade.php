@@ -62,10 +62,49 @@
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/shop.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/faq.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/error.css') }}" />
+    
+    <!-- Font Awesome CDN for version 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- responsive design -->
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-blog.css') }}" />
+    
+    <!-- responsive design -->
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-home.css') }}" />
 
     <!-- Template styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
+
+    <style>
+        .blog-two .row{
+            justify-content: center;
+        }
+        .fa-close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: #fff; /* white for dark theme */
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        body[data-theme="light"] .fa-close-btn {
+            color: #222; /* dark for light theme */
+        }
+        .fa-close-btn:focus {
+            outline: 2px solid #18835a;
+        }
+
+        .blog-two__title{
+            margin-bottom: 20px !important;
+        }
+
+        .blog-two__content{
+            padding-bottom: 1px !important;
+        }
+    </style>
 
 @endsection
 
@@ -84,9 +123,9 @@
                                         <img src="{{ asset('assets/images/shapes/banner-one-title-box-shape-1.png') }}" alt="">
                                     </div>
                                     <h2 class="banner-one__title">
-                                        <span class="banner-one__title-clr-1">{{ __('lang.Your Vision') }}</span>, <br>
+                                        <span class="banner-one__title-clr-1">{{ __('lang.Your Vision') }}</span><br>
                                         <span class="banner-one__title-clr-2">{!! __('lang.My Code') !!}</span> <br>
-                                        {{ __('lang.Lets Build Something Great') }} 
+                                        <span class="slogan-3">{{ __('lang.Lets Build Something Great') }} </span>
                                     </h2>
                                 </div>
                                 <p class="banner-one__text">
@@ -166,7 +205,7 @@
                                     <a href="#services-section">{{ __('lang.Services') }}</a>
                                     <a href="#why-choose-me">{{ __('lang.Why Me?') }}</a>
                                     <a href="#portfolio-sec">{{ __('lang.Portfolio') }}</a>
-                                    <a href="#">{{ __('lang.Blogs') }}</a>
+                                    <a href="#blog-section-home">{{ __('lang.Blogs') }}</a>
                                 </div>
                             </div>
                         </div>
@@ -192,7 +231,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6">
                                         <div class="about-one__img-box">
                                             <div class="about-one__img">
-                                                <img src="{{ asset('assets/images/resources/about1.jpeg') }}" alt="">
+                                                <img src="{{ asset('assets/images/resources/tfc.jpg') }}" alt="">
                                             </div>
                                         </div>
                                         <div class="about-one__awards-box">
@@ -222,7 +261,7 @@
                                         </div>
                                         <div class="about-one__img-box-2">
                                             <div class="about-one__img-2">
-                                                <img src="{{ asset('assets/images/resources/about2.jpeg') }}" alt="">
+                                                <img src="{{ asset('assets/images/resources/about1.jpeg') }}" alt="">
                                             </div>
                                             <div class="about-one__img-shape-1 float-bob-y">
                                                 <img src="{{ asset('assets/images/shapes/about-one-img-shape-1.png') }}" alt="">
@@ -240,7 +279,13 @@
                                         <span class="section-title__tagline">{{ __('lang.About Me') }}</span>
                                     </div>
                                     <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">
-                                        {{ __('lang.IM') }}:<span style="color:#fff !important"> {{ __('lang.Fazli Elahi') }}</span>
+                                        <div class="im">
+                                            <span>
+                                            {{ __('lang.IM') }} 
+                                            </span>
+                                            <span style="margin: 0 8px;"> {{ __('lang.Fazli Elahi') }}</span>
+                                        </div>
+                                       
                                         <span>{!! __('lang.Full stack web developer') !!} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></span>
                                     </h2>
                                 </div>
@@ -290,13 +335,13 @@
                             <div class="section-title__tagline-shape"></div>
                             <span class="section-title__tagline" >{{ __('lang.Services') }}</span>
                         </div>
-                        <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.More Than Web:') }} <br>{{ __('lang.One Place,') }}
+                        <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.More Than Web') }} <br>{{ __('lang.One Place,') }}
                             <span class="solution">{{ __('lang.Many Solutions.') }} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></span></h2>
                     </div>
                     <div class="blogs-one__carousel owl-theme owl-carousel">
                         <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="blogs-one__single">
+                            <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/web-development.jpg') }}" alt="">
@@ -336,7 +381,7 @@
 
                         <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="blogs-one__single">
+                            <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/coorporate-identity.jpg') }}" alt="">
@@ -376,7 +421,7 @@
 
                         <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="blogs-one__single">
+                            <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/digital-marketing.jpg') }}" alt="">
@@ -416,7 +461,7 @@
 
                         <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="blogs-one__single">
+                            <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/ecommerce.jpg') }}" alt="">
@@ -456,7 +501,7 @@
 
                         <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="blogs-one__single">
+                            <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/social-media-marketing.jpg') }}" alt="">
@@ -496,7 +541,7 @@
 
                         <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="blogs-one__single">
+                            <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/wordpress.jpg') }}" alt="">
@@ -536,7 +581,7 @@
 
                         <!--blogs One Single Start-->
                         <div class="item">
-                            <div class="blogs-one__single">
+                            <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
                                         <img src="{{ asset('assets/images/resources/seo-training.jpg') }}" alt="">
@@ -725,8 +770,8 @@
                         <div class="section-title__tagline-shape"></div>
                         <span class="section-title__tagline">{{ __('lang.Testimonial') }}</span>
                     </div>
-                    <h2 class="section-title__title title-animation">{{ __('lang.Explore Genuine Feedback') }} <br>
-                        {!! __('lang.from Happy Clients') !!} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt="">
+                    <h2 class="section-title__title">{{ __('lang.Explore Genuine Feedback') }} <br>
+                        {!! __('lang.from Happy Clients') !!} 
                     </h2>
                 </div>
                 <div class="testimonial-one__inner">
@@ -925,7 +970,7 @@
                     <!-- Blog One Single Start -->
                     <div class="item">
                         <div class="blog-one__single">
-                            <div class="blog-one__img">
+                            <div class="blog-one__img" >
                                 <img src="{{ asset('assets/images/project/3.jpg') }}" alt="">
                             </div>
                             <div class="blog-one__content">
@@ -988,58 +1033,119 @@
         <!-- portfolio One End --> 
 
                 <!--Blog section Start -->
-                <section class="blog-two one-page-two-blog" id="blog">
+                <section class="blog-two one-page-two-blog" id="blog-section-home">
             <div class="container">
                 <div class="section-title-two text-center sec-title-animation animation-style1">
                    <div class="section-title__tagline-box">
                         <div class="section-title__tagline-shape"></div>
                         <span class="section-title__tagline">{{ __('lang.Blogs') }}</span>
                     </div>
-                    <h2 class="section-title-two__title title-animation">{{ __('lang.Knowledge That Powers Growth -') }} <br> {{ __('lang.My') }}
+                    <h2 class="section-title-two__title">{{ __('lang.Knowledge That Powers Growth -') }} <br> {{ __('lang.My') }}
                         <span style="color: #fff">{{ __('lang.Blog Corner') }}</span>
                     </h2>
                 </div>
                 <div class="row">
                     <!--Blog Two Single Start -->
-                    <div class="col-xl-4 col-lg-4 wow fadeInLeft" data-wow-delay="100ms">
-                        <div class="blog-two__single">
-                            <div class="blog-two__img">
-                                <img src="{{ asset('assets/images/blog/blog-2-1.jpg') }}" alt="">
-                                <div class="blog-two__date">
-                                    <span class="icon-calendar"></span>
-                                    <p>{{ __('lang.Nov 02, 2025') }}</p>
+                    @if($blogs->count() > 0)
+                @foreach($blogs->sortByDesc('id') as $blog)
+                    <!-- Share Modal -->
+                    <div class="modal fade" id="shareModalTest" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered share-model" style="max-width: 320px;">
+                            <div class="modal-content share-modal">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">Link copied!</div>
+                                <div class="modal-body share-icons-row">
+                                    <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')" title="{{ __('lang.Copy Link') }}">
+                                        <i class="fa-regular fa-copy text-secondary share-icon"></i>
+                                    </a>
+                                    <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share on WhatsApp') }}">
+                                        <i class="fa-brands fa-whatsapp text-success share-icon"></i>
+                                    </a>
+                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
+                                        <i class="fa-brands fa-linkedin text-primary share-icon"></i>
+                                    </a>
+                                    <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share via Email') }}">
+                                        <i class="fa-regular fa-envelope text-danger share-icon"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="blog-two__content">
-                                <div class="blog-two__meta-box blog-profile">
-                                <div class="profile-container">
-                                        <img class="profile-pic" src="{{ asset('images/client1.jpg') }}" alt="Profile Picture">
-                                        <span class="username">Fazli Elahi</span>
-                                    </div>
-                                </div>
-                                <h4 class="blog-two__title"><a href="blog-details.html">How to Succeed in Online
-                                        Learning: Tips for Students</a></h4>
-                                <p class="blog-two__text">The discusses the advantages of using LMS for upskilling
-                                    employees, managing compliance training,</p>
-                            </div>
-                                <div class="blog-two__meta-box comment-sec">
-                                    <ul class="blog-two__meta list-unstyled">
-                                        <li>
-                                            <a href="blog-details.html"><span class="icon-tags"></span>{{ __('lang.Like') }}</a>
-                                        </li>
-                                        <li>
-                                            <a href="blog-details.html">
-                                                <span class="icon-comments">
-                                                </span>{{ __('lang.Comments') }}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="blog-details.html"><span class="icon-clock"></span>{{ __('lang.Read!') }}</a>
-                                        </li>
-                                    </ul>
-                                </div>
                         </div>
                     </div>
+                    <!--Blog Two Single Start -->
+                    <div class="wow fadeInLeft blog-card-home" data-wow-delay="100ms">
+                        <div class="blog-two__single">
+                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                            <div class="blog-two__img">
+                            <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" >   
+                            </div>
+                            </a> 
+                            <div class="blog-two__content">
+                                <div class="blog-two__meta-box blog-profile">
+                                    <div class="profile-container">
+                                        <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
+                                            <img
+                                                src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}"
+                                                width="100%" class="profile-pic">
+                                        </a>
+                                        <div>
+                                            <span class="username">
+                                                <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
+                                                    {{ $blog->creater->name ?? __('lang.unknown') }}
+                                                </a>
+                                            </span>
+                                            <span class="blog-time text-muted" style="font-size: 13px;">
+                                                {{ $blog->created_at->diffForHumans() }}
+                                            </span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <h4 class="blog-two__title">
+                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                    {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 85) }}
+                                </h4>
+                            </div>
+                            <div class="blog-two__meta-box comment-sec d-none">
+                                <ul class="blog-two__meta list-unstyled post-interactions" >
+                                    <li class="like-btn" data-url="{{ route('localized.blog.like', [app()->getLocale(), $blog->id]) }}">
+                                        @if(App\Models\Likes::where('blog_id', $blog->id)->exists())
+                                            <i class="heart-icon fa-solid fa-heart"></i>
+                                        @else
+                                            <i class="heart-icon fa-regular fa-heart"></i>
+                                        @endif 
+                                        <span class="like">{{ __('lang.Like') }} </span> <span class="like-count">{{ $blog->likes->count() }}</span>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-bs-toggle="modal" class="comment-a"  data-bs-target="#editModal{{ $blog->id }}" >
+                                            <i class="far fa-comments mx-1"></i> <span class="comment">{{ __('lang.Comments') }}</span>
+                                        </a>
+                                    </li>
+                                    <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest">
+                                    <i class="far fa-share-square mx-1"></i><span class="share">{{ __('lang.Share') }} </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                   
+                @endforeach
+                @else
+                <div class="col-12 text-center py-5">
+                    <div class="no-blogs-message">
+                        <i class="fas fa-blog fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">{{ __('lang.No blogs uploaded yet') }} </h4>
+                        <p class="text-muted">{{ __('lang.There are no blogs available in the selected category.') }}</p>
+                    </div>
+                </div>
+                @endif
+                <div class="text-center my-4">
+                    <a href="{{ route('localized.blogs', ['lang' => app()->getLocale()]) }}" class="btn btn-outline-secondary mb-3">{{ __('lang.Read More') }}</a>
+                </div>
+                <div class="ads-section-mobile">                       
+                </div>
                     <!--Blog Two Single End -->
                 </div>
             </div>

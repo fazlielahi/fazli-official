@@ -14,11 +14,13 @@
     @php $locale = app()->getLocale(); @endphp
     
     @if($locale == 'ar')
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif
 
     <!-- responsive css -->
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-header.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-profile.css')}}">
 
     <!-- jquery ui -->
     <link rel="stylesheet" href="{{ asset('lib/jquery-ui.css')}}">
@@ -30,17 +32,37 @@
     @yield('head')
 
     <style>
+        .container{
+            margin-top: 35px;
+        }
+
+        .profile-sidebar{
+            margin-top: 35px;
+        }
+
+        .category-dropdown.dropdown .col-md-4{
+            margin: 0 !important;
+        }
+
+        .blogs-section{
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .dropdown-col{
+            margin: 0;
+        }
+
         .ScrollSmoother-content {
             background-color: #f2f4f7;
             padding-top: 20px
         }
         /* Sidebar navigation styles */
         .sidebar-nav-item {
-            margin-bottom: 8px;
+            margin: 4px;
             border-radius: 6px;
             transition: all 0.3s ease;
             cursor: pointer;
-            display: block;
             color: #fff !important;
             text-decoration: none;
             border: 1px solid f5f5f5;
@@ -51,12 +73,16 @@
         }
         .sidebar-nav-item.active {
             background-color: #21cf8c;
-            color: #000 !important;
+            color: #000;
+            padding: 5px 15px;
+        }
+
+        .new-blog-btn {
+            background-color: #21cf8c;
+            color: #000;
             padding: 12px 15px;
         }
-        .sidebar-nav-item i {
-            margin-right: 10px;
-        }
+
         .sidebar-nav-item span {
             font-weight: 500;
         }
@@ -73,7 +99,6 @@
             top: 7px;
         }
         .blog-card {
-            width: 32% !important;
             padding-right: 0;
             margin-left: 6px;
         }
@@ -111,9 +136,6 @@
         }
         .action {
             z-index: 5;
-        }
-        .blog-card {
-            width: 30% !important;
         }
         .swal2-dark {
             background-color: #1e1e1e !important;
@@ -153,6 +175,12 @@
         .cke_notifications_area {
             display: none !important;
         }
+
+        .profile-sidebar .badge{
+            top: 0;
+            right: -10px;
+            color: #fff !important;
+        }
     </style>
 </head>
 
@@ -186,7 +214,7 @@
                 <div class="toast align-items-center text-bg-danger border-0" id="rejectedToast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="d-flex">
                         <div class="toast-body">
-                            You have {{ $toastCount }} rejected post{{ $toastCount > 1 ? 's' : '' }}.
+                           <span> {{ __('lang.You have X rejected posts.', ['count' => $toastCount, 'plural' => $toastCount > 1 ? 's' : '']) }}</span>
                         </div>
                         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -206,8 +234,8 @@
         </script>
     @endif
     <!-- News Section Start -->
-    <div class="container mb-4 mt-5">
-        <div class="d-flex align-items-center mb-3 mb-md-0" style="justify-content: space-between !important;">
+    <div class="container">
+        <div class="d-flex mb-md-0 profile-header" style="justify-content: space-between !important;">
             @php
                 if(isset($clickedUser) && $clickedUser && $clickedUser->id) {
                     $profile_photo = $clickedUser->photo ?? 'default.png';
@@ -223,101 +251,118 @@
                     $profile_since = '';
                 }
             @endphp
-            <div style="display: flex; align-items: center;">
+            <div style="display: flex; align-items: center;" class="profile-photo-box">
                 <img 
                     src="{{ $profile_photo ? asset('images/' . $profile_photo) : asset('default.png') }}"
-                    alt="Profile Picture" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                    alt="Profile Picture" class="rounded-circle mx-2" style="width: 80px; height: 80px; object-fit: cover;">
                 <div>
                     <h2 class="fw-semibold text-light">{{ $profile_name }}</h2>
-                    <p class="mb-0 text-muted" style="font-size: 14px;">Member Since: <strong>{{ $profile_since }}</strong></p>
+                    <div class="member-since">
+                        <p class="mb-0 mx-1 text-muted" style="font-size: 14px;">{{ __('lang.Member Since') }}</p> <p> <strong>{{ $profile_since }}</strong></p>
+                    </div>
+                    
                 </div>
             </div>
-            <div class="d-flex flex-column flex-md-row gap-2">
+            <div class="d-flex flex-md-row gap-2 profile-header-button">
                 @if(isset($clickedUser) && $clickedUser && $clickedUser->id)
-                    <a href="{{ route('localized.blog', ['lang' => app()->getLocale()])}}" class="btn sidebar-nav-item btn-outline-secondary text-dark px-4 py-2 rounded-pill d-flex align-items-center">
+                    <a href="{{ route('localized.blogs', ['lang' => app()->getLocale()])}}" class="btn sidebar-nav-item btn-outline-secondary text-dark px-4 py-2 rounded-pill d-flex align-items-center">
                         <i class="fa-solid fa-arrow-left mx-1"></i> {{ __('lang.Back') }}
                     </a>
                 @elseif($user && $user->type == 'admin')
-                    <a href="{{ route('localized.profile-edit', ['lang' => app()->getLocale()])}}" class="btn sidebar-nav-item btn-outline-secondary text-dark px-4 py-2 rounded-pill d-flex align-items-center">
+                    <a href="{{ route('localized.profile-edit', ['lang' => app()->getLocale()])}}" class="btn sidebar-nav-item btn-outline-secondary text-dark px-2 py-2 rounded-pill d-flex align-items-center">
                         <i class="fa-solid fa-user-pen mx-1"></i> {{ __('lang.Edit Profile') }}
                     </a>
                     <a href="{{ route('localized.blog-create', ['lang' => app()->getLocale()]) }}"
-                        class="sidebar-nav-item active  px-4 py-2 rounded-pill d-flex align-items-center">
+                        class="sidebar-nav-item px-2 py-2 rounded-pill d-flex align-items-center new-blog-btn">
                         <i class="fa-solid fa-plus mx-1"></i> {{ __('lang.New Post') }}
                     </a>
                 @elseif($user && $user->type == 'super_admin')
                     <a href="{{ route('localized.admin.dashboard', ['lang' => app()->getLocale()]) }}"
-                        class="btn sidebar-nav-item btn-outline-secondary text-dark px-4 py-2 rounded-pill d-flex align-items-center">
-                        <i class="fa-solid fa-user-pen mx-1"></i> Dashboard
+                        class="btn sidebar-nav-item btn-outline-secondary text-dark px-2 py-2 rounded-pill d-flex align-items-center">
+                        <i class="fa-solid fa-user-pen mx-1"></i> {{ __('lang.Dashboard') }}
                     </a>
                     <a href="{{ route('localized.profile', ['lang' => app()->getLocale()]) }}"
-                        class="sidebar-nav-item active  px-4 py-2 rounded-pill d-flex align-items-center">
-                        <i class="fa-solid fa-file-lines mx-1"></i> My Blogs
+                        class="sidebar-nav-item active  px-2 py-2 rounded-pill d-flex align-items-center">
+                        <i class="fa-solid fa-file-lines mx-1"></i> {{ __('lang.My Blogs') }}
                     </a>
                 @else
-                    <a href="{{ route('localized.blog', ['lang' => app()->getLocale()])}}" class="btn sidebar-nav-item btn-outline-secondary text-dark px-4 py-2 rounded-pill d-flex align-items-center">
+                    <a href="{{ route('localized.blogs', ['lang' => app()->getLocale()])}}" class="btn sidebar-nav-item btn-outline-secondary text-dark px-2 py-2 rounded-pill d-flex align-items-center">
                         <i class="fa-solid fa-arrow-left mx-1"></i> {{ __('lang.Back') }}
                     </a>
                 @endif
             </div>
         </div>
-        @if(!empty($categories) && count($categories))
-            <div class="row mb-4 category-dropdown">
-                <div class="col-md-4">
-                    <form method="GET" action="">
-                        <div class="input-group">
-                            <select name="category_id" class="form-control" onchange="this.form.submit()">
-                                <option value="">All Categories</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ (isset($selectedCategory) && $selectedCategory == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            <div class="input-group-append">
-                                <button class="btn btn-primary d-none" type="submit">Filter</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        @endif
-        <div class="row g-4 blog-boxes mt-1" style="justify-content: space-between !important;">
+
+        <div class="row g-4 blog-boxes" style="justify-content: space-between !important;">
             @if($user && $user->type == 'admin')
-                <div class="col-12 col-md-2 profile-sidebar">
+                @if(isset($clickedUser))
+                    <style>
+                        .blogs-section{
+                            margin-top: 90px;
+                        }
+                    </style>
+                @endif
+                @if(!isset($clickedUser) || (isset($clickedUser) && isset($user) && $clickedUser->id == $user->id))
+                <div class="col-12 profile-sidebar">
                     <div class="sidebar-nav">
                         {{-- Published Blogs --}}
                         <a href="{{ route('localized.profile', ['lang' => app()->getLocale()]) }}"
                             class="sidebar-nav-item {{ request()->routeIs('localized.profile') ? 'active' : '' }}">
-                            <i class="fa-solid fa-file-lines"></i> Published Blogs
+                            <i class="fa-solid fa-file-lines"></i> {{ __('lang.Published') }}
                         </a>
                         {{-- Draft Blogs --}}
                         <a href="{{ route('localized.profile-draft-blogs', ['lang' => app()->getLocale()]) }}"
                             class="sidebar-nav-item {{ request()->routeIs('localized.profile-draft-blogs') ? 'active' : '' }}">
-                            <i class="fa-solid fa-pen-to-square"></i> Draft
+                            <i class="fa-solid fa-pen-to-square"></i> {{ __('lang.Draft') }}
                         </a>
                         {{-- Review Requests --}}
                         <a href="{{ route('localized.profile-request-blogs', ['lang' => app()->getLocale()]) }}"
                             class="sidebar-nav-item {{ request()->routeIs('localized.profile-request-blogs') ? 'active' : '' }}">
-                            <i class="fa-solid fa-magnifying-glass"></i> Review Requests
+                            <i class="fa-solid fa-magnifying-glass"></i> {{ __('lang.Requested') }}
                         </a>
                         {{-- Rejected Blogs --}}
-                        <div class="position-relative" style="display: inline-block; width: 100%;">
+                        <div class="position-relative" style="display: inline-block;">
                             <a href="{{ route('localized.profile-rejected-blogs', ['lang' => app()->getLocale()]) }}"
                                 class="sidebar-nav-item {{ request()->routeIs('localized.profile-rejected-blogs') ? 'active' : '' }}">
-                                <i class="fa-solid fa-xmark-circle text-danger"></i> Rejected Blogs
+                                <i class="fa-solid fa-xmark-circle text-danger"></i> {{ __('lang.Rejected') }}
                             </a>
                             @if(isset($rejectedCount) && $rejectedCount > 0)
-                                <span class="badge bg-danger position-absolute top-0 end-0 translate-middle-y" style="z-index:1; font-size: 0.75rem;">{{ $rejectedCount }}</span>
+                                <span class="badge bg-danger position-absolute translate-middle-y" style="z-index:1; font-size: 0.75rem;">{{ $rejectedCount }}</span>
                             @endif
                         </div>
                     </div>
                 </div>
+                @endif
+                <div class="col dropdown-col">
+                    @if(!empty($categories) && count($categories))
+                        <div class="row mb-4 category-dropdown">
+                            <div class="col-md-4">
+                                <form method="GET" action="">
+                                    <div class="input-group">
+                                        <select name="category_id" class="form-control" onchange="this.form.submit()">
+                                            <option value="">{{ __('lang.All Categories') }}</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}" {{ (isset($selectedCategory) && $selectedCategory == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary d-none" type="submit">{{ __('lang.Filter') }}</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+                </div>
             @endif
-            @yield('content')
         </div>
+        
+            @yield('content')
+        
     </div>
     <a href="#" data-target="html" class="scroll-to-target scroll-to-top">
         <span class="scroll-to-top__wrapper"><span class="scroll-to-top__inner"></span></span>
-        <span class="scroll-to-top__text"> Go Back Top</span>
+        <span class="scroll-to-top__text"> {{ __('lang.Go Back Top') }}</span>
     </a>
     @include("site.inc.footer")   
     @yield('script')
@@ -333,14 +378,14 @@
     <script>
         function confirmDelete(blogId) {
             Swal.fire({
-                title: 'Delete Blog Post?',
-                text: 'This action cannot be undone.',
+                title: '{{ __('lang.Delete Blog Post?') }}',
+                text: '{{ __('lang.This action cannot be undone.') }}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc3545',
                 cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Delete',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: '{{ __('lang.Delete') }}',
+                cancelButtonText: '{{ __('lang.Cancel') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById('delete-form-' + blogId).submit();

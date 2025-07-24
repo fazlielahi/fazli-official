@@ -70,4 +70,8 @@
         padding-left: 6px;
         padding-right: 6px;
     }
+
+    .blog-details__left{
+        margin-left: 0;
+    }
 }

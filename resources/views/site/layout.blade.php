@@ -16,11 +16,13 @@
     @php $locale = app()->getLocale(); @endphp
     
     @if($locale == 'ar')
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif
 
     <!-- responsive css -->
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-header.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-login-register.css')}}">
 
     <!-- jquery ui -->
     <link rel="stylesheet" href="{{ asset('lib/jquery-ui.css')}}">
@@ -49,7 +51,7 @@
 
     <a href="#" data-target="html" class="scroll-to-target scroll-to-top">
         <span class="scroll-to-top__wrapper"><span class="scroll-to-top__inner"></span></span>
-        <span class="scroll-to-top__text"> Go Back Top</span>
+        <span class="scroll-to-top__text">{{ __('lang.Go Back Top') }}</span>
     </a>
 
     @include("site.inc.footer")   

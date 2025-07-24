@@ -74,20 +74,6 @@
 @section('content')
 
 <style>
-    .register {
-        background: #1a1a1a;
-        color: #e2e8f0;
-        border: 1px solid #2d3748;
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
-
-    .register h2 {
-        color: #4a90e2;
-        text-align: center;
-        margin-bottom: 30px;
-    }
 
     .form-group {
         margin-bottom: 20px;
@@ -98,52 +84,6 @@
         font-weight: 500;
         margin-bottom: 8px;
         display: block;
-    }
-
-    .form-control {
-        background: #2a2a2a !important;
-        border: 1px solid #4a5568 !important;
-        color: #e2e8f0 !important;
-        border-radius: 8px;
-        padding: 12px 16px;
-        transition: all 0.3s ease;
-    }
-
-    .form-control:focus {
-        background: #2a2a2a !important;
-        border-color: #4a90e2 !important;
-        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25) !important;
-        color: #e2e8f0 !important;
-    }
-
-    .form-control::placeholder {
-        color: #a0aec0 !important;
-    }
-
-    .btn {
-        background: #4a90e2 !important;
-        border: none !important;
-        color: white !important;
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        padding: 12px 24px;
-        font-weight: 500;
-    }
-
-    .btn:hover {
-        background: #5ba3f5 !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
-    }
-
-    .register a {
-        color: #4a90e2 !important;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-
-    .register a:hover {
-        color: #5ba3f5 !important;
     }
 
     /* Enhanced photo upload styles */
@@ -345,16 +285,16 @@
         </div>
 
         <div class="form-group mt-3">
-            <label for="photo">Photo (Optional)</label>
+            <label for="photo">{{ __('lang.PhotoOptional') }}</label>
             
             <div class="photo-upload-container">
                 <div class="drag-drop-zone" id="photoDragDropZone">
                     <div class="upload-icon">
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
-                    <div class="upload-text">Drag & drop your photo here</div>
-                    <div class="upload-hint">or click to browse files</div>
-                    <div class="upload-hint">Supports: JPG, PNG, GIF (Max: 5MB)</div>
+                    <div class="upload-text">{{ __('lang.DragDropPhoto') }}</div>
+                    <div class="upload-hint">{{ __('lang.OrClickToBrowse') }}</div>
+                    <div class="upload-hint">{{ __('lang.PhotoSupports') }}</div>
                     
                     <input type="file" name="photo" class="form-control photo-input" id="photo" accept="image/*">
                 </div>
@@ -491,14 +431,14 @@
                     
                     // Validate file type
                     if (!file.type.startsWith('image/')) {
-                        showError('Please select a valid image file.');
+                        showError(photoErrorInvalid);
                         return;
                     }
 
                     // Validate file size (5MB limit)
                     const maxSize = 5 * 1024 * 1024; // 5MB
                     if (file.size > maxSize) {
-                        showError('File size must be less than 5MB.');
+                        showError(photoErrorSize);
                         return;
                     }
 
@@ -514,7 +454,7 @@
                     createPreview(file);
                     
                     // Show success message
-                    showSuccess('Image selected successfully!');
+                    showSuccess(photoSuccess);
                 }
 
                 function showFileInfo(file) {

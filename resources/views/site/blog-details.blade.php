@@ -77,6 +77,11 @@
             text-align: right;
         }
 
+        
+        .modal-header .btn-close{
+            margin: 0 !important;
+        }
+
     </style>
 
 @endsection
@@ -98,7 +103,11 @@
                                 </a>
                             </li>
                             <li>
-                                <i class="fas fa-chevron-right"></i>
+                                @if(app()->getLocale() === 'ar')
+                                    <i class="fas fa-chevron-left"></i>
+                                @else
+                                    <i class="fas fa-chevron-right"></i>
+                                @endif
                             </li>
                             <li>
                                 {{ __('lang.Blog Details')}}
@@ -189,13 +198,18 @@
                                 @foreach($blog->comments->sortByDesc('created_at')->values() as $index => $comment)
                                     @php $user = $comment->user; @endphp
                                     <div class="comment-card comment-item{{ $index >= 2 ? ' extra-comment' : '' }}" style="border-bottom: 1px solid #222222; margin-bottom: 20px; padding-bottom: 4px; align-items: flex-start;">
+                                        <div class="comment-pic">
                                         <img
                                             src="{{ $user && $user->photo ? asset('images/' . $user->photo) : ($comment && $comment->photo ? asset('images/' . $comment->photo) : asset('images/default.png')) }}"
                                             class="user-image" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px;">
                                         <div class="comment-content comment-detail">
-                                            <span class="username" style="font-weight: bold;">{{ $comment->name }}</span>
-                                            <span class="timestamp" style="color: #888; font-size: 0.9em; margin-left: 8px;">{{ $comment->created_at->diffForHumans() }}</span>
+                                            <div class="comment-creater">
+                                                <span class="username" style="font-weight: bold;">{{ $comment->name }}</span>
+                                                <span class="timestamp" style="color: #888; font-size: 0.9em; margin-left: 8px;">{{ $comment->created_at->diffForHumans() }}</span>
+                                            </div>
+                                            
                                             <div class="comment-text" style="margin-top: 4px;">{{ $comment->comment }}</div>
+                                        </div>
                                         </div>
                                     </div>
                                 @endforeach
@@ -225,77 +239,78 @@
                                         <div class="col-xl-12">
                                             <div class="comment-form__input-box text-message-box" style="position: relative;">
                                                 <textarea name="comment" id="comment-textarea" placeholder="{{ __('lang.Add a comment')}}" style="padding-bottom: 50px; padding-right: 80px;">{{ old('comment') }}</textarea>
-                                                
-                                                <!-- Emoji Picker Container -->
-                                                <div class="emoji-picker-container" style="position: absolute; bottom: 10px; left: 10px; z-index: 10;">
-                                                    <button type="button" class="emoji-toggle-btn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666; padding: 5px; border-radius: 50%; transition: all 0.3s ease;">
-                                                        😊
-                                                    </button>
-                                                    <div class="emoji-panel" style="display: none; position: absolute; bottom: 100%; left: 0; background: white; border: 1px solid #ddd; border-radius: 8px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 240px; max-height: 200px; overflow-y: auto; margin-bottom: 5px;">
-                                                        <div class="emoji-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
-                                                            <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😂">😂</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😍">😍</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😎">😎</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤔">🤔</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="👎">👎</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="💯">💯</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="✨">✨</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🎉">🎉</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🙏">🙏</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😭">😭</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😡">😡</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😱">😱</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😴">😴</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤗">🤗</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😇">😇</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤩">🤩</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😋">😋</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤪">🤪</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😝">😝</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤓">🤓</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😤">😤</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😪">😪</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤐">🤐</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😷">😷</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤒">🤒</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤕">🤕</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤢">🤢</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤮">🤮</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤧">🤧</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😈">😈</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="👿">👿</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="👹">👹</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="👺">👺</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="💀">💀</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="☠️">☠️</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="👻">👻</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="👽">👽</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🤖">🤖</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="💩">💩</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😺">😺</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😸">😸</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😹">😹</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😻">😻</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😼">😼</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😽">😽</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="🙀">🙀</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😿">😿</button>
-                                                            <button type="button" class="emoji-btn" data-emoji="😾">😾</button>
+                                                <div class="comment-emoji">
+                                                    <!-- Emoji Picker Container -->
+                                                    <div class="emoji-picker-container" style="position: absolute; bottom: 10px; left: 10px; z-index: 10;">
+                                                        <button type="button" class="emoji-toggle-btn" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #666; padding: 5px; border-radius: 50%; transition: all 0.3s ease;">
+                                                            😊
+                                                        </button>
+                                                        <div class="emoji-panel" style="display: none;">
+                                                            <div class="emoji-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
+                                                                <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😂">😂</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😍">😍</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😎">😎</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤔">🤔</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="👎">👎</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="💯">💯</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="✨">✨</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🎉">🎉</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🙏">🙏</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😭">😭</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😡">😡</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😱">😱</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😴">😴</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤗">🤗</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😇">😇</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤩">🤩</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😋">😋</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤪">🤪</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😝">😝</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤓">🤓</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😤">😤</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😪">😪</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤐">🤐</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😷">😷</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤒">🤒</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤕">🤕</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤢">🤢</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤮">🤮</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤧">🤧</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😈">😈</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="👿">👿</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="👹">👹</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="👺">👺</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="💀">💀</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="☠️">☠️</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="👻">👻</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="👽">👽</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🤖">🤖</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="💩">💩</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😺">😺</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😸">😸</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😹">😹</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😻">😻</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😼">😼</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😽">😽</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="🙀">🙀</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😿">😿</button>
+                                                                <button type="button" class="emoji-btn" data-emoji="😾">😾</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <!-- Comment Button Inside Textarea -->
-                                                <div class="comment-btn-container" style="position: absolute; bottom: 10px; right: 10px; z-index: 10;">
-                                                    <button type="submit" class="comment-btn-inside" form="comment-form-{{ $blog->id }}" onclick="console.log('Button clicked!')" style="background: linear-gradient(135deg, #1da370 0%, #0d8a5a 100%); color: white; border: none; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(29, 163, 112, 0.3);">
-                                                        <span class="icon-arrow-circle" style="margin-right: 5px;"></span>
-                                                        {{ __('lang.Comment') }}
-                                                    </button>
+                                                    <!-- Comment Button Inside Textarea -->
+                                                    <div class="comment-btn-container" style="position: absolute; bottom: 10px; right: 10px; z-index: 10;">
+                                                        <button type="submit" class="comment-btn-inside" form="comment-form-{{ $blog->id }}" onclick="console.log('Button clicked!')" style="background: linear-gradient(135deg, #1da370 0%, #0d8a5a 100%); color: white; border: none; border-radius: 20px; padding: 8px 16px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(29, 163, 112, 0.3);">
+                                                            <span class="icon-arrow-circle" style="margin-right: 5px;"></span>
+                                                            {{ __('lang.Comment') }}
+                                                        </button>
+                                                    </div>
                                                 </div>
 
                                                 <style>

@@ -4,7 +4,7 @@
 .banner-one {
   position: relative;
   display: block;
-  padding: 200px 0 100px;
+  padding: 40px;
   z-index: 5;
 }
 
@@ -92,11 +92,12 @@
 .banner-one__title-clr-1 {
   font-weight: 600;
   font-family: mainheading_font;
+  color: #25cb8c;
 }
 
 .banner-one__title-clr-2 {
   font-weight: 600;
-  color: #fff;
+  color: #25cb8c;
   font-family: mainheading_font;
 }
 
@@ -104,6 +105,10 @@
   line-height: 23px;
   margin-top: 56px;
   margin-bottom: 40px;
+}
+
+.slogan-3{
+  color: #ffffff;
 }
 
 .banner-one__thm-and-other-btn-box {
@@ -380,7 +385,7 @@
 .banner-one__student-trained-count-box {
   position: relative;
   display: block;
-  margin-top: 20px;
+  margin-top: 2px;
 }
 
 .banner-one__student-trained-count-box-inner {

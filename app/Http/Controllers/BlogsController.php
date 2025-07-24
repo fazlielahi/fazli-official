@@ -33,10 +33,14 @@ class BlogsController extends Controller
             return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
         }
 
-        auth()->check();
         $user = User::find($request->session()->get('user_id'));
 
-        $blogs = Blog::all()->where('status', 'rejected'); 
+        // Only get rejected blogs for this user
+        $blogs = Blog::where('status', 'rejected')
+            ->where('created_by', $user->id)
+            ->get();
+            // dd($blogs, $user);
+
         return view('site.rejected_blogs', compact('blogs', 'user'));
     }
 

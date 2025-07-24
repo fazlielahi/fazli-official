@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="{{ asset('images/thefazli.com.png') }}" alt="thefazli.com" class="main-logo"/>
+    <a href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.home') ? 'active' : '' }}">
+            <img src="{{ asset('images/tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo"/>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <!-- fallback icon if the above is invisible -->
@@ -32,13 +32,13 @@
                 <li class="nav-item">
                     @if ($locale === 'en')
                         <a href="{{ route('lang.switch', 'ar') }}" class="language-icon">
-                            <i class="fas fa-globe mx-2"></i>
-                            العربية
+                            <i class="fas fa-globe"></i>
+                            {{ __('lang.Arabic') }}
                         </a>
                     @else
                         <a href="{{ route('lang.switch', 'en') }}" class="language-icon">
-                            <i class="fas fa-globe mx-2"></i>
-                            English
+                            <i class="fas fa-globe"></i>
+                            {{ __('lang.English') }}
                         </a>
                     @endif
                 </li>
@@ -61,7 +61,7 @@
             @if($user)
                 <div class="dropdown ms-3">
                     <button class="btn dropdown-toggle d-flex align-items-center justify-content-between w-100" 
-                            style="background-color:rgb(0, 0, 0);min-width: 159px !important; color: #fff; justify-content: flex-end !important;"
+                            style="background-color:rgb(0, 0, 0);min-width: 159px !important; color: #fff; justify-content: flex-end !important; margin-bottom: 2px"
                             type="button" id="userDropdown" 
                             data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="me-2">{{ $user->name }}</span>
@@ -72,28 +72,28 @@
                     <ul class="dropdown-menu w-100" aria-labelledby="userDropdown">
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.profile', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-user-circle me-2"></i>My Profile
+                                <i class="fas fa-user-circle me-2"></i>{{ __('lang.My Profile') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.blog-create', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-plus-circle me-2"></i>Create Blog
+                                <i class="fas fa-plus-circle me-2"></i>{{ __('lang.Create Blog') }}
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.logout', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                <i class="fas fa-sign-out-alt me-2"></i>{{ __('lang.Logout') }}
                             </a>
                         </li>
                     </ul>
                 </div>
             @else
-                <a href="{{ route('localized.register', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 register-btn ms-3">
-                    <i class="fas fa-user-plus me-1"></i>Sign Up
+                <a href="{{ route('localized.register', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 register-btn">
+                    <i class="fas fa-user-plus mx-1"></i>{{ __('lang.Sign Up') }}
                 </a>
-                <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 login-btn ms-2">
-                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 login-btn">
+                    <i class="fas fa-sign-in-alt mx-1"></i>{{ __('lang.Login') }}
                 </a>
             @endif
         </div>

@@ -89,15 +89,10 @@
         padding: 11px;
         border-radius: 16px;
         padding-top: 20px;
+        margin-top: 20px;
         box-shadow: 0px 0px 5px 1px #3333331f;
         color: #e2e8f0;
-        border: 1px solid #2d3748;
         }
-
-    .col-md-10 {
-        flex: 0 0 auto;
-        width: 79.333333%;
-    }
 
     /* Enhanced photo upload styles */
     .photo-upload-container {
@@ -246,9 +241,9 @@
        
 </style>
 
-<div class="col-12 col-md-10" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
+<div class="col-12" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
     <div class="form mb-4">
-        <h3>Edit Profile</h3>
+        <h3>{{ __('lang.Edit Profile') }}</h3>
 
         <!-- display validation errors -->
         <hr style="border-top: 1px dashed #424242; margin: 10px 0;">
@@ -274,15 +269,15 @@
             </div>
 
             <div class="photo-upload-container">
-                <label for="photo" class="form-label">Profile Photo</label>
+                <label for="photo" class="form-label">{{ __('lang.Profile Photo') }}</label>
                 
                 <div class="drag-drop-zone" id="dragDropZone">
                     <div class="upload-icon">
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
-                    <div class="upload-text">Drag & drop your photo here</div>
-                    <div class="upload-hint">or click to browse files</div>
-                    <div class="upload-hint">Supports: JPG, PNG, GIF (Max: 5MB)</div>
+                    <div class="upload-text">{{ __('lang.Drag & drop your photo here') }}</div>
+                    <div class="upload-hint">{{ __('lang.or click to browse files') }}</div>
+                    <div class="upload-hint">{{ __('lang.Supports: JPG, PNG, GIF (Max: 5MB)') }}</div>
                     
                     <input type="file" name="photo" class="form-control photo-input" id="photo" accept="image/*">
                 </div>
@@ -392,14 +387,14 @@
             
             // Validate file type
             if (!file.type.startsWith('image/')) {
-                showError('Please select a valid image file.');
+                showError('{{ __('lang.Please select a valid image file.') }}');
                 return;
             }
 
             // Validate file size (5MB limit)
             const maxSize = 5 * 1024 * 1024; // 5MB
             if (file.size > maxSize) {
-                showError('File size must be less than 5MB.');
+                showError('{{ __('lang.File size must be less than 5MB.') }}');
                 return;
             }
 
@@ -415,12 +410,12 @@
             createPreview(file);
             
             // Show success message
-            showSuccess('Image selected successfully!');
+            showSuccess('{{ __('lang.Image selected successfully!') }}');
         }
 
         function showFileInfo(file) {
-            fileName.textContent = `File: ${file.name}`;
-            fileSize.textContent = `Size: ${formatFileSize(file.size)}`;
+            fileName.textContent = `{{ __('lang.File:') }} ${file.name}`;
+            fileSize.textContent = `{{ __('lang.Size:') }} ${formatFileSize(file.size)}`;
             fileInfo.style.display = 'block';
         }
 
@@ -488,7 +483,7 @@
             photoInput.parentNode.appendChild(removePhotoInput);
             
             photoPreview.innerHTML = '';
-            showSuccess('Current photo will be removed on save.');
+            showSuccess('{{ __('lang.Current photo will be removed on save.') }}');
         };
     });
 </script>

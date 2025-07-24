@@ -16,10 +16,13 @@
 .blogs-one__single {
     position: relative;
     display: block;
-    background-color: #0000006b;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.07);
     border-radius: 16px;
     padding: 19px 19px 20px;
+}
+
+.service-card-home{
+    background-color: #212629;
 }
 
 .blogs-one__img-box {
@@ -3027,3 +3030,8 @@
 /*--------------------------------------------------------------
 # End
 --------------------------------------------------------------*/
+
+.blogs-one__btn
+{
+    color: #1da370 !important;
+}

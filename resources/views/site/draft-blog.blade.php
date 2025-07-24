@@ -59,10 +59,32 @@
     <!-- Template styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
+
+    <style>
+
+        .blog-two__title  {
+            height: 64px;
+        }
+
+        .blog-grid{
+            padding-top: 46px !important;
+            padding-bottom: 40px !important;
+            margin-bottom: 0 !important;
+        }
+
+        .blog-two__meta{
+            justify-content: space-around !important;
+        }
+
+        .blog-two__single{
+            padding-bottom: 2px;
+        }
+
+    </style>
 @endsection
 
 @section('content')
-    <div class="col-12 col-md-10" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px;">
+    <div class="col-12" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px;">
         @if($blogs->count() > 0)
             @foreach($blogs->sortByDesc('created_at') as $blog)
                 @if($blog->status === 'draft' && $blog->created_by == $user->id)
@@ -93,14 +115,9 @@
                     <!--Blog Two Single Start -->
                     <div class="wow fadeInLeft blog-card" data-wow-delay="100ms">
                         <div class="blog-two__single">
+                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
                             <div class="blog-two__img">
-                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                    <img src="{{ asset('storage/' . $blog->thumb) }}" alt="">
-                                </a>
-                                <div class="blog-two__date">
-                                    <span class="icon-calendar"></span>
-                                    <p>{{ $blog->created_at->format('F d, Y h:i A') }}</p>
-                                </div>
+                                <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" > 
                                 @php
                                     $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
                                 @endphp
@@ -121,24 +138,54 @@
                                             </button>
                                         </form>
                                     </div>
-                                @endif
+                                @endif  
                             </div>
+                            </a> 
                             <div class="blog-two__content">
                                 <div class="blog-two__meta-box blog-profile">
                                     <div class="profile-container">
                                         <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
-                                            <img src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" alt="img" width="100%" class="profile-pic">
+                                            <img
+                                                src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}"
+                                                width="100%" class="profile-pic">
                                         </a>
-                                        <span class="username">
-                                            <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
-                                                {{ $blog->creater->name ?? "unknown" }}
-                                            </a>
-                                        </span>
+                                        <div>
+                                            <span class="username">
+                                                <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
+                                                    {{ $blog->creater->name ?? __('lang.unknown') }}
+                                                </a>
+                                            </span>
+                                            <span class="blog-time text-muted" style="font-size: 13px;">
+                                                {{ $blog->created_at->diffForHumans() }}
+                                            </span>
+                                        </div>
+                                        
                                     </div>
                                 </div>
                                 <h4 class="blog-two__title">
-                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
+                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                    {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
                                 </h4>
+                            </div>
+                            <div class="blog-two__meta-box comment-sec d-none">
+                                <ul class="blog-two__meta list-unstyled post-interactions">
+                                    <li class="like-btn" data-url="{{ route('localized.blog.like', [app()->getLocale(), $blog->id]) }}">
+                                        @if(App\Models\Likes::where('blog_id', $blog->id)->exists())
+                                            <i class="heart-icon fa-solid fa-heart"></i>
+                                        @else
+                                            <i class="heart-icon fa-regular fa-heart"></i>
+                                        @endif 
+                                        <span class="like">{{ __('lang.Like') }} </span> <span class="like-count">{{ $blog->likes->count() }}</span>
+                                    </li>
+                                    <li>
+                                        <a href="#" data-bs-toggle="modal" class="comment-a"  data-bs-target="#editModal{{ $blog->id }}" >
+                                            <i class="far fa-comments mx-1"></i> <span class="comment">{{ __('lang.Comments') }}</span>
+                                        </a>
+                                    </li>
+                                    <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest">
+                                    <i class="far fa-share-square mx-1"></i><span class="share">{{ __('lang.Share') }} </span>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>

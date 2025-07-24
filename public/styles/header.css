@@ -8,6 +8,10 @@
     background-color: #000000 !important;
 }
 
+.btn:hover {
+    color: #1da370 !important;
+}
+
 .dropdown-item {
     color: #fff !important;
 }

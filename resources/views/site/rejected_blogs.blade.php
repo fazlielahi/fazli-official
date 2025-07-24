@@ -71,9 +71,31 @@
             background: rgb(112, 24, 24) !important;
             color: #fff !important;
         }
+
+        .modal-content{
+            background: #212629;
+        }
+
+        .modal-header{
+            border-color: #606060;
+        }
+
+        .modal-header .btn-close{
+            color:rgb(255, 255, 255) !important;
+            margin: 0 !important;
+        }
+
+        .modal-footer{
+            border-color: #606060;
+        }
+        
+        .blog-two__single{
+            padding-bottom: 2px;
+        }
+
     </style>
 
-    <div class="col-12 col-md-10" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px;">
+    <div class="col-12 mt-3" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px;">
         @if($blogs->count() > 0)
         @foreach($blogs->sortByDesc('created_at') as $blog)
             @if($blog->status === 'rejected' && $blog->created_by == $user->id)
@@ -85,7 +107,7 @@
                                 <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
-                            <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">Link copied!</div>
+                            <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">{{ __('lang.Link copied!') }}</div>
                             <div class="modal-body">
                                 <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')">
                                     <i class="fa-regular fa-copy text-secondary"></i> {{ __('lang.Copy Link') }}
@@ -102,61 +124,66 @@
 
             <!--Blog Two Single Start -->
             <div class="wow fadeInLeft blog-card" data-wow-delay="100ms">
-                <div class="blog-two__single">
-                    <div class="blog-two__img">
+                        <div class="blog-two__single">
                         <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                            <img src="{{ asset('storage/' . $blog->thumb) }}" alt="">
-                        </a>
-                        <div class="blog-two__date">
-                            <span class="icon-calendar"></span>
-                            <p>{{ $blog->created_at->format('F d, Y h:i A') }}</p>
-                        </div>
-                        @php
-                            $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
-                        @endphp
-                        @if(($user && $user->id == $blog->created_by))
-                            <div class="action">
-                                <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                
-                                <form id="delete-form-{{ $blog->id }}" 
-                                    action="{{ route('localized.admin.blog.destroy', ['lang' => app()->getLocale(), $blog->id]) }}" 
-                                    method="POST" 
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn btn-icon btn-danger" onclick="confirmDelete({{ $blog->id }})">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
+                            <div class="blog-two__img">
+                                <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" > 
+                                @php
+                                    $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
+                                @endphp
+                                @if(($user && $user->id == $blog->created_by))
+                                    <div class="action">
+                                        <a class="btn btn-icon btn-info" href="{{ route('localized.admin.blog.edit', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        
+                                        <form id="delete-form-{{ $blog->id }}" 
+                                              action="{{ route('localized.admin.blog.destroy', ['lang' => app()->getLocale(), $blog->id]) }}" 
+                                              method="POST" 
+                                              style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn btn-icon btn-danger" onclick="confirmDelete({{ $blog->id }})">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif  
                             </div>
-                        @endif
-                    </div>
-                    <div class="blog-two__content">
-                        <div class="blog-two__meta-box blog-profile">
-                            <div class="profile-container">
-                                <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
-                                    <img src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" alt="img" width="100%" class="profile-pic">
-                                </a>
-                                <span class="username">
-                                    <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
-                                        {{ $blog->creater->name ?? "unknown" }}
+                            </a> 
+                            <div class="blog-two__content">
+                                <div class="blog-two__meta-box blog-profile">
+                                    <div class="profile-container">
+                                        <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
+                                            <img
+                                                src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}"
+                                                width="100%" class="profile-pic">
+                                        </a>
+                                        <div>
+                                            <span class="username">
+                                                <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
+                                                    {{ $blog->creater->name ?? __('lang.unknown') }}
+                                                </a>
+                                            </span>
+                                            <span class="blog-time text-muted" style="font-size: 13px;">
+                                                {{ $blog->created_at->diffForHumans() }}
+                                            </span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <h4 class="blog-two__title">
+                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                    {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
                                     </a>
-                                </span>
+                                </h4>
                             </div>
-                        </div>
-                        <h4 class="blog-two__title">
-                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">{{ $blog->title }}</a>
-                        </h4>
-                    </div>
                     <!-- Why Rejected Button -->
                     <div class="mt-auto">
                         <button type="button" class="btn btn-sm btn-warning w-100" data-bs-toggle="modal" data-bs-target="#whyRejectedModal{{ $blog->id }}">
                             {{ __('lang.Why Rejected?') }}
                         </button>
                     </div>
-
                     <!-- Why Rejected Modal -->
                    
                 </div>
@@ -168,10 +195,22 @@
                       <h5 class="modal-title" id="whyRejectedModalLabel{{ $blog->id }}">{{ __('lang.Rejection Details') }}</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                      <p><strong>{{ __('lang.Reason:') }}</strong> {{ $blog->rejection_message ?? __('lang.Unknown') }}</p>
-                      <p><strong>{{ __('lang.Rejected By:') }}</strong> {{ $blog->rejected_by_user->name ?? __('lang.Unknown') }}</p>
-                      <p><strong>{{ __('lang.Rejected At:') }}</strong> {{ $blog->updated_at ? $blog->updated_at->format('d/m/Y h:i A') : __('lang.Unknown') }}</p>
+                    @php
+                        $isRtl = app()->getLocale() === 'ar'; // Adjust if you have more RTL languages
+                    @endphp
+                    <div class="modal-body" style="direction: {{ $isRtl ? 'rtl' : 'ltr' }}; text-align: {{ $isRtl ? 'right' : 'left' }};">
+                        <p>
+                            <strong style="display:inline-block; min-width: 110px;">{{ __('lang.Reason:') }}</strong>
+                            <span>{{ $blog->rejection_message ?? __('lang.Unknown') }}</span>
+                        </p>
+                        <p>
+                            <strong style="display:inline-block; min-width: 110px;">{{ __('lang.Rejected By:') }}</strong>
+                            <span>{{ $blog->rejected_by_user->name ?? __('lang.Unknown') }}</span>
+                        </p>
+                        <p>
+                            <strong style="display:inline-block; min-width: 110px;">{{ __('lang.Rejected At:') }}</strong>
+                            <span>{{ $blog->updated_at ? $blog->updated_at->format('d/m/Y h:i A') : __('lang.Unknown') }}</span>
+                        </p>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('lang.Close') }}</button>

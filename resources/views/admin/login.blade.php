@@ -117,8 +117,8 @@
 
         <div class="form-check mt-3">
             <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-            <label for="remember">
-                Remember Me
+            <label for="remember" class="remember-me">
+                {{ __('lang.Remember Me') }}
             </label>
         </div>
 
