@@ -391,4 +391,13 @@ return [
     'Current photo will be removed on save.' => 'Current photo will be removed on save.',
     'File:' => 'File:',
     'Size:' => 'Size:',
+    'Jobs' => 'Jobs',
+    'Comming Soon!' => 'Coming Soon!',
+    'CV Create' => 'CV Create',
+    'Books' => 'Books',
+    'Explore Jobs' => 'Explore Jobs',
+    'Comment submitted successfully!' => 'Comment submitted successfully!',
+    'Comment added successfully!' => 'Comment added successfully!',
+    'Blog approved successfully!' => 'Blog approved successfully!',
+    'Blog rejected successfully!' => 'Blog rejected successfully!',
 ];

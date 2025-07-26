@@ -19,10 +19,39 @@
                         <i class="fas fa-user me-2"></i>{{ __('lang.About') }}
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('localized.blogs', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.blogs') ? 'active' : '' }}">
+                <li class="nav-item dropdown">
+                    <a href="#" style="background-color: #ffffff00 !important;" class="nav-link dropdown-toggle {{ request()->routeIs('localized.blogs') || request()->routeIs('localized.books') ? 'active' : '' }}" id="blogsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-blog me-2"></i>{{ __('lang.Blogs') }}
                     </a>
+                    <ul class="dropdown-menu" aria-labelledby="blogsDropdown">
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('localized.blogs') ? 'active' : '' }}" href="{{ route('localized.blogs', ['lang' => app()->getLocale()]) }}">
+                                <i class="fas fa-blog me-2"></i>{{ __('lang.Blogs') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('localized.books') ? 'active' : '' }}" href="{{ route('localized.books', ['lang' => app()->getLocale()]) }}">
+                                <i class="fas fa-book me-2"></i>{{ __('lang.Books') }}
+                            </a>
+                        </li>      
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" style="background-color: #ffffff00 !important; " class="nav-link dropdown-toggle {{ request()->routeIs('localized.jobs') || request()->routeIs('localized.cv-create') ? 'active' : '' }}" id="jobsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-briefcase me-2"></i>{{ __('lang.Jobs') }}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="jobsDropdown">
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('localized.jobs') ? 'active' : '' }}" href="{{ route('localized.jobs', ['lang' => app()->getLocale()]) }}">
+                                <i class="fas fa-search me-2"></i>{{ __('lang.Explore Jobs') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->routeIs('localized.cv-create') ? 'active' : '' }}" href="{{ route('localized.cv-create', ['lang' => app()->getLocale()]) }}">
+                                <i class="fas fa-file-alt me-2"></i>{{ __('lang.CV Create') }}
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.contact') ? 'active' : '' }}">

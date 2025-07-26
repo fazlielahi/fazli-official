@@ -379,4 +379,13 @@ return [
     'Post' => 'نشر',
     'Please select a valid image file.' => 'يرجى اختيار ملف صورة صالح.',
     'File size must be less than 5MB.' => 'يجب أن يكون حجم الملف أقل من 5 ميجابايت.',
+    'Jobs' => 'الوظائف',
+    'Comming Soon!' => 'قريباً!',
+    'CV Create' => 'إنشاء السيرة الذاتية',
+    'Books' => 'الكتب',
+    'Explore Jobs' => 'استكشاف الوظائف',
+    'Comment submitted successfully!' => '!تم إرسال التعليق بنجاح',
+    'Comment added successfully!' => 'تم إضافة التعليق بنجاح!',
+    'Blog approved successfully!' => 'تمت الموافقة على المدونة بنجاح!',
+    'Blog rejected successfully!' => 'تم رفض المدونة بنجاح!',
 ];

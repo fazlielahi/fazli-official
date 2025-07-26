@@ -82,6 +82,28 @@
             margin: 0 !important;
         }
 
+        .blog-two__title  {
+            height: 64px;
+        }
+
+        .page-header{
+            margin-top: 40px !important;
+        }
+
+        .blog-grid{
+            padding-top: 46px !important;
+            padding-bottom: 40px !important;
+            margin-bottom: 0 !important;
+        }
+
+        .blog-two__meta-box.comment-sec,
+        .blog-two__meta-box.comment-sec *:not(.fa):not(.fas):not(.far):not(.fab):not(.fa-solid):not(.fa-regular):not(.fa-brands):not(.icon-comments) {
+            font-family: 'Outfit', 'Roboto Serif', Arial, sans-serif !important;
+            font-size: 15px; /* Adjust as needed for consistency */
+            font-weight: 400; /* Adjust as needed */
+            letter-spacing: 0.01em; /* Optional: for visual match */
+        }
+
     </style>
 
 @endsection
@@ -89,7 +111,6 @@
 @section('content')
 
 <div class="page-wrapper">
-
     <!--Page Header Start-->
     <section class="page-header">
     <div class="breadcrumb-wrapper bg-cover">
@@ -113,6 +134,9 @@
                                 {{ __('lang.Blog Details')}}
                             </li>
                         </ul>
+                        <div class="subscribe-btn-container my-3">
+                            <button id="subscribeBtn">Subscribe</button>
+                        </div>
                     </div>
                     <div class="blog-image-container">
                         <img src="{{asset('storage/' . $blog->image)}}" width="100%"/>
@@ -129,7 +153,7 @@
             <div class="col-xl-8 col-lg-7 blog-details-container">
                 <div class="blog-details__left">
                     <div class="blog-details__content">
-                        <h3 class="blog-details__title-1">{{ $blog->title }}</h3>
+                        <h3 class="blog-details__title-1" style="text-align: {{ getTextDirection($blog->title) }} !important;">{{ $blog->title }}</h3>
                         <div class="blog-details__client-and-meta">
                             <div class="blog-details__client-box">
                                 <div class="blog-details__client-img">
@@ -377,8 +401,90 @@
                         </div>
                     </div>
                 </div>
-                <div class="ads">
-
+                <div class="recommended-blogs"> 
+                    <h2>Recommended blogs</h2>
+                    <div class="row">
+                                            <!-- Share Modal -->
+                    <div class="modal fade" id="shareModalTest" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered share-model" style="max-width: 320px;">
+                            <div class="modal-content share-modal">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">Link copied!</div>
+                                <div class="modal-body share-icons-row">
+                                    <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')" title="{{ __('lang.Copy Link') }}">
+                                        <i class="fa-regular fa-copy text-secondary share-icon"></i>
+                                    </a>
+                                    <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share on WhatsApp') }}">
+                                        <i class="fa-brands fa-whatsapp text-success share-icon"></i>
+                                    </a>
+                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
+                                        <i class="fa-brands fa-linkedin text-primary share-icon"></i>
+                                    </a>
+                                    <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share via Email') }}">
+                                        <i class="fa-regular fa-envelope text-danger share-icon"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        @php
+                            $recommendedBlogs = \App\Models\Blog::where('category_id', $blog->category_id)
+                                ->where('id', '!=', $blog->id)
+                                ->where('status', 'published')
+                                ->latest()
+                                ->take(10)
+                                ->get();
+                        @endphp
+                        @if($recommendedBlogs->count() > 0)
+                            @foreach($recommendedBlogs as $recBlog)
+                                <div class="col-md-6">
+                                    <div class="wow fadeInLeft blog-card-blogs m-0" data-wow-delay="100ms" style="width: 100% !important">
+                                        <div class="blog-two__single">
+                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $recBlog->id]) }}">
+                                                <div class="blog-two__img">
+                                                    <img src="{{ $recBlog->thumb && file_exists(public_path('storage/' . $recBlog->thumb)) ? asset('storage/' . $recBlog->thumb) : asset('images/blog-default.jpg') }}" alt="Blog Thumbnail">
+                                                </div>
+                                            </a>
+                                            <div class="blog-two__content">
+                                                <div class="blog-two__meta-box blog-profile">
+                                                    <div class="profile-container">
+                                                        <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $recBlog->creater->id]) }}" class="mb-0 text-muted">
+                                                            <img src="{{ $recBlog->creater && $recBlog->creater->photo ? asset('images/' . $recBlog->creater->photo) : asset('images/default.png') }}" width="100%" class="profile-pic">
+                                                        </a>
+                                                        <div>
+                                            <span class="username">
+                                                <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}">
+                                                    {{ $blog->creater->name ?? __('lang.unknown') }}
+                                                </a>
+                                            </span>
+                                            <span class="blog-time text-muted" style="font-size: 13px;">
+                                                {{ $blog->created_at->diffForHumans() }}
+                                            </span>
+                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h4 class="blog-two__title">
+                                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $recBlog->id]) }}">
+                                                        {{ Str::limit(html_entity_decode(strip_tags($recBlog->title)), 45) }}
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div class="blog-two__meta-box comment-sec d-none">
+                                         
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="col-12 text-center py-3">
+                                <span class="text-secondary">{{ __('lang.No recommended blogs found.') }}</span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
             <div class="col-xl-4 col-lg-5 categories-section">
@@ -494,6 +600,10 @@
         {{-- Custom Template JS --}}
         <script src="{{ asset('assets/js/script.js') }}"></script>
 
+        <!-- SweetAlert2 CDN -->
+        <script src="{{ asset('assets/js/sweetalert2.min.js') }}"></script>
+        
+
         {{-- Heart Icon Toggle Script --}}
         <script>
             $(document).ready(function() {
@@ -592,6 +702,56 @@ function setupCommentToggle() {
 window.setupCommentToggle = setupCommentToggle;
 $(document).ready(setupCommentToggle);
 </script>
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+document.getElementById('subscribeBtn').addEventListener('click', function () {
+    Swal.fire({
+        title: 'Subscribe',
+        input: 'email',
+        inputLabel: 'Enter your email address',
+        inputPlaceholder: 'example@example.com',
+        showCancelButton: true,
+        confirmButtonText: 'Submit',
+        preConfirm: (email) => {
+            if (!email) {
+                Swal.showValidationMessage('Email is required');
+                return false;
+            }
+
+            const formData = new FormData();
+            formData.append('email', email);
+
+            return fetch("{{ route('localized.subscribe', ['lang' => app()->getLocale()]) }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'error') {
+                    Swal.showValidationMessage(data.message);
+                } else {
+                    Swal.fire('Subscribed!', data.message, 'success');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.showValidationMessage('Something went wrong. Please try again.');
+            });
+        }
+    });
+});
+
+</script>
 
 @endsection

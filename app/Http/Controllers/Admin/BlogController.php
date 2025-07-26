@@ -62,7 +62,7 @@ class BlogController extends Controller
         ]);
 
         return redirect()->route('localized.admin.request-blogs', ['lang' => app()->getLocale()])
-                    ->with('success', 'Blog approved successfully!');
+            ->with('success', __('lang.Blog approved successfully!'));
     }
 
     public function rejectBlog(Request $request, $lang, $id)
@@ -87,7 +87,7 @@ class BlogController extends Controller
         ]);
 
         return redirect()->route('localized.admin.request-blogs', ['lang' => app()->getLocale()])
-                    ->with('success', 'Blog rejected successfully!');
+            ->with('success', __('lang.Blog rejected successfully!'));
                     
     }
 

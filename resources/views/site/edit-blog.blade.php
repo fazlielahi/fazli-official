@@ -190,7 +190,7 @@
 
     <div class="col-12" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
         <div class="form mb-4">
-            <h3>Edit Post</h3>
+            <h3>{{ __('lang.Edit Post') }}</h3>
 
             <!-- display validation errors -->
             <hr style="border-top: 1px dashed #424242; margin: 10px 0;">
@@ -219,7 +219,7 @@
                             <div class="row">
                                 <div class="form-group col-md-6 my-2">
                                     <label for="title">{{ __('lang.Title') }}</label>
-                                    <input type="text" name="title" id="title" value="{{ old('title', $blog->title) }}" class="form-control" placeholder="Enter Blog title" />
+                                    <input type="text" name="title" id="title" value="{{ old('title', $blog->title) }}" class="form-control" placeholder="{{ __('lang.Enter Blog title') }}" />
                                     @error('title')
                                         <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
                                         <style>
@@ -242,7 +242,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-6 my-2">
-                                    <label>Change Thumbnail </label>
+                                    <label>{{ __('lang.Change Thumbnail') }}</label>
                                     <small id="fileHelp" class="form-text text-muted"> ({{ __('lang.Dimensions: 400x250') }})</small>
                                     <input type="file" name="thumb" class="image-input-thumb form-control d-block" value="{{ old('image', $blog->thumb) }}" id="exampleInputFile" aria-describedby="fileHelp">
                                     <div class="photo-preview-container" id="thumb-preview-container">
@@ -263,7 +263,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6 my-2">
-                                    <label>Change Main Image </label>
+                                    <label>{{ __('lang.Change Main Image') }}</label>
                                     <small id="fileHelp" class="form-text text-muted"> ({{ __('lang.Dimensions: 400x250') }})</small>
                                     <input type="file" name="image" class="image-input-main form-control d-block" value="{{ old('image', $blog->image) }}" id="exampleInputFile" aria-describedby="fileHelp">
                                     <div class="photo-preview-container" id="image-preview-container">
@@ -290,14 +290,14 @@
                                     @if($blog->status === 'draft')
                                         <select name="status" id="status" class="form-control show-tick">
                                             <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
-                                            <option value="request" @if($blog->status == 'request') selected @endif>Request for review</option>
+                                            <option value="request" @if($blog->status == 'request') selected @endif>{{ __('lang.Request for review') }}</option>
                                         </select>
                                     @elseif($blog->status === 'request')
-                                        <label class="mt-3 text-danger d-block"> The blog has been requested for review! </label>
+                                        <label class="mt-3 text-danger d-block">{{ __('lang.The blog has been requested for review!') }}</label>
                                         <input type="hidden" name="status" value="request">
                                     @elseif($blog->status === 'rejected')
                                         <select name="status" id="status" class="form-control show-tick">
-                                            <option value="rejected" @if($blog->status == 'rejected') selected @endif>{{__('lang.Keep as Rejected')}}</option>
+                                            <option value="rejected" @if($blog->status == 'rejected') selected @endif>{{ __('lang.Keep as Rejected') }}</option>
                                             <option value="request" @if($blog->status == 'request') selected @endif>Request for review</option>
                                             <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
                                         </select>
@@ -324,7 +324,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">Update</button>
+                            <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">{{ __('lang.Update') }}</button>
                         </div>
                     </div>
                 </div>            

@@ -2283,11 +2283,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .category-dropdown .input-group{
-    
     position: absolute;
     width: 350px;
     right: 31px;
-    top: 185px;
+    top: 200px;
 }
 
 .nice-select{
@@ -2421,4 +2420,27 @@ h1, h2, h3, h4, h5, h6 {
 
 .profile-header{
     align-items: center;
+}
+
+.recommended-blogs h2{
+    background: linear-gradient(45deg, #d7d7d7, transparent);
+    margin: 26px 0;
+    padding: 0 20px;
+}
+
+.subscribe-btn-container{
+    margin-top: 10px;
+
+}
+
+.subscribe-btn-container button{
+    background: #1da370;
+    color: #fff;
+    border: none;
+    padding: 5px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }

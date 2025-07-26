@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CKEditorController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\SubscriberController;
 
 // 1) Root — redirect "/" to the current locale's home
 Route::get('/', [HomeController::class, 'index'])->name('root.redirect');
@@ -29,10 +30,16 @@ Route::group([
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::get('/about', [AboutController::class, 'index'])->name('about');
+    Route::get('/jobs', [\App\Http\Controllers\JobsController::class, 'index'])->name('jobs');
+    Route::get('/cv-create', [\App\Http\Controllers\CvController::class, 'index'])->name('cv-create');
 
     //Blogs
     Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs');
     Route::get('/blogs-details/{blog}', [BlogsController::class, 'blogDetails'])->name('blog-details');
+    Route::get('/books', [\App\Http\Controllers\BooksController::class, 'index'])->name('books');
+
+    //subscribe
+    Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribe');
 
     // like and comment
     Route::post('/blog/{blog}/comments', [BlogsController::class, 'comment'])->name('blog.comment');

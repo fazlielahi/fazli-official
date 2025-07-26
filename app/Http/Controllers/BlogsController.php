@@ -115,7 +115,7 @@ class BlogsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Comment submitted successfully!',
+                'message' => __('lang.Comment submitted successfully!'),
                 'html' => $html
             ]);
         }

@@ -251,10 +251,13 @@
                                         
                                     </div>
                                 </div>
-                                <h4 class="blog-two__title">
+                                @php
+                                    $textDirection = getTextDirection($blog->title);
+                                @endphp
+                                <h4 class="blog-two__title" style="text-align: {{ $textDirection }} !important;">
                                     <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
                                     {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
-                                </h4>
+                                </h4>   
                             </div>
                             <div class="blog-two__meta-box comment-sec">
                                 <ul class="blog-two__meta list-unstyled post-interactions">
@@ -320,7 +323,7 @@
                                                                 </div>
                                                                 </div>
                                                             </div>
-                                                            <h4 class="blog-two__title">
+                                                            <h4 class="blog-two__title" style="text-align: {{ getTextDirection($blog->title) }} !important;">
                                                                 <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
                                                                 {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
 
