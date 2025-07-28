@@ -127,9 +127,6 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="blog-image-container">
-                        <img src="" width="100%"/>
-                    </div>
                 </div>
             </div>
     </section>
@@ -156,7 +153,8 @@
                                 </div>
                                 <ul class="list-unstyled blog-grid__list-item">
                                     <li>
-                                        <a href="?" class="blog-grid__list-text {{ empty($selectedCategory) ? 'active' : '' }}">
+                                        <a href="{{ route('localized.blogs', ['lang' => app()->getLocale()]) }}"
+                                           class="blog-grid__list-text {{ empty($selectedCategory) ? 'active' : '' }}">
                                             <span class="blog-grid__list-check" style="margin-top: -7px;display:inline-block;width:18px;height:18px;border:1.5px solid #1da370;border-radius:4px;text-align:center;line-height:16px;font-size:14px;color:#1da370;vertical-align:middle;">
                                                 @if(empty($selectedCategory))
                                                     <i class="fa fa-check"></i>
@@ -169,7 +167,8 @@
                                     </li>
                                     @foreach($categories as $category)
                                         <li>
-                                            <a href="?category_id={{ $category->id }}" class="blog-grid__list-text {{ (isset($selectedCategory) && $selectedCategory == $category->id) ? 'active' : '' }}">
+                                            <a href="{{ route('localized.blogs.by-category', ['lang' => app()->getLocale(), 'slug' => $category->slug]) }}"
+                                                   class="blog-grid__list-text {{ (isset($selectedCategory) && $selectedCategory == $category->id) ? 'active' : '' }}">
                                                 <span class="blog-grid__list-check" style="margin-top: -7px;display:inline-block;width:18px;height:18px;border:1.5px solid #1da370;border-radius:4px;text-align:center;line-height:16px;font-size:14px;color:#1da370;vertical-align:middle;">
                                                     @if(isset($selectedCategory) && $selectedCategory == $category->id)
                                                         <i class="fa fa-check"></i>
@@ -204,18 +203,20 @@
                                     <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
-                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">Link copied!</div>
+                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">
+                                    Link copied!
+                                </div>
                                 <div class="modal-body share-icons-row">
-                                    <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')" title="{{ __('lang.Copy Link') }}">
+                                    <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}')" title="{{ __('lang.Copy Link') }}">
                                         <i class="fa-regular fa-copy text-secondary share-icon"></i>
                                     </a>
-                                    <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share on WhatsApp') }}">
+                                    <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}" title="{{ __('lang.Share on WhatsApp') }}">
                                         <i class="fa-brands fa-whatsapp text-success share-icon"></i>
                                     </a>
-                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
+                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
                                         <i class="fa-brands fa-linkedin text-primary share-icon"></i>
                                     </a>
-                                    <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share via Email') }}">
+                                    <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}" title="{{ __('lang.Share via Email') }}">
                                         <i class="fa-regular fa-envelope text-danger share-icon"></i>
                                     </a>
                                 </div>
@@ -225,18 +226,16 @@
                     <!--Blog Two Single Start -->
                     <div class="wow fadeInLeft blog-card-blogs" data-wow-delay="100ms">
                         <div class="blog-two__single">
-                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                             <div class="blog-two__img">
-                            <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" >   
+                                    <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}">
                             </div>
                             </a> 
                             <div class="blog-two__content">
                                 <div class="blog-two__meta-box blog-profile">
                                     <div class="profile-container">
                                         <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
-                                            <img
-                                                src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}"
-                                                width="100%" class="profile-pic">
+                                            <img src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" width="100%" class="profile-pic">
                                         </a>
                                         <div>
                                             <span class="username">
@@ -248,15 +247,15 @@
                                                 {{ $blog->created_at->diffForHumans() }}
                                             </span>
                                         </div>
-                                        
                                     </div>
                                 </div>
                                 @php
                                     $textDirection = getTextDirection($blog->title);
                                 @endphp
                                 <h4 class="blog-two__title" style="text-align: {{ $textDirection }} !important;">
-                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                     {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
+                                    </a>
                                 </h4>   
                             </div>
                             <div class="blog-two__meta-box comment-sec">
@@ -267,7 +266,8 @@
                                         @else
                                             <i class="heart-icon fa-regular fa-heart"></i>
                                         @endif 
-                                        <span class="like">{{ __('lang.Like') }} </span> <span class="like-count">{{ $blog->likes->count() }}</span>
+                                        <span class="like">{{ __('lang.Like') }} </span>
+                                        <span class="like-count">{{ $blog->likes->count() }}</span>
                                     </li>
                                     <li>
                                         <a href="#" data-bs-toggle="modal" class="comment-a"  data-bs-target="#editModal{{ $blog->id }}" >
@@ -299,7 +299,7 @@
                                                 <div class="p-3">
                                                     <div class="blog-two__single">
                                                         <div class="blog-two__img" id="blog-image-{{ $blog->id }}">
-                                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                                                 <img src="{{ asset('storage/' . $blog->thumb) }}"  class="img-fluid rounded">
                                                             </a>    
                                                         </div>
@@ -324,7 +324,7 @@
                                                                 </div>
                                                             </div>
                                                             <h4 class="blog-two__title" style="text-align: {{ getTextDirection($blog->title) }} !important;">
-                                                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                                                 {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
 
                                                                 </a>
@@ -344,7 +344,7 @@
                                                         @endphp
                                                         
                                                         @if((!isset($user) || !$user) && (!Cookie::get('visiter_token') || !\App\Models\Comment::where('visiter_token', Cookie::get('visiter_token'))->exists()))
-                                                            <div class="mb-3">
+                                                            <div class="mb-3 your-name">
                                                                 <label for="title{{ $blog->id }}" class="form-label text-light">{{__('lang.Your Name')}}</label>
                                                                 <input type="text" class="form-control bg-secondary text-light border-0" name="name" value="{{ old('name') }}" required>
                                                             </div>
@@ -620,10 +620,17 @@
         });
     </script>
 
+    <script src="{{ asset('lib/jquery-1.11.3.min.js') }}"></script>
+
     <style>
         .emoji-toggle-btn:hover {
             background-color: rgba(255,255,255,0.1) !important;
             transform: scale(1.1);
+        }
+
+        
+        .footer{
+            position: unset;
         }
         
         .emoji-btn {

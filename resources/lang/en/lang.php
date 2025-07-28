@@ -21,7 +21,7 @@ return [
     'Send' => 'Send',
     'I_AM' => 'I\'M',
     'WEB_DEVELOPER' => 'WEB Developer',
-    'OPEN_TO_OPPORTUNITIES' => 'Currently open to any available opportunity ...',
+    'OPEN_TO_OPPORTUNITIES' => 'Open to Work ...',
     'CHECK_CV' => 'Check Out My CV',
     'TECHNICAL_SKILLS' => 'TECHNICAL SKILLS',
     'PROFESSIONAL_EXPERIENCE' => 'Professional Experience',
@@ -37,9 +37,8 @@ return [
     'TYPED_FRONTEND' => 'Frontend',
     'TYPED_BACKEND' => 'Backend',
     'TYPED_FULLSTACK' => 'Full stack PHP and Laravel',
-    'COPYRIGHT' => '©2025 fazlielahi.web',
-    'AVAILABLE_FOR_WORK' => 'Available for full-time position',
-    'MADE_BY' => 'Made by fazlielahi',
+    'COPYRIGHT' => '©2025 TFC. All rights reserved.',
+    'MADE_BY' => 'TFC - The Fazli Community',
     'PORTFOLIO_TITLE' => 'Fazli Elahi | Web Developer Portfolio',
     'AUTHOR_NAME' => 'Fazli Elahi Muhammad Haneef',
     'ORGANIZATION_NAME' => 'Tamakan IT',
@@ -68,6 +67,8 @@ return [
     'FORM_EMAIL' => 'Email',
     'FORM_EMAIL_PLACEHOLDER' => 'Type your email',
     'FORM_PHONE' => 'Phone',
+    'No recommended blogs found.' => 'No recommended blogs found',
+    'Recommended blogs' => 'Recommended Blogs',
     'FORM_PHONE_PLACEHOLDER' => 'Type your phone number',
     'FORM_SUBJECT' => 'Subject',
     'FORM_SUBJECT_PLACEHOLDER' => 'Type your subject',
@@ -164,10 +165,19 @@ return [
     'Testimonial' => 'Testimonial',
     'Explore Genuine Feedback' => 'Explore Genuine Feedback',
     'from Happy Clients' => 'from <span style="color:white !important">Happy Clients</span>',
-    // Testimonials
+
+    // Testimonials 1 majid khan
     'testimonial_majid_name' => 'Mian Majid Khan',
     'testimonial_majid_title' => 'ARCHITECTURAL DESIGNER',
     'testimonial_majid_text' => 'I had the pleasure of working with Fazli Elahi on the development of a website dedicated to showcasing my architectural portfolio. From the very beginning, Fazli demonstrated a deep understanding of both design aesthetics and technical execution creating a platform that not only presents my work in a...',
+
+    // Testimonials 2 waleed zafar
+    'testimonial_waleed_name' => 'Waleed Zafar',
+    'testimonial_waleed_title' => 'Facade Quality Control inspector',
+    'testimonial_waleed_text' => 'Fazli Elahi is hardworking, reliable, and always focused on growth.
+    Even though we\'re in different fields, I\'ve seen his dedication and commitment firsthand. I\'m confident he\'ll be a great asset wherever he works.',
+
+       // Testimonials 2 Samad Khan
     'testimonial_samad_name' => 'Samad Khan',
     'testimonial_samad_title' => 'Environmental health & safety EHS supervisor',
     'testimonial_samad_text' => 'I had the pleasure of working with Fazli Elahi on a CMS university project website for my brother, and I couldn\'t be more impressed. He delivered the project on time, showcasing both excellent technical skills and a professional attitude throughout the process. His ability to understand our needs and provide solutions was commendable. Highly recommended for anyone looking for a skilled and reliable full-stack developer!',
@@ -191,7 +201,7 @@ return [
     'Emily Dawson' => 'Emily Dawson',
     'Tech Specialist' => 'Tech Specialist',
     'Please wait...' => 'Please wait...',
-    'thefazli.com' => 'thefazli.com',
+    'thefazli.com' => 'TFC - The Fazli Community',
     'Search here...' => 'Search here...',
     'Welcome' => 'Welcome',
     'My Profile' => 'My Profile',
@@ -231,6 +241,7 @@ return [
     'Edit Blog Post' => 'Edit Blog Post',
     'Edit Post' => 'Edit Post',
     'Back to Blogs' => 'Back to Blogs',
+    'Back' => 'Go Back',
     'Enter Blog title' => 'Enter Blog title',
     'Change Thumbnail' => 'Change Thumbnail',
     'Dimensions: 600x340' => 'Dimensions: 600x340',

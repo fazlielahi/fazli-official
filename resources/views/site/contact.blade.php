@@ -5,31 +5,25 @@
     .about-btn{
         display: none;
     }
+
+    
+    .footer{
+            position: unset !important;
+        }
 </style>
 
 @section('head')
- <!-- favicons Icons -->
- <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicons/apple-touch-icon.png') }}" />
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicons/favicon-32x32.png') }}" />
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicons/favicon-16x16.png') }}" />
-    <link rel="manifest" href="{{ asset('assets/images/favicons/site.webmanifest') }}" />
     <meta name="description" content="fistudy HTML 5 Template " />
 
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" />
-  <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
-  
-  <link rel="stylesheet" href="{{ asset('styles/contact.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/contact.css') }}">
+
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/animate.min.css') }}" />
@@ -45,7 +39,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/nice-select.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/aos.css') }}" />
-
 
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/slider.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/footer.css') }}" />
@@ -68,44 +61,50 @@
     <!-- template styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" />
-@endsection
 
+    <style>
+        .blog-image-container{
+            width: 30% !important;
+        }
+
+        .page-header .container{
+            justify-content: space-around;
+            align-items: center;
+        }
+    </style>
+@endsection
 
 @section('content')
 
     <!--Page Header Start-->
     <section class="page-header">
-        <div class="page-header__bg" style="background-image: url('{{ asset('assets/images/shapes/page-header-bg-shape.png') }}');"></div>
-        <div class="page-header__shape-4">
-            <img src="{{ asset('assets/images/shapes/page-header-shape-4.png') }}" alt="">
-        </div>
-        <div class="page-header__shape-5">
-            <img src="{{ asset('assets/images/shapes/page-header-shape-5.png') }}" alt="">
-        </div>
-        <div class="container">
-            <div class="page-header__inner">
-                <div class="page-header__img">
-                    <img src="{{ asset('assets/images/resources/page-header-img-1.png') }}" alt="">
-                    <div class="page-header__shape-1">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-1.png') }}" alt="">
+    <div class="breadcrumb-wrapper bg-cover">
+                <div class="container">
+                    <div class="page-heading">
+                        <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('lang.Blogs Corner') }}</h1>
+                        <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
+                            <li>
+                                <a href="{{ route('localized.home', ['lang' => app()->getLocale()])}}">
+                                    {{ __('lang.Home')}}
+                                </a>
+                            </li>
+                            <li>
+                                @if(app()->getLocale() === 'ar')
+                                    <i class="fas fa-chevron-left"></i>
+                                @else
+                                    <i class="fas fa-chevron-right"></i>
+                                @endif
+                            </li>
+                            <li>
+                                {{ __('lang.Blogs')}}
+                            </li>
+                        </ul>
                     </div>
-                    <div class="page-header__shape-2">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-2.png') }}" alt="">
+                    <div class="blog-image-container">
+                        <img src="{{ asset('images/contact-image.png') }}" width="100%"/>
                     </div>
-                    <div class="page-header__shape-3">
-                        <img src="{{ asset('assets/images/shapes/page-header-shape-3.png') }}" alt="">
-                    </div>
-                </div>
-                <h2>{{ __('lang.Contact Me') }}</h2>
-                <div class="thm-breadcrumb__box">
-                    <ul class="thm-breadcrumb list-unstyled">
-                        <li><a href="index.html">{{ __('lang.Home') }}</a></li>
-                        <li><span>//</span></li>
-                        <li>{{ __('lang.Contact Me') }}</li>
-                    </ul>
                 </div>
             </div>
-        </div>
     </section>
     <!--Page Header End-->
 
@@ -164,7 +163,7 @@
                 <div class="col-xl-6 col-lg-6">
                     <div class="contact-three__left">
                         <div class="contact-three__img">
-                            <img src="{{ asset('assets/images/resources/contact-three-img-1.jpg') }}" alt="">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d463878.29488595825!2d46.82252880000001!3d24.725191849999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f03890d489399%3A0xba974d1c98e79fd5!2sRiyadh!5e0!3m2!1sen!2ssa!4v1753643396917!5m2!1sen!2ssa" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
                 </div>
@@ -172,11 +171,9 @@
                     <div class="contact-three__right">
                         <div class="section-title-two text-left sec-title-animation animation-style1">
                             <div class="section-title-two__tagline-box">
-                               
                                 <span class="section-title-two__tagline">{{ __('lang.Get in Touch') }}</span>
                             </div>
-                            <h2 class="section-title-two__title">{{ __('lang.I am Here to Help and Ready to Hear from You') }}
-                            </h2>
+                            <h2 class="section-title-two__title">{{ __('lang.I am Here to Help and Ready to Hear from You') }}</h2>
                         </div>
                         <form class="contact-form-validated contact-three__form" action="{{ asset('assets/inc/sendemail.php') }}"
                             method="post" novalidate="novalidate">
@@ -196,8 +193,7 @@
                                 <div class="col-xl-12">
                                     <h4 class="contact-three__input-title">{{ __('lang.Subject') }} *</h4>
                                     <div class="contact-three__input-box">
-                                        <input type="text" name="Phone" placeholder="{{ __('lang.Write about your enquiry') }}"
-                                            required="">
+                                        <input type="text" name="Phone" placeholder="{{ __('lang.Write about your enquiry') }}" required="">
                                     </div>
                                 </div>
                                 <div class="col-xl-12">
@@ -206,8 +202,7 @@
                                         <textarea name="message" placeholder="{{ __('lang.Write Your Message') }}"></textarea>
                                     </div>
                                     <div class="contact-three__btn-box">
-                                        <button type="submit" class="thm-btn-two contact-three__btn"><span>{{ __('lang.Send') }}
-                                        {{ __('lang.Message') }}</span><i class="icon-angles-right"></i></button>
+                                        <button type="submit" class="thm-btn-two contact-three__btn"><span>{{ __('lang.Send') }} {{ __('lang.Message') }}</span><i class="icon-angles-right"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -219,11 +214,10 @@
         </div>
     </section>
     <!--Contact Three End-->
-
 @endsection
 
 @section('script')
-<script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/jarallax.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.ajaxchimp.min.js') }}"></script>
@@ -240,17 +234,10 @@
     <script src="{{ asset('assets/js/jquery.nice-select.min.js') }}"></script>
     <script src="{{ asset('assets/js/marquee.min.js') }}"></script>
     <script src="{{ asset('assets/js/aos.js') }}"></script>
-
-
-
-
     <script src="{{ asset('assets/js/gsap/gsap.js') }}"></script>
     <script src="{{ asset('assets/js/gsap/ScrollTrigger.js') }}"></script>
     <script src="{{ asset('assets/js/gsap/SplitText.js') }}"></script>
-
-
-
-
     <!-- template js -->
     <script src="{{ asset('assets/js/script.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @endsection

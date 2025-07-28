@@ -72,11 +72,9 @@
             margin-right: 0 !important;
         }
     </style>
-
 @endsection
 
 @section('content')
-
     <style>
         .menu-thumb {
             display: inline-block !important;
@@ -207,15 +205,13 @@
             display: inline-block;
             margin-right: 10px;
         }
-
     </style>
 
     <div class="col-12" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
         <div class="form mb-4">
             <h3>{{ __('lang.New Post') }}</h3>
 
-            
-        <hr style="border-top: 1px dashed #424242; margin: 10px 0;">
+            <hr style="border-top: 1px dashed #424242; margin: 10px 0;">
 
             @if(session('success'))
                 <p style="color: #21cf8c">{{ session('success') }}</p>
@@ -228,102 +224,98 @@
             @endif
 
             <!-- Registration form -->
-
             <form action="{{ route('localized.admin.blog.store', ['lang' => app()->getLocale()]) }}" method="post" enctype="multipart/form-data">
-
                 @csrf
 
-            <div class="row clearfix">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="body">
-    
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="title">{{ __('lang.Title') }}</label>
-                                    <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-control" placeholder="{{ __('lang.Enter Blog title') }}" />
-                                    @error('title')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        <style>
-                                            #title { border-color: rgb(160, 40, 50) !important; }
-                                        </style>
-                                    @enderror
+                <div class="row clearfix">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="body">
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="title">{{ __('lang.Title') }}</label>
+                                        <input type="text" name="title" id="title" value="{{ old('title') }}" class="form-control" placeholder="{{ __('lang.Enter Blog title') }}" />
+                                        @error('title')
+                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                            <style>
+                                                #title { border-color: rgb(160, 40, 50) !important; }
+                                            </style>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="category_id">{{ __('lang.Category') }}</label>
+                                        <select name="category_id" id="category_id" class="form-control" required>
+                                            <option value="">{{ __('lang.Select Category') }}</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('category_id')
+                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                        @enderror
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="category_id">{{ __('lang.Category') }}</label>
-                                    <select name="category_id" id="category_id" class="form-control" required>
-                                        <option value="">{{ __('lang.Select Category') }}</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('category_id')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                    @enderror
+                                <div class="row">
+                                    <div class="form-group col-md-6 mt-3">
+                                        <label for="thumb">{{ __('lang.Thumbnail') }}</label>
+                                        <input type="file" name="thumb" id="thumb" class="image-input-thumb form-control d-block" style="font-size: small !important;" value="{{ old('thumb') }}" aria-describedby="fileHelp">
+                                        <small id="fileHelp" class="form-text text-muted">{{ __('lang.Dimensions: 600x340') }}</small>
+                                        @error('thumb')
+                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                            <style>
+                                                #thumb { border-color: rgb(160, 40, 50) !important; }
+                                            </style>
+                                        @enderror
+                                        <div class="photo-preview-container" id="thumb-preview-container"></div>
+                                    </div>
+                                    <div class="form-group col-md-6 mt-3">
+                                        <label for="image">{{ __('lang.Main Image') }}</label>
+                                        <input type="file" name="image" id="image" class="image-input-main form-control d-block" style="font-size: small !important;" value="{{ old('image') }}" aria-describedby="fileHelp">
+                                        <small id="fileHelp" class="form-text text-muted">{{ __('lang.Dimensions: 1920x500') }}</small>
+                                        @error('image')
+                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                            <style>
+                                                #image { border-color: rgb(160, 40, 50) !important; }
+                                            </style>
+                                        @enderror
+                                        <div class="photo-preview-container" id="image-preview-container"></div>
+                                    </div>
                                 </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="status">{{ __('lang.Status') }}</label>
+                                        <select name="status" id="status" class="form-control show-tick" style="height: 36px;">
+                                            <option selected value="draft">{{__('lang.Draft')}}</option>
+                                            <option value="request">{{ __('lang.Request for review') }}</option>
+                                        </select>
+                                        @error('status')
+                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                            <style>
+                                                #status { border-color: rgb(160, 40, 50) !important; }
+                                            </style>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-12 mt-3">
+                                        <label for="content">{{ __('lang.Content') }}</label>
+                                        <textarea id="content" name="content">{{ old('content') }}</textarea>
+                                        @error('content')
+                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
+                                            <style>
+                                                #content { border-color: rgb(160, 40, 50) !important; }
+                                            </style>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn text-light btn-sm my-3 mx-3" style="color: #222 !important; background: #21cf8c;">{{ __('lang.Post') }}</button>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-6 mt-3">
-                                    <label for="thumb">{{ __('lang.Thumbnail') }}</label>
-                                    <input type="file" name="thumb" id="thumb" class="image-input-thumb form-control d-block" style="font-size: small !important;" value="{{ old('thumb') }}" aria-describedby="fileHelp">
-                                    <small id="fileHelp" class="form-text text-muted">{{ __('lang.Dimensions: 600x340') }}</small>
-                                    @error('thumb')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        <style>
-                                            #thumb { border-color: rgb(160, 40, 50) !important; }
-                                        </style>
-                                    @enderror
-                                    <div class="photo-preview-container" id="thumb-preview-container"></div>
-                                </div>
-                                <div class="form-group col-md-6 mt-3">
-                                    <label for="image">{{ __('lang.Main Image') }}</label>
-                                    <input type="file" name="image" id="image" class="image-input-main form-control d-block" style="font-size: small !important;" value="{{ old('image') }}" aria-describedby="fileHelp">
-                                    <small id="fileHelp" class="form-text text-muted">{{ __('lang.Dimensions: 1920x500') }}</small>
-                                    @error('image')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        <style>
-                                            #image { border-color: rgb(160, 40, 50) !important; }
-                                        </style>
-                                    @enderror
-                                    <div class="photo-preview-container" id="image-preview-container"></div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="status">{{ __('lang.Status') }}</label>
-                                    <select name="status" id="status" class="form-control show-tick" style="height: 36px;">
-                                        <option selected value="draft">{{__('lang.Draft')}}</option>
-                                        <option value="request">{{ __('lang.Request for review') }}</option>
-                                    </select>
-                                    @error('status')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        <style>
-                                            #status { border-color: rgb(160, 40, 50) !important; }
-                                        </style>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-12 mt-3">
-                                    <label for="content">{{ __('lang.Content') }}</label>
-                                    <textarea id="content" name="content">{{ old('content') }}</textarea>
-                                    @error('content')
-                                        <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        <style>
-                                            #content { border-color: rgb(160, 40, 50) !important; }
-                                        </style>
-                                    @enderror
-                                </div>
-                            </div>
-                            <button type="submit" class="btn text-light btn-sm my-3 mx-3" style="color: #222 !important; background: #21cf8c;">{{ __('lang.Post') }}</button>
                         </div>
-                    </div>
-                </div>            
-            </div>
-        </form>
+                    </div>            
+                </div>
+            </form>
         </div>
     </div>
-
 
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -398,7 +390,6 @@
             preview.innerHTML = ''; // Clear preview
         };
     </script>
-
 @endsection
 
 @section('script')

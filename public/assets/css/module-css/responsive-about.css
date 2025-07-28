@@ -1,12 +1,14 @@
-.footer{
-    position: absolute;
-    bottom: 0;
-}
-
 @media screen and (max-width: 700px) {
 
     .footer{
         justify-content: space-around !important;
     }
+
+    .mc-description{
+        top: -42px !important;
+        bottom: auto !important;
+    }
    
 }
+
+    

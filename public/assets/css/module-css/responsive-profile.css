@@ -9,7 +9,11 @@
     .profile-header{
         flex-direction: column !important;
         align-items: stretch !important;
-        padding: 12px;
+        padding: 12px 0;
+    }
+
+    .sidebar-nav-item{
+        margin: 4px 12px !important;
     }
 
     .profile-sidebar{
@@ -73,6 +77,14 @@
 
     .blog-two__single{
         margin-bottom: 8px !important;
+    }
+
+    .form .form-group{
+        padding: 0;
+    }
+
+    .form .col-lg-12{
+        padding: 0;
     }
 }
 

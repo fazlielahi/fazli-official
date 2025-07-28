@@ -17,6 +17,8 @@
         padding: 6px 12px !important;
         background: #000;
         transition: 1s;
+        display: block;
+        width: 100%;
     }
 
     .header-bars{

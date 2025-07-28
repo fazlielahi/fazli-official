@@ -52,6 +52,14 @@
     border-bottom: 1px dashed;
 }
 
+.logo-dark {
+    display: none; 
+}
+
+.logo-light {
+    display: block; 
+}
+
 .header-button{
     margin: 0 30px;
 }

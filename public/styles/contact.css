@@ -7,7 +7,7 @@
 }
 
 .contact-two__single{
-  background-color: #0000006b;
+  background-color: #1b1f23;
 }
 
 /*--------------------------------------------------------------
@@ -226,8 +226,10 @@
 .contact-three {
   position: relative;
   display: block;
-  padding: 96px 0 120px;
+  padding: 60px 0 120px;
   z-index: 1;
+  margin: 60px 0px;
+  background-color: #1b1f23;
 }
 
 .contact-three__left {

@@ -66,9 +66,9 @@
     <!-- Font Awesome CDN for version 6 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-    <!-- responsive design -->
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-blog.css') }}" />
-    
+        <!-- responsive design -->
+        <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-blog.css') }}" />
+        
     <!-- responsive design -->
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-home.css') }}" />
 
@@ -80,6 +80,11 @@
         .blog-two .row{
             justify-content: center;
         }
+
+        .footer{
+            position: unset;
+        }
+
         .fa-close-btn {
             background: transparent;
             border: none;
@@ -120,7 +125,7 @@
                             <div class="banner-one__left">
                                 <div class="banner-one__title-box">
                                     <div class="banner-one__title-box-shape">
-                                        <img src="{{ asset('assets/images/shapes/banner-one-title-box-shape-1.png') }}" alt="">
+                                        <img src="{{ asset('assets/images/shapes/banner-one-title-box-shape-1.png') }}" alt="" aria-hidden="true">
                                     </div>
                                     <h2 class="banner-one__title">
                                         <span class="banner-one__title-clr-1">{{ __('lang.Your Vision') }}</span><br>
@@ -137,25 +142,25 @@
                             <div class="banner-one__right">
                                 <div class="banner-one__img-box">
                                     <div class="banner-one__img">
-                                        <img src="{{ asset('assets/images/banner-two-img-1.png') }}" alt="">
+                                        <img src="{{ asset('assets/images/banner-two-img-1.png') }}" alt="Fazli Elahi standing confidently in a TFC logo shirt, representing The Fazli Community">
                                         <div class="banner-one__img-shape-box rotate-me">
                                             <div class="banner-one__img-shape-1">
                                                 <div class="banner-one__img-shape-2"></div>
                                             </div>
                                             <div class="banner-one__shape-1">
-                                                <img src="{{ asset('assets/images/shapes/banner-one-shape-1.png') }}" alt="">
+                                                <img src="{{ asset('assets/images/shapes/banner-one-shape-1.png') }}" alt="" aria-hidden="true">
                                             </div>
                                             <div class="banner-one__shape-2 rotate-me"></div>
                                             <div class="banner-one__shape-3">
-                                                <img src="{{ asset('assets/images/shapes/banner-one-shape-3.png') }}" alt="">
+                                                <img src="{{ asset('assets/images/shapes/banner-one-shape-3.png') }}" alt="" aria-hidden="true">
                                             </div>
                                         </div>
                                         <div class="banner-one__udemy-review">
                                             <div class="banner-one__udemy-review-img">
-                                                <img src="{{ asset('images/linkedin-profile-photo.jpg') }}" alt="">
+                                                <img src="{{ asset('images/linkedin-profile-photo.jpg') }}" alt="Fazli Elahi's LinkedIn profile photo">
                                             </div>
                                             <div class="banner-one__udemy-review-logo">
-                                                <img src="{{ asset('images/linked-91x38.png') }}" height="100%" alt="">
+                                                <img src="{{ asset('images/linked-91x38.png') }}" height="100%" alt="LinkedIn logo">
                                             </div>
                                             <div class="banner-one__udemy-review-client-info">
                                                 <p class="banner-one__udemy-review-client-name">Fazli Elahi | </p>
@@ -169,17 +174,17 @@
                                         </div>
                                         <div class="banner-one__student-trained">
                                             <div class="banner-one__student-trained-shape-1 rotate-me">
-                                                <img src="{{ asset('assets/images/shapes/banner-one-student-trained-shape-1.png') }}" alt="">
+                                                <img src="{{ asset('assets/images/shapes/banner-one-student-trained-shape-1.png') }}" alt="" aria-hidden="true">
                                             </div>
                                             <ul class="list-unstyled banner-one__student-trained-list">
                                                 <li>
                                                     <div class="banner-one__student-trained-img">
-                                                        <img src="{{ asset('images/client1.jpg') }}" alt="">
+                                                        <img src="{{ asset('images/client1.jpg') }}" alt="Photo of a satisfied client - Samad Khan">
                                                     </div>
                                                 </li>
                                                 <li>
                                                     <div class="banner-one__student-trained-img">
-                                                        <img src="{{ asset('images/client2.jpg') }}" alt="">
+                                                        <img src="{{ asset('images/client2.jpg') }}" alt="Photo of a satisfied client - Majid Khan">
                                                     </div>
                                                 </li>
                                             </ul>
@@ -217,10 +222,10 @@
             <!-- About One Start -->
             <section class="about-one" id="about-section">
                 <div class="about-one__shape-1">
-                    <img src="{{ asset('assets/images/shapes/about-one-shape-1.png') }}" alt="">
+                    <img src="{{ asset('assets/images/shapes/about-one-shape-1.png') }}" alt="" aria-hidden="true">
                 </div>
                 <div class="about-one__shape-2">
-                    <img src="{{ asset('assets/images/shapes/about-one-shape-2.png') }}" alt="">
+                    <img src="{{ asset('assets/images/shapes/about-one-shape-2.png') }}" alt="" aria-hidden="true">
                 </div>
                 <div class="container">
                     <div class="row about-rtl">
@@ -730,7 +735,7 @@
                                 </div>
                                 <div class="why-choose-one__btn-and-client-box">
                                     <div class="why-choose-one__btn-box">
-                                        <a href="/about" class="why-choose-one__btn thm-btn">
+                                        <a href="{{ route('localized.about', ['lang' => app()->getLocale()]) }}" class="why-choose-one__btn thm-btn">
                                             <span class="icon-angles-right"></span>{{ __('lang.Know More') }}
                                         </a>
                                     </div>
@@ -781,7 +786,7 @@
                             <div class="testimonial-one__single">
                                 <div class="testimonial-one__img-inner">
                                     <div class="testimonial-one__img">
-                                        <img src="{{ asset('images/testimonial/testimonial-1-1.jpg') }}" alt="">
+                                        <img src="{{ asset('images/testimonial/majid-khan.jpg') }}" alt="">
                                         <div class="testimonial-one__icon">
                                             <span class="icon-graduation-cap"></span>
                                         </div>
@@ -824,7 +829,7 @@
                             <div class="testimonial-one__single">
                                 <div class="testimonial-one__img-inner">
                                     <div class="testimonial-one__img">
-                                        <img src="{{ asset('images/testimonial/testimonial-1-2.jpg') }}" alt="">
+                                        <img src="{{ asset('images/testimonial/samad-khan.jpg') }}" alt="">
                                         <div class="testimonial-one__icon">
                                             <span class="icon-graduation-cap"></span>
                                         </div>
@@ -836,6 +841,49 @@
                                         <p class="testimonial-one__client-sub-title">{{ __('lang.testimonial_samad_title') }}</p>
                                     </div>
                                     <p class="testimonial-one__text">{{ __('lang.testimonial_samad_text') }}</p>
+                                    <div class="testimonial-one__ratting-and-social">
+                                        <ul class="testimonial-one__ratting list-unstyled">
+                                            <li>
+                                                <span class="icon-star"></span>
+                                            </li>
+                                            <li>
+                                                <span class="icon-star"></span>
+                                            </li>
+                                            <li>
+                                                <span class="icon-star"></span>
+                                            </li>
+                                            <li>
+                                                <span class="icon-star"></span>
+                                            </li>
+                                            <li>
+                                                <span class="icon-star"></span>
+                                            </li>
+                                        </ul>
+                                        <div class="testimonial-one__social">
+                                            <a href="https://www.linkedin.com/in/samad-khan-488a13232/"><span class="fab fa-linkedin-in"></span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Testimonial One Single End-->
+                        <!--Testimonial One Single Start-->
+                        <div class="item">
+                            <div class="testimonial-one__single">
+                                <div class="testimonial-one__img-inner">
+                                    <div class="testimonial-one__img">
+                                        <img src="{{ asset('images/testimonial/waleed-zafar.jpg') }}" alt="">
+                                        <div class="testimonial-one__icon">
+                                            <span class="icon-graduation-cap"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="testimonial-one__content">
+                                    <div class="testimonial-one__client-info">
+                                        <h3 class="testimonial-one__client-name">{{ __('lang.testimonial_waleed_name') }}</h3>
+                                        <p class="testimonial-one__client-sub-title">{{ __('lang.testimonial_waleed_title') }}</p>
+                                    </div>
+                                    <p class="testimonial-one__text">{{ __('lang.testimonial_waleed_text') }}</p>
                                     <div class="testimonial-one__ratting-and-social">
                                         <ul class="testimonial-one__ratting list-unstyled">
                                             <li>
@@ -1056,7 +1104,9 @@
                                     <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
-                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">Link copied!</div>
+                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">
+                                    Link copied!
+                                </div>
                                 <div class="modal-body share-icons-row">
                                     <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')" title="{{ __('lang.Copy Link') }}">
                                         <i class="fa-regular fa-copy text-secondary share-icon"></i>
@@ -1077,18 +1127,16 @@
                     <!--Blog Two Single Start -->
                     <div class="wow fadeInLeft blog-card-home" data-wow-delay="100ms">
                         <div class="blog-two__single">
-                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                            <div class="blog-two__img">
-                            <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" >   
-                            </div>
-                            </a> 
+                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                <div class="blog-two__img">
+                                    <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}">
+                                </div>
+                            </a>
                             <div class="blog-two__content">
                                 <div class="blog-two__meta-box blog-profile">
                                     <div class="profile-container">
                                         <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
-                                            <img
-                                                src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}"
-                                                width="100%" class="profile-pic">
+                                            <img src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" width="100%" class="profile-pic">
                                         </a>
                                         <div>
                                             <span class="username">
@@ -1105,11 +1153,12 @@
                                 </div>
                                 <h4 class="blog-two__title">
                                     <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
-                                    {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 85) }}
+                                        {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 85) }}
+                                    </a>
                                 </h4>
                             </div>
                             <div class="blog-two__meta-box comment-sec d-none">
-                                <ul class="blog-two__meta list-unstyled post-interactions" >
+                                <ul class="blog-two__meta list-unstyled post-interactions">
                                     <li class="like-btn" data-url="{{ route('localized.blog.like', [app()->getLocale(), $blog->id]) }}">
                                         @if(App\Models\Likes::where('blog_id', $blog->id)->exists())
                                             <i class="heart-icon fa-solid fa-heart"></i>
@@ -1208,6 +1257,7 @@
                 });
             });
         </script>
-
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 @endsection

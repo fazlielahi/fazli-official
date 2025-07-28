@@ -107,8 +107,56 @@ body[data-theme="light"]  .dropdown-toggle {
   background-color: #dcdee0 !important;
 }
 
+body[data-theme="light"]  .main-heading span
+{
+  background: #fff;
+  border: none;
+  box-shadow: 0px 0px 4px 0px #e5e5e5;
+}
+
+body[data-theme="light"]  .social-profiles,
+body[data-theme="light"]  .footer
+{
+  background: #dfe1e4;
+  color: #2b2a2a;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"]  .material-card .heading,
+body[data-theme="light"]  .material-card .heading span
+{
+  color: #ffffff !important;
+}
+
+body[data-theme="light"] .skill_graph,
+body[data-theme="light"] .skills_boxes,
+body[data-theme="light"] .experience
+{
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"]  .social-profiles .top span
+{
+  color: #fff !important;
+}
+
+body[data-theme="light"]  .social-profiles
+{
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 body[data-theme="light"]  .dropdown-item {
   color: #000 !important;
+}
+
+body[data-theme="light"]  .main-heading .heading-row1 {
+  color: #176e4d !important;
+}
+
+body[data-theme="light"]  .subtitle1 {
+  color: #176e4d !important;
 }
 
 body[data-theme="light"]  .dropdown-divider{
@@ -638,6 +686,14 @@ body[data-theme="light"] .comment-card .timestamp {
   white-space: nowrap;
 }
 
+body[data-theme="light"] .logo-dark {
+  display: block;
+}
+
+body[data-theme="light"] .logo-light {
+  display: none;
+}
+
 /* Responsive theme toggle */
 @media (max-width: 768px) {
   .theme-toggle-container {
@@ -757,6 +813,10 @@ body[data-theme="light"] .comment-modal .comment-emoji {
 
   body[data-theme="light"] {
     background-color: #dbe2ed;
+  }
+
+  body[data-theme="light"] .offcanvas-content{
+    background-color: #fff !important;
   }
 
   body[data-theme="light"] .blog-grid__left {

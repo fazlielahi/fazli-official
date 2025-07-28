@@ -198,7 +198,6 @@ left: 17px !important;
 
 .heading-row2{
     font-family: 'Noto Kufi Arabic', sans-serif;
-    font-size: 62px;
     font-weight: bold;
 }
 
@@ -333,8 +332,53 @@ textarea{
     right: 0;
 }
 
+.about-top .main-heading h3{
+    margin-top: 18px;
+}
+
+.about-top .main-heading .organization{
+    display: inline-block;
+    margin-top: 8px;
+}
+
+
+.material-card .mc-description{
+    text-align: right;
+}
+
+.about-top .cv-btn{
+    top: auto !important;
+    bottom: -15px !important;
+}
+
 @media screen and (max-width: 1000px) {
     .main-header .menu{
         padding-right: 30px !important;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    
+    .about-top .main-heading .heading-row2{
+        display: inline-block;
+        margin-top: 0 !important;
+    }
+    
+    .about-top .main-heading h3{
+        margin-top: 0 !important;
+    }
+    
+    .about-top .photo-slider{
+        margin-top: 20px;
+    }
+
+    .about-top .cv-btn{
+        margin: 17px auto !important;
+        position: unset;
+    }
+
+    .offcanvas-close{
+        right: auto !important;
+        left: 18px !important;
     }
 }

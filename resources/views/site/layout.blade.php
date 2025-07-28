@@ -2,9 +2,8 @@
 <html lang="en">
 
 <head>
-   
     <title>@yield('title', __('lang.DEFAULT_TITLE'))</title>
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" >
+    <link rel="icon" href="{{ asset('images/favicon-tfc-the-fazli-community.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @yield('meta')
@@ -16,7 +15,7 @@
     @php $locale = app()->getLocale(); @endphp
     
     @if($locale == 'ar')
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif
 
@@ -30,12 +29,9 @@
     <script src="{{ asset('lib/jquery-ui.js')}}"></script>
 
     @yield('head')
-
-
 </head>
 
-<body onresize="add_collapse()" id="body" >
-
+<body onresize="add_collapse()" id="body">
     @include("site.inc.header")
     @include("site.inc.cv")
 
@@ -45,12 +41,14 @@
         <div></div>
         <div></div>
     </div>
-
     <!--End Preloader-->
+
     @yield('content')
 
     <a href="#" data-target="html" class="scroll-to-target scroll-to-top">
-        <span class="scroll-to-top__wrapper"><span class="scroll-to-top__inner"></span></span>
+        <span class="scroll-to-top__wrapper">
+            <span class="scroll-to-top__inner"></span>
+        </span>
         <span class="scroll-to-top__text">{{ __('lang.Go Back Top') }}</span>
     </a>
 
@@ -62,11 +60,9 @@
         {{ __('lang.Comment added successfully!') }}
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('js/theme.js') }}"></script>
     <script src="{{ asset('js/like.js') }}"></script>
     <script src="{{ asset('js/comment.js') }}"></script>
     <script src="{{ asset('js/share-blog.js') }}"></script>
-
 </body>
 </html>

@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
     <a href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.home') ? 'active' : '' }}">
-            <img src="{{ asset('images/tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo"/>
+            <img src="{{ asset('images/dark-tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo logo-dark"/>
+            <img src="{{ asset('images/light-tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo logo-light"/>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <!-- fallback icon if the above is invisible -->
@@ -15,8 +16,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('localized.about', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.about') ? 'active' : '' }}">
-                        <i class="fas fa-user me-2"></i>{{ __('lang.About') }}
+                    <a href="#about-section" class="{{ request()->routeIs('localized.about') ? 'active' : '' }}">
+                        <i class="fas fa-user me-2"></i>{{ __('lang.Services') }}
                     </a>
                 </li>
                 <li class="nav-item dropdown">

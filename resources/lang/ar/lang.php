@@ -6,7 +6,7 @@ return [
     'Contact' => 'اتصل بنا', // More natural than just "اتصل"
     'I_AM' => 'أنا',
     'WEB_DEVELOPER' => 'مطور ويب',
-    'OPEN_TO_OPPORTUNITIES' => '...متاح حالياً لأي فرصة مناسبة',
+    'OPEN_TO_OPPORTUNITIES' => '... متاح للعمل',
     'CHECK_CV' => 'عرض السيرة الذاتية',
     'TECHNICAL_SKILLS' => 'المهارات التقنية',
     'PROFESSIONAL_EXPERIENCE' => 'الخبرة المهنية',
@@ -22,9 +22,9 @@ return [
     'TYPED_FRONTEND' => 'واجهة أمامية',
     'TYPED_BACKEND' => 'خلفية',
     'TYPED_FULLSTACK' => 'مطور متكامل PHP و Laravel',
-    'COPYRIGHT' => '©2025 fazlielahi.web',
+    'COPYRIGHT' => '©2025 TFC - جميع الحقوق محفوظة',
     'AVAILABLE_FOR_WORK' => 'متاح للعمل بدوام كامل',
-    'MADE_BY' => 'تم التطوير بواسطة fazlielahi',
+    'MADE_BY' => 'TFC - The Fazli Community',
     'PORTFOLIO_TITLE' => 'فظلي إلهي | معرض مطور الويب',
     'AUTHOR_NAME' => 'فظلي إلهي محمد حنيـف',
     'SCAN_QR_CODE' => 'مسح رمز QR',
@@ -139,16 +139,27 @@ return [
     'Testimonial' => 'آراء العملاء',
     'Explore Genuine Feedback' => 'استكشف آراء العملاء الحقيقية',
     'from Happy Clients' => 'من <span style="color:#444 !important">عملاء سعداء</span>',
-    // Testimonials
+
+    // Testimonials 2 Majid Khan
     'testimonial_majid_name' => 'ميان ماجد خان',
     'testimonial_majid_title' => 'مصمم معماري',
     'testimonial_majid_text' => 'لقد سعدت بالعمل مع فظلي إلهي في تطوير موقع ويب مخصص لعرض أعمالي المعمارية. منذ البداية، أظهر فظلي فهماً عميقاً لكل من الجوانب الجمالية والتنفيذ التقني، مما أدى إلى إنشاء منصة لا تعرض أعمالي فقط بل ...',
+
+    // Testimonials 2 waleed zafar
+    'testimonial_waleed_name' => 'وليد ظفر',
+    'testimonial_waleed_title' => 'مفتش مراقبة جودة الواجهة',
+    'testimonial_waleed_text' => 'فضل إلهي مجتهد، يمكن الاعتماد عليه، ويركز دائمًا على التطور. رغم أننا في مجالات مختلفة، إلا أنني رأيت التزامه واجتهاده بنفسي. أنا واثق أنه سيكون إضافة قيمة في أي مكان يعمل فيه.',
+
+    // Testimonials 3 Samad Khan
     'testimonial_samad_name' => 'صمد خان',
     'testimonial_samad_title' => 'مشرف الصحة والسلامة البيئية',
     'testimonial_samad_text' => 'لقد سعدت بالعمل مع فظلي إلهي في مشروع موقع جامعة CMS لأخي، ولا يمكنني أن أكون أكثر إعجاباً. لقد سلم المشروع في الوقت المحدد، وأظهر مهارات تقنية ممتازة ومهنية طوال العملية. كانت قدرته على فهم احتياجاتنا وتقديم الحلول جديرة بالثناء. أوصي به بشدة لأي شخص يبحث عن مطور متكامل ماهر وموثوق!',
+
+    // Testimonials 4 Amir Hamza
     'testimonial_hamza_name' => 'أمير حمزة',
     'testimonial_hamza_title' => 'رسام أوتوكاد في شركة سما للاستشارات الهندسية',
     'testimonial_hamza_text' => 'يمتلك فظلي قدرة رائعة على تبسيط المفاهيم التقنية لغير المطورين مثلي. كرسام، قدرت مدى وضوح تواصله وسرعة إنجازه. ذكي، متكيف، وسهل التعامل للغاية.',
+
     'From Concepts to Live Projects' => 'من الأفكار إلى المشاريع الحية',
     'See What I\'ve Built.' => '.شاهد <span style="color: #444">ما أنجزته </span>',
     'Completed!' => 'تم الإنجاز!',
@@ -164,7 +175,7 @@ return [
     'Emily Dawson' => 'إميلي داوسون',
     'Tech Specialist' => 'أخصائية تقنية',
     'Please wait...' => 'يرجى الانتظار...',
-    'thefazli.com' => 'thefazli.com',
+    'thefazli.com' => 'TFC - The Fazli Community',
     'Search here...' => 'ابحث هنا...',
     'Welcome' => 'مرحباً',
     'My Profile' => 'ملفي الشخصي',
@@ -204,6 +215,7 @@ return [
     'Edit Blog Post' => 'تعديل منشور المدونة',
     'Edit Post' => 'تعديل المنشور',
     'Back to Blogs' => 'العودة للمدونات',
+    'Back' => 'العودة',
     'Enter Blog title' => 'أدخل عنوان المدونة',
     'Change Thumbnail' => 'تغيير الصورة المصغرة',
     'Dimensions: 600x340' => 'الأبعاد: 600x340',
@@ -322,6 +334,8 @@ return [
     'Be the first to comment!' => 'كن أول من يعلق!',
     'Read all comments' => 'اقرأ جميع التعليقات',
     'No blogs uploaded yet' => 'لم يتم رفع أي مدونات بعد',
+    'No recommended blogs found.' => '.لم يتم العثور على مدونات موصى بها',
+    'Recommended blogs' => 'مدونات موصى بها',
     'There are no blogs available in the selected category.' => 'لا توجد مدونات متاحة في التصنيف المحدد.',
     'Add a comment' => 'أضف تعليقًا',
     'Comment' => 'تعليق',

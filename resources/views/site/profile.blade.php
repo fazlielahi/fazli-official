@@ -3,7 +3,7 @@
 
 <head>
     <title>@yield('title', __('lang.DEFAULT_TITLE'))</title>
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" >
+    <link rel="icon" href="{{ asset('images/favicon-tfc-the-fazli-community.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -214,7 +214,7 @@
                 <div class="toast align-items-center text-bg-danger border-0" id="rejectedToast" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="d-flex">
                         <div class="toast-body">
-                           <span> {{ __('lang.You have X rejected posts.', ['count' => $toastCount, 'plural' => $toastCount > 1 ? 's' : '']) }}</span>
+                            <span> {{ __('lang.You have X rejected posts.', ['count' => $toastCount, 'plural' => $toastCount > 1 ? 's' : '']) }}</span>
                         </div>
                         <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -260,7 +260,6 @@
                     <div class="member-since">
                         <p class="mb-0 mx-1 text-muted" style="font-size: 14px;">{{ __('lang.Member Since') }}</p> <p> <strong>{{ $profile_since }}</strong></p>
                     </div>
-                    
                 </div>
             </div>
             <div class="d-flex flex-md-row gap-2 profile-header-button">
@@ -292,7 +291,6 @@
                 @endif
             </div>
         </div>
-
         <div class="row g-4 blog-boxes" style="justify-content: space-between !important;">
             @if($user && $user->type == 'admin')
                 @if(isset($clickedUser))
@@ -303,35 +301,35 @@
                     </style>
                 @endif
                 @if(!isset($clickedUser) || (isset($clickedUser) && isset($user) && $clickedUser->id == $user->id))
-                <div class="col-12 profile-sidebar">
-                    <div class="sidebar-nav">
-                        {{-- Published Blogs --}}
-                        <a href="{{ route('localized.profile', ['lang' => app()->getLocale()]) }}"
-                            class="sidebar-nav-item {{ request()->routeIs('localized.profile') ? 'active' : '' }}">
-                            <i class="fa-solid fa-file-lines"></i> {{ __('lang.Published') }}
-                        </a>
-                        {{-- Draft Blogs --}}
-                        <a href="{{ route('localized.profile-draft-blogs', ['lang' => app()->getLocale()]) }}"
-                            class="sidebar-nav-item {{ request()->routeIs('localized.profile-draft-blogs') ? 'active' : '' }}">
-                            <i class="fa-solid fa-pen-to-square"></i> {{ __('lang.Draft') }}
-                        </a>
-                        {{-- Review Requests --}}
-                        <a href="{{ route('localized.profile-request-blogs', ['lang' => app()->getLocale()]) }}"
-                            class="sidebar-nav-item {{ request()->routeIs('localized.profile-request-blogs') ? 'active' : '' }}">
-                            <i class="fa-solid fa-magnifying-glass"></i> {{ __('lang.Requested') }}
-                        </a>
-                        {{-- Rejected Blogs --}}
-                        <div class="position-relative" style="display: inline-block;">
-                            <a href="{{ route('localized.profile-rejected-blogs', ['lang' => app()->getLocale()]) }}"
-                                class="sidebar-nav-item {{ request()->routeIs('localized.profile-rejected-blogs') ? 'active' : '' }}">
-                                <i class="fa-solid fa-xmark-circle text-danger"></i> {{ __('lang.Rejected') }}
+                    <div class="col-12 profile-sidebar">
+                        <div class="sidebar-nav">
+                            {{-- Published Blogs --}}
+                            <a href="{{ route('localized.profile', ['lang' => app()->getLocale()]) }}"
+                                class="sidebar-nav-item {{ request()->routeIs('localized.profile') ? 'active' : '' }}">
+                                <i class="fa-solid fa-file-lines"></i> {{ __('lang.Published') }}
                             </a>
-                            @if(isset($rejectedCount) && $rejectedCount > 0)
-                                <span class="badge bg-danger position-absolute translate-middle-y" style="z-index:1; font-size: 0.75rem;">{{ $rejectedCount }}</span>
-                            @endif
+                            {{-- Draft Blogs --}}
+                            <a href="{{ route('localized.profile-draft-blogs', ['lang' => app()->getLocale()]) }}"
+                                class="sidebar-nav-item {{ request()->routeIs('localized.profile-draft-blogs') ? 'active' : '' }}">
+                                <i class="fa-solid fa-pen-to-square"></i> {{ __('lang.Draft') }}
+                            </a>
+                            {{-- Review Requests --}}
+                            <a href="{{ route('localized.profile-request-blogs', ['lang' => app()->getLocale()]) }}"
+                                class="sidebar-nav-item {{ request()->routeIs('localized.profile-request-blogs') ? 'active' : '' }}">
+                                <i class="fa-solid fa-magnifying-glass"></i> {{ __('lang.Requested') }}
+                            </a>
+                            {{-- Rejected Blogs --}}
+                            <div class="position-relative" style="display: inline-block;">
+                                <a href="{{ route('localized.profile-rejected-blogs', ['lang' => app()->getLocale()]) }}"
+                                    class="sidebar-nav-item {{ request()->routeIs('localized.profile-rejected-blogs') ? 'active' : '' }}">
+                                    <i class="fa-solid fa-xmark-circle text-danger"></i> {{ __('lang.Rejected') }}
+                                </a>
+                                @if(isset($rejectedCount) && $rejectedCount > 0)
+                                    <span class="badge bg-danger position-absolute translate-middle-y" style="z-index:1; font-size: 0.75rem;">{{ $rejectedCount }}</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
                 @endif
                 <div class="col dropdown-col">
                     @if(!empty($categories) && count($categories))
@@ -356,15 +354,12 @@
                 </div>
             @endif
         </div>
-        
-            @yield('content')
-        
+        @yield('content')
     </div>
     <a href="#" data-target="html" class="scroll-to-target scroll-to-top">
         <span class="scroll-to-top__wrapper"><span class="scroll-to-top__inner"></span></span>
         <span class="scroll-to-top__text"> {{ __('lang.Go Back Top') }}</span>
     </a>
-    @include("site.inc.footer")   
     @yield('script')
     <div id="comment-success-message" style="display:none; position:fixed; top:30px; left:50%; transform:translateX(-50%); z-index:9999; background:#1da370; color:#fff; padding:12px 32px; border-radius:8px; font-size:1.1rem; box-shadow:0 2px 8px #0002;">
         {{ __('lang.Comment added successfully!') }}

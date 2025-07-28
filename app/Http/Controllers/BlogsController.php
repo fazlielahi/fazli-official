@@ -44,10 +44,26 @@ class BlogsController extends Controller
         return view('site.rejected_blogs', compact('blogs', 'user'));
     }
 
-    public function blogDetails($locale, $id)
+    public function category($locale, $slug)
     {
-        $blog = Blog::findOrFail($id);
-        $popular_blogs = Blog::where('id', '!=', $id)->where('status', 'published')->latest()->take(10)->get();
+        $categories = \App\Models\Category::all();
+        $selectedCategory = \App\Models\Category::where('slug', $slug)->firstOrFail();
+        $blogs = \App\Models\Blog::where('status', 'published')
+            ->where('category_id', $selectedCategory->id)
+            ->get();
+
+        return view('site.blogs', [
+            'blogs' => $blogs,
+            'categories' => $categories,
+            'selectedCategory' => $selectedCategory->id,
+            'selectedCategorySlug' => $selectedCategory->slug,
+        ]);
+    }
+
+    public function blogDetails($locale, $slug)
+    {
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+        $popular_blogs = Blog::where('id', '!=', $blog->id)->where('status', 'published')->latest()->take(10)->get();
         $categories = \App\Models\Category::all();
         $selectedCategory = $blog->category_id;
         return view('site.blog-details', compact('blog', 'popular_blogs', 'categories', 'selectedCategory'));

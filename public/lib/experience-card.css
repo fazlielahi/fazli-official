@@ -285,9 +285,7 @@
 }
 
 @media screen and (max-width: 767px) {
-    .material-card .mc-footer label {
-       left: 10px;
-    }
+  
 }
     .material-card.mc-active .mc-footer {
     overflow: visible;

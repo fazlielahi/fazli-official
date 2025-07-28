@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Admin Dashboard')</title>
-
+    <link rel="icon" href="{{ asset('images/favicon-tfc-the-fazli-community.png') }}">
     <!-- Local CSS files -->
     <link rel="stylesheet" href="{{ asset('assets/admin/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/font-awesome.min.css') }}">

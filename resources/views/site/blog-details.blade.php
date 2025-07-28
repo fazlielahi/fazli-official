@@ -78,6 +78,10 @@
         }
 
         
+        .footer{
+            position: unset;
+        }
+        
         .modal-header .btn-close{
             margin: 0 !important;
         }
@@ -402,7 +406,7 @@
                     </div>
                 </div>
                 <div class="recommended-blogs"> 
-                    <h2>Recommended blogs</h2>
+                    <h2>{{ __('lang.Recommended blogs') }}</h2>
                     <div class="row">
                                             <!-- Share Modal -->
                     <div class="modal fade" id="shareModalTest" tabindex="-1">
@@ -604,6 +608,7 @@
         <script src="{{ asset('assets/js/sweetalert2.min.js') }}"></script>
         
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         {{-- Heart Icon Toggle Script --}}
         <script>
             $(document).ready(function() {
@@ -706,52 +711,53 @@ $(document).ready(setupCommentToggle);
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-document.getElementById('subscribeBtn').addEventListener('click', function () {
-    Swal.fire({
-        title: 'Subscribe',
-        input: 'email',
-        inputLabel: 'Enter your email address',
-        inputPlaceholder: 'example@example.com',
-        showCancelButton: true,
-        confirmButtonText: 'Submit',
-        preConfirm: (email) => {
-            if (!email) {
-                Swal.showValidationMessage('Email is required');
-                return false;
+    // Subscribe Button
+    document.getElementById('subscribeBtn').addEventListener('click', function () {
+        Swal.fire({
+            title: 'Subscribe',
+            input: 'email',
+            inputLabel: 'Enter your email address',
+            inputPlaceholder: 'example@example.com',
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            preConfirm: (email) => {
+                if (!email) {
+                    Swal.showValidationMessage('Email is required');
+                    return false;
+                }
+
+                const formData = new FormData();
+                formData.append('email', email);
+
+                return fetch("{{ route('localized.subscribe', ['lang' => app()->getLocale()]) }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: formData
+                })
+                .then(async response => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'error') {
+                        Swal.showValidationMessage(data.message);
+                    } else {
+                        Swal.fire('Subscribed!', data.message, 'success');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.showValidationMessage('Something went wrong. Please try again.');
+                });
             }
-
-            const formData = new FormData();
-            formData.append('email', email);
-
-            return fetch("{{ route('localized.subscribe', ['lang' => app()->getLocale()]) }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: formData
-            })
-            .then(async response => {
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'error') {
-                    Swal.showValidationMessage(data.message);
-                } else {
-                    Swal.fire('Subscribed!', data.message, 'success');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.showValidationMessage('Something went wrong. Please try again.');
-            });
-        }
+        });
     });
-});
-
-</script>
+    
+    </script>
 
 @endsection

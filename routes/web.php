@@ -35,7 +35,8 @@ Route::group([
 
     //Blogs
     Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs');
-    Route::get('/blogs-details/{blog}', [BlogsController::class, 'blogDetails'])->name('blog-details');
+    Route::get('/blogs/category/{slug}', [BlogsController::class, 'category'])->name('blogs.by-category');
+    Route::get('/blog/{slug}', [BlogsController::class, 'blogDetails'])->name('blog-details');
     Route::get('/books', [\App\Http\Controllers\BooksController::class, 'index'])->name('books');
 
     //subscribe

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class Blog extends Model
 {
@@ -20,7 +21,39 @@ class Blog extends Model
         'approval_message',
         'rejection_message',
         'category_id',
+        'slug',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($blog) {
+            if (empty($blog->slug)) {
+                $blog->slug = $blog->generateUniqueSlug();
+            }
+        });
+        
+        static::updating(function ($blog) {
+            if ($blog->isDirty('title') && empty($blog->slug)) {
+                $blog->slug = $blog->generateUniqueSlug();
+            }
+        });
+    }
+
+    public function generateUniqueSlug()
+    {
+        $baseSlug = Str::slug($this->title);
+        $slug = $baseSlug;
+        $counter = 1;
+        
+        while (static::where('slug', $slug)->where('id', '!=', $this->id)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        
+        return $slug;
+    }
 
     public function creater()
     {
