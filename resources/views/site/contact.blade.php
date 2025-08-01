@@ -81,7 +81,7 @@
     <div class="breadcrumb-wrapper bg-cover">
                 <div class="container">
                     <div class="page-heading">
-                        <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('lang.Blogs Corner') }}</h1>
+                        <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('lang.We’d Love to Hear From You') }}</h1>
                         <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
                             <li>
                                 <a href="{{ route('localized.home', ['lang' => app()->getLocale()])}}">
@@ -96,12 +96,12 @@
                                 @endif
                             </li>
                             <li>
-                                {{ __('lang.Blogs')}}
+                                {{ __('lang.Contact')}}
                             </li>
                         </ul>
                     </div>
-                    <div class="blog-image-container">
-                        <img src="{{ asset('images/contact-image.png') }}" width="100%"/>
+                    <div class="blog-image-container contact-image">
+                        <img src="{{ asset('images/contact-image.png') }}" width="100%" alt="TFC - The Fazli Community logo in Contact Page"/>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                 <li class="col-xl-3 col-lg-6 col-md-6 wow fadeInLeft" data-wow-delay="100ms">
                     <div class="contact-two__single">
                         <div class="contact-two__icon">
-                            <img src="{{ asset('assets/images/icon/contact-two-icon-1.png') }}" alt="">
+                            <img src="{{ asset('assets/images/icon/contact-two-icon-1.png') }}" alt="" role="presentation" aria-hidden="true">
                         </div>
                         <h3 class="contact-two__title">{{ __('lang.Address') }}</h3>
                         <p> Riyadh Riyadh,<br> Saudi Arabia</p>
@@ -124,7 +124,7 @@
                 <li class="col-xl-3 col-lg-6 col-md-6 wow fadeInLeft" data-wow-delay="200ms">
                     <div class="contact-two__single">
                         <div class="contact-two__icon">
-                            <img src="{{ asset('assets/images/icon/contact-two-icon-2.png') }}" alt="">
+                            <img src="{{ asset('assets/images/icon/contact-two-icon-2.png') }}" alt="" role="presentation" aria-hidden="true">
                         </div>
                         <h3 class="contact-two__title">{{ __('lang.Contact Number') }}</h3>
                         <p> <a href="wa.me:966592304816"><i class="fab fa-whatsapp"></i> +966592304816</a></p>
@@ -134,7 +134,7 @@
                 <li class="col-xl-3 col-lg-6 col-md-6 wow fadeInRight" data-wow-delay="300ms">
                     <div class="contact-two__single">
                         <div class="contact-two__icon">
-                            <img src="{{ asset('assets/images/icon/contact-two-icon-3.png') }}" alt="">
+                            <img src="{{ asset('assets/images/icon/contact-two-icon-3.png') }}" alt="" role="presentation" aria-hidden="true">
                         </div>
                         <h3 class="contact-two__title">{{ __('lang.Email Address') }}</h3>
                         <p> <a href="info@domain.com">fazli@tamakan.com.sa</a></p>
@@ -144,7 +144,7 @@
                 <li class="col-xl-3 col-lg-6 col-md-6 wow fadeInRight" data-wow-delay="400ms">
                     <div class="contact-two__single">
                         <div class="contact-two__icon">
-                            <img src="{{ asset('assets/images/icon/contact-two-icon-4.png') }}" alt="">
+                            <img src="{{ asset('assets/images/icon/contact-two-icon-4.png') }}" alt="" role="presentation" aria-hidden="true">
                         </div>
                         <h3 class="contact-two__title">{{ __('lang.Working hours') }}</h3>
                         <p> 10:00 AM - 8:00 PM

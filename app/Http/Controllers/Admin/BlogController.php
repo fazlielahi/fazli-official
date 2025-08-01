@@ -178,15 +178,11 @@ class BlogController extends Controller
         if($request->hasFile('image')){
             $image = $request->file('image');
             $imagePath = $image->store('uploads', 'public');
-        } else {
-            $imagePath = 'blog-default.jpg';
         }
 
         if($request->hasFile('thumb')){
             $thumb = $request->file('thumb');
             $thumbPath = $thumb->store('uploads', 'public');
-        } else {
-            $thumbPath = 'blog-thumb-default.jpg';
         }
         
         // dd($request->session()->get('user_id'));

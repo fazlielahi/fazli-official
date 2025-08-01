@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CKEditorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\ServiceController;
 
 // 1) Root — redirect "/" to the current locale's home
 Route::get('/', [HomeController::class, 'index'])->name('root.redirect');
@@ -41,6 +42,9 @@ Route::group([
 
     //subscribe
     Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribe');
+
+    //services 
+    Route::get('/services', [ServiceController::class, 'index'])->name('services');
 
     // like and comment
     Route::post('/blog/{blog}/comments', [BlogsController::class, 'comment'])->name('blog.comment');

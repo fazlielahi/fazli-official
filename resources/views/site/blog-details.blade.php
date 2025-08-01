@@ -143,7 +143,11 @@
                         </div>
                     </div>
                     <div class="blog-image-container">
-                        <img src="{{asset('storage/' . $blog->image)}}" width="100%"/>
+                    <img 
+                        src="{{ $blog->image && file_exists(public_path('storage/' . $blog->image)) ? asset('storage/' . $blog->image) : asset('images/blog-default.jpg') }}" 
+                        alt="{{ $blog->title ?? 'Blog post image' }}" 
+                        style="width: 100%;">
+
                     </div>
                 </div>
             </div>
@@ -161,7 +165,11 @@
                         <div class="blog-details__client-and-meta">
                             <div class="blog-details__client-box">
                                 <div class="blog-details__client-img">
-                                <img src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" alt="profile" style="width:31px; height:31px; border-radius:50%; object-fit:cover; margin-right:6px; vertical-align:middle;">
+                                <img 
+                                    src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" 
+                                    alt="{{ $blog->creater->name ?? 'Default profile picture' }}" 
+                                    style="width:31px; height:31px; border-radius:50%; object-fit:cover; margin-right:6px; vertical-align:middle;">
+
                                 </div>
                                 <div class="blog-details__client-content">
                                     <h4>{{ $blog->creater->name ?? __('lang.unknown')}}</h4>
@@ -229,7 +237,10 @@
                                         <div class="comment-pic">
                                         <img
                                             src="{{ $user && $user->photo ? asset('images/' . $user->photo) : ($comment && $comment->photo ? asset('images/' . $comment->photo) : asset('images/default.png')) }}"
-                                            class="user-image" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px;">
+                                            alt="{{ $user ? $user->name . ' profile picture' : ($comment ? $comment->name . ' profile picture' : 'Default user profile picture') }}"
+                                            class="user-image"
+                                            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px;">
+
                                         <div class="comment-content comment-detail">
                                             <div class="comment-creater">
                                                 <span class="username" style="font-weight: bold;">{{ $comment->name }}</span>
@@ -449,14 +460,22 @@
                                         <div class="blog-two__single">
                                             <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $recBlog->id]) }}">
                                                 <div class="blog-two__img">
-                                                    <img src="{{ $recBlog->thumb && file_exists(public_path('storage/' . $recBlog->thumb)) ? asset('storage/' . $recBlog->thumb) : asset('images/blog-default.jpg') }}" alt="Blog Thumbnail">
+                                                <img 
+                                                    src="{{ $recBlog->thumb && file_exists(public_path('storage/' . $recBlog->thumb)) ? asset('storage/' . $recBlog->thumb) : asset('images/blog-default.jpg') }}" 
+                                                    alt="{{ $recBlog->title ?? 'Blog post image' }}">
+
                                                 </div>
                                             </a>
                                             <div class="blog-two__content">
                                                 <div class="blog-two__meta-box blog-profile">
                                                     <div class="profile-container">
                                                         <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $recBlog->creater->id]) }}" class="mb-0 text-muted">
-                                                            <img src="{{ $recBlog->creater && $recBlog->creater->photo ? asset('images/' . $recBlog->creater->photo) : asset('images/default.png') }}" width="100%" class="profile-pic">
+                                                        <img 
+                                                            src="{{ $recBlog->creater && $recBlog->creater->photo ? asset('images/' . $recBlog->creater->photo) : asset('images/default.png') }}" 
+                                                            width="100%" 
+                                                            class="profile-pic" 
+                                                            alt="{{ e($recBlog->creater->name ?? 'Creator profile picture') }}">
+
                                                         </a>
                                                         <div>
                                             <span class="username">
@@ -540,7 +559,10 @@
                             <li>
                                 <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $popular_blog->id]) }}">
                                     <div class="sidebar__post-image">
-                                        <img src="{{ $popular_blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $popular_blog->thumb) : asset('images/blog-default.jpg') }}" >       
+                                    <img 
+                                        src="{{ $popular_blog->thumb && file_exists(public_path('storage/' . $popular_blog->thumb)) ? asset('storage/' . $popular_blog->thumb) : asset('images/blog-default.jpg') }}" 
+                                        alt="{{ $popular_blog->title ?? 'Popular blog post image' }}">
+                                        
                                     </div>
                                 <div class="sidebar__post-content">
                                     <h3 class="sidebar__post-title">
@@ -556,9 +578,6 @@
                     </div>
                     <div class="sidebar__single sidebar__newsletter">
                         <div class="sidebar__title-box">
-                            <div class="sidebar__title-icon">
-                                <img src="assets/images/icon/sidebar-title-icon.png" alt="">
-                            </div>
                             <h3 class="sidebar__title">{{ __('lang.Sponsored') }}</h3>
                         </div>
                     </div>

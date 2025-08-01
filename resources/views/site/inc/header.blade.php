@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
     <a href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.home') ? 'active' : '' }}">
-            <img src="{{ asset('images/dark-tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo logo-dark"/>
-            <img src="{{ asset('images/light-tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo logo-light"/>
+            <img src="{{ asset('images/dark-tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo logo-dark" alt="TFC - The Fazli Community Dark logo"/>
+            <img src="{{ asset('images/light-tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo logo-light"  alt="TFC - The Fazli Community Light logo"/>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <!-- fallback icon if the above is invisible -->
@@ -16,7 +16,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#about-section" class="{{ request()->routeIs('localized.about') ? 'active' : '' }}">
+                    <a href="{{ route('localized.services', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.about') ? 'active' : '' }}">
                         <i class="fas fa-user me-2"></i>{{ __('lang.Services') }}
                     </a>
                 </li>
@@ -95,9 +95,13 @@
                             type="button" id="userDropdown" 
                             data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="me-2">{{ $user->name }}</span>
-                        <img src="{{ $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
-                             class="rounded-circle me-1" width="30" height="30" 
-                             style="object-fit: cover; border-radius: 50%; border: 1px solid rgb(173, 172, 172);">
+                        <img 
+                            src="{{ $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
+                            class="rounded-circle me-1" 
+                            width="30" 
+                            height="30" 
+                            style="object-fit: cover; border-radius: 50%; border: 1px solid rgb(173, 172, 172);" 
+                            alt="{{ e($user->name ?? 'User profile picture') }}">
                     </button>
                     <ul class="dropdown-menu w-100" aria-labelledby="userDropdown">
                         <li>

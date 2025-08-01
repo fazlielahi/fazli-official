@@ -254,7 +254,8 @@
             <div style="display: flex; align-items: center;" class="profile-photo-box">
                 <img 
                     src="{{ $profile_photo ? asset('images/' . $profile_photo) : asset('default.png') }}"
-                    alt="Profile Picture" class="rounded-circle mx-2" style="width: 80px; height: 80px; object-fit: cover;">
+                    alt="{{ e($profile_name ?? 'User profile picture') }}"
+                    class="rounded-circle mx-2" style="width: 80px; height: 80px; object-fit: cover;">
                 <div>
                     <h2 class="fw-semibold text-light">{{ $profile_name }}</h2>
                     <div class="member-since">

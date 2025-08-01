@@ -228,14 +228,22 @@
                         <div class="blog-two__single">
                         <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                             <div class="blog-two__img">
-                                    <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}">
+                            <img 
+                                src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" 
+                                alt="{{ $blog->title ?? 'Blog post image' }}">
+
                             </div>
                             </a> 
                             <div class="blog-two__content">
                                 <div class="blog-two__meta-box blog-profile">
                                     <div class="profile-container">
                                         <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
-                                            <img src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" width="100%" class="profile-pic">
+                                        <img 
+                                            src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" 
+                                            width="100%" 
+                                            class="profile-pic" 
+                                            alt="{{ $blog->creater ? 'Photo of ' . $blog->creater->name : 'Default profile image' }}">
+
                                         </a>
                                         <div>
                                             <span class="username">
@@ -300,16 +308,19 @@
                                                     <div class="blog-two__single">
                                                         <div class="blog-two__img" id="blog-image-{{ $blog->id }}">
                                                             <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
-                                                                <img src="{{ asset('storage/' . $blog->thumb) }}"  class="img-fluid rounded">
+                                                                <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" 
+                                                                alt="{{ $blog->title ?? 'Blog post image' }}"  class="img-fluid rounded">
                                                             </a>    
                                                         </div>
                                                         <div class="blog-two__content">
                                                             <div class="blog-two__meta-box blog-profile">
                                                                 <div class="profile-container">
                                                                     <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
-                                                                        <img
-                                                                            src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}"
-                                                                             width="100%" class="profile-pic">
+                                                                    <img 
+                                                                        src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" 
+                                                                        width="100%" 
+                                                                        class="profile-pic" 
+                                                                        alt="{{ $blog->creater ? 'Photo of ' . $blog->creater->name : 'Default profile image' }}">
                                                                     </a>
                                                                     <div>
                                                                     <span class="username">
@@ -451,9 +462,10 @@
                                                                 @php $user = $comment->user; @endphp
                                                                 @if($user)
                                                                     <div class="comment-card">
-                                                                        <img
-                                                                            src="{{ $user && $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
-                                                                            class="user-image">
+                                                                    <img
+                                                                        src="{{ $user && $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
+                                                                        class="user-image"
+                                                                        alt="{{ $user ? $user->name . ' profile photo' : 'Default user profile photo' }}">
                                                                         <div class="comment-content">
                                                                             <span class="username">{{ $comment->name }}</span>
                                                                             <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>
@@ -464,7 +476,7 @@
                                                                     <div class="comment-card">
                                                                         <img
                                                                             src="{{ $comment && $comment->photo ? asset('images/' . $comment->photo) : asset('images/default.png') }}"
-                                                                            class="user-image">
+                                                                            class="user-image" alt="">
                                                                         <div class="comment-content">
                                                                             <span class="username">{{ $comment->name }}</span>
                                                                             <span class="timestamp">{{ $comment->created_at->diffForHumans() }}</span>

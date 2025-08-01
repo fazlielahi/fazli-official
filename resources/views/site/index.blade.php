@@ -129,7 +129,7 @@
                                     </div>
                                     <h2 class="banner-one__title">
                                         <span class="banner-one__title-clr-1">{{ __('lang.Your Vision') }}</span><br>
-                                        <span class="banner-one__title-clr-2">{!! __('lang.My Code') !!}</span> <br>
+                                        <span class="banner-one__title-clr-2">{!! __('lang.Our Code') !!}</span> <br>
                                         <span class="slogan-3">{{ __('lang.Lets Build Something Great') }} </span>
                                     </h2>
                                 </div>
@@ -208,7 +208,7 @@
                                 <div class="banner-one__tags">
                                     <a href="#about-section">{{ __('lang.About') }}</a>
                                     <a href="#services-section">{{ __('lang.Services') }}</a>
-                                    <a href="#why-choose-me">{{ __('lang.Why Me?') }}</a>
+                                    <a href="#why-choose-me">{{ __('lang.Why Us?') }}</a>
                                     <a href="#portfolio-sec">{{ __('lang.Portfolio') }}</a>
                                     <a href="#blog-section-home">{{ __('lang.Blogs') }}</a>
                                 </div>
@@ -236,7 +236,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6">
                                         <div class="about-one__img-box">
                                             <div class="about-one__img">
-                                                <img src="{{ asset('assets/images/resources/tfc.jpg') }}" alt="">
+                                                <img src="{{ asset('assets/images/resources/tfc.jpg') }}" alt="TFC - The Fazli Community logo in About section">
                                             </div>
                                         </div>
                                         <div class="about-one__awards-box">
@@ -251,7 +251,7 @@
                                         <div class="about-one__experience-box">
                                             <div class="about-one__experience-box-inner">
                                                 <div class="about-one__experience-icon">
-                                                    <img src="{{ asset('assets/images/icon/about-one-experience-icon.png') }}" alt="">
+                                                    <img src="{{ asset('assets/images/icon/about-one-experience-icon.png') }}" alt="Experience icon in the About TFC section">
                                                 </div>
                                                 <div class="about-one__experience-count-box">
                                                     <div class="about-one__experience-count">
@@ -266,10 +266,10 @@
                                         </div>
                                         <div class="about-one__img-box-2">
                                             <div class="about-one__img-2">
-                                                <img src="{{ asset('assets/images/resources/about1.jpeg') }}" alt="">
+                                                <img src="{{ asset('assets/images/resources/fazli-elahi-about.jpeg') }}" alt="Fazli Elahi, founder of TFC - The Fazli Community">
                                             </div>
                                             <div class="about-one__img-shape-1 float-bob-y">
-                                                <img src="{{ asset('assets/images/shapes/about-one-img-shape-1.png') }}" alt="">
+                                                <img src="{{ asset('assets/images/shapes/about-one-img-shape-1.png') }}" alt="" aria-hidden="true" role="presentation">
                                             </div>
                                         </div>
                                     </div>
@@ -281,17 +281,17 @@
                                 <div class="section-title text-left sec-title-animation animation-style2">
                                     <div class="section-title__tagline-box">
                                         <div class="section-title__tagline-shape"></div>
-                                        <span class="section-title__tagline">{{ __('lang.About Me') }}</span>
+                                        <span class="section-title__tagline">{{ __('lang.About Us') }}</span>
                                     </div>
                                     <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">
                                         <div class="im">
-                                            <span>
-                                            {{ __('lang.IM') }} 
+                                        <span style="color:#fff">
+                                            TFC -
                                             </span>
-                                            <span style="margin: 0 8px;"> {{ __('lang.Fazli Elahi') }}</span>
+                                            <span style="margin: 0 8px;">The Fazli Community</span>
                                         </div>
                                        
-                                        <span>{!! __('lang.Full stack web developer') !!} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></span>
+                                        <span>{!! __('lang.Helping You Grow') !!} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt="" role="presentation" aria-hidden="true"></span>
                                     </h2>
                                 </div>
                                 <p class="about-one__text">{{ __('lang.I bring ideas to life through') }}</p>
@@ -299,20 +299,20 @@
                                     <li>
                                         <div class="about-one__icon-and-title">
                                             <div class="about-one__icon">
-                                                <img src="{{ asset('assets/images/icon/mission-icon.png') }}" alt="">
+                                                <img src="{{ asset('assets/images/icon/mission-icon.png') }}" alt="" role="presentation" aria-hidden="true">
                                             </div>
-                                            <h3>{{ __('lang.My Mission') }}:</h3>
+                                            <h3>{{ __('lang.Our Mission') }}:</h3>
                                         </div>
-                                        <p class="about-one__mission-and-vision-text">{{ __('lang.My mission is to create meaningful, user-friendly web experiences that help individuals and businesses grow online.') }}</p>
+                                        <p class="about-one__mission-and-vision-text">{{ __('lang.Our mission is to provide helpful tools, valuable resources, and reliable tech services that empower individuals and businesses to learn, grow, and succeed online') }}</p>
                                     </li>
                                     <li>
                                         <div class="about-one__icon-and-title">
                                             <div class="about-one__icon">
-                                                <img src="{{ asset('assets/images/icon/vision-icon.png') }}" alt="">
+                                                <img src="{{ asset('assets/images/icon/vision-icon.png') }}" alt="" role="presentation" aria-hidden="true">
                                             </div>
-                                            <h3>{{ __('lang.My Vision') }}</h3>
+                                            <h3>{{ __('lang.Our Vision') }}</h3>
                                         </div>
-                                        <p class="about-one__mission-and-vision-text">{{ __('lang.My vision is to become a trusted web developer known for building smart, scalable, and impactful digital solutions.') }}</p>
+                                        <p class="about-one__mission-and-vision-text">{{ __('lang.To become a leading digital hub where learners, professionals, and businesses connect, grow, and thrive through innovative tech solutions and community-driven support.') }}</p>
                                     </li>
                                 </ul>
                                 <div class="about-one__btn-and-live-class">
@@ -322,7 +322,7 @@
                                         </a>
                                     </div>
                                     <h3 class="about-one__live-class">{{ __('lang.Available') }}
-                                        <img src="{{ asset('assets/images/shapes/live-class-shape-1.png') }}" alt="">
+                                        <img src="{{ asset('assets/images/shapes/live-class-shape-1.png') }}" alt="" role="presentation" aria-hidden="true">
                                     </h3>
                                 </div>
                             </div>
@@ -341,7 +341,7 @@
                             <span class="section-title__tagline" >{{ __('lang.Services') }}</span>
                         </div>
                         <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.More Than Web') }} <br>{{ __('lang.One Place,') }}
-                            <span class="solution">{{ __('lang.Many Solutions.') }} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></span></h2>
+                            <span class="solution">{{ __('lang.Many Solutions.') }} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt="" role="presentation" aria-hidden="true"></span></h2>
                     </div>
                     <div class="blogs-one__carousel owl-theme owl-carousel">
                         <!--blogs One Single Start-->
@@ -349,7 +349,7 @@
                             <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
-                                        <img src="{{ asset('assets/images/resources/web-development.jpg') }}" alt="">
+                                        <img src="{{ asset('assets/images/resources/web-development.jpg') }}" alt="Web development services by TFC - The Fazli Community">
                                     </div>
                                 </div>
                                 <div class="blogs-one__content">
@@ -389,7 +389,7 @@
                             <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
-                                        <img src="{{ asset('assets/images/resources/coorporate-identity.jpg') }}" alt="">
+                                        <img src="{{ asset('assets/images/resources/coorporate-identity.jpg') }}" alt="Corporate identity and branding services by TFC - The Fazli Community">
                                     </div>
                                 </div>
                                 <div class="blogs-one__content">
@@ -429,7 +429,7 @@
                             <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
-                                        <img src="{{ asset('assets/images/resources/digital-marketing.jpg') }}" alt="">
+                                    <img src="{{ asset('assets/images/resources/digital-marketing.jpg') }}" alt="Digital marketing services by TFC - The Fazli Community">
                                     </div>
                                 </div>
                                 <div class="blogs-one__content">
@@ -469,7 +469,7 @@
                             <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
-                                        <img src="{{ asset('assets/images/resources/ecommerce.jpg') }}" alt="">
+                                    <img src="{{ asset('assets/images/resources/ecommerce.jpg') }}" alt="E-commerce development services by TFC - The Fazli Community">
                                     </div>
                                 </div>
                                 <div class="blogs-one__content">
@@ -509,7 +509,7 @@
                             <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
-                                        <img src="{{ asset('assets/images/resources/social-media-marketing.jpg') }}" alt="">
+                                    <img src="{{ asset('assets/images/resources/social-media-marketing.jpg') }}" alt="Social media marketing services by TFC - The Fazli Community">
                                     </div>
                                 </div>
                                 <div class="blogs-one__content">
@@ -549,7 +549,7 @@
                             <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
-                                        <img src="{{ asset('assets/images/resources/wordpress.jpg') }}" alt="">
+                                    <img src="{{ asset('assets/images/resources/wordpress.jpg') }}" alt="WordPress development and services by TFC - The Fazli Community">
                                     </div>
                                 </div>
                                 <div class="blogs-one__content">
@@ -589,7 +589,7 @@
                             <div class="blogs-one__single service-card-home">
                                 <div class="blogs-one__img-box">
                                     <div class="blogs-one__img">
-                                        <img src="{{ asset('assets/images/resources/seo-training.jpg') }}" alt="">
+                                    <img src="{{ asset('assets/images/resources/seo-training.jpg') }}" alt="SEO training course offered by TFC - The Fazli Community">
                                     </div>
                                 </div>
                                 <div class="blogs-one__content">
@@ -631,10 +631,10 @@
             <!-- Why Choose One Start -->
             <section class="why-choose-one" id="why-choose-me">
                 <div class="why-choose-one__shape-6 float-bob-x">
-                    <img src="{{ asset('assets/images/shapes/why-choose-one-shape-6.png') }}" alt="">
+                    <img src="{{ asset('assets/images/shapes/why-choose-one-shape-6.png') }}" alt="" role="presentation" aria-hidden="true">
                 </div>
                 <div class="why-choose-one__shape-7 float-bob-y">
-                    <img src="{{ asset('assets/images/shapes/why-choose-one-shape-7.png') }}" alt="">
+                    <img src="{{ asset('assets/images/shapes/why-choose-one-shape-7.png') }}" alt="" role="presentation" aria-hidden="true">
                 </div>
                 <div class="container">
                     <div class="row why-choose-us">
@@ -642,25 +642,25 @@
                             <div class="why-choose-one__left wow slideInLeft" data-wow-delay="100ms" data-wow-duration="2500ms">
                                 <div class="why-choose-one__img-box">
                                     <div class="why-choose-one__img">
-                                        <img src="{{ asset('assets/images/resources/why-choose-one-img-1.jpg') }}" alt="">
+                                    <img src="{{ asset('assets/images/resources/tfc-team-why-choose-us.jpg') }}" alt="TFC team group photo at LEAP 2025 event with Autosoft company team">
                                     </div>
                                     <div class="why-choose-one__img-2">
-                                        <img src="{{ asset('assets/images/resources/why-choose-one-img-2.jpg') }}" alt="">
+                                    <img src="{{ asset('assets/images/resources/tfc-lab-why-choose-us.jpg') }}" alt="TFC lab and workspace showcasing our tech environment">
                                     </div>
                                     <div class="why-choose-one__shape-1 float-bob-y">
-                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-1.png') }}" alt="">
+                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-1.png') }}" alt="" role="presentation" aria-hidden="true">
                                     </div>
                                     <div class="why-choose-one__shape-2 float-bob-x">
-                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-2.png') }}" alt="">
+                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-2.png') }}" alt="" role="presentation" aria-hidden="true">
                                     </div>
                                     <div class="why-choose-one__shape-3 float-bob-y">
-                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-3.png') }}" alt="">
+                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-3.png') }}" alt="" role="presentation" aria-hidden="true">
                                     </div>
                                     <div class="why-choose-one__shape-4">
-                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-4.png') }}" alt="">
+                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-4.png') }}" alt="" role="presentation" aria-hidden="true">
                                     </div>
                                     <div class="why-choose-one__shape-5 img-bounce">
-                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-5.png') }}" alt="">
+                                        <img src="{{ asset('assets/images/shapes/why-choose-one-shape-5.png') }}" alt="" role="presentation" aria-hidden="true">
                                     </div>
                                 </div>
                             </div>
@@ -670,13 +670,13 @@
                                 <div class="section-title text-left sec-title-animation animation-style2">
                                     <div class="section-title__tagline-box">
                                         <div class="section-title__tagline-shape"></div>
-                                        <span class="section-title__tagline">{{ __('lang.Why Choose Me') }}</span>
+                                        <span class="section-title__tagline">{{ __('lang.Why Choose Us') }}</span>
                                     </div>
-                                    <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.Why Clients Choose Me:') }}
-                                        <span>{!! __('lang.And Stay With Me.') !!} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></span>
+                                    <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.Why Clients Choose Us:') }}
+                                        <span>{!! __('lang.And Stay With Us.') !!} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt="" role="presentation" aria-hidden="true"></span>
                                     </h2>
                                 </div>
-                                <p class="why-choose-one__text">{{ __('lang.Because I care about your success. With the right mix of skills, dedication, and creativity, I turn your ideas into results — efficiently and professionally.') }}</p>
+                                <p class="why-choose-one__text">{{ __('lang.Because we care about your success. With the right mix of skills, dedication, and creativity, we turn your ideas into results — efficiently and professionally.') }}</p>
                                 <div class="why-choose-one__points-box">
                                     <div class="row">
                                         <div class="col-xl-6 col-lg-6 col-md-6">
@@ -684,18 +684,18 @@
                                                 <li>
                                                     <div class="why-choose-one__points-icon-inner">
                                                         <div class="why-choose-one__points-icon">
-                                                            <img src="{{ asset('assets/images/icon/why-choose-one-icon-1.png') }}" alt="">
+                                                            <img src="{{ asset('assets/images/icon/why-choose-one-icon-1.png') }}" alt="" role="presentation" aria-hidden="true">
                                                         </div>
                                                     </div>
                                                     <div class="why-choose-one__points-content">
                                                         <h3>{{ __('lang.On-Time Delivery') }}</h3>
-                                                        <p>{{ __('lang.I respect deadlines and always aim to deliver before them.') }}</p>
+                                                        <p>{{ __('lang.We respect deadlines and always aim to deliver before them.') }}</p>
                                                     </div>
                                                 </li>
                                                 <li>
                                                     <div class="why-choose-one__points-icon-inner">
                                                         <div class="why-choose-one__points-icon">
-                                                            <img src="{{ asset('assets/images/icon/why-choose-one-icon-2.png') }}" alt="">
+                                                            <img src="{{ asset('assets/images/icon/why-choose-one-icon-2.png') }}" alt="" role="presentation" aria-hidden="true">
                                                         </div>
                                                     </div>
                                                     <div class="why-choose-one__points-content">
@@ -710,7 +710,7 @@
                                                 <li>
                                                     <div class="why-choose-one__points-icon-inner">
                                                         <div class="why-choose-one__points-icon">
-                                                            <img src="{{ asset('assets/images/icon/why-choose-one-icon-3.png') }}" alt="">
+                                                            <img src="{{ asset('assets/images/icon/why-choose-one-icon-3.png') }}" alt="" role="presentation" aria-hidden="true">
                                                         </div>
                                                     </div>
                                                     <div class="why-choose-one__points-content">
@@ -721,12 +721,12 @@
                                                 <li>
                                                     <div class="why-choose-one__points-icon-inner">
                                                         <div class="why-choose-one__points-icon">
-                                                            <img src="{{ asset('assets/images/icon/why-choose-one-icon-4.png') }}" alt="">
+                                                            <img src="{{ asset('assets/images/icon/why-choose-one-icon-4.png') }}" alt="" role="presentation" aria-hidden="true">
                                                         </div>
                                                     </div>
                                                     <div class="why-choose-one__points-content">
                                                         <h3>{{ __('lang.Clean & Scalable Code') }}</h3>
-                                                        <p>{{ __('lang.I build smart, efficient, and future-ready solutions — no shortcuts.') }}</p>
+                                                        <p>{{ __('lang.We build smart, efficient, and future-ready solutions — no shortcuts.') }}</p>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -741,16 +741,22 @@
                                     </div>
                                     <div class="why-choose-one__client-box">
                                         <ul class="why-choose-one__client-img-list list-unstyled">
-                                            <li><img src="{{ asset('assets/images/resources/why-choose-one-client-img-1.jpg') }}" alt=""></li>
-                                            <li><img src="{{ asset('assets/images/resources/why-choose-one-client-img-2.jpg') }}" alt=""></li>
-                                            <li><img src="{{ asset('assets/images/resources/why-choose-one-client-img-3.jpg') }}" alt=""></li>
+                                            <li>
+                                                <img src="{{ asset('assets/images/resources/why-choose-one-client-img-1.jpg') }}" alt="Amer Hamza, client of The Fazli Community">
+                                            </li>
+                                            <li>
+                                            <img src="{{ asset('assets/images/resources/why-choose-one-client-img-2.jpg') }}" alt="Engr. Adzsar K. Saraka, client of The Fazli Community">
+                                            </li>
+                                            <li>
+                                            <img src="{{ asset('assets/images/resources/why-choose-one-client-img-3.jpg') }}" alt="Gulalai Khan, client of The Fazli Community">
+                                            </li>
                                         </ul>
                                         <div class="why-choose-one__client-content">
                                             <div class="why-choose-one__count-box">
                                                 <h3 class="odometer" data-count="10">00</h3>
                                                 <span>+</span>
                                             </div>
-                                            <p>{{ __('lang.Ive Professional Engineers') }}</p>
+                                            <p>{{ __('lang.we have Professional Engineers') }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -764,10 +770,10 @@
                 <!-- Testimonial One Start-->
                 <section class="testimonial-one">
             <div class="testimonial-one__shape-1 float-bob-x">
-                <img src="{{ asset('assets/images/shapes/testimonial-one-shape-1.png') }}" alt="">
+                <img src="{{ asset('assets/images/shapes/testimonial-one-shape-1.png') }}" alt="" role="presentation" aria-hidden="true">
             </div>
             <div class="testimonial-one__shape-2">
-                <img src="{{ asset('assets/images/shapes/testimonial-one-shape-2.png') }}" alt="">
+                <img src="{{ asset('assets/images/shapes/testimonial-one-shape-2.png') }}" alt="" role="presentation" aria-hidden="true">
             </div>
             <div class="container">
                 <div class="section-title text-left sec-title-animation animation-style2">
@@ -786,7 +792,7 @@
                             <div class="testimonial-one__single">
                                 <div class="testimonial-one__img-inner">
                                     <div class="testimonial-one__img">
-                                        <img src="{{ asset('images/testimonial/majid-khan.jpg') }}" alt="">
+                                    <img src="{{ asset('images/testimonial/majid-khan.jpg') }}" alt="Testimonial by Majid Khan, Architectural Designer" title="Majid Khan - Architectural Designer">
                                         <div class="testimonial-one__icon">
                                             <span class="icon-graduation-cap"></span>
                                         </div>
@@ -829,7 +835,7 @@
                             <div class="testimonial-one__single">
                                 <div class="testimonial-one__img-inner">
                                     <div class="testimonial-one__img">
-                                        <img src="{{ asset('images/testimonial/samad-khan.jpg') }}" alt="">
+                                    <img src="{{ asset('images/testimonial/samad-khan.jpg') }}" alt="Testimonial by Samad Khan, Environmental Health & Safety (EHS) Supervisor" title="Samad Khan - EHS Supervisor">
                                         <div class="testimonial-one__icon">
                                             <span class="icon-graduation-cap"></span>
                                         </div>
@@ -872,7 +878,7 @@
                             <div class="testimonial-one__single">
                                 <div class="testimonial-one__img-inner">
                                     <div class="testimonial-one__img">
-                                        <img src="{{ asset('images/testimonial/waleed-zafar.jpg') }}" alt="">
+                                    <img src="{{ asset('images/testimonial/waleed-zafar.jpg') }}" alt="Testimonial by Waleed Zafar, Facade Quality Control Inspector" title="Waleed Zafar - Facade Quality Control Inspector">
                                         <div class="testimonial-one__icon">
                                             <span class="icon-graduation-cap"></span>
                                         </div>
@@ -915,7 +921,7 @@
                             <div class="testimonial-one__single">
                                 <div class="testimonial-one__img-inner">
                                     <div class="testimonial-one__img">
-                                        <img src="{{ asset('images/testimonial/testimonial-1-3.jpg') }}" alt="">
+                                    <img src="{{ asset('images/default.png') }}" alt="Default client image" title="Client image not available">
                                         <div class="testimonial-one__icon">
                                             <span class="icon-graduation-cap"></span>
                                         </div>
@@ -967,14 +973,14 @@
                         <div class="section-title__tagline-shape"></div>
                         <span class="section-title__tagline" id="portfolio-sec">{{ __('lang.Portfolio') }}</span>
                     </div>
-                    <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.From Concepts to Live Projects') }} <br>  {!! __('lang.See What I\'ve Built.') !!} </sapn> <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt=""></h2>
+                    <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">{{ __('lang.From Concepts to Live Projects') }} <br>  {!! __('lang.See What I\'ve Built.') !!} </sapn> <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt="" role="presentation" aria-hidden="true"></h2>
                 </div>
                 <div class="blog-one__carousel owl-theme owl-carousel">
                     <!-- Blog One Single Start -->
                     <div class="item">
                         <div class="blog-one__single">
                             <div class="blog-one__img">
-                                <img src="{{ asset('assets/images/project/1.jpg') }}" alt="">
+                            <img src="{{ asset('assets/images/project/1.jpg') }}" alt="PEC Engineering website project developed by TFC">
                             </div>
                             <div class="blog-one__content">
                                 <ul class="blog-one__meta list-unstyled">
@@ -998,7 +1004,7 @@
                     <div class="item">
                         <div class="blog-one__single">
                             <div class="blog-one__img">
-                                <img src="{{ asset('assets/images/project/2.jpg') }}" alt="">
+                            <img src="{{ asset('assets/images/project/2.jpg') }}" alt="Architecture portfolio website for mianmajid.arch designed by TFC">
                             </div>
                             <div class="blog-one__content">
                                 <ul class="blog-one__meta list-unstyled">
@@ -1019,7 +1025,7 @@
                     <div class="item">
                         <div class="blog-one__single">
                             <div class="blog-one__img" >
-                                <img src="{{ asset('assets/images/project/3.jpg') }}" alt="">
+                                <img src="{{ asset('assets/images/project/3.jpg') }}" alt="4Space Furniture website – Modern furniture and custom design project by TFC">
                             </div>
                             <div class="blog-one__content">
                                 <ul class="blog-one__meta list-unstyled">
@@ -1042,7 +1048,7 @@
                     <div class="item">
                         <div class="blog-one__single">
                             <div class="blog-one__img">
-                                <img src="{{ asset('assets/images/project/4.jpg') }}" alt="">
+                            <img src="{{ asset('assets/images/project/4.jpg') }}" alt="ERP system website project developed by TFC">
                             </div>
                             <div class="blog-one__content">
                                 <ul class="blog-one__meta list-unstyled">
@@ -1088,7 +1094,7 @@
                         <div class="section-title__tagline-shape"></div>
                         <span class="section-title__tagline">{{ __('lang.Blogs') }}</span>
                     </div>
-                    <h2 class="section-title-two__title">{{ __('lang.Knowledge That Powers Growth -') }} <br> {{ __('lang.My') }}
+                    <h2 class="section-title-two__title">{{ __('lang.Knowledge That Powers Growth -') }} <br> {{ __('lang.Our') }}
                         <span style="color: #fff">{{ __('lang.Blog Corner') }}</span>
                     </h2>
                 </div>
@@ -1129,14 +1135,21 @@
                         <div class="blog-two__single">
                             <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
                                 <div class="blog-two__img">
-                                    <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}">
+                                <img 
+                                    src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" 
+                                    alt="{{ $blog->title ?? 'Blog post thumbnail' }}"
+                                    >
                                 </div>
                             </a>
                             <div class="blog-two__content">
                                 <div class="blog-two__meta-box blog-profile">
                                     <div class="profile-container">
                                         <a href="{{ route('localized.user-profile', ['lang' => app()->getLocale(), $blog->creater->id]) }}" class="mb-0 text-muted">
-                                            <img src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" width="100%" class="profile-pic">
+                                        <img 
+                                            src="{{ $blog->creater && $blog->creater->photo ? asset('images/' . $blog->creater->photo) : asset('images/default.png') }}" 
+                                            alt="{{ $blog->creater ? $blog->creater->name . ' profile picture' : 'Default profile picture' }}" 
+                                            width="100%" 
+                                            class="profile-pic">
                                         </a>
                                         <div>
                                             <span class="username">

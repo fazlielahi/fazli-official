@@ -114,6 +114,17 @@
     display: inline-block;
 }
 
+.services-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.services-card{
+    width: 400px;
+    margin-top: 25px;
+}
+
 .blogs-one__meta li .icon span {
     position: relative;
     display: inline-block;
@@ -3034,4 +3045,11 @@
 .blogs-one__btn
 {
     color: #1da370 !important;
+}
+
+
+@media screen and (max-width:700px) {
+    .services-main-image{
+      display: none;
+    }
 }
