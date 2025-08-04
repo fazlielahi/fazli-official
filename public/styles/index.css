@@ -620,3 +620,12 @@ body {
 .slider-card{
   margin-top: 100px;
 }
+
+.accordion-item{
+  background-color: #000000 !important;
+}
+
+.accordion-button{
+  background-color: #1b1f23 !important;
+  color: #fff !important;
+}

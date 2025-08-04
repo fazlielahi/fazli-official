@@ -412,4 +412,28 @@ return [
     'Comment added successfully!' => 'Comment added successfully!',
     'Blog approved successfully!' => 'Blog approved successfully!',
     'Blog rejected successfully!' => 'Blog rejected successfully!',
+
+    // faqs
+
+        'faq_what_services' => 'What services does TFC – The Fazli Community offer?',
+        'faq_what_services_ans' => 'We offer web design and development, digital marketing, SEO services, resume building tools, and IT training resources to help individuals and businesses grow online.',
+    
+        'faq_why_seo_important' => 'Why is SEO important for my website?',
+        'faq_why_seo_important_ans' => 'SEO helps your website appear on Google and other search engines when people search for relevant topics, increasing visibility, traffic, and potential customers.',
+    
+        'faq_responsive_websites' => 'Do you build responsive websites for mobile users?',
+        'faq_responsive_websites_ans' => 'Yes, all our websites are fully responsive, optimized for mobile, tablet, and desktop users to ensure a smooth experience across all devices.',
+    
+        'faq_website_time' => 'How long does it take to develop a website?',
+        'faq_website_time_ans' => 'Development time depends on the project\'s complexity. Simple sites can take 1–2 weeks, while larger custom solutions may take 4–6 weeks or more.',
+    
+        'faq_manage_content' => 'Can I manage my website content after it’s built?',
+        'faq_manage_content_ans' => 'Yes, we build websites with admin panels (CMS) so you can easily manage your content without needing to code.',
+    
+        'faq_maintenance' => 'Do you offer website maintenance and updates?',
+        'faq_maintenance_ans' => 'Yes, we provide ongoing website maintenance, updates, backups, and performance optimization services to keep your website secure and up to date.',
+
+        'The Fazli Community – Tech Resources, Web Services & Learning Hub' => 'The Fazli Community – Tech Resources, Web Services & Learning Hub',
+        'FAQs' => 'FAQs',
+
 ];

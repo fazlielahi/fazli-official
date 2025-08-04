@@ -434,6 +434,16 @@ body[data-theme="light"] .banner-one__title-clr-1 {
   color: #176e4d !important;
 }
 
+
+body[data-theme="light"]  .accordion-item{
+  background-color: #f2f4f7 !important;
+}
+
+body[data-theme="light"]  .accordion-button{
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
 body[data-theme="light"] .blogs-one__title a {
   color: #176e4d !important;
 }

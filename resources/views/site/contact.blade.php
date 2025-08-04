@@ -1,6 +1,38 @@
 @extends('site.layout')
 @section('title', 'Contact')
 
+
+@section('meta')
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   
+    <meta name="description" content="Contact TFC - The Fazli Community for expert support and personalized solutions in web development, branding, SEO, digital marketing, and more to help grow your business." />
+
+    
+    <meta name="keywords" content="contact, get in touch, customer support, inquiries, partnership, web development help, digital marketing assistance, branding consultation, website support, SEO questions, service requests" />
+
+    <meta property="og:title" content="Contact TFC - The Fazli Community. We're Here to Support Your Growth" />
+    <meta property="og:description" content="Reach out to TFC - The Fazli Community for expert support, collaboration, and inquiries. We’re here to help you succeed." />
+
+
+    <meta property="og:image"         content="https://thefazli.com/images/tfc-contact-page-preview.png" />
+    <meta property="og:url"           content="https://thefazli.com/{{$locale}}/contact" />
+    <meta property="og:type"          content="website" />
+
+
+    <meta name="twitter:card"         content="summary_large_image" />
+    <meta name="twitter:site"         content="@fazlielahi" />
+    <meta name="twitter:title" content="Contact TFC - The Fazli Community – We're Here to Support Your Growth" />
+    <meta name="twitter:description" content="Get in touch with TFC - The Fazli Community team for inquiries, support, and partnership opportunities. We're here to help you grow." />
+    <meta name="twitter:image"        content="https://thefazli.com/images/tfc-contact-page-preview.png" />
+
+    <meta name="author" content="TFC - The Fazli Community" />
+    <meta name="robots" content="index, follow" />
+    
+    <link rel="canonical" href="https://thefazli.com/{{$locale}}/contact" />
+    
+@endsection
+
 <style>
     .about-btn{
         display: none;

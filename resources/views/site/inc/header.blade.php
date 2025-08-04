@@ -8,7 +8,7 @@
         <!-- fallback icon if the above is invisible -->
         <i class="fas fa-bars header-bars"></i>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse navbar-collapse" id="navbarNav" aria-label="breadcrumb">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.home') ? 'active' : '' }}">

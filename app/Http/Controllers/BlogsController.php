@@ -23,7 +23,8 @@ class BlogsController extends Controller
             $blogs = $blogs->where('category_id', $selectedCategory);
         }
         $blogs = $blogs->get();
-        return view('site.blogs', compact('blogs', 'categories', 'selectedCategory'));
+        $locale = app()->getLocale();
+        return view('site.blogs', compact('blogs', 'categories', 'selectedCategory', 'locale'));
     }
 
     public function rejectedBlogs(Request $request)
@@ -66,7 +67,7 @@ class BlogsController extends Controller
         $popular_blogs = Blog::where('id', '!=', $blog->id)->where('status', 'published')->latest()->take(10)->get();
         $categories = \App\Models\Category::all();
         $selectedCategory = $blog->category_id;
-        return view('site.blog-details', compact('blog', 'popular_blogs', 'categories', 'selectedCategory'));
+        return view('site.blog-details', compact('blog', 'popular_blogs', 'categories', 'selectedCategory', 'locale'));
     }
 
     //comment on blog post

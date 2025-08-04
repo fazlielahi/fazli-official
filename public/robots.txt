@@ -1,2 +1,5 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://thefazli.com/sitemap.xml
+Sitemap: https://thefazli.com/image-sitemap.xml

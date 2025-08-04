@@ -270,7 +270,7 @@ class BlogController extends Controller
             'image.max' => 'The image must not be larger than 2MB.',
         ]);
 
-        // info($id);
+        // dd($request->hasFile('image'));
 
         $blog = Blog::findOrFail($id);
 
@@ -301,12 +301,11 @@ class BlogController extends Controller
             $blog->thumb = $thumbPath; 
         }       
 
-        $blog->update([
-            'title' => $request->title,
-            'content' => $request->content,
-            'status' => $request->status,
-            'category_id' => $request->input('category_id'),
-        ]);
+        $blog->title = $request->title;
+         $blog->content = $request->content;
+         $blog->status = $request->status;
+         $blog->category_id = $request->input('category_id');
+         $blog->save();
 
         $user = User::find($request->session()->get('user_id'));
 

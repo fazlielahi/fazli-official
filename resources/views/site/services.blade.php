@@ -1,5 +1,34 @@
 @extends('site.layout')
-@section('title', 'services')
+@section('title', 'Web Development & Digital Services | TFC - The Fazli Community')
+
+@section('meta')
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Explore expert services in web development, branding, SEO, digital marketing, WordPress, content writing, and more to grow your business." />
+    
+    <meta name="keywords" content="web development, web design, digital marketing, SEO, WordPress development, ecommerce, branding, UI UX design, content writing, landing page, PHP development, email marketing, Google Ads, mobile responsive design, domain hosting, website security, website maintenance" />
+
+
+    <meta property="og:title" content="TFC - The Fazli Community – Tech Resources, Web Services & Learning Hub" />
+    <meta property="og:description"   content="Empowering learners, professionals & businesses with web design, digital marketing, SEO training, and free career tools." />
+
+    <meta property="og:image"         content="https://thefazli.com/images/tfc-services-page-preview.png" />
+    <meta property="og:url"           content="https://thefazli.com/{{$locale}}/services" />
+    <meta property="og:type"          content="website" />
+
+
+    <meta name="twitter:card"         content="summary_large_image" />
+    <meta name="twitter:site"         content="@fazlielahi" />
+    <meta name="twitter:title" content="Web Development & Digital Services – The Fazli Community" />
+    <meta name="twitter:description" content="Explore our professional web design, branding, e-commerce, and digital marketing services to grow your online presence." />
+    <meta name="twitter:image"        content="https://thefazli.com/images/tfc-services-page-preview.png" />
+
+    <meta name="author" content="TFC - The Fazli Community" />
+    <meta name="robots" content="index, follow" />
+    
+    <link rel="canonical" href="https://thefazli.com/{{$locale}}/services" />
+    
+@endsection
 
 <style>
     .about-btn{

@@ -1,10 +1,32 @@
 @extends('site.layout')
 
-@section('title', __('lang.PORTFOLIO_TITLE'))
+@section('title', __('lang.The Fazli Community – Tech Resources, Web Services & Learning Hub'))
 
 @section('meta')
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" 
+          content="The Fazli Community (TFC) empowers learners, professionals, and businesses with web design, custom PHP development, digital marketing, SEO training, and free career tools. Join our tech community today!" />
+    <meta name="keywords" content="web design, PHP development, custom PHP, digital marketing, SEO training, career tools, tech community, professional development, web development, online learning, business solutions" />
+
+    <meta property="og:title" content="The Fazli Community – Tech Resources, Web Services & Learning Hub" />
+    <meta property="og:description"   content="Empowering learners, professionals & businesses with web design, digital marketing, SEO training, and free career tools." />
+
+    <meta property="og:image"         content="https://thefazli.com/images/tfc-website-preview.png" />
+    <meta property="og:url"           content="https://thefazli.com/{{$locale}}" />
+    <meta property="og:type"          content="website" />
+
+    <meta name="twitter:card"         content="summary_large_image" />
+    <meta name="twitter:site"         content="@fazlielahi" />
+    <meta name="twitter:title"        content="The Fazli Community – Tech Resources & Learning Hub" />
+    <meta name="twitter:description"  content="Empowering learners, professionals & businesses with web design, digital marketing, SEO training, and free career tools." />
+    <meta name="twitter:image"        content="https://thefazli.com/images/tfc-website-preview.png" />
+
+    <meta name="author" content="TFC - The Fazli Community" />
+    <meta name="robots" content="index, follow" />
+    
+    <link rel="canonical" href="https://thefazli.com/{{$locale}}" />
+    
 @endsection
 
 @section('head')
@@ -12,16 +34,18 @@
     <link rel="preload" href="{{ asset('assets/css/style.css') }}" as="style" />
     <link rel="preload" href="{{ asset('assets/css/responsive.css') }}" as="style" />
 
-    
-    <link rel="stylesheet" href="{{ asset('styles/header.css') }}" /> <!-- main heading css -->
-    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
-
+    <!-- Main styles -->
+    <link rel="stylesheet" href="{{ asset('styles/header.css') }}" />
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet" />
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" 
+      rel="stylesheet" 
+    />
 
     <!-- Third-party CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
@@ -62,8 +86,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/shop.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/faq.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/error.css') }}" />
-    
-    <!-- Font Awesome CDN for version 6 -->
+
+    <!-- Font Awesome CDN v6 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
         <!-- responsive design -->
@@ -110,8 +134,8 @@
             padding-bottom: 1px !important;
         }
     </style>
-
 @endsection
+
 
 @section('content')
 
@@ -211,6 +235,7 @@
                                     <a href="#why-choose-me">{{ __('lang.Why Us?') }}</a>
                                     <a href="#portfolio-sec">{{ __('lang.Portfolio') }}</a>
                                     <a href="#blog-section-home">{{ __('lang.Blogs') }}</a>
+                                    <a href="#blog-section-home">{{ __('lang.FAQs') }}</a>
                                 </div>
                             </div>
                         </div>
@@ -1213,6 +1238,105 @@
             </div>
         </section>
         <!--Blog Two End -->
+
+        <!-- faqs -->
+
+        <section id="faq" class="faq-section py-5">
+    <div class="container">
+        <h2 class="mb-4">{{ __('lang.faq_title') }}</h2>
+        <div class="accordion" id="faqAccordion">
+
+            <!-- Q1 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading1">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                        {{ __('lang.faq_what_services') }}
+                    </button>
+                </h2>
+                <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        {{ __('lang.faq_what_services_ans') }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                        {{ __('lang.faq_why_seo_important') }}
+                    </button>
+                </h2>
+                <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        {{ __('lang.faq_why_seo_important_ans') }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading3">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                        {{ __('lang.faq_responsive_websites') }}
+                    </button>
+                </h2>
+                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        {{ __('lang.faq_responsive_websites_ans') }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading4">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                        {{ __('lang.faq_website_time') }}
+                    </button>
+                </h2>
+                <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        {{ __('lang.faq_website_time_ans') }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading5">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                        {{ __('lang.faq_manage_content') }}
+                    </button>
+                </h2>
+                <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        {{ __('lang.faq_manage_content_ans') }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading6">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                        {{ __('lang.faq_maintenance') }}
+                    </button>
+                </h2>
+                <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        {{ __('lang.faq_maintenance_ans') }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+
 
         </main>
     </div>

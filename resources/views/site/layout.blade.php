@@ -29,6 +29,105 @@
     <script src="{{ asset('lib/jquery-ui.js')}}"></script>
 
     @yield('head')
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://thefazli.com/{{$locale}}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Services",
+      "item": "https://thefazli.com/{{$locale}}/services"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Contact",
+      "item": "https://thefazli.com/{{$locale}}/contact"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Blogs",
+      "item": "https://thefazli.com/{{$locale}}/Blogs"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "{{ isset($blog) ? '/' . $blog->title : '' }}",
+      "item": "https://thefazli.com/{{$locale}}{{ isset($blog) ? '/' . $blog->slug : '' }}"
+    }
+  ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "{{ __('lang.faq_what_services') }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ __('lang.faq_what_services_ans') }}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "{{ __('lang.faq_why_seo_important') }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ __('lang.faq_why_seo_important_ans') }}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "{{ __('lang.faq_responsive_websites') }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ __('lang.faq_responsive_websites_ans') }}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "{{ __('lang.faq_website_time') }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ __('lang.faq_website_time_ans') }}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "{{ __('lang.faq_manage_content') }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ __('lang.faq_manage_content_ans') }}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "{{ __('lang.faq_maintenance') }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ __('lang.faq_maintenance_ans') }}"
+      }
+    }
+  ]
+}
+</script>
+
+
 </head>
 
 <body onresize="add_collapse()" id="body">

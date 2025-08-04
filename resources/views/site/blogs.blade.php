@@ -1,10 +1,35 @@
 @extends('site.layout')
 
-@section('title', __('lang.Blogs'))
+@section('title', __('lang.Explore Blogs on Web Development, AI, Career Tips & More | TFC - The Fazli Community
+'))
 
 @section('meta')
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Discover expert articles and insights across categories like Web Development, AI & Automation, Career Tips, UI/UX Design, Tech News, Sports, Politics, Entertainment, Science, and more at The Fazli Community blog." />
+    
+    <meta name="keywords" content="web development, AI automation, career tips, UI/UX design, tech news, sports, politics, entertainment, science, learning resources, projects case studies, APIs integrations, resume tips, hosting deployment" />
+
+
+    <meta property="og:title" content="Explore Blogs on Web Development, AI, Career Tips & More – The Fazli Community" />
+    <meta property="og:description"   content="Dive into our rich collection of blog categories including Web Development, AI & Automation, Career Tips, UI/UX Design, Tech News, Sports, Politics, and more." />
+
+    <meta property="og:image"         content="https://thefazli.com/images/tfc-blogs-page-preview.png" />
+    <meta property="og:url"           content="https://thefazli.com/{{$locale}}/blogs" />
+    <meta property="og:type"          content="website" />
+
+
+    <meta name="twitter:card"         content="summary_large_image" />
+    <meta name="twitter:site"         content="@fazlielahi" />
+    <meta property="og:title" content="Explore Blogs on Web Development, AI, Career Tips & More – The Fazli Community" />
+    <meta property="og:description" content="Dive into our rich collection of blog categories including Web Development, AI & Automation, Career Tips, UI/UX Design, Tech News, Sports, Politics, and more." />
+    <meta name="twitter:image"        content="https://thefazli.com/images/tfc-blogs-page-preview.png" />
+
+    <meta name="author" content="TFC - The Fazli Community" />
+    <meta name="robots" content="index, follow" />
+    
+    <link rel="canonical" href="https://thefazli.com/{{$locale}}/blogs" />
+    
 @endsection
 
 @section('head')
@@ -229,8 +254,9 @@
                         <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                             <div class="blog-two__img">
                             <img 
-                                src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" 
-                                alt="{{ $blog->title ?? 'Blog post image' }}">
+    src="{{ $blog->thumb ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" 
+    alt="{{ $blog->title ?? 'Blog post image' }}">
+
 
                             </div>
                             </a> 
