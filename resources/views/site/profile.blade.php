@@ -235,7 +235,7 @@
     @endif
     <!-- News Section Start -->
     <div class="container">
-        <div class="d-flex mb-md-0 profile-header" style="justify-content: space-between !important;">
+        <div class="d-flex mb-md-5 profile-header" style="justify-content: space-between !important;">
             @php
                 if(isset($clickedUser) && $clickedUser && $clickedUser->id) {
                     $profile_photo = $clickedUser->photo ?? 'default.png';
@@ -262,6 +262,11 @@
                         <p class="mb-0 mx-1 text-muted" style="font-size: 14px;">{{ __('lang.Member Since') }}</p> <p> <strong>{{ $profile_since }}</strong></p>
                     </div>
                 </div>
+                @if($user && $user->type == 'admin')
+                <a href="{{ route('localized.profile-edit', ['lang' => app()->getLocale()])}}" class="edit-profile-icon">
+                        <i class="fa-solid fa-user-pen mx-1"></i> 
+                </a>
+                @endif
             </div>
             <div class="d-flex flex-md-row gap-2 profile-header-button">
                 @if(isset($clickedUser) && $clickedUser && $clickedUser->id)
@@ -269,7 +274,7 @@
                         <i class="fa-solid fa-arrow-left mx-1"></i> {{ __('lang.Back') }}
                     </a>
                 @elseif($user && $user->type == 'admin')
-                    <a href="{{ route('localized.profile-edit', ['lang' => app()->getLocale()])}}" class="btn sidebar-nav-item btn-outline-secondary text-dark px-2 py-2 rounded-pill d-flex align-items-center">
+                    <a href="{{ route('localized.profile-edit', ['lang' => app()->getLocale()])}}" class="btn sidebar-nav-item btn-outline-secondary text-dark px-2 py-2 rounded-pill  align-items-center edit-profile-btn">
                         <i class="fa-solid fa-user-pen mx-1"></i> {{ __('lang.Edit Profile') }}
                     </a>
                     <a href="{{ route('localized.blog-create', ['lang' => app()->getLocale()]) }}"

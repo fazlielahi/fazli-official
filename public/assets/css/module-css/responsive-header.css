@@ -36,6 +36,9 @@
     .navbar>.container-fluid{
         padding: 0 !important;
     }
-    
+ 
+    .row.main-banner{
+        margin: 0 !important;
+    }
 
 }

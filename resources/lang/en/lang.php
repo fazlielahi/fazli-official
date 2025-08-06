@@ -435,5 +435,16 @@ return [
 
         'The Fazli Community – Tech Resources, Web Services & Learning Hub' => 'The Fazli Community – Tech Resources, Web Services & Learning Hub',
         'FAQs' => 'FAQs',
+        'faq_title' => 'FAQs',
+        'faq_description' => 'FAQs',
+        'faq_keywords' => 'FAQs',
+        'The blog has been requested for review!' => 'The blog has been requested for review!',
+        'Keep as Rejected' => 'Keep as Rejected',
+        'Request for review' => 'Request for review',
+        'Draft' => 'Draft',
+        'Published' => 'Published',
+        'Rejected' => 'Rejected',
+        'Filter' => 'Filter',
+        'All Categories' => 'All Categories',
 
 ];

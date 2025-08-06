@@ -2286,7 +2286,15 @@ h1, h2, h3, h4, h5, h6 {
     position: absolute;
     width: 350px;
     right: 31px;
-    top: 200px;
+    top: 236px;
+}
+
+.edit-profile-icon{
+    display: none;
+}
+
+.edit-profile-btn{
+    display: flex;
 }
 
 .nice-select{

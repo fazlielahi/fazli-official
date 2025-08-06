@@ -22,6 +22,9 @@ class Blog extends Model
         'rejection_message',
         'category_id',
         'slug',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
     ];
 
     protected static function boot()

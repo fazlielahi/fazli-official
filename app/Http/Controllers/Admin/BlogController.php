@@ -161,6 +161,9 @@ class BlogController extends Controller
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2028',
             'thumb' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2028',
             'category_id' => 'required|exists:categories,id',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:200',
+            'meta_keywords' => 'nullable|string|max:255',
         ],
         [
             'title.required' => "Please write a title",
@@ -170,7 +173,12 @@ class BlogController extends Controller
             'image.max' => 'The image must not be larger than 2MB.',
             'category_id.required' => 'Please select a category.',
             'category_id.exists' => 'Selected category does not exist.',
+            'meta_title.max' => 'The meta title must not be larger than 255 characters.',
+            'meta_description.max' => 'The meta description must not be larger than 200 characters.',
+            'meta_keywords.max' => 'The meta keywords must not be larger than 255 characters.',
         ]);
+
+        // dd($request->meta_keywords);
 
           $imagePath = null;
           $thumbPath = null;
@@ -195,6 +203,9 @@ class BlogController extends Controller
             'thumb' =>  $thumbPath,
             'created_by' => $request->session()->get('user_id'),
             'category_id' => $request->input('category_id'),
+            'meta_title' => $request->input('meta_title'),
+            'meta_description' => $request->input('meta_description'),
+            'meta_keywords' => $request->input('meta_keywords'),
         ]);
 
         $user = User::find($request->session()->get('user_id'));
@@ -260,6 +271,9 @@ class BlogController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'thumb' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'category_id' => 'required|exists:categories,id',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:200',
+            'meta_keywords' => 'nullable|string|max:255',
         ],
         [
             'title.required' => "Please write a title",
@@ -268,9 +282,12 @@ class BlogController extends Controller
             'image.image' => 'The uploaded file must be an image.',
             'image.mimes' => 'The image must be a file of type: jpg, jpeg, png, gif.',
             'image.max' => 'The image must not be larger than 2MB.',
+            'meta_title.max' => 'The meta title must not be larger than 255 characters.',
+            'meta_description.max' => 'The meta description must not be larger than 200 characters.',
+            'meta_keywords.max' => 'The meta keywords must not be larger than 255 characters.',
         ]);
 
-        // dd($request->hasFile('image'));
+        // dd($request->all());
 
         $blog = Blog::findOrFail($id);
 
@@ -305,6 +322,9 @@ class BlogController extends Controller
          $blog->content = $request->content;
          $blog->status = $request->status;
          $blog->category_id = $request->input('category_id');
+         $blog->meta_title = $request->input('meta_title');
+         $blog->meta_description = $request->input('meta_description');
+         $blog->meta_keywords = $request->input('meta_keywords');
          $blog->save();
 
         $user = User::find($request->session()->get('user_id'));

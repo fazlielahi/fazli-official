@@ -68,7 +68,7 @@ Route::group([
     Route::get('/create-blog', [BlogController::class, 'create'])->name('blog-create');
 
     // show blogs of user whose profile is cliked
-    Route::get('user-blogs/{id}', [BlogController::class, 'userBlogs'])->name('user-blogs');
+    // Route::get('user-blogs/{id}', [BlogController::class, 'userBlogs'])->name('user-blogs');
     Route::get('user-profile/{id}', [ProfileController::class, 'userProfile'])->name('user-profile');
    
 

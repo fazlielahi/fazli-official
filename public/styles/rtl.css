@@ -353,11 +353,21 @@ textarea{
 
 .accordion{
     direction: rtl;
+    text-align: right;
+}
+
+.accordion .accordion-button {
+    text-align: right;
 }
 
 .accordion-button::after{
     margin-left: 10px !important;
     margin-right: auto !important;
+}
+
+.edit-profile-icon{
+    right: auto !important;
+    left: 12px !important;
 }
 
 @media screen and (max-width: 1000px) {

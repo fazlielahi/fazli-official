@@ -278,7 +278,7 @@
 
         <div class="form-group mt-3">
             <label for="password">{{ __('lang.Password') }}</label>
-            <input type="password" id="password" name="password" placeholder="{{ __('lang.Enter Your Password') }}" class="form-control">
+            <input type="password" id="password" name="password" required placeholder="{{ __('lang.Enter Your Password') }}" class="form-control">
             @error('password')
                 <p style="color: rgb(160, 40, 50);"> {{ $message }}</p>
                 <style>

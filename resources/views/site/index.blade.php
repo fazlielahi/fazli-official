@@ -399,7 +399,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -439,7 +439,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -479,7 +479,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -519,7 +519,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -559,7 +559,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -599,7 +599,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -639,7 +639,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -1127,34 +1127,6 @@
                     <!--Blog Two Single Start -->
                     @if($blogs->count() > 0)
                 @foreach($blogs->sortByDesc('id') as $blog)
-                    <!-- Share Modal -->
-                    <div class="modal fade" id="shareModalTest" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered share-model" style="max-width: 320px;">
-                            <div class="modal-content share-modal">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">
-                                    Link copied!
-                                </div>
-                                <div class="modal-body share-icons-row">
-                                    <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')" title="{{ __('lang.Copy Link') }}">
-                                        <i class="fa-regular fa-copy text-secondary share-icon"></i>
-                                    </a>
-                                    <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share on WhatsApp') }}">
-                                        <i class="fa-brands fa-whatsapp text-success share-icon"></i>
-                                    </a>
-                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
-                                        <i class="fa-brands fa-linkedin text-primary share-icon"></i>
-                                    </a>
-                                    <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share via Email') }}">
-                                        <i class="fa-regular fa-envelope text-danger share-icon"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!--Blog Two Single Start -->
                     <div class="wow fadeInLeft blog-card-home" data-wow-delay="100ms">
                         <div class="blog-two__single">

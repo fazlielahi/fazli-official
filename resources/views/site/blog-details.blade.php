@@ -1,35 +1,62 @@
 @extends('site.layout')
 
-@section('title', __("lang.:title – The Fazli Community Blog", [
-    'title' => $blog->title
-]))
+@section('title', $blog->meta_title ?? $blog->title . " – The Fazli Community Blog")
 
 @section('meta')
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="{{ Str::limit(strip_tags($blog->content), 155) }}" />
+    @if($blog->meta_description)
+    <meta name="description" content="{{ $blog->meta_description }}">
+    @else
+    <meta name="description" content="{{ Str::limit(strip_tags($blog->content), 155) }}">
+    @endif
     
-    <meta name="keywords" content="web development, AI automation, career tips, UI/UX design, tech news, sports, politics, entertainment, science, learning resources, projects case studies, APIs integrations, resume tips, hosting deployment" />
+    @if($blog->meta_keywords)
+    <meta name="keywords" content="{{ $blog->meta_keywords }}">
+    @endif
 
+    @if($blog->meta_title)
+    <meta property="og:title" content="{{ $blog->meta_title }}">
+    @else
+        <meta property="og:title" content="{{ $blog->title }} – The Fazli Community"/>
+    @endif
 
-    <meta property="og:title"       content="{{ $blog->title }} – The Fazli Community" />
+    @if($blog->meta_description)
+    <meta property="og:description" content="{{ $blog->meta_description }}">
+    @else
     <meta property="og:description" content="{{ Str::limit(strip_tags($blog->content), 200) }}" />
+    @endif
     <meta property="og:image"         content="{{ asset($blog->image) }}" />
     <meta property="og:url"           content="https://thefazli.com/{{$locale}}/{{$blog->slug}}" />
     <meta property="og:type"        content="article" />
     <meta property="article:published_time" content="{{ $blog->created_at }}" />
     <meta property="article:modified_time"  content="{{ $blog->updated_at }}" />
-    <meta property="article:author"         content="{{ $blog->creater->name }}" />
-    <meta property="article:section"        content="{{ $blog->category->name }}" />
+    @if($blog->creater)
+    <meta property="article:author" content="{{ $blog->creater->name }}">
+    @endif
+    @if($blog->category)
+    <meta property="article:section" content="{{ $blog->category->name }}" />
+    @endif
 
 
 
     <meta name="twitter:card"         content="summary_large_image" />
     <meta name="twitter:site"         content="@fazlielahi" />
-    <meta property="og:title" content="{{ $blog->title }} – The Fazli Community" />
+    @if($blog->meta_title)
+    <meta property="og:title" content="{{ $blog->meta_title }}">
+    @else
+    <meta property="og:title" content="{{ $blog->title }} – The Fazli Community"/>
+    @endif
+    @if($blog->meta_description)
+    <meta property="og:description" content="{{ $blog->meta_description }}">
+    @else
     <meta property="og:description" content="{{ Str::limit(strip_tags($blog->content), 200) }}" />
-    <meta name="twitter:image"        content="{{ asset($blog->image) }}" />
-
+    @endif
+    @if($blog->image)
+    <meta name="twitter:image" content="{{ asset($blog->image) }}" />
+    @else
+    <meta name="twitter:image" content="{{ asset('assets/images/resources/tfc.jpg') }}" />
+    @endif
     <meta name="author" content="TFC - The Fazli Community" />
     <meta name="robots" content="index, follow" />
     
@@ -113,8 +140,7 @@
         .categ-btn{
             text-align: right;
         }
-
-        
+    
         .footer{
             position: unset;
         }
@@ -261,37 +287,39 @@
                                 {!! $blog->content !!} 
                             </div>
                             <div class="blog-details__tag-and-share">
-                                <div class="blog-details__share share-btn" data-bs-toggle="modal" data-bs-target="#shareModalTest">
+                                <div class="blog-details__share share-btn" data-bs-toggle="modal" data-bs-target="#shareModalTest{{ $blog->id }}">
                                     <span>{{ __('lang.Share') }} <i class="far fa-share-square" style="color: #1da370;"></i></span>
                                 </div>
                             </div>
 
-                            <!-- Share Modal -->
-                            <div class="modal fade" id="shareModalTest" tabindex="-1">
-                                <div class="modal-dialog modal-dialog-centered" style="max-width: 320px;">
-                                    <div class="modal-content share-modal">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">{{ __('lang.Copy Link') }}</div>
-                                        <div class="modal-body share-icons-row">
-                                            <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')" title="{{ __('lang.Copy Link') }}">
-                                                <i class="fa-regular fa-copy text-secondary share-icon"></i>
-                                            </a>
-                                            <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share on WhatsApp') }}">
-                                                <i class="fa-brands fa-whatsapp text-success share-icon"></i>
-                                            </a>
-                                            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
-                                                <i class="fa-brands fa-linkedin text-primary share-icon"></i>
-                                            </a>
-                                            <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share via Email') }}">
-                                                <i class="fa-regular fa-envelope text-danger share-icon"></i>
-                                            </a>
-                                        </div>
-                                    </div>
+                             <!-- Share Modal -->
+                    <div class="modal fade" id="shareModalTest{{ $blog->id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered share-model" style="max-width: 320px;">
+                            <div class="modal-content share-modal">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div id="copyMessage{{ $blog->id }}" style="color: green; display:none; position: absolute; top: 37px; right: 27px;">
+                                    Link copied!
+                                </div>
+                                <div class="modal-body share-icons-row">
+                                    <a href="#" onclick="copyToClipboard(event, '{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}', 'copyMessage{{ $blog->id }}')" title="{{ __('lang.Copy Link') }}">
+                                    <i class="fa-regular fa-copy text-secondary share-icon"></i>
+                                    </a>
+                                    <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}" title="{{ __('lang.Share on WhatsApp') }}">
+                                        <i class="fa-brands fa-whatsapp text-success share-icon"></i>
+                                    </a>
+                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
+                                        <i class="fa-brands fa-linkedin text-primary share-icon"></i>
+                                    </a>
+                                    <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}" title="{{ __('lang.Share via Email') }}">
+                                        <i class="fa-regular fa-envelope text-danger share-icon"></i>
+                                    </a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
                             <div class="comment-one" id="comments-section">
                                 <h3 class="comment-one__title">
@@ -514,7 +542,7 @@
                         </div>
                             @php
                                 $recommendedBlogs = \App\Models\Blog::where('category_id', $blog->category_id)
-                                    ->where('id', '!=', $blog->id)
+                                    ->where('slug', '!=', $blog->slug)
                                     ->where('status', 'published')
                                     ->latest()
                                     ->take(10)
@@ -525,7 +553,7 @@
                                     <div class="col-md-6">
                                         <div class="wow fadeInLeft blog-card-blogs m-0" data-wow-delay="100ms" style="width: 100% !important">
                                             <div class="blog-two__single">
-                                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $recBlog->id]) }}">
+                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                                     <div class="blog-two__img">
                                                     <img 
                                                         src="{{ $recBlog->thumb && file_exists(public_path('storage/' . $recBlog->thumb)) ? asset('storage/' . $recBlog->thumb) : asset('images/blog-default.jpg') }}" 
@@ -557,7 +585,7 @@
                                                         </div>
                                                     </div>
                                                     <h4 class="blog-two__title">
-                                                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $recBlog->id]) }}">
+                                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                                             {{ Str::limit(html_entity_decode(strip_tags($recBlog->title)), 45) }}
                                                         </a>
                                                     </h4>
@@ -624,7 +652,7 @@
                                                 </li>
                                             </ul>
                                 <li>
-                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $popular_blog->id]) }}">
+                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                         <div class="sidebar__post-image">
                                         <img 
                                             src="{{ $popular_blog->thumb && file_exists(public_path('storage/' . $popular_blog->thumb)) ? asset('storage/' . $popular_blog->thumb) : asset('images/blog-default.jpg') }}" 
@@ -633,7 +661,7 @@
                                         </div>
                                     <div class="sidebar__post-content">
                                         <h3 class="sidebar__post-title">
-                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $popular_blog->id]) }}">
+                                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                                 {{ Str::limit(html_entity_decode(strip_tags($popular_blog->title)), 45) }}
                                             </a>
                                         </h3>

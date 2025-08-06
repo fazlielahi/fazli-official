@@ -116,7 +116,7 @@ return [
     'of experience' => 'من الخبرة',
     'About Us' => 'من نحن',
     'IM' => ' :أنا',
-    'Helping You Grow' => '<span style="color: #444 !important"> رقميًا</span> نساعدك على النمو',
+    'Helping You Grow' => '<span style="color: #fff"> رقميًا</span> نساعدك على النمو',
     'Our Mission' => 'مهمتنا',
     'Our mission is to provide helpful tools, valuable resources, and reliable tech services that empower individuals and businesses to learn, grow, and succeed online' => 'مهمتنا هي توفير أدوات مفيدة، وموارد قيمة، وخدمات تقنية موثوقة تمكّن الأفراد والشركات من التعلم والنمو والنجاح عبر الإنترنت.',
     'Our Vision' => 'رؤيتنا',
@@ -125,7 +125,7 @@ return [
     'Available' => 'متاح',
     'Why Choose Us' => 'لماذا تختارنا',
     'Why Clients Choose Us:' => 'لماذا يختار العملاءُنا:',
-    'And Stay With Us.' => '.وابقوا <span style="color: #444 !important">معنا</span>',
+    'And Stay With Us.' => '.وابقوا <span style="color: #fff">معنا</span>',
     'Because we care about your success. With the right mix of skills, dedication, and creativity, we turn your ideas into results — efficiently and professionally.' => 'لأننا نهتم بنجاحك. بالمزيج الصحيح من المهارات والتفاني والإبداع، نحول أفكارك إلى نتائج — بكفاءة واحترافية.',
     'On-Time Delivery' => 'أحترم المواعيد النهائية وأسعى دائماً للتسليم قبلها.',
     'We respect deadlines and always aim to deliver before them.' => 'نحترم المواعيد النهائية ونسعى دائماً للتسليم قبلها.',
@@ -139,7 +139,7 @@ return [
     'we have Professional Engineers' => 'لدينا مهندسون محترفون',
     'Testimonial' => 'آراء العملاء',
     'Explore Genuine Feedback' => 'استكشف آراء العملاء الحقيقية',
-    'from Happy Clients' => 'من <span style="color:#444 !important">عملاء سعداء</span>',
+    'from Happy Clients' => 'من <span style="color:#fff">عملاء سعداء</span>',
 
     // Testimonials 2 Majid Khan
     'testimonial_majid_name' => 'ميان ماجد خان',
@@ -162,7 +162,7 @@ return [
     'testimonial_hamza_text' => 'يمتلك فظلي قدرة رائعة على تبسيط المفاهيم التقنية لغير المطورين مثلي. كرسام، قدرت مدى وضوح تواصله وسرعة إنجازه. ذكي، متكيف، وسهل التعامل للغاية.',
 
     'From Concepts to Live Projects' => 'من الأفكار إلى المشاريع الحية',
-    'See What I\'ve Built.' => '.شاهد <span style="color: #444">ما أنجزته </span>',
+    'See What I\'ve Built.' => '.شاهد <span style="color: #fff">ما أنجزته </span>',
     'Completed!' => 'تم الإنجاز!',
     'Ongoing!' => 'قيد التنفيذ!',
     'Read More' => 'اقرأ المزيد',
@@ -426,5 +426,16 @@ return [
         'The Fazli Community – Tech Resources, Web Services & Learning Hub' => 'مجتمع الفضلي – موارد تقنية، خدمات ويب، ومركز تعلم',
 
         'FAQs' => 'الأسئلة الشائعة',
+        'faq_title' => 'الأسئلة الشائعة',
+        'faq_description' => 'الأسئلة الشائعة',
+        'faq_keywords' => 'الأسئلة الشائعة',
+        'The blog has been requested for review!' => 'تم طلب مراجعة المدونة!',
+        'Keep as Rejected' => 'الاحتفاظ بها كمرفوض',
+        'Request for review' => 'طلب للمراجعة',
+        'Draft' => 'مسودة',
+        'Published' => 'منشور',
+        'Rejected' => 'مرفوض',
+        'Filter' => 'تصفية',
+        'All Categories' => 'كل التصنيفات',
 
 ];

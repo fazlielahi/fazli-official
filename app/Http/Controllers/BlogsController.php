@@ -173,28 +173,28 @@ class BlogsController extends Controller
         return redirect()->back();
     }
 
- public function userBlogs($lang, $id)
-{
-    // Set locale based on URL parameter
-    app()->setLocale($lang);
+//  public function userBlogs($lang, $id)
+// {
+//     // Set locale based on URL parameter
+//     app()->setLocale($lang);
     
-    // Find the user or return 404
-    $user = \App\Models\User::findOrFail($id);
-    // info($lang);
-    // Get all blogs by this user, ordered by newest first
-    $blogs = \App\Blog::where('created_by', $id)
-                    ->where('status', 'published')
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+//     // Find the user or return 404
+//     $user = \App\Models\User::findOrFail($id);
+//     // info($lang);
+//     // Get all blogs by this user, ordered by newest first
+//     $blogs = \App\Blog::where('created_by', $id)
+//                     ->where('status', 'published')
+//                     ->orderBy('created_at', 'desc')
+//                     ->get();
 
-    $latestBlogs = \App\Blog::where('created_by', $id)
-    ->where('status', 'published')
-    ->orderBy('created_at', 'desc')
-    ->take(10)
-    ->get(); // For latest 10
+//     $latestBlogs = \App\Blog::where('created_by', $id)
+//     ->where('status', 'published')
+//     ->orderBy('created_at', 'desc')
+//     ->take(10)
+//     ->get(); // For latest 10
     
-    // Return the view with user and their blogs
-    return view('sections.user_blogs', compact('user', 'blogs', 'latestBlogs'));
-}
+//     // Return the view with user and their blogs
+//     return view('sections.user_blogs', compact('user', 'blogs', 'latestBlogs'));
+// }
    
 }

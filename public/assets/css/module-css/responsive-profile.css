@@ -16,6 +16,16 @@
         margin: 4px 12px !important;
     }
 
+    .edit-profile-icon{
+        display: block !important;
+        position: absolute;
+        right: 12px;
+    }
+
+    .edit-profile-btn{
+        display: none !important;
+    }
+
     .profile-sidebar{
         margin: 0 !important;
     }

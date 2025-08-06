@@ -83,32 +83,10 @@
         @if($blogs->count() > 0)
             @foreach($blogs->sortByDesc('created_at') as $blog)
                 @if($blog->status === 'draft' && $blog->created_by == $user->id)
-                    <!-- Share Modal -->
-                    <div class="modal fade" id="shareModalTest" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered" style="max-width: 320px;">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">Link copied!</div>
-                                <div class="modal-body">
-                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')">
-                                        <i class="fa-regular fa-copy text-secondary"></i> {{ __('lang.Copy Link') }}
-                                    </a>
-                                </div>
-                                <div class="modal-body">
-                                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}">
-                                        <i class="fa-brands fa-whatsapp text-success"></i> {{ __('lang.Share on WhatsApp') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!--Blog Two Single Start -->
                     <div class="wow fadeInLeft blog-card" data-wow-delay="100ms">
                         <div class="blog-two__single">
-                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                 <div class="blog-two__img">
                                     <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}">
                                     @php
@@ -149,7 +127,7 @@
                                     </div>
                                 </div>
                                 <h4 class="blog-two__title">
-                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                         {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
                                     </a>
                                 </h4>

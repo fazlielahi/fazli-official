@@ -90,36 +90,38 @@
     <div class="blogs-section">
         @if($blogs->count() > 0)
             @foreach($blogs->sortByDesc('id') as $blog)
-                <!-- Share Modal -->
-                <div class="modal fade" id="shareModalTest" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered share-model" style="max-width: 320px;">
-                        <div class="modal-content share-modal">
-                            <div class="modal-header">
-                                <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">Link copied!</div>
-                            <div class="modal-body share-icons-row">
-                                <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}')" title="{{ __('lang.Copy Link') }}">
+                   <!-- Share Modal -->
+                   <div class="modal fade" id="shareModalTest{{ $blog->id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered share-model" style="max-width: 320px;">
+                            <div class="modal-content share-modal">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
+                                    
+                                </div>
+                                <div id="copyMessage{{ $blog->id }}" style="color: green; display:none; position: absolute; top: 37px; right: 27px;">
+                                    Link copied!
+                                </div>
+                                <div class="modal-body share-icons-row">
+                                    <a href="#" onclick="copyToClipboard(event, '{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}', 'copyMessage{{ $blog->id }}')" title="{{ __('lang.Copy Link') }}">
                                     <i class="fa-regular fa-copy text-secondary share-icon"></i>
-                                </a>
-                                <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share on WhatsApp') }}">
-                                    <i class="fa-brands fa-whatsapp text-success share-icon"></i>
-                                </a>
-                                <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
-                                    <i class="fa-brands fa-linkedin text-primary share-icon"></i>
-                                </a>
-                                <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id])) }}" title="{{ __('lang.Share via Email') }}">
-                                    <i class="fa-regular fa-envelope text-danger share-icon"></i>
-                                </a>
+                                    </a>
+                                    <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}" title="{{ __('lang.Share on WhatsApp') }}">
+                                        <i class="fa-brands fa-whatsapp text-success share-icon"></i>
+                                    </a>
+                                    <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}&title={{ urlencode($blog->title) }}" title="{{ __('lang.Share on LinkedIn') }}">
+                                        <i class="fa-brands fa-linkedin text-primary share-icon"></i>
+                                    </a>
+                                    <a href="mailto:?subject={{ urlencode($blog->title) }}&body={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}" title="{{ __('lang.Share via Email') }}">
+                                        <i class="fa-regular fa-envelope text-danger share-icon"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <!--Blog Two Single Start -->
                 <div class="wow fadeInLeft blog-card" data-wow-delay="100ms">
                     <div class="blog-two__single">
-                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                             <div class="blog-two__img">
                                 <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}">
                             </div>
@@ -143,7 +145,7 @@
                                 </div>
                             </div>
                             <h4 class="blog-two__title">
-                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                     {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
                                 </a>
                             </h4>
@@ -163,9 +165,9 @@
                                         <i class="far fa-comments mx-1"></i> <span class="comment">{{ __('lang.Comments') }}</span>
                                     </a>
                                 </li>
-                                <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest">
+                                <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest{{ $blog->id }}">
                                     <i class="far fa-share-square mx-1"></i><span class="share">{{ __('lang.Share') }} </span>
-                                </li>
+                                    </li>
                             </ul>
                         </div>
                     </div>
@@ -188,7 +190,7 @@
                                         <div class="p-3">
                                             <div class="blog-two__single">
                                                 <div class="blog-two__img" id="blog-image-{{ $blog->id }}">
-                                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                                         <img src="{{ asset('storage/' . $blog->thumb) }}" class="img-fluid rounded">
                                                     </a>
                                                 </div>
@@ -211,7 +213,7 @@
                                                         </div>
                                                     </div>
                                                     <h4 class="blog-two__title">
-                                                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                                             {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 45) }}
                                                         </a>
                                                     </h4>

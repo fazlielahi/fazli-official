@@ -221,19 +221,18 @@
                 @if($blogs->count() > 0)
                 @foreach($blogs->sortByDesc('id') as $blog)
                     <!-- Share Modal -->
-                    <div class="modal fade" id="shareModalTest" tabindex="-1">
+                    <div class="modal fade" id="shareModalTest{{ $blog->id }}" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered share-model" style="max-width: 320px;">
                             <div class="modal-content share-modal">
                                 <div class="modal-header">
                                     <h5 class="modal-title">{{ __('lang.Share this blog') }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
-                                <div id="copyMessage" style="color: green; display:none; position: absolute; top: 85px; right: 27px;">
+                                <div id="copyMessage{{ $blog->id }}" style="color: green; display:none; position: absolute; top: 37px; right: 27px;">
                                     Link copied!
                                 </div>
                                 <div class="modal-body share-icons-row">
-                                    <a href="#" onclick="copyToClipboard('{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}')" title="{{ __('lang.Copy Link') }}">
-                                        <i class="fa-regular fa-copy text-secondary share-icon"></i>
+                                    <a href="#" onclick="copyToClipboard(event, '{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}', 'copyMessage{{ $blog->id }}')" title="{{ __('lang.Copy Link') }}">
+                                    <i class="fa-regular fa-copy text-secondary share-icon"></i>
                                     </a>
                                     <a target="_blank" href="https://wa.me/?text={{ urlencode(route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug])) }}" title="{{ __('lang.Share on WhatsApp') }}">
                                         <i class="fa-brands fa-whatsapp text-success share-icon"></i>
@@ -253,11 +252,7 @@
                         <div class="blog-two__single">
                         <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                             <div class="blog-two__img">
-                            <img 
-    src="{{ $blog->thumb ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" 
-    alt="{{ $blog->title ?? 'Blog post image' }}">
-
-
+                            <img src="{{ $blog->thumb ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" alt="{{ $blog->title ?? 'Blog post image' }}">
                             </div>
                             </a> 
                             <div class="blog-two__content">
@@ -308,7 +303,7 @@
                                             <i class="far fa-comments mx-1"></i> <span class="comment">{{ __('lang.Comments') }}</span>
                                         </a>
                                     </li>
-                                    <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest">
+                                    <li data-bs-toggle="modal" class="share-btn" data-bs-target="#shareModalTest{{ $blog->id }}">
                                     <i class="far fa-share-square mx-1"></i><span class="share">{{ __('lang.Share') }} </span>
                                     </li>
                                 </ul>

@@ -108,7 +108,6 @@ class ProfileController extends Controller
             ->take(10)
             ->get(); // For latest 10
             
-
             // Return the view with user and their blogs
             return view('site.published_blogs', compact('clickedUser', 'blogs', 'latestBlogs'));
         }
