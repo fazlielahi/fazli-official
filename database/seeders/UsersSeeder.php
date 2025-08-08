@@ -18,9 +18,9 @@ class UsersSeeder extends Seeder
     {
         // Create super_admin user
         DB::table('users')->insert([
-            'name' => 'Mohammed Al-Fayez',
-            'email' => 'superadmin@example.com',
-            'password' => Hash::make('12345678'),
+            'name' => 'TFC - The Fazli Community',
+            'email' => 'info@thefazli.com',
+            'password' => Hash::make('Tfc@5556'),
             'type' => 'super_admin',
             'photo' => 'default.png',
             'created_at' => Carbon::now(),
@@ -31,24 +31,12 @@ class UsersSeeder extends Seeder
         // Create 5 admin users with romanized Arabic names
         $admins = [
             [
-                'name' => 'Ahmed Al-Abdullah',
-                'email' => 'admin1@example.com',
+                'name' => 'Sofia',
+                'email' => 'sofia@thefazli.com',
             ],
             [
-                'name' => 'Fatima Al-Zahra',
-                'email' => 'admin2@example.com',
-            ],
-            [
-                'name' => 'Abdulrahman Al-Qasim',
-                'email' => 'admin3@example.com',
-            ],
-            [
-                'name' => 'Noura Al-Harbi',
-                'email' => 'admin4@example.com',
-            ],
-            [
-                'name' => 'Sultan Al-Otaibi',
-                'email' => 'admin5@example.com',
+                'name' => 'Fazli Elahi',
+                'email' => 'admin@thefazli.com',
             ],
         ];
 
@@ -56,7 +44,7 @@ class UsersSeeder extends Seeder
             DB::table('users')->insert([
                 'name' => $admin['name'],
                 'email' => $admin['email'],
-                'password' => Hash::make('12345678'),
+                'password' => Hash::make($admin['name'] . '12345678'),
                 'type' => 'admin',
                 'photo' => 'default.png',
                 'created_at' => Carbon::now(),

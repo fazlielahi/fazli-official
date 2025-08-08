@@ -1,6 +1,12 @@
 /*--------------------------------------------------------------
 # Banner One
 --------------------------------------------------------------*/
+
+@font-face {
+  src: url(../fonts/Rowdies-Regular.ttf);
+  font-family: mainheading_font_banner;
+}
+
 .banner-one {
   position: relative;
   display: block;
@@ -92,14 +98,14 @@
 
 .banner-one__title-clr-1 {
   font-weight: 600;
-  font-family: mainheading_font;
+  font-family: mainheading_font_banner;
   color: #25cb8c;
 }
 
 .banner-one__title-clr-2 {
   font-weight: 600;
   color: #25cb8c;
-  font-family: mainheading_font;
+  font-family: mainheading_font_banner;
 }
 
 .banner-one__text {

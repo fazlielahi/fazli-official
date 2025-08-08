@@ -47,7 +47,7 @@ class UserController extends Controller
             'password.min' => 'Password must be at least 6 characters long.',
             'type.in' => 'Type must be either admin or super_admin.',
             'photo.mimes' => 'Photo must be of type: jpg, png, jpeg, gif.',
-            'photo.max' => 'Photo must not be larger than 2MB.',
+            'photo.max' => 'Photo must not be larger than 5MB.',
 
         ]);
 
