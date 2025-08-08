@@ -43,6 +43,10 @@
     object-fit: initial;
     }
 
+    .blog-two__img{
+        height: auto;
+    }
+
     .blog-two__single{
         border-bottom-left-radius: 16px;
         border-bottom-right-radius: 16px;
