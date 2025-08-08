@@ -859,7 +859,7 @@
 .blog-grid__left {
     position: relative;
     display: block;
-    margin-right: 34px;
+    margin-right: 0;
 }
 
 .blog-grid__sidebar {
