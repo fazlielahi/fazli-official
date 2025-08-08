@@ -239,6 +239,14 @@
             width: 95%;
             margin: auto 12px;
         }
+
+        
+
+.blog-two__img img {
+    width: 100%;
+    height: auto !important;
+    object-fit: initial;
+}
     }
   
 
