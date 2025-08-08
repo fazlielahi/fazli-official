@@ -38,6 +38,9 @@
     .blog-two__img img, .blog-two__single,
     .blog-two__img {
         border-radius: 0px;
+        
+    height: auto !important;
+    object-fit: initial;
     }
 
     .blog-two__single{
@@ -244,8 +247,6 @@
 
 .blog-two__img img {
     width: 100%;
-    height: auto !important;
-    object-fit: initial;
 }
     }
   
