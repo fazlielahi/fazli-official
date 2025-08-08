@@ -109,7 +109,34 @@
 
         <div class="form-group mt-3">
             <label for="password">{{ __('lang.Password') }}</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="{{ __('lang.Enter Your Password') }}">
+            <div style="position: relative;">
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="{{ __('lang.Enter Your Password') }}"
+                    style="padding-right: 40px;"
+                >
+                <button
+                    type="button"
+                    id="togglePassword"
+                    style="
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    border: none;
+                    background: none;
+                    cursor: pointer;
+                    padding: 0;
+                    font-size: 16px;
+                    "
+                    aria-label="Show password"
+                >
+                    👁️
+                </button>
+            </div>
             @error('password')
                 <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
                 <style>
@@ -198,4 +225,17 @@
             });
         });
     </script>
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Change icon (optional)
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+    </script>
+
 @endsection
