@@ -44,7 +44,7 @@ class UsersSeeder extends Seeder
             DB::table('users')->insert([
                 'name' => $admin['name'],
                 'email' => $admin['email'],
-                'password' => Hash::make($admin['name'] . '12345678'),
+                $password = strtolower(explode(' ', $admin['name'])[0]) . '@2021',
                 'type' => 'admin',
                 'photo' => 'default.png',
                 'created_at' => Carbon::now(),
