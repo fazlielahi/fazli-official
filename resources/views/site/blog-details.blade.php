@@ -149,6 +149,15 @@
             margin: 0 !important;
         }
 
+        .blog-two__img img{
+            height: auto !important;
+            object-fit: unset !important;
+        }
+
+        .blog-two__img{
+            height: auto !important;
+        }
+
         .blog-two__title  {
             height: 64px;
         }

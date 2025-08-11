@@ -8,6 +8,8 @@ return [
     'WEB_DEVELOPER' => 'مطور ويب',
     'OPEN_TO_OPPORTUNITIES' => '... متاح للعمل',
     'CHECK_CV' => 'عرض السيرة الذاتية',
+    'CHECK_CV' => 'عرض السيرة الذاتية',
+    'Explore Blogs on Web Development, AI, Career Tips & More | TFC - The Fazli Community' => 'استكشف المدونات حول تطوير الويب، والذكاء الاصطناعي، ونصائح مهنية والمزيد | TFC - مجتمع فاضلي',
     'TECHNICAL_SKILLS' => 'المهارات التقنية',
     'PROFESSIONAL_EXPERIENCE' => 'الخبرة المهنية',
     'We’d Love to Hear From You' => 'نحن نود أن نسمع منك',

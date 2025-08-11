@@ -122,6 +122,7 @@ return [
     'Our Vision' => 'Our Vision',
     'To become a leading digital hub where learners, professionals, and businesses connect, grow, and thrive through innovative tech solutions and community-driven support.' => 'To become a leading digital hub where learners, professionals, and businesses connect, grow, and thrive through innovative tech solutions and community-driven support.',
     'Know More' => 'Know More',
+    'Explore Blogs on Web Development, AI, Career Tips & More | TFC - The Fazli Community' => 'Explore Blogs on Web Development, AI, Career Tips & More | TFC - The Fazli Community',
     'Available' => 'Available',
     // Services section keys
     'More Than Web' => 'More Than Web:',

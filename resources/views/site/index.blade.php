@@ -1130,7 +1130,7 @@
                     <!--Blog Two Single Start -->
                     <div class="wow fadeInLeft blog-card-home" data-wow-delay="100ms">
                         <div class="blog-two__single">
-                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                 <div class="blog-two__img">
                                 <img 
                                     src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" 
@@ -1162,7 +1162,7 @@
                                     </div>
                                 </div>
                                 <h4 class="blog-two__title">
-                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), $blog->id]) }}">
+                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
                                         {{ Str::limit(html_entity_decode(strip_tags($blog->title)), 85) }}
                                     </a>
                                 </h4>

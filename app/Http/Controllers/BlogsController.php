@@ -58,6 +58,7 @@ class BlogsController extends Controller
             'categories' => $categories,
             'selectedCategory' => $selectedCategory->id,
             'selectedCategorySlug' => $selectedCategory->slug,
+            'locale' => $locale,
         ]);
     }
 

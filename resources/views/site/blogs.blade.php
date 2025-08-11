@@ -1,7 +1,6 @@
 @extends('site.layout')
 
-@section('title', __('lang.Explore Blogs on Web Development, AI, Career Tips & More | TFC - The Fazli Community
-'))
+@section('title', __('lang.Explore Blogs on Web Development, AI, Career Tips & More | TFC - The Fazli Community'))
 
 @section('meta')
     <meta charset="UTF-8" />
