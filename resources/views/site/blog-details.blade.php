@@ -300,11 +300,11 @@
                                 {!! $blog->content !!} 
                             </div>
                             <div class="blog-details__tag-and-share">
-                                <div class="blog-details__share share-btn" data-bs-toggle="modal" data-bs-target="#shareModalTest{{ $blog->id }}">
-                                    <span>{{ __('lang.Share') }} <i class="far fa-share-square" style="color: #1da370;"></i></span>
+                                <div class="blog-details__share share-btn">
+                                    <span data-bs-toggle="modal" data-bs-target="#shareModalTest{{ $blog->id }}">{{ __('lang.Share') }} <i data-bs-toggle="modal" data-bs-target="#shareModalTest{{ $blog->id }}" class="far fa-share-square" style="color: #1da370;"></i></span>
                                     <div class="subscribe-btn-container my-3">
-                                    <button id="subscribeBtn">Subscribe</button>
-                                </div>
+                                         <button id="subscribeBtn">Subscribe</button>
+                                     </div>
                                 </div>
                                
                             </div>
