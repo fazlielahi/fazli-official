@@ -244,7 +244,7 @@
                             </li>
                         </ul>
                         <div class="subscribe-btn-container my-3">
-                            <button id="subscribeBtn">Subscribe</button>
+                            <button class="subscribeBtn">Subscribe</button>
                         </div>
                     </div>
                     <div class="blog-image-container">
@@ -303,8 +303,8 @@
                                 <div class="blog-details__share share-btn">
                                     <span data-bs-toggle="modal" data-bs-target="#shareModalTest{{ $blog->id }}">{{ __('lang.Share') }} <i data-bs-toggle="modal" data-bs-target="#shareModalTest{{ $blog->id }}" class="far fa-share-square" style="color: #1da370;"></i></span>
                                     <div class="subscribe-btn-container my-3">
-                                         <button id="subscribeBtn">Subscribe</button>
-                                     </div>
+                            <button class="subscribeBtn2">Subscribe</button>
+                        </div>
                                 </div>
                                
                             </div>
@@ -844,7 +844,54 @@ $(document).ready(setupCommentToggle);
 
 <script>
     // Subscribe Button
-    document.getElementById('subscribeBtn').addEventListener('click', function () {
+    document.querySelector('.subscribeBtn').addEventListener('click', function () {
+        Swal.fire({
+            title: 'Subscribe',
+            input: 'email',
+            inputLabel: 'Enter your email address',
+            inputPlaceholder: 'example@example.com',
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            preConfirm: (email) => {
+                if (!email) {
+                    Swal.showValidationMessage('Email is required');
+                    return false;
+                }
+
+                const formData = new FormData();
+                formData.append('email', email);
+
+                return fetch("{{ route('localized.subscribe', ['lang' => app()->getLocale()]) }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: formData
+                })
+                .then(async response => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'error') {
+                        Swal.showValidationMessage(data.message);
+                    } else {
+                        Swal.fire('Subscribed!', data.message, 'success');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.showValidationMessage('Something went wrong. Please try again.');
+                });
+            }
+        });
+    });
+
+    // Subscribe Button 2
+    document.querySelector('.subscribeBtn2').addEventListener('click', function () {
         Swal.fire({
             title: 'Subscribe',
             input: 'email',
