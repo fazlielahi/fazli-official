@@ -180,6 +180,10 @@
             letter-spacing: 0.01em; /* Optional: for visual match */
         }
 
+        .blog-details__tag-and-share{
+            width: 100%;
+        }
+
     </style>
 
 <script type="application/ld+json">
@@ -298,7 +302,11 @@
                             <div class="blog-details__tag-and-share">
                                 <div class="blog-details__share share-btn" data-bs-toggle="modal" data-bs-target="#shareModalTest{{ $blog->id }}">
                                     <span>{{ __('lang.Share') }} <i class="far fa-share-square" style="color: #1da370;"></i></span>
+                                    <div class="subscribe-btn-container my-3">
+                                    <button id="subscribeBtn">Subscribe</button>
                                 </div>
+                                </div>
+                               
                             </div>
 
                              <!-- Share Modal -->
