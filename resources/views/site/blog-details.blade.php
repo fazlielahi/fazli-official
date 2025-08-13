@@ -570,7 +570,7 @@
                                     <div class="col-md-6">
                                         <div class="wow fadeInLeft blog-card-blogs m-0" data-wow-delay="100ms" style="width: 100% !important">
                                             <div class="blog-two__single">
-                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
+                                            <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $recBlog->slug]) }}">
                                                     <div class="blog-two__img">
                                                     <img 
                                                         src="{{ $recBlog->thumb && file_exists(public_path('storage/' . $recBlog->thumb)) ? asset('storage/' . $recBlog->thumb) : asset('images/blog-default.jpg') }}" 
@@ -602,7 +602,7 @@
                                                         </div>
                                                     </div>
                                                     <h4 class="blog-two__title">
-                                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
+                                                    <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $recBlog->slug]) }}">
                                                             {{ Str::limit(html_entity_decode(strip_tags($recBlog->title)), 45) }}
                                                         </a>
                                                     </h4>
@@ -669,7 +669,7 @@
                                                 </li>
                                             </ul>
                                 <li>
-                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
+                                <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $popular_blog->slug]) }}">
                                         <div class="sidebar__post-image">
                                         <img 
                                             src="{{ $popular_blog->thumb && file_exists(public_path('storage/' . $popular_blog->thumb)) ? asset('storage/' . $popular_blog->thumb) : asset('images/blog-default.jpg') }}" 
@@ -678,7 +678,7 @@
                                         </div>
                                     <div class="sidebar__post-content">
                                         <h3 class="sidebar__post-title">
-                                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $blog->slug]) }}">
+                                        <a href="{{ route('localized.blog-details', ['lang' => app()->getLocale(), 'slug' => $popular_blog->slug]) }}">
                                                 {{ Str::limit(html_entity_decode(strip_tags($popular_blog->title)), 45) }}
                                             </a>
                                         </h3>
