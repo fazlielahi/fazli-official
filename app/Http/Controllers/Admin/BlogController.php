@@ -23,6 +23,10 @@ class BlogController extends Controller
         $categories = \App\Models\Category::all();
         $selectedCategory = $request->input('category_id');
 
+        if (!$user) {
+            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
+        }
+
         if($user->type === 'super_admin')
         {
             $blogs = \App\Models\Blog::query();
@@ -49,6 +53,9 @@ class BlogController extends Controller
         }
 
         $user = User::find($request->session()->get('user_id'));
+        if (!$user) {
+            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
+        }
         if($user->type !== 'super_admin') {
             return redirect()->back()->with('error', 'Unauthorized');
         }
@@ -72,6 +79,9 @@ class BlogController extends Controller
         }
 
         $user = User::find($request->session()->get('user_id'));
+        if (!$user) {
+            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
+        }
         if($user->type !== 'super_admin') {
             return redirect()->back()->with('error', 'Unauthorized');
         }
@@ -101,6 +111,9 @@ class BlogController extends Controller
         }
 
         $user = User::find($request->session()->get('user_id'));
+        if (!$user) {
+            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
+        }
         $categories = \App\Models\Category::all();
         $selectedCategory = $request->input('category_id');
 
@@ -125,6 +138,9 @@ class BlogController extends Controller
         }
 
         $user = User::find($request->session()->get('user_id'));
+        if (!$user) {
+            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
+        }
         $categories = \App\Models\Category::all();
         $selectedCategory = $request->input('category_id');
         $blogs = \App\Models\Blog::where('status', 'draft')->where('created_by', $user->id);
@@ -141,6 +157,9 @@ class BlogController extends Controller
             return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
         }
         $user = User::find($request->session()->get('user_id'));
+        if (!$user) {
+            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
+        }
         $categories = \App\Models\Category::all();
         if($user->type === 'super_admin')
         {
@@ -244,6 +263,9 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
 
         $user = User::find($request->session()->get('user_id'));
+        if (!$user) {
+            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
+        }
         $categories = \App\Models\Category::all();
 
         // check if user is allowed to edit this blog

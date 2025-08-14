@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" 
-          content="The Fazli Community (TFC) empowers learners, professionals, and businesses with web design, custom PHP development, digital marketing, SEO training, and free career tools. Join our tech community today!" />
+          content="TFC - The Fazli Community empowers learners, professionals, and businesses with web design, custom PHP development, digital marketing, SEO training, and free career tools. Join our tech community today!" />
     <meta name="keywords" content="web design, PHP development, custom PHP, digital marketing, SEO training, career tools, tech community, professional development, web development, online learning, business solutions" />
 
     <meta property="og:title" content="The Fazli Community – Tech Resources, Web Services & Learning Hub" />

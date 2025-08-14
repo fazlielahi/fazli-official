@@ -29,6 +29,10 @@ Route::group([
 ], function () {
     // Home
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/tfc', function () {
+        return view('site.the-fazli-community');
+    })->name('tfc');
+    
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::get('/about', [AboutController::class, 'index'])->name('about');
     Route::get('/jobs', [\App\Http\Controllers\JobsController::class, 'index'])->name('jobs');
