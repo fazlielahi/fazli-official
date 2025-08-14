@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="{{ asset('images/favicon-tfc-the-fazli-community.png') }}">
   <meta name="description" content="TFC - The Fazli Community empowers learners, professionals, and businesses with web design, custom PHP development, digital marketing, SEO training, and free career tools. Join our tech community today!" />
   <title>TFC – The Fazli Community</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
   <header>
