@@ -24,7 +24,7 @@
     <meta name="twitter:image"        content="https://thefazli.com/images/tfc-services-page-preview.png" />
 
     <meta name="author" content="TFC - The Fazli Community" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large">
     
     <link rel="canonical" href="https://thefazli.com/{{$locale}}/services" />
     

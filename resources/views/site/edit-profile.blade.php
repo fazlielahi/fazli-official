@@ -1,7 +1,5 @@
 @extends('site.profile')
 
-@section('title', __('lang.Edit Profile'))
-
 @section('head')
     <!-- Preload critical CSS -->
     <link rel="preload" href="{{ asset('assets/css/style.css') }}" as="style" />

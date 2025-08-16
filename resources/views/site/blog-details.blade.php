@@ -57,8 +57,8 @@
     @else
     <meta name="twitter:image" content="{{ asset('assets/images/resources/tfc.jpg') }}" />
     @endif
-    <meta name="author" content="TFC - The Fazli Community" />
-    <meta name="robots" content="index, follow" />
+    <meta name="author" content="{{ $blog->creater->name ?? __('lang.unknown')}}" />
+    <meta name="robots" content="index, follow, max-image-preview:large">
     
     <link rel="canonical" href="https://thefazli.com/{{$locale}}/{{$blog->slug}}" />
     
