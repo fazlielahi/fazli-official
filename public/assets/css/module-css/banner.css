@@ -3,8 +3,11 @@
 --------------------------------------------------------------*/
 
 @font-face {
-  src: url(../fonts/Rowdies-Regular.ttf);
   font-family: mainheading_font_banner;
+  src: url('../../fonts/Rowdies-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 .banner-one {
