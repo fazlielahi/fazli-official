@@ -37,6 +37,10 @@ Route::group([
     Route::get('/about', [AboutController::class, 'index'])->name('about');
     Route::get('/jobs', [\App\Http\Controllers\JobsController::class, 'index'])->name('jobs');
     Route::get('/cv-create', [\App\Http\Controllers\CvController::class, 'index'])->name('cv-create');
+    
+    // CV Builder Routes
+    Route::get('/cv', [\App\Http\Controllers\CvController::class, 'index'])->name('cv.gallery');
+    Route::get('/cv/create/{slug}', [\App\Http\Controllers\CvController::class, 'builder'])->name('cv.builder');
 
     //Blogs
     Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs');

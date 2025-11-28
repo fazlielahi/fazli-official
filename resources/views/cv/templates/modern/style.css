@@ -1,0 +1,79 @@
+/* Modern CV Template Styles */
+
+.cv-template.modern {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+    background: #fff;
+}
+
+.cv-template.modern .cv-header {
+    text-align: center;
+    padding: 30px 0;
+    border-bottom: 3px solid #2563eb;
+    margin-bottom: 30px;
+}
+
+.cv-template.modern .cv-header h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2563eb;
+    margin: 0 0 10px 0;
+}
+
+.cv-template.modern .cv-header p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.cv-template.modern .cv-body {
+    padding: 20px 0;
+}
+
+.cv-template.modern section {
+    margin-bottom: 30px;
+}
+
+.cv-template.modern section h2 {
+    font-size: 20px;
+    color: #2563eb;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.cv-template.modern .experience-item,
+.cv-template.modern .education-item {
+    margin-bottom: 20px;
+}
+
+.cv-template.modern .experience-item h3,
+.cv-template.modern .education-item h3 {
+    font-size: 18px;
+    margin: 0 0 5px 0;
+    color: #1e40af;
+}
+
+.cv-template.modern .company,
+.cv-template.modern .institution {
+    font-weight: bold;
+    color: #555;
+    margin: 5px 0;
+}
+
+.cv-template.modern .period {
+    font-style: italic;
+    color: #777;
+    margin: 5px 0;
+}
+
+/* Print styles */
+@media print {
+    .cv-template.modern {
+        padding: 0;
+    }
+}
+

@@ -135,11 +135,11 @@
     @include("site.inc.cv")
 
     <!--Start Preloader-->
-    <div class="loader js-preloader">
+    <!-- <div class="loader js-preloader">
         <div></div>
         <div></div>
         <div></div>
-    </div>
+    </div> -->
     <!--End Preloader-->
 
     @yield('content')
