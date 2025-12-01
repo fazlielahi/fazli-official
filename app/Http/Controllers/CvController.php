@@ -16,7 +16,7 @@ class CvController extends Controller
         // Get all active templates from database
         $templates = CvTemplate::where('is_active', true)->get();
         
-        // Also scan for templates in the filesystem
+        // Also scan for templates in the filesystem and merge with database
         $templatesPath = resource_path('views/cv/templates');
         $templateFolders = [];
         
@@ -28,11 +28,31 @@ class CvController extends Controller
                 
                 if (File::exists($configPath)) {
                     $config = json_decode(File::get($configPath), true);
+                    
+                    // Get template from database if exists
+                    $dbTemplate = CvTemplate::where('slug', $templateName)->first();
+                    
+                    // Determine preview path - prioritize database, then check filesystem
+                    $previewPath = null;
+                    if ($dbTemplate && $dbTemplate->preview_path) {
+                        $previewPath = asset($dbTemplate->preview_path);
+                    } else {
+                        // Check for preview images in multiple formats
+                        $previewExtensions = ['webp', 'png', 'jpg', 'jpeg'];
+                        foreach ($previewExtensions as $ext) {
+                            $previewFile = public_path('cv-templates/previews/' . $templateName . '-preview.' . $ext);
+                            if (File::exists($previewFile)) {
+                                $previewPath = asset('cv-templates/previews/' . $templateName . '-preview.' . $ext);
+                                break;
+                            }
+                        }
+                    }
+                    
                     $templateFolders[] = [
                         'slug' => $templateName,
                         'name' => $config['name'] ?? ucfirst($templateName),
-                        'description' => $config['description'] ?? '',
-                        'preview_path' => asset('cv-templates/previews/' . $templateName . '-preview.webp')
+                        'description' => $config['description'] ?? ($dbTemplate ? $dbTemplate->description : ''),
+                        'preview_path' => $previewPath
                     ];
                 }
             }

@@ -37,7 +37,7 @@ Route::group([
     Route::get('/about', [AboutController::class, 'index'])->name('about');
     Route::get('/jobs', [\App\Http\Controllers\JobsController::class, 'index'])->name('jobs');
     Route::get('/cv-create', [\App\Http\Controllers\CvController::class, 'index'])->name('cv-create');
-    
+
     // CV Builder Routes
     Route::get('/cv', [\App\Http\Controllers\CvController::class, 'index'])->name('cv.gallery');
     Route::get('/cv/create/{slug}', [\App\Http\Controllers\CvController::class, 'builder'])->name('cv.builder');
@@ -111,6 +111,15 @@ Route::group([
         Route::get('/categories/{category}/edit', [\App\Http\Controllers\Admin\CategoryController::class, 'edit'])->name('admin.categories.edit');
         Route::put('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('admin.categories.update');
         Route::delete('/categories/{category}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+
+        // CV Templates admin routes
+        Route::get('/cv-templates', [\App\Http\Controllers\Admin\CVTemplateController::class, 'index'])->name('admin.cv-templates.index');
+        Route::get('/cv-templates/create', [\App\Http\Controllers\Admin\CVTemplateController::class, 'create'])->name('admin.cv-templates.create');
+        Route::post('/cv-templates', [\App\Http\Controllers\Admin\CVTemplateController::class, 'store'])->name('admin.cv-templates.store');
+        Route::get('/cv-templates/{cvTemplate}/edit', [\App\Http\Controllers\Admin\CVTemplateController::class, 'edit'])->name('admin.cv-templates.edit');
+        Route::put('/cv-templates/{cvTemplate}', [\App\Http\Controllers\Admin\CVTemplateController::class, 'update'])->name('admin.cv-templates.update');
+        Route::delete('/cv-templates/{cvTemplate}', [\App\Http\Controllers\Admin\CVTemplateController::class, 'destroy'])->name('admin.cv-templates.destroy');
+        Route::post('/cv-templates/{cvTemplate}/toggle', [\App\Http\Controllers\Admin\CVTemplateController::class, 'toggleActive'])->name('admin.cv-templates.toggle');
 
        
     });

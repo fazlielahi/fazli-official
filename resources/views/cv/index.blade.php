@@ -152,8 +152,8 @@
                 @forelse($templateFolders as $template)
                     <div class="template-card">
                         <div class="template-preview">
-                            @if(file_exists(public_path('cv-templates/previews/' . $template['slug'] . '-preview.webp')))
-                                <img src="{{ asset('cv-templates/previews/' . $template['slug'] . '-preview.webp') }}" alt="{{ $template['name'] }}">
+                            @if(!empty($template['preview_path']))
+                                <img src="{{ $template['preview_path'] }}" alt="{{ $template['name'] }}" onerror="this.style.display='none';">
                             @endif
                         </div>
                         <div class="template-info">
