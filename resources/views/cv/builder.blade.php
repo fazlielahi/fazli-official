@@ -172,8 +172,27 @@
         
         <!-- Right Panel: Preview -->
         <div class="builder-preview-panel">
-            <div class="cv-preview-container">
-                @include('cv.templates.' . $templateSlug . '.template', ['data' => $data])
+            <div class="cv-preview-container" id="cv-preview">
+                @if(isset($templateExists) && $templateExists)
+                    @include('cv.templates.' . $templateSlug . '.template', ['data' => $data])
+                @else
+                    <div style="padding: 40px; text-align: center; color: #999;">
+                        <h3>Template Files Not Found</h3>
+                        <p>The template folder and files need to be created in:</p>
+                        <code style="display: block; margin: 20px 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">
+                            resources/views/cv/templates/{{ $templateSlug }}/
+                        </code>
+                        <p>Required files:</p>
+                        <ul style="text-align: left; display: inline-block;">
+                            <li>template.blade.php</li>
+                            <li>config.json (optional - can use database config)</li>
+                            <li>style.css (optional)</li>
+                        </ul>
+                        <p style="margin-top: 20px;">
+                            <small>Note: Template was created in admin panel, but template files need to be added manually.</small>
+                        </p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -185,9 +204,169 @@
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <script>
-        // Phase 1: Static preview only
-        // Phase 2: Will add live update functionality here
+        // Phase 2: Live Preview Updates
         console.log('CV Builder loaded for template: {{ $templateSlug }}');
+        
+        // Step 1: Listen to form inputs
+        $(document).ready(function() {
+            const $form = $('#cv-form');
+            let formData = {};
+            
+            // Function to collect all form data
+            function collectFormData() {
+                const data = {
+                    name: $form.find('input[name="name"]').val() || '',
+                    email: $form.find('input[name="email"]').val() || '',
+                    phone: $form.find('input[name="phone"]').val() || '',
+                    summary: $form.find('textarea[name="summary"]').val() || '',
+                    experience: [],
+                    education: []
+                };
+                
+                // Collect experience entries
+                $form.find('input[name^="experience["], textarea[name^="experience["]').each(function() {
+                    const name = $(this).attr('name');
+                    // Extract index and field name from name like "experience[0][title]"
+                    const match = name.match(/experience\[(\d+)\]\[(\w+)\]/);
+                    if (match) {
+                        const index = parseInt(match[1]);
+                        const field = match[2];
+                        const value = $(this).val() || '';
+                        
+                        if (!data.experience[index]) {
+                            data.experience[index] = {};
+                        }
+                        data.experience[index][field] = value;
+                    }
+                });
+                
+                // Collect education entries
+                $form.find('input[name^="education["]').each(function() {
+                    const name = $(this).attr('name');
+                    const match = name.match(/education\[(\d+)\]\[(\w+)\]/);
+                    if (match) {
+                        const index = parseInt(match[1]);
+                        const field = match[2];
+                        const value = $(this).val() || '';
+                        
+                        if (!data.education[index]) {
+                            data.education[index] = {};
+                        }
+                        data.education[index][field] = value;
+                    }
+                });
+                
+                return data;
+            }
+            
+            // Step 2: Update preview with captured data
+            function updatePreview(data) {
+                const $preview = $('#cv-preview');
+                
+                // Check if template exists (don't overwrite error message)
+                const templateExists = $preview.find('.cv-template').length > 0 || 
+                                      $preview.find('h3:contains("Template Files Not Found")').length === 0;
+                
+                if (!templateExists) {
+                    return; // Don't update if template files don't exist
+                }
+                
+                // Build HTML structure matching template
+                let html = '<div class="cv-template modern">';
+                
+                // Header section
+                html += '<div class="cv-header">';
+                html += '<h1>' + (data.name || 'Your Name') + '</h1>';
+                html += '<p>' + (data.email || 'your.email@example.com') + '</p>';
+                html += '<p>' + (data.phone || 'Your Phone') + '</p>';
+                html += '</div>';
+                
+                // Body section
+                html += '<div class="cv-body">';
+                
+                // Summary section
+                if (data.summary && data.summary.trim()) {
+                    html += '<section class="summary">';
+                    html += '<h2>Summary</h2>';
+                    html += '<p>' + escapeHtml(data.summary) + '</p>';
+                    html += '</section>';
+                }
+                
+                // Experience section
+                if (data.experience && data.experience.length > 0) {
+                    html += '<section class="experience">';
+                    html += '<h2>Experience</h2>';
+                    
+                    data.experience.forEach(function(exp) {
+                        if (exp.title || exp.company) {
+                            html += '<div class="experience-item">';
+                            html += '<h3>' + (exp.title || 'Job Title') + '</h3>';
+                            html += '<p class="company">' + (exp.company || 'Company Name') + '</p>';
+                            html += '<p class="period">' + (exp.period || 'Period') + '</p>';
+                            if (exp.description) {
+                                html += '<p>' + escapeHtml(exp.description) + '</p>';
+                            }
+                            html += '</div>';
+                        }
+                    });
+                    
+                    html += '</section>';
+                }
+                
+                // Education section
+                if (data.education && data.education.length > 0) {
+                    html += '<section class="education">';
+                    html += '<h2>Education</h2>';
+                    
+                    data.education.forEach(function(edu) {
+                        if (edu.degree || edu.institution) {
+                            html += '<div class="education-item">';
+                            html += '<h3>' + (edu.degree || 'Degree') + '</h3>';
+                            html += '<p class="institution">' + (edu.institution || 'Institution') + '</p>';
+                            html += '<p class="period">' + (edu.period || 'Period') + '</p>';
+                            html += '</div>';
+                        }
+                    });
+                    
+                    html += '</section>';
+                }
+                
+                html += '</div>'; // End cv-body
+                html += '</div>'; // End cv-template
+                
+                // Update preview container
+                $preview.html(html);
+            }
+            
+            // Helper function to escape HTML (prevent XSS)
+            function escapeHtml(text) {
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+            
+            // Function to handle form data changes
+            function handleFormChange() {
+                formData = collectFormData();
+                console.log('Form data updated:', formData);
+                updatePreview(formData); // Update preview in real-time
+            }
+            
+            // Listen to all input and textarea changes using event delegation
+            $form.on('input change', 'input, textarea', function() {
+                handleFormChange();
+            });
+            
+            // Initial data collection and preview update
+            formData = collectFormData();
+            console.log('Initial form data:', formData);
+            updatePreview(formData); // Show initial preview
+        });
     </script>
 @endsection
 

@@ -13,52 +13,46 @@ class CvController extends Controller
      */
     public function index()
     {
-        // Get all active templates from database
-        $templates = CvTemplate::where('is_active', true)->get();
+        // Get all ACTIVE templates from database (primary source - managed from admin panel)
+        $dbTemplates = CvTemplate::where('is_active', true)->get();
         
-        // Also scan for templates in the filesystem and merge with database
         $templatesPath = resource_path('views/cv/templates');
         $templateFolders = [];
         
-        if (File::exists($templatesPath)) {
-            $folders = File::directories($templatesPath);
-            foreach ($folders as $folder) {
-                $templateName = basename($folder);
-                $configPath = $folder . '/config.json';
-                
-                if (File::exists($configPath)) {
-                    $config = json_decode(File::get($configPath), true);
-                    
-                    // Get template from database if exists
-                    $dbTemplate = CvTemplate::where('slug', $templateName)->first();
-                    
-                    // Determine preview path - prioritize database, then check filesystem
-                    $previewPath = null;
-                    if ($dbTemplate && $dbTemplate->preview_path) {
-                        $previewPath = asset($dbTemplate->preview_path);
-                    } else {
-                        // Check for preview images in multiple formats
-                        $previewExtensions = ['webp', 'png', 'jpg', 'jpeg'];
-                        foreach ($previewExtensions as $ext) {
-                            $previewFile = public_path('cv-templates/previews/' . $templateName . '-preview.' . $ext);
-                            if (File::exists($previewFile)) {
-                                $previewPath = asset('cv-templates/previews/' . $templateName . '-preview.' . $ext);
-                                break;
-                            }
-                        }
+        // Process each active template from database ONLY
+        // Gallery will ONLY show templates managed from admin panel
+        foreach ($dbTemplates as $dbTemplate) {
+            $templateSlug = $dbTemplate->slug;
+            $templateFolder = $templatesPath . '/' . $templateSlug;
+            
+            // Get preview path from database (admin panel managed)
+            $previewPath = null;
+            if ($dbTemplate->preview_path) {
+                $previewPath = asset($dbTemplate->preview_path);
+            } else {
+                // Fallback: check filesystem for preview image (if not uploaded via admin)
+                $previewExtensions = ['webp', 'png', 'jpg', 'jpeg'];
+                foreach ($previewExtensions as $ext) {
+                    $previewFile = public_path('cv-templates/previews/' . $templateSlug . '-preview.' . $ext);
+                    if (File::exists($previewFile)) {
+                        $previewPath = asset('cv-templates/previews/' . $templateSlug . '-preview.' . $ext);
+                        break;
                     }
-                    
-                    $templateFolders[] = [
-                        'slug' => $templateName,
-                        'name' => $config['name'] ?? ucfirst($templateName),
-                        'description' => $config['description'] ?? ($dbTemplate ? $dbTemplate->description : ''),
-                        'preview_path' => $previewPath
-                    ];
                 }
             }
+            
+            // Use database data (from admin panel) as source of truth
+            // Show template even if folder doesn't exist (admin can create template first, then add files)
+            $templateFolders[] = [
+                'slug' => $dbTemplate->slug,
+                'name' => $dbTemplate->name,
+                'description' => $dbTemplate->description ?? 'Professional CV template',
+                'preview_path' => $previewPath,
+                'folder_exists' => File::exists($templateFolder) // For debugging/warnings
+            ];
         }
         
-        return view('cv.index', compact('templates', 'templateFolders'));
+        return view('cv.index', compact('templateFolders'));
     }
     
     /**
@@ -66,31 +60,67 @@ class CvController extends Controller
      */
     public function builder($lang, $slug)
     {
-        // Load template config from filesystem
-        $templatePath = resource_path('views/cv/templates/' . $slug);
-        $configPath = $templatePath . '/config.json';
+        // Load template from database first (admin panel managed)
+        $template = CvTemplate::where('slug', $slug)->where('is_active', true)->first();
         
-        if (!File::exists($configPath)) {
-            abort(404, 'Template not found');
+        if (!$template) {
+            abort(404, 'Template not found or inactive');
         }
         
-        $config = json_decode(File::get($configPath), true);
+        // Try to load config from database first, then fallback to filesystem
+        $config = null;
+        if ($template->config && is_array($template->config)) {
+            $config = $template->config;
+        } else {
+            // Fallback: Load config from filesystem
+            $templatePath = resource_path('views/cv/templates/' . $slug);
+            $configPath = $templatePath . '/config.json';
+            
+            if (File::exists($configPath)) {
+                $config = json_decode(File::get($configPath), true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $config = null;
+                }
+            }
+        }
         
-        // Load template from database if exists
-        $template = CvTemplate::where('slug', $slug)->first();
+        // If no config found, create a basic one
+        if (!$config) {
+            $config = [
+                'name' => $template->name,
+                'slug' => $template->slug,
+                'description' => $template->description ?? 'CV Template',
+                'sections' => [
+                    'required' => ['header'],
+                    'optional' => ['summary', 'experience', 'education', 'skills']
+                ],
+                'layout' => [
+                    'type' => 'single-column'
+                ],
+                'styling' => [
+                    'primary_color' => '#2563eb',
+                    'font_family' => 'Arial, sans-serif'
+                ]
+            ];
+        }
+        
+        // Check if template blade file exists (required for rendering)
+        $templatePath = resource_path('views/cv/templates/' . $slug);
+        $templateBladePath = $templatePath . '/template.blade.php';
+        $templateExists = File::exists($templateBladePath);
         
         // Dummy data for preview (Phase 1)
         $dummyData = [
-            'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
-            'phone' => '+1 234 567 8900',
-            'summary' => 'Experienced professional with a passion for excellence.',
+            'name' => 'Zahra Al-Khalil',
+            'email' => 'zahra@thefazli.com',
+            'phone' => '+966 59 230 4816',
+            'summary' => 'Experienced E-commerce Seller managing online stores on Amazon, Shopify, and TikTok.',
             'experience' => [
                 [
-                    'title' => 'Senior Developer',
+                    'title' => 'E-Commerce Specialist',
                     'company' => 'Tech Company Inc.',
                     'period' => '2020 - Present',
-                    'description' => 'Leading development teams and building innovative solutions.'
+                    'description' => 'Experienced E-commerce Seller managing online stores on Amazon, Shopify, and TikTok.'
                 ]
             ],
             'education' => [
@@ -107,6 +137,7 @@ class CvController extends Controller
             'lang' => $lang,
             'config' => $config,
             'template' => $template,
+            'templateExists' => $templateExists,
             'data' => $dummyData
         ]);
     }
