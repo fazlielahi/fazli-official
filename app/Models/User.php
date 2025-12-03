@@ -45,4 +45,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+
+    /**
+     * Get all CVs created by this user.
+     */
+    public function cvs()
+    {
+        return $this->hasMany(UserCV::class);
+    }
 }

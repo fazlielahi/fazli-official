@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CvTemplate;
+use App\Models\UserCV;
+use App\Models\User;
 use Illuminate\Support\Facades\File;
 
 class CvController extends Controller
@@ -140,5 +142,55 @@ class CvController extends Controller
             'templateExists' => $templateExists,
             'data' => $dummyData
         ]);
+    }
+    
+    /**
+     * Save user's CV data
+     */
+    public function save(Request $request)
+    {
+        // Check if user is logged in
+        $userId = $request->session()->get('user_id') ?? $request->cookie('user_id');
+        
+        if (!$userId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please login to save your CV'
+            ], 401);
+        }
+        
+        // Validate request
+        $request->validate([
+            'template_slug' => 'required|string',
+            'cv_data' => 'required|array',
+            'title' => 'nullable|string|max:255',
+        ]);
+        
+        try {
+            // Create or update CV
+            $cv = UserCV::updateOrCreate(
+                [
+                    'user_id' => $userId,
+                    'template_slug' => $request->input('template_slug'),
+                    'is_active' => true // For now, save as active
+                ],
+                [
+                    'title' => $request->input('title') ?? 'My CV',
+                    'cv_data' => $request->input('cv_data'),
+                ]
+            );
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'CV saved successfully!',
+                'cv_id' => $cv->id
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error saving CV: ' . $e->getMessage()
+            ], 500);
+        }
     }
 } 

@@ -41,6 +41,7 @@ Route::group([
     // CV Builder Routes
     Route::get('/cv', [\App\Http\Controllers\CvController::class, 'index'])->name('cv.gallery');
     Route::get('/cv/create/{slug}', [\App\Http\Controllers\CvController::class, 'builder'])->name('cv.builder');
+    Route::post('/cv/save', [\App\Http\Controllers\CvController::class, 'save'])->name('cv.save');
 
     //Blogs
     Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs');
