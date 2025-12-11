@@ -516,7 +516,7 @@
                         </div>
                     </div>
                 @endforeach
-                @else
+                @if($blogs->count() == 0)
                 <div class="col-12 text-center py-5">
                     <div class="no-blogs-message">
                         <i class="fas fa-blog fa-3x text-muted mb-3"></i>
