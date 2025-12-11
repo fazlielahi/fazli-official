@@ -116,22 +116,7 @@ class CvController extends Controller
             'name' => 'Zahra Al-Khalil',
             'email' => 'zahra@thefazli.com',
             'phone' => '+966 59 230 4816',
-            'summary' => 'Experienced E-commerce Seller managing online stores on Amazon, Shopify, and TikTok.',
-            'experience' => [
-                [
-                    'title' => 'E-Commerce Specialist',
-                    'company' => 'Tech Company Inc.',
-                    'period' => '2020 - Present',
-                    'description' => 'Experienced E-commerce Seller managing online stores on Amazon, Shopify, and TikTok.'
-                ]
-            ],
-            'education' => [
-                [
-                    'degree' => 'Bachelor of Science',
-                    'institution' => 'University Name',
-                    'period' => '2016 - 2020'
-                ]
-            ]
+            'summary' => 'Experienced E-commerce Seller managing online stores on Amazon, Shopify, and TikTok.'
         ];
         
         return view('cv.builder', [
@@ -190,6 +175,97 @@ class CvController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error saving CV: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Get user's saved CVs
+     */
+    public function getSavedCVs(Request $request)
+    {
+        // Check if user is logged in
+        $userId = $request->session()->get('user_id') ?? $request->cookie('user_id');
+        
+        if (!$userId) {
+            // Return success with empty array for non-logged-in users
+            // This allows the page to work without authentication
+            return response()->json([
+                'success' => true,
+                'message' => 'Please login to view saved CVs',
+                'cvs' => []
+            ], 200);
+        }
+        
+        try {
+            $cvs = UserCV::where('user_id', $userId)
+                ->orderBy('updated_at', 'desc')
+                ->get(['id', 'title', 'template_slug', 'created_at', 'updated_at']);
+            
+            return response()->json([
+                'success' => true,
+                'cvs' => $cvs
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading CVs: ' . $e->getMessage(),
+                'cvs' => []
+            ], 500);
+        }
+    }
+    
+    /**
+     * Load a specific saved CV
+     */
+    public function loadCV(Request $request, $lang, $id)
+    {
+        // Check if user is logged in
+        $userId = $request->session()->get('user_id') ?? $request->cookie('user_id');
+        
+        if (!$userId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please login to load CV'
+            ], 401);
+        }
+        
+        try {
+            $cv = UserCV::where('id', $id)
+                ->where('user_id', $userId)
+                ->first();
+            
+            if (!$cv) {
+                // Check if CV exists but belongs to different user
+                $cvExists = UserCV::where('id', $id)->exists();
+                if ($cvExists) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You do not have permission to access this CV'
+                    ], 403);
+                }
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'CV not found'
+                ], 404);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'cv' => [
+                    'id' => $cv->id,
+                    'title' => $cv->title,
+                    'template_slug' => $cv->template_slug,
+                    'cv_data' => $cv->cv_data
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading CV: ' . $e->getMessage()
             ], 500);
         }
     }

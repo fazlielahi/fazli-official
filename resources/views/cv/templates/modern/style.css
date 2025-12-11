@@ -1,80 +1,533 @@
-/* Modern CV Template Styles */
+/* Modern CV Template Styles - Matching modern.html design */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Satisfy&display=swap');
 
 .cv-template.modern {
-    max-width: 210mm;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    color: #333;
-    background: #fff;
+    margin: 0;
+    background: #eeeeee;
+    display: flex;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
 }
 
-.cv-template.modern .cv-header {
+/* CV PAGE - A4 Size */
+.cv-template.modern .cv-page {
+    width: 210mm;
+    height: 297mm;
+    min-height: 297mm;
+    background: white;
+    position: relative;
+    box-shadow: 0 0 25px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+/* ---------- TOP GREEN SECTION ---------- */
+.cv-template.modern .top-green {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: 162px;
+    background: #8fae6f;
+}
+
+.cv-template.modern .top-content {
     text-align: center;
-    padding: 30px 0;
-    border-bottom: 3px solid #2563eb;
-    margin-bottom: 30px;
+    padding-top: 15px;
+    padding-left: 243px;
 }
 
-.cv-template.modern .cv-header h1 {
-    font-size: 32px;
-    font-weight: bold;
-    color: #2563eb;
-    margin: 0 0 10px 0;
+/* Circular logo */
+.cv-template.modern .logo-circle {
+    width: 65px;
+    height: 65px;
+    border: 2px solid #0F1A1A;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 5px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    color: #0F1A1A;
 }
 
-.cv-template.modern .cv-header p {
-    margin: 5px 0;
-    color: #666;
-    font-size: 14px;
+
+/* Handwritten name */
+.cv-template.modern .name {
+    font-family: "Allura", cursive;
+    font-size: 38px;
+    color: #0F1A1A;
+    margin: 0;
+    line-height: 1.1;
+    font-weight: 600;
 }
 
-.cv-template.modern .cv-body {
-    padding: 20px 0;
+.cv-template.modern .subtitle {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: #0F1A1A;
+    letter-spacing: 3px;
+    font-weight: 300;
+    text-transform: uppercase;
 }
 
-.cv-template.modern section {
-    margin-bottom: 30px;
+/* ---------- LEFT GREEN SECTION ---------- */
+.cv-template.modern .left-green {
+    position: absolute;
+    top: 0px;
+    left: 40px;
+    width: 216px;
+    height: 100%;
+    background: #4F7267;
+    padding-top: 65px;
+    padding-bottom: 40px;
+    color: white;
+    text-align: center;
+    font-family: 'Montserrat', 'Open Sans', 'Lato', 'Raleway', sans-serif;
 }
 
-.cv-template.modern section h2 {
-    font-size: 20px;
-    color: #2563eb;
-    border-bottom: 2px solid #2563eb;
-    padding-bottom: 5px;
+/* DIAMOND PHOTO WITH BORDER */
+.cv-template.modern .photo-box {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 64px;
+    transform: rotate(45deg);
+    overflow: hidden;
+    border-radius: 12px;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border: 3px solid white;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cv-template.modern .photo-box .profile-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-45deg);
+    background: #f5f5f5;
+}
+
+.cv-template.modern .photo-box .profile-placeholder .initials {
+    font-size: 48px;
+    font-weight: 700;
+    color: #355b5a;
+    text-transform: uppercase;
+}
+
+.cv-template.modern .photo-box .profile-placeholder .profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.3);
+    object-position: center;
+}
+
+/* SECTION TITLES IN LEFT */
+.cv-template.modern .left-green .section-title {
+    background: #82a14fde;
+    text-align: center;
+    padding: 6px 12px 2px 12px;
+    font-weight: 600;
+    margin: 21px 0 16px;
+    border-radius: 3px;
+    letter-spacing: 3px;
+    font-size: 13px;
+    color: white !important;
+    text-transform: uppercase;
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cv-template.modern .left-green .section-content {
+    padding: 0;
+    text-align: center;
+}
+
+.cv-template.modern .left-green .education-item {
+    margin-bottom: 0;
+    padding-bottom: 28px;
+    text-align: center;
+}
+
+.cv-template.modern .left-green .education-item:not(:last-child)::after {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 28px auto 0;
+}
+
+.cv-template.modern .left-green .education-item:last-child {
+    padding-bottom: 0;
+}
+
+.cv-template.modern .left-green .education-item .item-title {
+    margin: 0 0 -5px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #FFFFFF !important;
+    text-transform: uppercase;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+}
+
+.cv-template.modern .left-green .education-item .item-institution {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #E5E7E7 !important;
+    font-weight: 300;
+}
+
+.cv-template.modern .left-green .education-item .item-institution br {
+    display: block;
+    content: '';
+    margin-top: 4px;
+}
+
+.cv-template.modern .left-green .education-item .item-period {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #E5E7E7 !important;
+    font-weight: 300;
+}
+
+/* Contact Section */
+.cv-template.modern .left-green .contact .section-content {
+    padding: 0;
+    text-align: center;
+}
+
+.cv-template.modern .left-green .contact-info {
+    display: block;
+    text-align: center;
+}
+
+.cv-template.modern .left-green .contact-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #ffffff !important;
+}
+
+.cv-template.modern .left-green .contact-item:last-child {
+    margin-bottom: 0;
+}
+
+.cv-template.modern .left-green .contact-icon {
+    font-size: 13px;
+    color: #ffffff !important;
+    background: #82a14f;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+}
+
+.cv-template.modern .left-green .contact-icon i {
+    color: #ffffff !important;
+}
+
+.cv-template.modern .left-green .contact-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.cv-template.modern .left-green .contact-text {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #F0F0F0 !important;
+    font-weight: 300;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* Certifications */
+.cv-template.modern .left-green .certification-item {
     margin-bottom: 15px;
 }
 
-.cv-template.modern .experience-item,
-.cv-template.modern .education-item {
+.cv-template.modern .left-green .certification-item .item-title {
+    margin: 8px 0 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+}
+
+.cv-template.modern .left-green .certification-item .item-issuer {
+    margin: 5px 0 15px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Languages */
+.cv-template.modern .left-green .language-item {
+    margin: 5px 0 15px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ---------- RIGHT CONTENT AREA ---------- */
+.cv-template.modern .right-content {
+    position: absolute;
+    top: 220px;
+    left: 280px;
+    width: 430px;
+    padding-right: 30px;
+    text-align: center;
+}
+
+.cv-template.modern .right-content .section-title {
+    background: #355b5a;
+    color: white !important;
+    padding: 6px 12px 2px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.cv-template.modern .right-content .section-content {
     margin-bottom: 20px;
 }
 
-.cv-template.modern .experience-item h3,
-.cv-template.modern .education-item h3 {
-    font-size: 18px;
-    margin: 0 0 5px 0;
-    color: #1e40af;
+.cv-template.modern .right-content .summary .section-content p {
+    font-size: 12px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    color: #333;
+    text-align: left;
 }
 
-.cv-template.modern .company,
-.cv-template.modern .institution {
-    font-weight: bold;
-    color: #555;
-    margin: 5px 0;
+/* Experience Items */
+
+.experience{
+    background-color: white !important;
+    padding: 1px 40px !important;
 }
 
-.cv-template.modern .period {
+.cv-template.modern .right-content .experience-item {
+    padding-bottom: 15px;
+    text-align: left;
+}
+
+.cv-template.modern .right-content .experience-item:not(:last-child)::after {
+    content: '';
+    display: block;
+    width: 80%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.15);
+    margin: 15px auto 0;
+}
+
+.cv-template.modern .right-content .experience-item:last-child {
+    padding-bottom: 0;
+}
+
+.cv-template.modern .right-content .experience-item .item-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.cv-template.modern .right-content .experience-item .item-company {
+    font-size: 12px;
+    margin: -5px 0 8px;
+    color: #666;
     font-style: italic;
-    color: #777;
-    margin: 5px 0;
 }
 
-/* Print styles */
+.cv-template.modern .right-content .experience-item .item-description {
+    font-size: 12px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* SKILLS */
+.cv-template.modern .right-content .skills-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+.cv-template.modern .right-content .skills-list li {
+    display: inline-block;
+    background: #e8f2e3;
+    padding: 6px 12px;
+    margin: 5px 5px 0 0;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #333;
+}
+
+/* Projects */
+.cv-template.modern .right-content .project-item {
+    margin-bottom: 15px;
+}
+
+.cv-template.modern .right-content .project-item .item-title {
+    margin: 5px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.cv-template.modern .right-content .project-item .item-technologies {
+    font-size: 12px;
+    margin: 3px 0 8px;
+    color: #666;
+    font-style: italic;
+}
+
+.cv-template.modern .right-content .project-item .item-description {
+    font-size: 12px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* Awards */
+.cv-template.modern .right-content .award-item {
+    margin-bottom: 15px;
+}
+
+.cv-template.modern .right-content .award-item .item-title {
+    margin: 5px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.cv-template.modern .right-content .award-item .item-organization {
+    font-size: 12px;
+    margin: 3px 0 8px;
+    color: #666;
+    font-style: italic;
+}
+
+.cv-template.modern .right-content .award-item .item-description {
+    font-size: 12px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* References */
+.cv-template.modern .right-content .references-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cv-template.modern .right-content .reference-item {
+    padding: 12px;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.cv-template.modern .right-content .reference-item .ref-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 6px 0;
+}
+
+.cv-template.modern .right-content .reference-item .ref-position,
+.cv-template.modern .right-content .reference-item .ref-company,
+.cv-template.modern .right-content .reference-item .ref-email,
+.cv-template.modern .right-content .reference-item .ref-phone {
+    font-size: 12px;
+    color: #666;
+    margin: 3px 0;
+}
+
+/* Print Styles - A4 */
 @media print {
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    
     .cv-template.modern {
+        background: white;
         padding: 0;
+    }
+    
+    .cv-template.modern .cv-page {
+        box-shadow: none;
+        width: 210mm;
+        height: 297mm;
+        page-break-after: avoid;
     }
 }
 
-
+/* Responsive Design */
+@media (max-width: 900px) {
+    .cv-template.modern .cv-page {
+        width: 100%;
+        height: auto;
+        min-height: 1100px;
+    }
+    
+    .cv-template.modern .top-green {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+    
+    .cv-template.modern .left-green {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+    }
+    
+    .cv-template.modern .right-content {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+}

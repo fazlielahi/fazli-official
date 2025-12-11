@@ -42,6 +42,8 @@ Route::group([
     Route::get('/cv', [\App\Http\Controllers\CvController::class, 'index'])->name('cv.gallery');
     Route::get('/cv/create/{slug}', [\App\Http\Controllers\CvController::class, 'builder'])->name('cv.builder');
     Route::post('/cv/save', [\App\Http\Controllers\CvController::class, 'save'])->name('cv.save');
+    Route::get('/cv/saved', [\App\Http\Controllers\CvController::class, 'getSavedCVs'])->name('cv.saved');
+    Route::get('/cv/load/{id}', [\App\Http\Controllers\CvController::class, 'loadCV'])->name('cv.load');
 
     //Blogs
     Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs');

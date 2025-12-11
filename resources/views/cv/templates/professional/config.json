@@ -1,0 +1,28 @@
+{
+    "name": "Professional",
+    "slug": "professional",
+    "description": "A clean, elegant, and professional CV template with a classic black and gold color scheme. Perfect for traditional industries and formal applications.",
+    "sections": {
+        "required": ["header"],
+        "optional": ["summary", "certifications", "awards", "projects", "skills", "languages", "references"]
+    },
+    "layout": {
+        "type": "single-column",
+        "header_style": "centered",
+        "section_spacing": "generous"
+    },
+    "styling": {
+        "primary_color": "#1a1a1a",
+        "accent_color": "#d4af37",
+        "font_family": "Georgia, serif",
+        "font_size": "16px",
+        "line_height": "1.7"
+    },
+    "features": [
+        "Elegant typography",
+        "Classic color scheme",
+        "Professional layout",
+        "Print-friendly design"
+    ]
+}
+

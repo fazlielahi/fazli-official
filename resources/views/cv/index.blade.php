@@ -24,10 +24,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet" />
     
-    <!-- Template styles -->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
-    
     <!-- Theme styles -->
     <link rel="stylesheet" href="{{ asset('styles/theme.css') }}" />
     <style>
@@ -187,5 +183,19 @@
     <!-- Bootstrap JS (Required for header dropdowns and mobile menu) -->
     <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    
+    {{-- Plugins --}}
+    <script src="{{ asset('assets/js/jquery.appear.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ asset('assets/js/aos.js') }}"></script>
+    
+    {{-- GSAP --}}
+    <script src="{{ asset('assets/js/gsap/gsap.js') }}"></script>
+    <script src="{{ asset('assets/js/gsap/ScrollTrigger.js') }}"></script>
+    <script src="{{ asset('assets/js/gsap/SplitText.js') }}"></script>
+    
+    {{-- Menu script --}}
+    <script src="{{ asset('js/menu.js') }}"></script>
+    
     <script src="{{ asset('assets/js/script.js') }}"></script>
 @endsection
