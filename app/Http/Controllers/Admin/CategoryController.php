@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Blog;
 use Illuminate\Support\Str;
@@ -12,23 +13,18 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-        // Check if the user is logged in: either session or cookie has 'user_id'
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-
-        $user = User::find($request->session()->get('user_id'));
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
         $categories = \App\Models\Category::all();
         return view('admin.active-category', compact('user', 'categories'));
     }
 
     public function create(Request $request)
     {
-        // Check if the user is logged in: either session or cookie has 'user_id'
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-        $user = User::find($request->session()->get('user_id'));
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
         return view('admin.create-category', compact('user'));
     }
 
@@ -47,9 +43,7 @@ class CategoryController extends Controller
 
     public function edit(Request $request, $lang, $id)
     {
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
+        // Middleware ensures user is authenticated
         $category = \App\Models\Category::findOrFail($id);
         return response()->json(['category' => $category]);
     }

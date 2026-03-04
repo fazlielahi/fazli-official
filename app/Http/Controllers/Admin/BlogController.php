@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
 
@@ -14,18 +15,11 @@ class BlogController extends Controller
     // show all blogs for admin
     public function showBlog(Request $request)
     {
-        // Check if the user is logged in: either session or cookie has 'user_id'
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-
-        $user = User::find($request->session()->get('user_id'));
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
         $categories = \App\Models\Category::all();
         $selectedCategory = $request->input('category_id');
-
-        if (!$user) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
 
         if($user->type === 'super_admin')
         {
@@ -48,14 +42,10 @@ class BlogController extends Controller
 
     public function approveBlog(Request $request, $lang, $id)
     {
-        if (!$request->session()->has('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-
-        $user = User::find($request->session()->get('user_id'));
-        if (!$user) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
+        
         if($user->type !== 'super_admin') {
             return redirect()->back()->with('error', 'Unauthorized');
         }
@@ -74,14 +64,10 @@ class BlogController extends Controller
 
     public function rejectBlog(Request $request, $lang, $id)
     {
-        if (!$request->session()->has('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-
-        $user = User::find($request->session()->get('user_id'));
-        if (!$user) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
+        
         if($user->type !== 'super_admin') {
             return redirect()->back()->with('error', 'Unauthorized');
         }
@@ -104,16 +90,9 @@ class BlogController extends Controller
 
     //function requestBlogs
     public function requestBlogs(Request $request) {
-
-        // Check if the user is logged in: either session or cookie has 'user_id'
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-
-        $user = User::find($request->session()->get('user_id'));
-        if (!$user) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
         $categories = \App\Models\Category::all();
         $selectedCategory = $request->input('category_id');
 
@@ -133,14 +112,9 @@ class BlogController extends Controller
 
     public function draftBlogs(Request $request)
     {
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-
-        $user = User::find($request->session()->get('user_id'));
-        if (!$user) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
         $categories = \App\Models\Category::all();
         $selectedCategory = $request->input('category_id');
         $blogs = \App\Models\Blog::where('status', 'draft')->where('created_by', $user->id);
@@ -153,13 +127,9 @@ class BlogController extends Controller
 
     public function create(Request $request)
     {
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-        $user = User::find($request->session()->get('user_id'));
-        if (!$user) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
         $categories = \App\Models\Category::all();
         if($user->type === 'super_admin')
         {
@@ -212,7 +182,8 @@ class BlogController extends Controller
             $thumbPath = $thumb->store('uploads', 'public');
         }
         
-        // dd($request->session()->get('user_id'));
+        // Get authenticated user ID using Laravel Auth
+        $userId = Auth::id();
 
         Blog::create([
             'title' => $request->input('title'),
@@ -220,14 +191,14 @@ class BlogController extends Controller
             'status' => $request->input('status') ?? 'draft',
             'image' =>  $imagePath,
             'thumb' =>  $thumbPath,
-            'created_by' => $request->session()->get('user_id'),
+            'created_by' => $userId,
             'category_id' => $request->input('category_id'),
             'meta_title' => $request->input('meta_title'),
             'meta_description' => $request->input('meta_description'),
             'meta_keywords' => $request->input('meta_keywords'),
         ]);
 
-        $user = User::find($request->session()->get('user_id'));
+        $user = Auth::user();
         // dd($user);
         if($user->type === 'super_admin')
         {
@@ -255,17 +226,10 @@ class BlogController extends Controller
     // Show form to edit an existing blog
     public function editBlog($locale, $id, Request $request)   
     {
-        // Check if the user is logged in: either session or cookie has 'user_id'
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
         $blog = Blog::findOrFail($id);
-
-        $user = User::find($request->session()->get('user_id'));
-        if (!$user) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
         $categories = \App\Models\Category::all();
 
         // check if user is allowed to edit this blog
@@ -349,7 +313,8 @@ class BlogController extends Controller
          $blog->meta_keywords = $request->input('meta_keywords');
          $blog->save();
 
-        $user = User::find($request->session()->get('user_id'));
+        // Get authenticated user using Laravel Auth
+        $user = Auth::user();
 
         if($user->type === 'super_admin')
         {
@@ -378,15 +343,14 @@ class BlogController extends Controller
     //delete the blog post
     public function delete(Request $request, $locale, $id)
     {
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
 
         //check if the user is allowed to delete this blog
-
         $blog = Blog::findOrFail($id);
-        $user = User::find(session()->get('user_id'));  
 
         $blog->delete();
-
-        $user = User::find($request->session()->get('user_id'));
 
         if($user->type === 'super_admin')
         {

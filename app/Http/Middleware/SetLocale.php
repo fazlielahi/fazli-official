@@ -17,7 +17,7 @@ class SetLocale
 
         // 2) override if URL contains a valid {lang}
         $uriLang = $request->route('lang');
-        if (in_array($uriLang, ['en', 'ar'])) {
+        if (in_array($uriLang, ['en', 'ar', 'ur'])) {
             App::setLocale($uriLang);
             Session::put('locale', $uriLang);
         }

@@ -1,0 +1,355 @@
+/* Classic CV Template Styles */
+/* Traditional, professional, and timeless design */
+
+.cv-template.classic {
+    max-width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 0;
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000;
+    background: #ffffff;
+    line-height: 1.6;
+}
+
+/* Header Section */
+.cv-template.classic .cv-header {
+    border-bottom: 3px solid #000000;
+    padding: 40px 50px;
+    text-align: center;
+    background: #ffffff;
+}
+
+.cv-template.classic .header-content {
+    max-width: 100%;
+}
+
+.cv-template.classic .cv-header .name {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0 0 15px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #000000;
+}
+
+.cv-template.classic .contact-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 14px;
+    color: #333333;
+}
+
+.cv-template.classic .contact-item {
+    color: #333333;
+}
+
+.cv-template.classic .contact-separator {
+    color: #666666;
+    margin: 0 5px;
+}
+
+/* Body Section */
+.cv-template.classic .cv-body {
+    padding: 40px 50px;
+}
+
+/* Section Styles */
+.cv-template.classic section {
+    margin-bottom: 30px;
+    page-break-inside: avoid;
+}
+
+.cv-template.classic .section-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    margin: 0 0 15px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #000000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cv-template.classic .section-content {
+    padding-left: 0;
+}
+
+/* Summary Section */
+.cv-template.classic .summary {
+    padding: 0;
+}
+
+.cv-template.classic .summary p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #333333;
+    text-align: justify;
+}
+
+/* Experience & Education Items */
+.cv-template.classic .experience-item,
+.cv-template.classic .education-item,
+.cv-template.classic .certification-item,
+.cv-template.classic .project-item,
+.cv-template.classic .award-item {
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.cv-template.classic .item-header {
+    margin-bottom: 8px;
+}
+
+.cv-template.classic .item-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cv-template.classic .item-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+    margin: 0;
+}
+
+.cv-template.classic .item-period {
+    font-size: 13px;
+    color: #333333;
+    font-weight: normal;
+    font-style: italic;
+    white-space: nowrap;
+}
+
+.cv-template.classic .item-company,
+.cv-template.classic .item-institution,
+.cv-template.classic .item-issuer,
+.cv-template.classic .item-organization {
+    font-size: 14px;
+    color: #333333;
+    font-weight: normal;
+    margin: 3px 0;
+    font-style: italic;
+}
+
+.cv-template.classic .item-technologies {
+    font-size: 13px;
+    color: #555555;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.cv-template.classic .item-credential {
+    font-size: 12px;
+    color: #666666;
+    margin-top: 3px;
+    font-family: 'Courier New', monospace;
+}
+
+.cv-template.classic .item-description {
+    margin-top: 10px;
+    color: #333333;
+    line-height: 1.7;
+    padding-left: 15px;
+    border-left: 2px solid #e0e0e0;
+}
+
+.cv-template.classic .item-description p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* Skills Section */
+.cv-template.classic .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 0;
+}
+
+.cv-template.classic .skill-item {
+    font-size: 13px;
+    color: #333333;
+    padding: 5px 0;
+}
+
+.cv-template.classic .skill-level {
+    font-size: 12px;
+    color: #666666;
+    font-style: italic;
+}
+
+/* Languages Section */
+.cv-template.classic .languages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cv-template.classic .language-item {
+    font-size: 13px;
+    color: #333333;
+    padding: 3px 0;
+}
+
+.cv-template.classic .language-name {
+    font-weight: bold;
+    color: #000000;
+}
+
+.cv-template.classic .language-proficiency {
+    font-size: 12px;
+    color: #666666;
+    font-style: italic;
+}
+
+/* Projects Section */
+.cv-template.classic .project-link {
+    color: #000000;
+    text-decoration: underline;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.cv-template.classic .project-link:hover {
+    color: #333333;
+}
+
+/* References Section */
+.cv-template.classic .references-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cv-template.classic .reference-item {
+    padding: 0;
+    border: none;
+}
+
+.cv-template.classic .ref-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000;
+    margin: 0 0 3px 0;
+}
+
+.cv-template.classic .ref-position {
+    font-size: 13px;
+    color: #333333;
+    margin: 2px 0;
+    font-style: italic;
+}
+
+.cv-template.classic .ref-company {
+    font-size: 13px;
+    color: #333333;
+    margin: 2px 0;
+}
+
+.cv-template.classic .ref-email,
+.cv-template.classic .ref-phone {
+    font-size: 12px;
+    color: #666666;
+    margin: 2px 0;
+}
+
+/* Print Styles */
+@media print {
+    .cv-template.classic {
+        padding: 0;
+        max-width: 100%;
+        box-shadow: none;
+    }
+    
+    .cv-template.classic .cv-header {
+        padding: 30px 20px;
+    }
+    
+    .cv-template.classic .cv-body {
+        padding: 20px;
+    }
+    
+    .cv-template.classic section {
+        page-break-inside: avoid;
+        margin-bottom: 20px;
+    }
+    
+    .cv-template.classic .experience-item,
+    .cv-template.classic .education-item,
+    .cv-template.classic .certification-item,
+    .cv-template.classic .project-item,
+    .cv-template.classic .award-item {
+        page-break-inside: avoid;
+    }
+    
+    .cv-template.classic .item-description {
+        border-left: 1px solid #e0e0e0;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cv-template.classic {
+        padding: 0;
+    }
+    
+    .cv-template.classic .cv-header {
+        padding: 30px 20px;
+    }
+    
+    .cv-template.classic .cv-header .name {
+        font-size: 28px;
+    }
+    
+    .cv-template.classic .cv-body {
+        padding: 25px 20px;
+    }
+    
+    .cv-template.classic .section-title {
+        font-size: 16px;
+    }
+    
+    .cv-template.classic .item-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cv-template.classic .item-period {
+        white-space: normal;
+    }
+}
+
+/* Classic Typography Enhancements */
+.cv-template.classic h1,
+.cv-template.classic h2,
+.cv-template.classic h3 {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.cv-template.classic .section-title {
+    font-weight: 700;
+}
+
+.cv-template.classic .item-title {
+    font-weight: 600;
+}
+
+/* Subtle dividers for better readability */
+.cv-template.classic .experience-item:not(:last-child),
+.cv-template.classic .education-item:not(:last-child),
+.cv-template.classic .certification-item:not(:last-child),
+.cv-template.classic .project-item:not(:last-child),
+.cv-template.classic .award-item:not(:last-child) {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+

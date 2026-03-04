@@ -18,6 +18,11 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif
+    
+    @if($locale == 'ur')
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
+    @endif
 
     <!-- responsive css -->
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-header.css')}}">
@@ -135,11 +140,11 @@
     @include("site.inc.cv")
 
     <!--Start Preloader-->
-    <div class="loader js-preloader">
+    <!-- <div class="loader js-preloader">
         <div></div>
         <div></div>
         <div></div>
-    </div>
+    </div> -->
     <!--End Preloader-->
 
     @yield('content')
@@ -163,5 +168,6 @@
     <script src="{{ asset('js/like.js') }}"></script>
     <script src="{{ asset('js/comment.js') }}"></script>
     <script src="{{ asset('js/share-blog.js') }}"></script>
+    <script src="{{ asset('js/confetti.js') }}"></script>
 </body>
 </html>

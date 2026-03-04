@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\Session;
     public function switch(string $lang, Request $request): RedirectResponse
     {
         // 1) validate & store
-        if (! in_array($lang, ['en', 'ar'])) {
+        if (! in_array($lang, ['en', 'ar', 'ur'])) {
             $lang = config('app.locale');
         }
         Session::put('locale', $lang);
         App::setLocale($lang);
 
-        // 2) grab the “referer” (last page URL)
+        // 2) grab the "referer" (last page URL)
         $previousUrl = url()->previous(); // e.g. https://example.com/en/erp?foo=bar
         $parts      = parse_url($previousUrl);
 
@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Session;
         $segments = explode('/', trim($path, '/')); // ['en','erp']
 
         // 4) if first segment is a locale, replace it; otherwise, prefix it
-        if (isset($segments[0]) && in_array($segments[0], ['ar','en'])) {
+        if (isset($segments[0]) && in_array($segments[0], ['ar','en','ur'])) {
             $segments[0] = $lang;
         } else {
             array_unshift($segments, $lang);

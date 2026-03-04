@@ -10,8 +10,8 @@
             display: none !important;
         }
     </style>
-@endsection
-
+@endsection 
+ 
 @section('head')
     <!-- Preload critical CSS -->
     <link rel="preload" href="{{ asset('assets/css/style.css') }}" as="style" />
@@ -290,6 +290,19 @@
         </div>
 
         <div class="form-group mt-3">
+            <label for="password_confirmation">{{ __('lang.Confirm Password') }}</label>
+            <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="{{ __('lang.Confirm Your Password') }}" class="form-control">
+            @error('password_confirmation')
+                <p style="color: rgb(160, 40, 50);"> {{ $message }}</p>
+                <style>
+                    #password_confirmation{
+                        border-color: rgb(160, 40, 50) !important;
+                    }
+                </style>
+            @enderror
+        </div>
+
+        <div class="form-group mt-3">
             <label for="photo">{{ __('lang.PhotoOptional') }}</label>
             
             <div class="photo-upload-container">
@@ -366,6 +379,11 @@
 
         {{-- Enhanced Photo Upload Script --}}
         <script>
+            // Define error and success messages for photo upload
+            const photoErrorInvalid = 'Invalid file type. Please upload an image file (jpg, png, jpeg, gif).';
+            const photoErrorSize = 'File size is too large. Maximum size is 5MB.';
+            const photoSuccess = 'Photo uploaded successfully!';
+            
             document.addEventListener('DOMContentLoaded', function () {
                 const dragDropZone = document.getElementById('photoDragDropZone');
                 const photoInput = document.getElementById('photo');

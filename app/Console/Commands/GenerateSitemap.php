@@ -41,7 +41,7 @@ class GenerateSitemap extends Command
             ->add(Url::create("{$baseUrl}/{$locale}/blogs"))
             ->add(Url::create("{$baseUrl}/{$locale}/books"))
             ->add(Url::create("{$baseUrl}/{$locale}/jobs"))
-            ->add(Url::create("{$baseUrl}/{$locale}/cv-create"))
+            ->add(Url::create("{$baseUrl}/{$locale}/cv"))
             ->add(Url::create("{$baseUrl}/{$locale}/contact"));
     
         // Add dynamic blog URLs

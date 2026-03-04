@@ -1,0 +1,21 @@
+# Mailtrap Configuration for .env file
+# Copy these lines to your .env file and replace with your Mailtrap credentials
+
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your-mailtrap-username-here
+MAIL_PASSWORD=your-mailtrap-password-here
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=test@thefazli.com
+MAIL_FROM_NAME="${APP_NAME}"
+
+# Alternative: For TLS encryption (Port 587)
+# MAIL_PORT=587
+# MAIL_ENCRYPTION=tls
+
+# After updating .env, run:
+# php artisan config:clear
+
+
+

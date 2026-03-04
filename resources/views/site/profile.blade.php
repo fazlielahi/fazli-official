@@ -198,7 +198,8 @@
     @php
         use App\Models\User;
         use App\Models\Blog;
-        $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
+        // Use Laravel Auth to get the authenticated user
+        $user = auth()->check() ? auth()->user() : null;
         $rejectedCount = 0;
         if ($user) {
             $rejectedCount = \App\Models\Blog::where('status', 'rejected')->where('created_by', $user->id)->count();

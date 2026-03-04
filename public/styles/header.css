@@ -63,3 +63,58 @@
 .header-button{
     margin: 0 30px;
 }
+
+/* Create CV Button - Simple Style */
+.btn-create-cv {
+    background: #1da370;
+    color: #fff !important;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: visible;
+}
+
+.btn-create-cv:hover {
+    background: #0d8a5a;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+/* Light Theme Styles */
+body[data-theme="light"] .btn-create-cv {
+    color: #212529 !important;
+    box-shadow: 0 2px 8px rgba(29, 163, 112, 0.3);
+}
+
+body[data-theme="light"] .btn-create-cv:hover {
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(29, 163, 112, 0.4);
+}
+
+/* Simple Confetti Particles */
+.confetti-dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #1da370;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+
+@media (max-width: 768px) {
+    .btn-create-cv {
+        padding: 8px 16px;
+        font-size: 13px;
+        margin-right: 10px;
+    }
+}

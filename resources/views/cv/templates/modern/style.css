@@ -1,0 +1,764 @@
+/* Modern CV Template Styles - PDF-friendly with CSS Grid only */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Satisfy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Montserrat:wght@300;400;600&display=swap');
+
+.cv-template.modern {
+    margin: 0;
+    background: #eeeeee;
+    display: flex;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* CV PAGE - A4 Size */
+.cv-template.modern .cv-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: white;
+    position: relative;
+    box-shadow: 0 0 25px rgba(0,0,0,0.15);
+    overflow: visible;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 
+        "top-bar"
+        "main";
+        margin: 20px;
+}
+
+/* ---------- TOP GREEN SECTION ---------- */
+.cv-template.modern .top-green {
+    grid-area: top-bar;
+    min-height: 42.9mm;
+    background: #8fae6f;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 57.2mm 0.3mm 1fr;
+    grid-template-areas: "photo-container gap top-content-area";
+    align-items: center;
+}
+
+/* Photo Container Box - Aligned with Left Sidebar */
+.cv-template.modern .top-green .photo-container-box {
+    grid-area: photo-container;
+    background: #4F7267;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 23px 0 0 0;
+    height: 100%;
+}
+
+.cv-template.modern .top-green .photo-box {
+    width: 100px;
+    height: 100px;
+    margin: 0;
+    transform: rotate(45deg);
+    overflow: hidden;
+    border-radius: 3px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border: 3px solid white;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cv-template.modern .top-green .photo-box .profile-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-45deg);
+    background: #f5f5f5;
+}
+
+.cv-template.modern .top-green .photo-box .profile-placeholder .initials {
+    font-size: 48px;
+    font-weight: 700;
+    color: #355b5a;
+    text-transform: uppercase;
+}
+
+.cv-template.modern .top-green .photo-box .profile-placeholder .profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.3);
+    object-position: center;
+}
+
+.cv-template.modern .top-content {
+    grid-area: top-content-area;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 15px;
+    padding-left: 0;
+    width: 100%;
+}
+
+/* Circular logo */
+.cv-template.modern .logo-circle {
+    width: 65px;
+    height: 65px;
+    border: 2px solid #0F1A1A;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 5px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    color: #0F1A1A;
+}
+
+/* Handwritten name */
+.cv-template.modern .name {
+    font-family: "Allura", cursive;
+    font-size: 38px;
+    color: #0F1A1A;
+    margin: 0;
+    line-height: 1.1;
+    font-weight: 600;
+}
+
+.cv-template.modern .subtitle {
+    font-family: "Montserrat", sans-serif;
+    font-size: 13px;
+    color: #0F1A1A;
+    letter-spacing: 3px;
+    font-weight: 300;
+    text-transform: uppercase;
+}
+
+/* ---------- MAIN CONTENT GRID ---------- */
+.cv-template.modern .main-content {
+    grid-area: main;
+    display: grid;
+    grid-template-columns: 57.2mm 6.3mm 1fr;
+    grid-template-areas: "left-green gap right-content";
+    width: 100%;
+}
+
+/* ---------- LEFT GREEN SECTION ---------- */
+.cv-template.modern .left-green {
+    grid-area: left-green;
+    background: #4F7267;
+    padding-top: 0px;
+    padding-bottom: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: white;
+    text-align: center;
+    font-family: 'Montserrat', 'Open Sans', 'Lato', 'Raleway', sans-serif;
+}
+
+/* DIAMOND PHOTO WITH BORDER - Moved to top-green, styles above */
+
+/* SECTION TITLES IN LEFT */
+.cv-template.modern .left-green .section-title {
+    background: #82a14fde;
+    text-align: center;
+    padding: 8px 12px 4px 12px;
+    font-weight: 600;
+    margin: 25px 0 12px 0;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    font-size: 13px;
+    color: white !important;
+    text-transform: uppercase;
+    width: 100%;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cv-template.modern .left-green .section-content {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+/* Education Items */
+.cv-template.modern .left-green .education-item {
+    margin-bottom: 0;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+.cv-template.modern .left-green .education-item:not(:last-child)::after {
+    content: '';
+    display: block;
+    width: calc(100% - 40px);
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 15px auto 0;
+}
+
+.cv-template.modern .left-green .education-item .item-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: white !important;
+    line-height: 1.3;
+}
+
+.cv-template.modern .left-green .education-item .item-institution {
+    font-size: 13px;
+    margin: 0 0 4px;
+    color: rgba(255, 255, 255, 0.9) !important;
+    line-height: 1.4;
+}
+
+.cv-template.modern .left-green .education-item .item-period {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8) !important;
+    display: block;
+    line-height: 1.4;
+}
+
+/* Contact Items */
+.cv-template.modern .left-green .contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.cv-template.modern .left-green .contact-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0;
+    width: 100%;
+}
+
+.cv-template.modern .left-green .contact-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 5px;
+    flex-shrink: 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(130, 161, 79, 0.5);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cv-template.modern .left-green .contact-text-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.cv-template.modern .left-green .contact-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9) !important;
+    word-break: break-word;
+    display: block;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* Languages */
+.cv-template.modern .left-green .languages-list {
+    text-align: center;
+}
+
+.cv-template.modern .left-green .language-item {
+    margin-bottom: 12px;
+}
+
+.cv-template.modern .left-green .language-item:last-child {
+    margin-bottom: 0;
+}
+
+.cv-template.modern .left-green .language-name-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.cv-template.modern .left-green .language-name {
+    font-size: 12px;
+    color: white !important;
+    line-height: 1.4;
+}
+
+.cv-template.modern .left-green .language-proficiency-badge {
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 3px;
+    color: white !important;
+}
+
+/* References */
+.cv-template.modern .left-green .references-list {
+    text-align: center;
+}
+
+.cv-template.modern .left-green .reference-item {
+    margin-bottom: 0;
+    padding-bottom: 15px;
+}
+
+.cv-template.modern .left-green .reference-item:not(:last-child)::after {
+    content: '';
+    display: block;
+    width: calc(100% - 40px);
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 15px auto 0;
+}
+
+.cv-template.modern .left-green .reference-item .ref-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: white !important;
+    display: block;
+    line-height: 1.3;
+}
+
+.cv-template.modern .left-green .reference-item .ref-position {
+    margin: 0 0 4px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 400;
+    font-style: italic;
+    display: block;
+}
+
+.cv-template.modern .left-green .reference-item .ref-company {
+    margin: 0 0 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 300;
+    display: block;
+}
+
+.cv-template.modern .left-green .reference-item .ref-email,
+.cv-template.modern .left-green .reference-item .ref-phone {
+    margin: 3px 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 300;
+    display: block;
+    word-break: break-word;
+}
+
+.cv-template.modern .left-green .reference-item .ref-email::before {
+    content: '✉ ';
+    font-size: 2.6pt;
+    opacity: 0.8;
+}
+
+.cv-template.modern .left-green .reference-item .ref-phone::before {
+    content: '☎ ';
+    font-size: 2.6pt;
+    opacity: 0.8;
+}
+
+/* ---------- RIGHT CONTENT AREA ---------- */
+.cv-template.modern .right-content {
+    grid-area: right-content;
+    padding-top: 15px;
+    padding-right: 30px;
+    padding-left: 0px;
+    text-align: center;
+}
+
+.cv-template.modern .right-content .section-title {
+    background: #355b5a;
+    color: white !important;
+    padding: 6px 12px 2px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 16px;
+    border-radius: 3px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.cv-template.modern .right-content .section-content {
+    margin-bottom: 10.3mm;
+}
+
+.cv-template.modern .right-content .summary .section-content p {
+    font-size: 12px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    color: #333;
+    text-align: left;
+}
+
+/* Experience Items */
+.experience{
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    box-shadow: 0 !important;
+}
+
+.cv-template.modern .right-content .experience-item {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    text-align: left;
+    border-left: 3px solid #8fae6f;
+    padding-left: 15px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.cv-template.modern .right-content .experience-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.cv-template.modern .right-content .experience-item .item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0F1A1A;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.cv-template.modern .right-content .experience-item .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #666;
+    flex-wrap: nowrap;
+}
+
+.cv-template.modern .right-content .experience-item .item-company {
+    font-weight: 500;
+    color: #355b5a;
+    white-space: nowrap;
+}
+
+.cv-template.modern .right-content .experience-item .item-period {
+    color: #888;
+    font-style: italic;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.cv-template.modern .right-content .experience-item .item-period::before {
+    content: '• ';
+    color: #999;
+    margin: 0 4px;
+}
+
+.cv-template.modern .right-content .experience-item .item-description {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #555;
+    margin: 0;
+    text-align: justify;
+}
+
+/* Skills */
+.cv-template.modern .right-content .skills-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    text-align: left;
+}
+
+.cv-template.modern .right-content .skill-item {
+    margin-bottom: 0;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border-left: 3px solid #8fae6f;
+    border-radius: 3px;
+}
+
+.cv-template.modern .right-content .skill-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 8px;
+}
+
+.cv-template.modern .right-content .skill-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0F1A1A;
+    flex: 1;
+    line-height: 1.3;
+}
+
+.cv-template.modern .right-content .skill-level-badge {
+    font-size: 9px;
+    background: #355b5a;
+    color: white !important;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.cv-template.modern .right-content .skill-progress-container {
+    width: 100%;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.cv-template.modern .right-content .skill-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #8fae6f 0%, #82a14f 100%);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Languages in Right Content */
+.cv-template.modern .right-content .languages-list {
+    text-align: left;
+}
+
+.cv-template.modern .right-content .language-item {
+    margin-bottom: 10px;
+}
+
+.cv-template.modern .right-content .language-name-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-left: 3px solid #8fae6f;
+    border-radius: 3px;
+    transition: background 0.2s ease;
+}
+
+.cv-template.modern .right-content .language-name-row:hover {
+    background: #f0f0f0;
+}
+
+.cv-template.modern .right-content .language-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #0F1A1A;
+    flex: 1;
+}
+
+.cv-template.modern .right-content .language-proficiency-badge {
+    font-size: 9px;
+    background: #355b5a;
+    color: white !important;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+/* Certifications Section */
+.cv-template.modern .right-content .certifications {
+    background-color: #ffffff !important;
+}
+
+.cv-template.modern .right-content .certification-item {
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+    text-align: left;
+}
+
+.cv-template.modern .right-content .certification-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.cv-template.modern .right-content .certification-item .item-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0F1A1A;
+    margin: 0 0 8px;
+    line-height: 1.3;
+}
+
+.cv-template.modern .right-content .certification-item .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #666;
+    flex-wrap: wrap;
+}
+
+.cv-template.modern .right-content .certification-item .item-issuer {
+    font-weight: 600;
+    color: #355b5a;
+}
+
+.cv-template.modern .right-content .certification-item .item-date {
+    color: #888;
+    font-style: italic;
+}
+
+.cv-template.modern .right-content .certification-item .item-date::before {
+    content: '• ';
+    color: #999;
+}
+
+.cv-template.modern .right-content .certification-item .item-credential {
+    font-size: 11px;
+    color: #777;
+    margin: 6px 0 0 0;
+    font-family: 'Courier New', monospace;
+    line-height: 1.5;
+}
+
+/* Print Styles - A4 */
+@media print {
+    @page {
+        size: A4;
+        margin: 0;
+        margin-top: 10mm;
+    }
+    
+    @page :first {
+        margin-top: 0;
+    }
+    
+    .cv-template.modern {
+        background: white;
+        padding: 0;
+        display: flex !important;
+        justify-content: center !important;
+    }
+    
+    .cv-template.modern .cv-page {
+        box-shadow: none;
+        width: 210mm !important;
+        min-height: 297mm;
+        page-break-after: avoid;
+        display: grid !important;
+        grid-template-rows: auto 1fr !important;
+        grid-template-areas: 
+            "top-bar"
+            "main" !important;
+            margin: 20px;
+    }
+    
+    .cv-template.modern .top-green {
+        grid-area: top-bar !important;
+        min-height: 42.9mm;
+        background: #8fae6f !important;
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: 57.2mm 0.3mm 1fr !important;
+        grid-template-areas: "photo-container gap top-content-area" !important;
+        page-break-inside: avoid;
+    }
+    
+    .cv-template.modern .main-content {
+        grid-area: main !important;
+        display: grid !important;
+        grid-template-columns: 57.2mm 6.3mm 1fr !important;
+        grid-template-areas: "left-green gap right-content" !important;
+        width: 100% !important;
+    }
+    
+    .cv-template.modern .left-green {
+        grid-area: left-green !important;
+        background: #4F7267 !important;
+        width: 100% !important;
+    }
+    
+    .cv-template.modern .right-content {
+        grid-area: right-content !important;
+        width: 100% !important;
+    }
+    
+    .cv-template.modern .photo-container-box {
+        grid-area: photo-container !important;
+        background: #4F7267 !important;
+    }
+    
+    .cv-template.modern .top-content {
+        grid-area: top-content-area !important;
+    }
+    
+    /* Remove spacing between name and subtitle in print */
+    .cv-template.modern .name {
+        margin: 0 !important;
+        margin-bottom: 0 !important;
+        line-height: 1.1 !important;
+    }
+    
+    .cv-template.modern .subtitle {
+        margin: 0 !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
+    /* Prevent sections from breaking across pages */
+    .cv-template.modern section {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    
+    .cv-template.modern .section-content {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    
+    .cv-template.modern .experience-item,
+    .cv-template.modern .education-item,
+    .cv-template.modern .certification-item,
+    .cv-template.modern .skill-item,
+    .cv-template.modern .language-item,
+    .cv-template.modern .reference-item {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    .cv-template.modern .cv-page {
+        width: 100%;
+        height: auto;
+        min-height: 1100px;
+    }
+    
+    .cv-template.modern .main-content {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "left-green"
+            "right-content";
+    }
+    
+    .cv-template.modern .left-green {
+        width: 100%;
+        height: auto;
+    }
+    
+    .cv-template.modern .right-content {
+        width: 100%;
+        padding: 20px;
+    }
+}
+

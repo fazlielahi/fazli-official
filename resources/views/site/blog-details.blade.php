@@ -374,7 +374,8 @@
                                 <form method="POST" action="{{ route('localized.blog.comment', ['lang' => app()->getLocale(), $blog->id]) }}" class="comment-form ajax-comment-form" id="comment-form-{{ $blog->id }}">
                                     @csrf
                                     @php 
-                                        $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
+                                        // Use Laravel Auth to get the authenticated user
+                                        $user = auth()->check() ? auth()->user() : null;
                                     @endphp
                                                             
                                     @if((!isset($user) || !$user) && (!Cookie::get('visiter_token') || !\App\Models\Comment::where('visiter_token', Cookie::get('visiter_token'))->exists()))

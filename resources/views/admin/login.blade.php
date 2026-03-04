@@ -11,7 +11,7 @@
         }
     </style>
 @endsection
-
+ 
 @section('head')
     <!-- Preload critical CSS -->
     <link rel="preload" href="{{ asset('assets/css/style.css') }}" as="style" />
@@ -91,6 +91,20 @@
         </span>
     @endif
 
+    {{-- Display rate limit and general errors --}}
+    @if ($errors->any())
+        <div id="rateLimitError" style="color: rgb(160, 40, 50); padding: 10px; background-color: rgba(160, 40, 50, 0.1); border-radius: 5px; margin-bottom: 15px;">
+            @foreach ($errors->all() as $error)
+                <p style="margin: 0;">
+                    <strong>{{ $error }}</strong>
+                    @if(session('throttle_seconds'))
+                        <span id="countdown" style="font-weight: bold; color: rgb(160, 40, 50);"></span>
+                    @endif
+                </p>
+            @endforeach
+        </div>
+    @endif
+
     <form method="post" action="{{ route('localized.login', ['lang' => app()->getlocale()]) }}">
         @csrf
 
@@ -155,12 +169,10 @@
         </div>
 
         <div class="forgot-password d-flex" style="align-items: flex-start; justify-content: space-between">
-            <button type="submit" class="btn text-light btn-sm mt-2" style="background: #21cf8c; color:rgb(13, 14, 13) !important;">{{ __('lang.Login') }}</button>
-            @if (Route::has('password.request'))
-                <a style="color:rgb(20, 57, 82); font-size: small;" href="{{ route('password.request', ['lang' => app()->getLocale()]) }}">
-                    {{ __('lang.Forgot Your Password?') }}
-                </a>
-            @endif
+            <button type="submit" id="loginButton" class="btn text-light btn-sm mt-2" style="background: #21cf8c; color:rgb(13, 14, 13) !important;">{{ __('lang.Login') }}</button>
+            <a style="color:rgb(20, 57, 82); font-size: small;" href="{{ route('localized.password.request', ['lang' => app()->getLocale()]) }}">
+                {{ __('lang.Forgot Your Password?') }}
+            </a>
         </div>
 
         <p class="mt-3">
@@ -237,5 +249,61 @@
             this.textContent = type === 'password' ? '👁️' : '🙈';
         });
     </script>
+
+    {{-- Rate Limit Countdown Script --}}
+    @if(session('throttle_seconds'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const throttleSeconds = {{ session('throttle_seconds', 0) }};
+            const countdownElement = document.getElementById('countdown');
+            const loginButton = document.getElementById('loginButton');
+            const rateLimitError = document.getElementById('rateLimitError');
+            
+            if (throttleSeconds > 0 && countdownElement && loginButton) {
+                // Store original button text
+                const originalButtonText = loginButton.textContent.trim();
+                let remainingSeconds = throttleSeconds;
+                
+                // Disable login button immediately
+                loginButton.disabled = true;
+                loginButton.style.opacity = '0.6';
+                loginButton.style.cursor = 'not-allowed';
+                loginButton.textContent = originalButtonText + ' ({{ __("lang.Wait") }})';
+                
+                // Update countdown display
+                function updateCountdown() {
+                    if (remainingSeconds > 0) {
+                        const minutes = Math.floor(remainingSeconds / 60);
+                        const seconds = remainingSeconds % 60;
+                        const timeString = minutes > 0 
+                            ? minutes + ':' + (seconds < 10 ? '0' : '') + seconds
+                            : seconds + 's';
+                        
+                        countdownElement.textContent = ' (' + timeString + ')';
+                        remainingSeconds--;
+                        
+                        // Continue countdown
+                        setTimeout(updateCountdown, 1000);
+                    } else {
+                        // Countdown finished - re-enable button
+                        countdownElement.textContent = '';
+                        loginButton.disabled = false;
+                        loginButton.style.opacity = '1';
+                        loginButton.style.cursor = 'pointer';
+                        loginButton.textContent = originalButtonText;
+                        
+                        // Hide error message
+                        if (rateLimitError) {
+                            rateLimitError.style.display = 'none';
+                        }
+                    }
+                }
+                
+                // Start countdown
+                updateCountdown();
+            }
+        });
+    </script>
+    @endif
 
 @endsection

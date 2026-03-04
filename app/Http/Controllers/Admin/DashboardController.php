@@ -3,28 +3,23 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class DashboardController extends Controller
 {
     /**
-     * Show the dashboard to the loged in users only
+     * Show the dashboard to logged in users only
+     * 
+     * Now using Laravel Auth - middleware handles authentication check
      */
 
     public function index(Request $request)
     {
-        // Check if the user is logged in: either session or cookie has 'user_id'
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-        
-        // auth()->user();
-        auth()->check();
-        $user = User::find($request->session()->get('user_id'));
+        // Get the authenticated user using Laravel Auth
+        // No need for manual session checks - middleware handles authentication
+        $user = Auth::user();
 
         return view('admin.dashboard', ['user' => $user]);
-
     }
 }

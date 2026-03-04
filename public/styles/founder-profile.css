@@ -1,0 +1,908 @@
+/* Experience Timeline Styles */
+.experience-timeline {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 40px 20px;
+    background: #ffffff;
+    border-radius: 12px;
+}
+
+.experience-timeline__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 26px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+
+.section-toggle-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.section-toggle-btn:hover {
+    background: rgba(33, 207, 140, 0.1);
+    transform: scale(1.1);
+}
+
+.section-toggle-btn i {
+    transition: transform 0.3s ease;
+}
+
+.section-toggle-btn.collapsed i {
+    transform: rotate(-90deg);
+}
+
+.experience-timeline__content {
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.experience-timeline__content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+}
+
+.experience-timeline__list {
+    position: relative;
+    padding-left: 0;
+    list-style: none;
+}
+
+/* Timeline line */
+.experience-timeline__list::before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e5e7eb;
+    z-index: 1;
+}
+
+.experience-timeline__item {
+    position: relative;
+    margin-bottom: 40px;
+    padding-left: 70px;
+}
+
+.experience-timeline__item:last-child {
+    margin-bottom: 0;
+}
+
+/* Company entry */
+.experience-timeline__company {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.experience-timeline__icon {
+    position: absolute;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: #fff;
+    border: 3px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.experience-timeline__icon img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.experience-timeline__icon--novo {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.experience-timeline__icon--postman {
+    background: #ff6c37;
+    border-color: #ff6c37;
+}
+
+.experience-timeline__icon--masia {
+    background: #21cf8c;
+    border-color: #21cf8c;
+}
+
+.experience-timeline__company-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+/* Role entry */
+.experience-timeline__role {
+    margin-left: 0;
+    margin-bottom: 8px;
+    padding-left: 0;
+}
+
+.experience-timeline__role:last-child {
+    margin-bottom: 0;
+}
+
+.experience-timeline__role-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.experience-timeline__role-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.experience-timeline__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.experience-timeline__status-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.experience-timeline__status-icon--check {
+    background: #10b981;
+    color: #fff;
+}
+
+.experience-timeline__status-icon--star {
+    background: #ff6c37;
+    color: #fff;
+}
+
+.experience-timeline__role-details {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin-left: 0;
+}
+
+.experience-timeline__role-details span {
+    margin-right: 12px;
+}
+
+.experience-timeline__role-details span:not(:last-child)::after {
+    content: '•';
+    margin-left: 12px;
+    color: #9ca3af;
+}
+
+.experience-timeline__role-description {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.experience-timeline__description-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.experience-timeline__description-list li {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.8;
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+}
+
+.experience-timeline__description-list li:last-child {
+    margin-bottom: 0;
+}
+
+.experience-timeline__description-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #21cf8c;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Experience Media Section */
+.experience-timeline__media-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.experience-timeline__media-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.experience-timeline__media-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    padding: 10px 0;
+    margin: 0 -10px;
+}
+
+.experience-timeline__media-scroll::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.experience-timeline__media-items {
+    display: flex;
+    gap: 15px;
+    padding: 0 10px;
+    min-width: min-content;
+}
+
+.experience-timeline__media-item {
+    flex: 0 0 auto;
+    width: 160px;
+    min-width: 160px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.experience-timeline__media-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(33, 207, 140, 0.3);
+    border-color: #21cf8c;
+}
+
+.experience-timeline__media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.experience-timeline__media-item:hover img {
+    transform: scale(1.05);
+}
+
+.experience-timeline__media-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    opacity: 1;
+    pointer-events: all;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.experience-timeline__media-container:hover .experience-timeline__media-nav {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.experience-timeline__media-nav:hover {
+    background: #21cf8c;
+    border-color: #21cf8c;
+    color: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.experience-timeline__media-nav i {
+    font-size: 14px;
+    color: #1a1a1a;
+    transition: color 0.3s ease;
+    display: block;
+}
+
+.experience-timeline__media-nav:hover i {
+    color: #fff;
+}
+
+.experience-timeline__media-nav--prev {
+    left: 10px;
+}
+
+.experience-timeline__media-nav--next {
+    right: 10px;
+}
+
+.experience-timeline__media-nav.hidden {
+    display: none;
+}
+
+.experience-timeline__media-nav.disabled {
+    opacity: 0.3 !important;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* Nested roles (same company) */
+.experience-timeline__item--nested {
+    padding-left: 90px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.experience-timeline__item--nested .experience-timeline__icon {
+    left: 20px;
+    width: 40px;
+    height: 40px;
+}
+
+.experience-timeline__item--nested .experience-timeline__icon img {
+    width: 26px;
+    height: 26px;
+}
+
+/* Light theme support */
+body[data-theme="light"] .experience-timeline {
+    background: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"] .experience-timeline__title {
+    color: #1a1a1a;
+}
+
+body[data-theme="light"] .experience-timeline__company-name {
+    color: #1a1a1a;
+}
+
+body[data-theme="light"] .experience-timeline__role-title {
+    color: #1a1a1a;
+}
+
+body[data-theme="light"] .experience-timeline__role-details {
+    color: #6b7280;
+}
+
+body[data-theme="light"] .experience-timeline__role-description {
+    border-top-color: #e5e7eb;
+}
+
+body[data-theme="light"] .experience-timeline__description-list li {
+    color: #6b7280;
+}
+
+body[data-theme="light"] .experience-timeline__media-section {
+    border-top-color: #e5e7eb;
+}
+
+body[data-theme="light"] .experience-timeline__media-item {
+    border-color: #e5e7eb;
+}
+
+body[data-theme="light"] .experience-timeline__list::before {
+    background: #e5e7eb;
+}
+
+body[data-theme="light"] .experience-timeline__icon {
+    background: #fff;
+    border-color: #e5e7eb;
+}
+
+/* Dark theme support */
+body[data-theme="dark"] .experience-timeline,
+body:not([data-theme="light"]) .experience-timeline {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .experience-timeline__title,
+body:not([data-theme="light"]) .experience-timeline__title {
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .experience-timeline__company-name,
+body:not([data-theme="light"]) .experience-timeline__company-name {
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .experience-timeline__role-title,
+body:not([data-theme="light"]) .experience-timeline__role-title {
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .experience-timeline__role-details,
+body:not([data-theme="light"]) .experience-timeline__role-details {
+    color: #d1d5db;
+}
+
+body[data-theme="dark"] .experience-timeline__role-description,
+body:not([data-theme="light"]) .experience-timeline__role-description {
+    border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+body[data-theme="dark"] .experience-timeline__description-list li,
+body:not([data-theme="light"]) .experience-timeline__description-list li {
+    color: #d1d5db;
+}
+
+body[data-theme="dark"] .experience-timeline__media-section,
+body:not([data-theme="light"]) .experience-timeline__media-section {
+    border-top-color: rgba(255, 255, 255, 0.2);
+}
+
+body[data-theme="dark"] .experience-timeline__media-item,
+body:not([data-theme="light"]) .experience-timeline__media-item {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] .experience-timeline__media-nav,
+body:not([data-theme="light"]) .experience-timeline__media-nav {
+    background: rgba(31, 41, 55, 0.95);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body[data-theme="dark"] .experience-timeline__media-nav i,
+body:not([data-theme="light"]) .experience-timeline__media-nav i {
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .experience-timeline__list::before,
+body:not([data-theme="light"]) .experience-timeline__list::before {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body[data-theme="dark"] .experience-timeline__icon,
+body:not([data-theme="light"]) .experience-timeline__icon {
+    background: #1f2937;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body[data-theme="dark"] .section-toggle-btn,
+body:not([data-theme="light"]) .section-toggle-btn {
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .section-toggle-btn:hover,
+body:not([data-theme="light"]) .section-toggle-btn:hover {
+    background: rgba(33, 207, 140, 0.2);
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .experience-timeline {
+        margin: 40px auto;
+        padding: 30px 15px;
+    }
+
+    .experience-timeline__title {
+        font-size: 24px;
+        margin-bottom: 40px;
+    }
+
+    .experience-timeline__item {
+        padding-left: 60px;
+    }
+
+    .experience-timeline__icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .experience-timeline__icon img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .experience-timeline__company-name {
+        font-size: 16px;
+    }
+
+    .experience-timeline__role-title {
+        font-size: 14px;
+    }
+
+    .experience-timeline__role-details {
+        font-size: 12px;
+    }
+
+    .experience-timeline__role-description {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+
+    .experience-timeline__description-list li {
+        font-size: 13px;
+        margin-bottom: 6px;
+        padding-left: 20px;
+    }
+
+    .experience-timeline__media-section {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .experience-timeline__media-item {
+        width: 140px;
+        min-width: 140px;
+        height: 100px;
+    }
+
+    .experience-timeline__media-nav {
+        width: 32px;
+        height: 32px;
+    }
+
+    .experience-timeline__media-nav i {
+        font-size: 12px;
+    }
+
+    .experience-timeline__item--nested {
+        padding-left: 70px;
+    }
+
+    .experience-timeline__item--nested .experience-timeline__icon {
+        width: 36px;
+        height: 36px;
+        left: 15px;
+    }
+
+    .experience-timeline__title,
+    .skills-timeline__title {
+        font-size: 24px;
+    }
+
+    .section-toggle-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .experience-timeline {
+        padding: 20px 10px;
+    }
+
+    .experience-timeline__title {
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
+
+    .experience-timeline__item {
+        padding-left: 50px;
+    }
+
+    .experience-timeline__icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .experience-timeline__icon img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .experience-timeline__list::before {
+        left: 18px;
+    }
+
+    .experience-timeline__title,
+    .skills-timeline__title {
+        font-size: 20px;
+    }
+
+    .section-toggle-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        padding: 6px 10px;
+    }
+
+    .experience-timeline__media-section {
+        margin-top: 12px;
+        padding-top: 12px;
+    }
+
+    .experience-timeline__media-item {
+        width: 120px;
+        min-width: 120px;
+        height: 90px;
+    }
+
+    .experience-timeline__media-nav {
+        width: 28px;
+        height: 28px;
+    }
+
+    .experience-timeline__media-nav i {
+        font-size: 11px;
+    }
+}
+
+/* Skills Timeline Styles - Matching Experience Timeline Theme */
+.skills-timeline {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 40px 20px;
+    background: #ffffff;
+    border-radius: 12px;
+}
+
+.skills-timeline__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 40px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+
+.skills-timeline__content {
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    max-height: 2000px;
+    opacity: 1;
+}
+
+.skills-timeline__content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+}
+
+.skills-timeline__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.skill-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.skill-item:hover {
+    background: #f3f4f6;
+    border-color: #21cf8c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 207, 140, 0.2);
+}
+
+.skill-item__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.skill-item:hover .skill-item__icon {
+    border-color: #21cf8c;
+    background: rgba(33, 207, 140, 0.1);
+}
+
+.skill-item__icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.skill-item__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.skill-item__name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+}
+
+.skill-item__percentage {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.skill-item:hover .skill-item__name {
+    color: #21cf8c;
+}
+
+.skill-item:hover .skill-item__percentage {
+    color: #21cf8c;
+}
+
+/* Light theme support */
+body[data-theme="light"] .skills-timeline {
+    background: #fff !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+body[data-theme="light"] .skills-timeline__title {
+    color: #1a1a1a !important;
+}
+
+body[data-theme="light"] .skill-item {
+    background: #f9fafb !important;
+    border-color: #e5e7eb !important;
+}
+
+body[data-theme="light"] .skill-item__name {
+    color: #1a1a1a !important;
+}
+
+body[data-theme="light"] .skill-item__percentage {
+    color: #6b7280 !important;
+}
+
+body[data-theme="light"] .section-toggle-btn {
+    color: #1a1a1a;
+}
+
+body[data-theme="light"] .section-toggle-btn:hover {
+    background: rgba(33, 207, 140, 0.15);
+}
+
+/* Dark theme support */
+body[data-theme="dark"] .skills-timeline,
+body:not([data-theme="light"]) .skills-timeline {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .skills-timeline__title,
+body:not([data-theme="light"]) .skills-timeline__title {
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .skill-item,
+body:not([data-theme="light"]) .skill-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] .skill-item:hover,
+body:not([data-theme="light"]) .skill-item:hover {
+    background: rgba(33, 207, 140, 0.1);
+    border-color: rgba(33, 207, 140, 0.3);
+}
+
+body[data-theme="dark"] .skill-item__name,
+body:not([data-theme="light"]) .skill-item__name {
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .skill-item__percentage,
+body:not([data-theme="light"]) .skill-item__percentage {
+    color: #d1d5db;
+}
+
+body[data-theme="dark"] .skill-item__icon,
+body:not([data-theme="light"]) .skill-item__icon {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+    .skills-timeline {
+        margin: 40px auto;
+        padding: 30px 15px;
+    }
+
+    .skills-timeline__title {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+
+    .skills-timeline__grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .skill-item {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .skill-item__icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .skill-item__icon img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .skill-item__name {
+        font-size: 14px;
+    }
+
+    .skill-item__percentage {
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .skills-timeline {
+        padding: 20px 10px;
+    }
+
+    .skills-timeline__title {
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+
+    .skills-timeline__grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .skill-item {
+        padding: 14px;
+    }
+}

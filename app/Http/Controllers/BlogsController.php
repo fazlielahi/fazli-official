@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str; //to use its static method str::random() without typing the full namespace eachtime
 use App\Models\Blog;
@@ -29,18 +30,14 @@ class BlogsController extends Controller
 
     public function rejectedBlogs(Request $request)
     {
-        // Check if the user is logged in: either session or cookie has 'user_id'
-        if (!$request->session()->has('user_id') && !$request->cookie('user_id')) {
-            return redirect()->route('localized.login', ['lang' => app()->getLocale()]);
-        }
-
-        $user = User::find($request->session()->get('user_id'));
+        // Get authenticated user using Laravel Auth
+        // Middleware ensures user is authenticated
+        $user = Auth::user();
 
         // Only get rejected blogs for this user
         $blogs = Blog::where('status', 'rejected')
             ->where('created_by', $user->id)
             ->get();
-            // dd($blogs, $user);
 
         return view('site.rejected_blogs', compact('blogs', 'user'));
     }
@@ -92,11 +89,11 @@ class BlogsController extends Controller
         }
         // dd($token);
 
-        //check if the user is logged in
-        if($request->session()->has('user_id') || $request->cookie('user_id'))
+        //check if the user is logged in (using Laravel Auth)
+        if(Auth::check())
         {
-            $userId = $request->session()->get('user_id') ?? $request->cookie('user_id');
-            $user = User::find($userId);
+            $user = Auth::user();
+            $userId = $user->id;
            
             $name = $user->name;
             $user_id = $user->id;

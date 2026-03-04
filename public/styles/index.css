@@ -168,7 +168,7 @@ body {
     flex-flow: row;
     align-items: stretch;
     justify-content: center;
-    transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.38, 1.399);
+    transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.38, 1.399);
   }
 
   .marquee-slider__list--item {
@@ -290,18 +290,7 @@ body {
 
   /*SKILLS*/
 
-  .skills_sec{
-    height: 350px;
-    padding: 0;
-    padding-top: 10px;
-    display: flex;
-    justify-content: space-around;
-    flex-direction: row-reverse;
-    justify-content: space-evenly;
-  }
-
    .section-heading{
-
     background-color: #000000;
     color: #21cf8c;
     text-decoration: underline;
@@ -309,110 +298,18 @@ body {
     padding: 15px 0px;
     margin-bottom: 14px;
     text-align: center;
-
-  }
-
-  
-   .skills-heading{
-
-    color: #21cf8c;
-    text-decoration: underline;
-    font-size: 22px;
-    position: sticky;
-    top: 0;
-    margin-bottom: 14px;
-    padding: 24px 26px 0px 17px;
-    font-size: x-large;
-    font-weight: 700;
-
-
   }
 
   .templates_sec {
     padding: 20px;
-}
-
-  .experience .section-heading{
-    background-color: #00000000;
-    color: #21cf8c;
-    text-decoration: underline;
-    font-size: 22px;
-    position: sticky;
-    top: 0;
-    margin-bottom: 14px;
-    padding: 24px 26px 10px 17px;
-    font-size: x-large;
-    font-weight: 700;
-    position: unset;
   }
 
-  
   .templates_sec .section-heading{
-
     position: unset;
   }
 
-  .skills_sec .skills_boxes{
-
-    width: 50%;
-    padding: 10px;
-    padding-top: 0;
-    background-color: #00000078;
-    color: #ffffff;
-    border-radius: 5px;
-    overflow-y: scroll;
-    height: 300px;
-  }
-
-  .skills_sec .skill_graph{
-
-    background-color: #00000078;
-    color: #ffffff;
-    border-radius: 5px;
-    width: 43%;
-    height: 300px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex-direction: column;
-    padding-bottom: 25px;
-  }
-
-  .skills_boxes .skill{
-
-    width: 80px;
-    min-height: 80px;
-    text-align: center;
-    display: inline-block;
-    margin: 10px;
-    cursor: pointer;
-    
-  }
-
-  .skill .icon{
-    display: inline-block;
-    border: 1px solid rgba(131, 130, 130, 0.247);
-
-  }
-
-      
   .about-top .main-heading span{
     background-color: #212629;
-}
-
-  .skill p{
-    margin-top: px;
-    color: #ffffff;
-    font-size: 11px;
-    text-align: center;
-  }
-
-  #skill_title{
-
-    display: block;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #adefd1ff;
   }
 
   /*experience*/
@@ -423,25 +320,6 @@ body {
     font-family: heading;
   }
 
-  .experience{
-    padding: 0px 40px ;
-    background-color: #00000078;
-    color: #ffffff;
-    padding-top: 5px;
-    width: 95%;
-  }
-
-  .img-container{
-
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-  }
-
-  .img-container img{
-
-    width: 100%;
-
-  }
 
    /*templates and clones*/
 
@@ -551,21 +429,6 @@ body {
       font-size: 40px;
     }
 
-    .skills_sec{
-
-      flex-direction: column-reverse;
-    }
-    
-    .skills_sec .skills_boxes{
-      width: 100%;
-      margin: 10px 0px;
-    }
-
-    
-  .skills_sec .skill_graph{
-    width: 100%;
-    padding-top: 30px;
-  }
 }
 
  
@@ -585,11 +448,6 @@ body {
       width: 95%;
     }
 
-    .skills_sec{
-
-      height: 700px;
-      justify-content: center;
-    }
 
     .main-heading .organization{
       font-size: 11px;
@@ -611,14 +469,65 @@ body {
   }
 
   
-.experience {
-    padding: 0px 5px;
-}
 
 }
 
 .slider-card{
   margin-top: 100px;
+  position: relative;
+}
+
+.slider-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.3s ease;
+  font-size: 18px;
+}
+
+.slider-nav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.slider-nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.slider-nav-prev {
+  left: 10px;
+}
+
+.slider-nav-next {
+  right: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .slider-nav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+  
+  .slider-nav-prev {
+    left: 5px;
+  }
+  
+  .slider-nav-next {
+    right: 5px;
+  }
 }
 
 .accordion-item{

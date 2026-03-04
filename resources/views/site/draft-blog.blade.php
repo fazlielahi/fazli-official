@@ -89,7 +89,8 @@
                                 <div class="blog-two__img">
                                     <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}">
                                     @php
-                                        $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
+                                        // Use Laravel Auth to get the authenticated user
+                                        $user = auth()->check() ? auth()->user() : null;
                                     @endphp
                                     @if(($user && $user->id == $blog->created_by))
                                         <div class="action">

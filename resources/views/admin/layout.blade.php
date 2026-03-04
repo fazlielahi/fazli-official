@@ -154,6 +154,16 @@
                                     <li>
                                         <a href="{{ route('localized.admin.categories.index', ['lang' => app()->getLocale()]) }}" ><i class="fas fa-folder"></i><span>{{ __('lang.Categories') }}</span></a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('localized.admin.cv-templates.index', ['lang' => app()->getLocale()]) }}" ><i class="fas fa-file-alt"></i><span>CV Templates</span></a>
+                                    </li>
+                                    <li class="mb-3">
+                                        <a href="#Founder" class="has-arrow"><i class="fas fa-user-tie"></i><span>Founder</span></a>
+                                        <ul>
+                                            <li><a href="{{ route('localized.admin.founder.experiences.index', ['lang' => app()->getLocale()]) }}">-- Experiences</a></li>
+                                            <li><a href="{{ route('localized.admin.founder.skills.index', ['lang' => app()->getLocale()]) }}">-- Skills</a></li>
+                                        </ul>
+                                    </li>
                                     <li class="active mb-3">
                                         <a href="#App" class="has-arrow"><i class="fa fa-th-large"></i><span>{{ __('lang.Blogs') }}</span></a>
                                         <ul>

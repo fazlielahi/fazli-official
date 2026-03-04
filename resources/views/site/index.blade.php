@@ -95,6 +95,9 @@
         
     <!-- responsive design -->
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-home.css') }}" />
+    
+    <!-- CV Templates Section CSS -->
+    <link rel="stylesheet" href="{{ asset('styles/home-page-cv-section.css') }}" />
 
     <!-- Template styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
@@ -132,6 +135,31 @@
 
         .blog-two__content{
             padding-bottom: 1px !important;
+        }
+
+        /* Banner Star Rating Color */
+        .banner-one__udemy-review-star .icon-star:before {
+            color: #FFC224 !important;
+        }
+
+        /* Banner Title Font Fix */
+        .banner-one__title-clr-1,
+        .banner-one__title-clr-2 {
+            font-family: mainheading_font_banner, 'Rowdies', 'Outfit', sans-serif !important;
+            font-weight: 600 !important;
+            font-style: normal !important;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Ensure font loads properly with correct path */
+        @font-face {
+            font-family: mainheading_font_banner;
+            src: url('{{ asset("fonts/Rowdies-Regular.ttf") }}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
     </style>
 @endsection
@@ -180,21 +208,24 @@
                                             </div>
                                         </div>
                                         <div class="banner-one__udemy-review">
-                                            <div class="banner-one__udemy-review-img">
-                                                <img src="{{ asset('images/linkedin-profile-photo.jpg') }}" alt="Fazli Elahi's LinkedIn profile photo">
-                                            </div>
-                                            <div class="banner-one__udemy-review-logo">
-                                                <img src="{{ asset('images/linked-91x38.png') }}" height="100%" alt="LinkedIn logo">
-                                            </div>
-                                            <div class="banner-one__udemy-review-client-info">
-                                                <p class="banner-one__udemy-review-client-name">Fazli Elahi | </p>
-                                                <div class="banner-one__udemy-review-star">
-                                                    <span class="icon-star"></span>
-                                                    <span class="icon-star"></span>
-                                                    <span class="icon-star"></span>
-                                                    <span class="icon-star"></span>
+                                            <!-- TFC LinkedIn Logo -->
+                                             <a href="https://www.linkedin.com/company/thefazli/" target="_blank">
+                                                <div class="banner-one__udemy-review-img">
+                                                    <img src="{{ asset('images/linkedin-profile-photo.jpg') }}" alt="TFC's LinkedIn profile photo">
                                                 </div>
-                                            </div>
+                                                <div class="banner-one__udemy-review-logo">
+                                                    <img src="{{ asset('images/linked-91x38.png') }}" height="100%" alt="LinkedIn logo">
+                                                </div>
+                                                <div class="banner-one__udemy-review-client-info">
+                                                    <p class="banner-one__udemy-review-client-name">TFC | </p>
+                                                    <div class="banner-one__udemy-review-star">
+                                                        <span class="icon-star"></span>
+                                                        <span class="icon-star"></span>
+                                                        <span class="icon-star"></span>
+                                                        <span class="icon-star"></span>
+                                                    </div>
+                                                </div>
+                                            </a>
                                         </div>
                                         <div class="banner-one__student-trained">
                                             <div class="banner-one__student-trained-shape-1 rotate-me">
@@ -232,6 +263,7 @@
                                 <div class="banner-one__tags">
                                     <a href="#about-section">{{ __('lang.About') }}</a>
                                     <a href="#services-section">{{ __('lang.Services') }}</a>
+                                    <a href="#cv-template-section">{{ __('lang.Create Cv') }}</a>
                                     <a href="#why-choose-me">{{ __('lang.Why Us?') }}</a>
                                     <a href="#portfolio-sec">{{ __('lang.Portfolio') }}</a>
                                     <a href="#blog-section-home">{{ __('lang.Blogs') }}</a>
@@ -342,7 +374,7 @@
                                 </ul>
                                 <div class="about-one__btn-and-live-class">
                                     <div class="about-one__btn-box">
-                                        <a href="{{ route('localized.about', ['lang' => app()->getLocale()]) }}" class="about-one__btn thm-btn">
+                                        <a href="{{ route('localized.founder-profile', ['lang' => app()->getLocale()]) }}" class="about-one__btn thm-btn">
                                             <span class="icon-angles-right"></span>{{ __('lang.Know More') }}
                                         </a>
                                     </div>
@@ -653,6 +685,65 @@
             </section>
             <!-- Services One End -->
 
+            <!-- CV Templates Section Start -->
+            <section class="cv-templates-section" id="cv-templates-section">
+                <div class="container">
+                    <div class="section-title text-center sec-title-animation animation-style1">
+                        <div class="section-title__tagline-box">
+                            <div class="section-title__tagline-shape"></div>
+                            <span class="section-title__tagline">{{ __('lang.CV Templates') }}</span>
+                        </div>
+                        <h2 class="section-title__title {{ $locale == 'en' ? 'title-animation' : '' }}">
+                            {{ __('lang.Professional CV Templates') }} <br>
+                            <span>{{ __('lang.Build Your Perfect Resume') }} <img src="{{ asset('assets/images/shapes/section-title-shape-1.png') }}" alt="" role="presentation" aria-hidden="true"></span>
+                        </h2>
+                        <p class="cv-templates-section__subtitle">
+                            {{ __('lang.Choose from our collection of professionally designed CV templates and create a standout resume in minutes.') }}
+                        </p>
+                    </div>
+                    
+                    @if(isset($cvTemplates) && count($cvTemplates) > 0)
+                    <div class="cv-templates-grid">
+                        @foreach($cvTemplates as $template)
+                        <div class="cv-template-card wow fadeInUp" data-wow-delay="{{ $loop->index * 100 }}ms">
+                            <div class="cv-template-card__preview">
+                                @if($template['preview_path'])
+                                    <img src="{{ $template['preview_path'] }}" alt="{{ $template['name'] }}" class="cv-template-card__image">
+                                @else
+                                    <div class="cv-template-card__placeholder">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>{{ __('lang.Preview') }}</span>
+                                    </div>
+                                @endif
+                                <div class="cv-template-card__overlay">
+                                    <a href="{{ route('localized.cv.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]) }}" class="cv-template-card__btn">
+                                        <span class="icon-angles-right"></span>{{ __('lang.Use Template') }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="cv-template-card__content">
+                                <h3 class="cv-template-card__title">{{ $template['name'] }}</h3>
+                                <p class="cv-template-card__description">{{ $template['description'] }}</p>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    
+                    <div class="cv-templates-section__cta text-center">
+                        <a href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}" class="cv-templates-section__btn thm-btn">
+                            <span class="icon-angles-right"></span>{{ __('lang.View All Templates') }}
+                        </a>
+                    </div>
+                    @else
+                    <div class="cv-templates-section__empty text-center">
+                        <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">{{ __('lang.No CV templates available yet.') }}</p>
+                    </div>
+                    @endif
+                </div>
+            </section>
+            <!-- CV Templates Section End -->
+
             <!-- Why Choose One Start -->
             <section class="why-choose-one" id="why-choose-me">
                 <div class="why-choose-one__shape-6 float-bob-x">
@@ -760,7 +851,7 @@
                                 </div>
                                 <div class="why-choose-one__btn-and-client-box">
                                     <div class="why-choose-one__btn-box">
-                                        <a href="{{ route('localized.about', ['lang' => app()->getLocale()]) }}" class="why-choose-one__btn thm-btn">
+                                        <a href="{{ route('localized.founder-profile', ['lang' => app()->getLocale()]) }}" class="why-choose-one__btn thm-btn">
                                             <span class="icon-angles-right"></span>{{ __('lang.Know More') }}
                                         </a>
                                     </div>

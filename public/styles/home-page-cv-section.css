@@ -1,0 +1,291 @@
+/* CV Templates Section Styles */
+.cv-templates-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #0a1929 0%, #1a1a2e 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.cv-templates-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.cv-templates-section__subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 20px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.cv-templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.cv-template-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+}
+
+.cv-template-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(29, 163, 112, 0.3);
+    border-color: rgba(29, 163, 112, 0.5);
+}
+
+.cv-template-card__preview {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    background: #1a1a2e;
+}
+
+.cv-template-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.cv-template-card:hover .cv-template-card__image {
+    transform: scale(1.1);
+}
+
+.cv-template-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.cv-template-card__placeholder i {
+    font-size: 64px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.cv-template-card__placeholder span {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.cv-template-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    backdrop-filter: blur(5px);
+}
+
+.cv-template-card:hover .cv-template-card__overlay {
+    opacity: 1;
+}
+
+.cv-template-card__btn {
+    background: linear-gradient(135deg, #1da370 0%, #0d8a5a 100%);
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(29, 163, 112, 0.4);
+}
+
+.cv-template-card__btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(29, 163, 112, 0.6);
+    color: #fff;
+}
+
+.cv-template-card__btn .icon-angles-right {
+    transition: transform 0.3s ease;
+}
+
+.cv-template-card__btn:hover .icon-angles-right {
+    transform: translateX(5px);
+}
+
+.cv-template-card__content {
+    padding: 25px;
+}
+
+.cv-template-card__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.cv-template-card__description {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.cv-templates-section__cta {
+    margin-top: 50px;
+}
+
+.cv-templates-section__btn {
+    background: linear-gradient(135deg, #1da370 0%, #0d8a5a 100%);
+    color: #fff;
+    padding: 16px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(29, 163, 112, 0.4);
+    border: none;
+}
+
+.cv-templates-section__btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(29, 163, 112, 0.5);
+    color: #fff;
+}
+
+.cv-templates-section__btn .icon-angles-right {
+    transition: transform 0.3s ease;
+}
+
+.cv-templates-section__btn:hover .icon-angles-right {
+    transform: translateX(5px);
+}
+
+.cv-templates-section__empty {
+    padding: 60px 20px;
+}
+
+.cv-templates-section__empty i {
+    opacity: 0.3;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .cv-templates-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cv-templates-section {
+        padding: 60px 0;
+    }
+    
+    .cv-templates-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 40px;
+    }
+    
+    .cv-template-card__preview {
+        height: 350px;
+    }
+    
+    .cv-templates-section__subtitle {
+        font-size: 16px;
+        padding: 0 20px;
+    }
+    
+    .cv-templates-section__cta {
+        margin-top: 40px;
+    }
+    
+    .cv-templates-section__btn {
+        padding: 14px 30px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cv-template-card__preview {
+        height: 300px;
+    }
+    
+    .cv-template-card__content {
+        padding: 20px;
+    }
+    
+    .cv-template-card__title {
+        font-size: 18px;
+    }
+    
+    .cv-template-card__description {
+        font-size: 14px;
+    }
+}
+
+/* Dark theme adjustments */
+body[data-theme="light"] .cv-templates-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+body[data-theme="light"] .cv-templates-section__subtitle {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+body[data-theme="light"] .cv-template-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body[data-theme="light"] .cv-template-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border-color: rgba(29, 163, 112, 0.3);
+}
+
+body[data-theme="light"] .cv-template-card__title {
+    color: #222;
+}
+
+body[data-theme="light"] .cv-template-card__description {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+body[data-theme="light"] .cv-template-card__placeholder {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: rgba(0, 0, 0, 0.3);
+}
+

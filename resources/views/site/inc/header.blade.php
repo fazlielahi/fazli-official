@@ -16,7 +16,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('localized.services', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.about') ? 'active' : '' }}">
+                    <a href="{{ route('localized.services', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.services') ? 'active' : '' }}">
                         <i class="fas fa-user me-2"></i>{{ __('lang.Services') }}
                     </a>
                 </li>
@@ -38,7 +38,7 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="#" style="background-color: #ffffff00 !important; " class="nav-link dropdown-toggle {{ request()->routeIs('localized.jobs') || request()->routeIs('localized.cv-create') ? 'active' : '' }}" id="jobsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a href="#" style="background-color: #ffffff00 !important; " class="nav-link dropdown-toggle {{ request()->routeIs('localized.jobs') || request()->routeIs('localized.cv.gallery') ? 'active' : '' }}" id="jobsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-briefcase me-2"></i>{{ __('lang.Jobs') }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="jobsDropdown">
@@ -48,44 +48,71 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item {{ request()->routeIs('localized.cv-create') ? 'active' : '' }}" href="{{ route('localized.cv-create', ['lang' => app()->getLocale()]) }}">
+                            <a class="dropdown-item {{ request()->routeIs('localized.cv.gallery') ? 'active' : '' }}" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
                                 <i class="fas fa-file-alt me-2"></i>{{ __('lang.CV Create') }}
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('localized.founder-profile', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.founder-profile') ? 'active' : '' }}">
+                        <i class="fas fa-user-tie me-2"></i>{{ __('lang.Founder') }}
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.contact') ? 'active' : '' }}">
                         <i class="fas fa-envelope me-2"></i>{{ __('lang.Contact') }}
                     </a>
                 </li>
-                <li class="nav-item">
-                    @if ($locale === 'en')
-                        <a href="{{ route('lang.switch', 'ar') }}" class="language-icon">
-                            <i class="fas fa-globe"></i>
-                            {{ __('lang.Arabic') }}
-                        </a>
-                    @else
-                        <a href="{{ route('lang.switch', 'en') }}" class="language-icon">
-                            <i class="fas fa-globe"></i>
+                <li class="nav-item dropdown">
+                    <a href="#" style="background-color: #ffffff00 !important;" class="nav-link dropdown-toggle language-icon" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-globe"></i>
+                        @if($locale === 'en')
                             {{ __('lang.English') }}
-                        </a>
-                    @endif
+                        @elseif($locale === 'ar')
+                            {{ __('lang.Arabic') }}
+                        @elseif($locale === 'ur')
+                            {{ __('lang.Urdu') }}
+                        @endif
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <li>
+                            <a class="dropdown-item {{ $locale === 'en' ? 'active' : '' }}" href="{{ route('lang.switch', 'en') }}">
+                                {{ __('lang.English') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ $locale === 'ar' ? 'active' : '' }}" href="{{ route('lang.switch', 'ar') }}">
+                                {{ __('lang.Arabic') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ $locale === 'ur' ? 'active' : '' }}" href="{{ route('lang.switch', 'ur') }}">
+                                {{ __('lang.Urdu') }}
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
         <div class="header-button d-flex align-items-center">
+            <!-- Create CV Button with Confetti -->
+            <a href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}" class="btn btn-create-cv" id="createCvBtn">
+                <i class="fas fa-file-alt me-2"></i>{{ __('lang.Create CV') }}
+            </a>
+            
             <!-- Theme Toggle -->
             <div class="theme-toggle-container">
                 <span class="theme-toggle-label d-none d-md-inline">{{ __('lang.Theme') }}</span>
-                <div class="theme-toggle" data-theme="dark">
+                <div class="theme-toggle" data-theme="light">
                     <i class="fas fa-sun icon sun-icon"></i>
                     <i class="fas fa-moon icon moon-icon"></i>
                 </div>
             </div>
             
             @php 
-                $user = session()->has('user_id') ? \App\Models\User::find(session('user_id')) : null;
+                // Use Laravel Auth to check if user is logged in
+                $user = auth()->check() ? auth()->user() : null;
             @endphp
 
             @if($user)

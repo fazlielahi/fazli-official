@@ -48,19 +48,24 @@
     position: relative;
     z-index: 101;
     background-color: #eeeeee;
-    max-height: 75vh;
+    max-height: 85vh;
     max-width: 95%;
     padding: 2px;
     margin-top: 10px;
     min-height: max-content;
     min-width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .media-container img, .media-container video{
-    height: 100%;
-    width: 100%;
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 85vh;
+    max-width: 95%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
 }
 
 .media-container iframe{
@@ -113,6 +118,16 @@
 
 /*Tablet*/
 @media screen and (max-width: 768px){
+    .media-container {
+        max-height: 80vh;
+        max-width: 98%;
+    }
+    
+    .media-container img, .media-container video {
+        max-height: 80vh;
+        max-width: 98%;
+    }
+    
     .media-container iframe{
         min-height: 50vh;
     }
@@ -120,6 +135,16 @@
 
 /*Mobile*/
 @media screen and (max-width: 425px){
+    .media-container {
+        max-height: 75vh;
+        max-width: 98%;
+    }
+    
+    .media-container img, .media-container video {
+        max-height: 75vh;
+        max-width: 98%;
+    }
+    
     .media-container iframe{
         min-height: 35vh;
     }

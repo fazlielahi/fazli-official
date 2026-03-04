@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;         //Fir handling http request
 use Illuminate\Support\Facades\Hash; //For hashing password
 use Illuminate\Support\Facades\App; 
+use Illuminate\Support\Facades\Auth; //For Laravel authentication
 use App\Models\User;                        //The user model
 use App\Models\Blog;                        //The user model
 use Illuminate\Support\Facades\Cookie;
@@ -15,12 +16,10 @@ class ProfileController extends Controller
 {
      public function showPublicProfile(Request $request)
         {
-            auth()->check();
-            $user = User::find($request->session()->get('user_id'));
+            // Get the authenticated user using Laravel Auth
+            // Middleware ensures user is authenticated, so no need for manual checks
+            $user = Auth::user();
 
-            if (!$user) {
-                return redirect()->back()->with('error', 'Session expired.');
-            }
             $categories = \App\Models\Category::all();
             $selectedCategory = $request->input('category_id');
             $blogs = \App\Models\Blog::where('created_by', $user->id)
@@ -35,12 +34,9 @@ class ProfileController extends Controller
 
         public function adminProfile(Request $request)
         {
-            auth()->check();
-            $user = User::find($request->session()->get('user_id'));
-
-            if (!$user) {
-                return redirect()->back()->with('error', 'Session expired.');
-            }
+            // Get the authenticated user using Laravel Auth
+            // Middleware ensures user is authenticated
+            $user = Auth::user();
             
             $blogs = Blog::where('created_by', $user->id)->where('status', 'published')->get();
 
@@ -49,7 +45,8 @@ class ProfileController extends Controller
 
         public function editProfile(Request $request)
         {
-            $user = User::find($request->session()->get('user_id'));
+            // Get the authenticated user using Laravel Auth
+            $user = Auth::user();
             $locale = App::getLocale(); 
 
             return view('site.edit-profile', compact('user')); 
@@ -57,7 +54,9 @@ class ProfileController extends Controller
 
         public function updateProfile(Request $request)
         {
-            $user = User::find($request->session()->get('user_id'));
+            // Get the authenticated user using Laravel Auth
+            $user = Auth::user();
+            
             $data = $request->validate([
                 'name' => 'nullable|string',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
