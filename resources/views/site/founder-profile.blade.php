@@ -23,7 +23,7 @@
 
 @section('head')
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" /> <!-- main heading css -->
-    <link rel="stylesheet" href="{{ asset('styles/cv.css') }}" /> <!-- cv css -->
+    <link rel="stylesheet" href="{{ asset('cv/css/cv.css') }}" /> <!-- cv css -->
     <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/slider.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/founder-profile.css') }}">

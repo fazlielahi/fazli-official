@@ -12,7 +12,8 @@
         routes: {
             saved: '',
             load: '',
-            save: ''
+            save: '',
+            duplicateCV: ''
         },
         csrfToken: ''
     };
@@ -41,7 +42,7 @@
         const $emailInput = $form.find('input[name="email"]');
         const $phoneInput = $form.find('input[name="phone"]');
         const $cityInput = $form.find('input[name="city"]');
-        const $countryInput = $form.find('input[name="country"]');
+        const $photoCircle = $('.cv-photo-upload__circle');
         const $summaryInput = $form.find('textarea[name="summary"]');
         const $photoInput = $('#photo-upload');
         const $photoPreview = $('#photo-preview');
@@ -163,20 +164,27 @@
         // Collect form data
         function collectFormData() {
             try {
-                // Combine city and country into a single address string
+                const rawLoc = ($cityInput.val() || '').trim();
+                let cityVal = rawLoc;
+                let countryVal = '';
+                const commaIdx = rawLoc.indexOf(',');
+                if (commaIdx !== -1) {
+                    cityVal = rawLoc.slice(0, commaIdx).trim();
+                    countryVal = rawLoc.slice(commaIdx + 1).trim();
+                }
                 const addressParts = [];
-                if ($cityInput.val()) addressParts.push($cityInput.val());
-                if ($countryInput.val()) addressParts.push($countryInput.val());
+                if (cityVal) addressParts.push(cityVal);
+                if (countryVal) addressParts.push(countryVal);
                 const fullAddress = addressParts.join(', ');
-                
+
                 const data = {
                     name: $nameInput.val() || '',
                     job_title: $jobTitleInput.val() || '',
                     email: $emailInput.val() || '',
                     phone: $phoneInput.val() || '',
-                    address: fullAddress, // Combined address for template display
-                    city: $cityInput.val() || '',
-                    country: $countryInput.val() || '',
+                    address: fullAddress,
+                    city: cityVal,
+                    country: countryVal,
                     summary: $summaryInput.val() || '',
                     photo: photoData || ''
                 };
@@ -831,6 +839,9 @@
         // Listen to form input changes
         $form.on('input change', 'input, textarea, select', function() {
             handleFormChange();
+            if (!window.__cvBuilderHydrating) {
+                window.__cvBuilderDirty = true;
+            }
         });
 
         // Handle photo upload
@@ -855,8 +866,12 @@
                 reader.onload = function(e) {
                     photoData = e.target.result;
                     $photoPreview.attr('src', photoData);
-                    $photoPreviewContainer.show();
+                    $photoPreviewContainer.prop('hidden', false);
+                    $photoCircle.addClass('has-photo');
                     handleFormChange();
+                    if (!window.__cvBuilderHydrating) {
+                        window.__cvBuilderDirty = true;
+                    }
                 };
                 reader.onerror = function() {
                     alert('Error reading file. Please try again.');
@@ -867,12 +882,40 @@
         });
 
         // Handle photo removal
-        $('#remove-photo').on('click', function() {
+        $('#remove-photo').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             photoData = null;
             $photoInput.val('');
             $photoPreview.attr('src', '');
-            $photoPreviewContainer.hide();
+            $photoPreviewContainer.prop('hidden', true);
+            $photoCircle.removeClass('has-photo');
             handleFormChange();
+        });
+
+        $photoCircle.on('click', function(e) {
+            if ($(e.target).closest('#remove-photo').length) return;
+            $photoInput.trigger('click');
+        });
+        $photoCircle.on('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                $photoInput.trigger('click');
+            }
+        });
+
+        $('#cv-personal-card-toggle').on('click', function() {
+            const $card = $(this).closest('.cv-personal-card');
+            const expanded = $(this).attr('aria-expanded') === 'true';
+            $(this).attr('aria-expanded', expanded ? 'false' : 'true');
+            $card.toggleClass('is-collapsed', expanded);
+        });
+
+        $('#cv-personal-get-tips').on('click', function() {
+            const msg = $(this).data('hint') || '';
+            if (msg && typeof showToast === 'function') {
+                showToast('info', msg, 4000);
+            }
         });
 
         // Load initial photo if exists in template
@@ -880,7 +923,8 @@
         if ($initialPhoto.length > 0 && $initialPhoto.attr('src')) {
             photoData = $initialPhoto.attr('src');
             $photoPreview.attr('src', photoData);
-            $photoPreviewContainer.show();
+            $photoPreviewContainer.prop('hidden', false);
+            $photoCircle.addClass('has-photo');
         }
 
         // Page Management Functions
@@ -1261,38 +1305,792 @@
 
         // Load Saved CVs functionality
         const $loadSelect = $('#load-cv-select');
-        const $loadBtn = $('#btn-load-cv');
         const $loadMessage = $('#load-message');
+        const $loadMessageText = $('#load-message-text');
+        const $toastClose = $('#cv-toast-close');
+        let toastTimer = null;
 
-        function loadSavedCVsList() {
+        function hideToast() {
+            if (!$loadMessage.length) return;
+            if (toastTimer) {
+                clearTimeout(toastTimer);
+                toastTimer = null;
+            }
+            $loadMessage.addClass('is-hiding');
+            setTimeout(function() {
+                $loadMessage.removeClass('is-visible is-hiding success error').hide();
+            }, 190);
+        }
+
+        function showToast(type, text, ms) {
+            if (!$loadMessage.length) return;
+            if (toastTimer) {
+                clearTimeout(toastTimer);
+                toastTimer = null;
+            }
+
+            $loadMessage.removeClass('success error is-hiding').addClass(type || 'success');
+            if ($loadMessageText.length) {
+                $loadMessageText.text(text || '');
+            } else {
+                $loadMessage.text(text || '');
+            }
+            $loadMessage.show().addClass('is-visible');
+
+            toastTimer = setTimeout(function() {
+                hideToast();
+            }, typeof ms === 'number' ? ms : 2800);
+        }
+
+        $toastClose.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            hideToast();
+        });
+
+        // "Coming soon" tooltips on click (mobile-friendly)
+        const $soonEls = $('.cv-soon');
+        let soonTimer = null;
+
+        function closeSoonTooltips() {
+            $soonEls.removeClass('is-tooltip-open');
+            if (soonTimer) {
+                clearTimeout(soonTimer);
+                soonTimer = null;
+            }
+        }
+
+        $soonEls.on('click', function(e) {
+            // These are static (non-functional) controls; show tooltip instead.
+            e.preventDefault();
+            e.stopPropagation();
+            closeSoonTooltips();
+            const $el = $(this);
+            $el.addClass('is-tooltip-open');
+            soonTimer = setTimeout(closeSoonTooltips, 1600);
+        });
+
+        $(document).on('click', closeSoonTooltips);
+        const $resumeDropdown = $('#cv-resume-dropdown');
+        const $resumeTrigger = $('#cv-resume-trigger');
+        const $resumeTriggerText = $('#cv-resume-trigger-text');
+        const $resumePanel = $('#cv-resume-panel');
+        const $resumeList = $('#cv-resume-list');
+
+        // Template picker modal (toolbar)
+        const $tplTrigger = $('#cv-template-switcher-trigger');
+        const $tplModal = $('#cv-template-modal');
+        const $tplModalGrid = $('#cv-template-modal-grid');
+        const $tplModalTabEmpty = $('#cv-templates-modal-tab-empty');
+        const $modalTabScroll = $('#cv-template-modal-tabs-scroll');
+        const $modalTabPrev = $('#cv-template-modal-tabs-prev');
+        const $modalTabNext = $('#cv-template-modal-tabs-next');
+        const modalTabScrollStep = 180;
+
+        function updateTemplateModalTabScrollNav() {
+            if (!$modalTabScroll.length) return;
+            if (window.matchMedia('(min-width: 768px)').matches) {
+                $modalTabPrev.addClass('cv-template-tabs__nav--concealed').prop('disabled', true).attr('aria-hidden', 'true');
+                $modalTabNext.prop('disabled', true);
+                return;
+            }
+            const el = $modalTabScroll[0];
+            const max = el.scrollWidth - el.clientWidth;
+            if (max <= 1) {
+                $modalTabPrev.addClass('cv-template-tabs__nav--concealed').prop('disabled', true).attr('aria-hidden', 'true');
+                $modalTabNext.prop('disabled', true);
+                return;
+            }
+            const sl = el.scrollLeft;
+            const atStart = sl <= 1;
+            if (atStart) {
+                $modalTabPrev.addClass('cv-template-tabs__nav--concealed').prop('disabled', true).attr('aria-hidden', 'true');
+            } else {
+                $modalTabPrev.removeClass('cv-template-tabs__nav--concealed').prop('disabled', false).attr('aria-hidden', 'false');
+            }
+            $modalTabNext.prop('disabled', sl >= max - 1);
+        }
+
+        function closeTemplateModal() {
+            if (!$tplModal.length) return;
+            $tplModal.removeClass('is-open').attr('aria-hidden', 'true');
+            $tplTrigger.attr('aria-expanded', 'false');
+        }
+
+        function openTemplateModal() {
+            if (!$tplModal.length) return;
+            const $tabBtns = $tplModal.find('.cv-template-tabs__btn');
+            $tabBtns.removeClass('is-active').attr('aria-selected', 'false');
+            $tabBtns.filter('[data-tab="all"]').addClass('is-active').attr('aria-selected', 'true');
+            applyTemplateModalFilter('all');
+            $tplModal.addClass('is-open').attr('aria-hidden', 'false');
+            $tplTrigger.attr('aria-expanded', 'true');
+            setTimeout(function() {
+                updateTemplateModalTabScrollNav();
+            }, 0);
+        }
+
+        function toggleTemplateModal() {
+            if (!$tplModal.length) return;
+            if ($tplModal.hasClass('is-open')) closeTemplateModal();
+            else openTemplateModal();
+        }
+
+        function applyTemplateModalFilter(tab) {
+            if (!$tplModalGrid.length) return;
+            const f = tab || 'all';
+            const $cards = $tplModalGrid.find('.template-card');
+            let visible = 0;
+            if (f === 'all') {
+                $cards.show();
+                visible = $cards.length;
+            } else {
+                $cards.each(function() {
+                    const $c = $(this);
+                    const show = $c.data('tab') === f;
+                    $c.toggle(show);
+                    if (show) visible++;
+                });
+            }
+            const hasInitialEmpty = $tplModalGrid.find('.cv-templates-grid-empty--initial').length > 0;
+            const hasFilterableCards = $cards.length > 0;
+            const shouldShowEmpty = !hasInitialEmpty && (visible === 0 && hasFilterableCards);
+            if ($tplModalTabEmpty.length) {
+                $tplModalTabEmpty.prop('hidden', !shouldShowEmpty);
+            }
+        }
+
+        let selectedCvId = null;
+        window.__cvBuilderDirty = window.__cvBuilderDirty || false;
+        window.__cvBuilderHydrating = window.__cvBuilderHydrating || false;
+        let pendingAction = null;
+
+        const $unsavedModal = $('#cv-unsaved-modal');
+        const $unsavedSave = $('#cv-unsaved-save');
+        const $unsavedDiscard = $('#cv-unsaved-discard');
+        const $unsavedCancel = $('#cv-unsaved-cancel');
+
+        function setResumeTriggerLabel(text) {
+            $resumeTriggerText.text(text || 'Resume');
+        }
+
+        function openUnsavedModal(action) {
+            pendingAction = typeof action === 'function' ? action : null;
+            $unsavedModal.addClass('is-open').attr('aria-hidden', 'false');
+        }
+
+        function closeUnsavedModal() {
+            pendingAction = null;
+            $unsavedModal.removeClass('is-open').attr('aria-hidden', 'true');
+            $unsavedSave.prop('disabled', false).text('Save');
+        }
+
+        function proceedPendingAction() {
+            const action = pendingAction;
+            closeUnsavedModal();
+            if (typeof action === 'function') action();
+        }
+
+        function saveCurrentCv(opts) {
+            const options = opts || {};
+            const cvTitle = $('#cv-title').val() || 'My CV';
+            const cvData = collectFormData();
+            const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
+
+            return $.ajax({
+                url: cvBuilderConfig.routes.save,
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken },
+                data: {
+                    _token: csrfToken,
+                    template_slug: cvBuilderConfig.templateSlug,
+                    title: cvTitle,
+                    cv_data: cvData,
+                    cv_id: selectedCvId || null
+                }
+            }).done(function(resp) {
+                if (resp && resp.success) {
+                    window.__cvBuilderDirty = false;
+                    if (resp.cv_id) selectedCvId = String(resp.cv_id);
+                    if (typeof loadSavedCVsList === 'function') loadSavedCVsList();
+                    showToast('success', 'Saved');
+                    if (typeof options.onSuccess === 'function') options.onSuccess(resp);
+                } else {
+                    showToast('error', (resp && resp.message) || 'Unable to save');
+                    if (typeof options.onError === 'function') options.onError(resp);
+                }
+            }).fail(function(xhr) {
+                const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Unable to save';
+                showToast('error', msg);
+                if (typeof options.onError === 'function') options.onError(xhr);
+            });
+        }
+
+        // Unsaved modal buttons
+        $unsavedCancel.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeUnsavedModal();
+        });
+        $unsavedDiscard.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.__cvBuilderDirty = false;
+            proceedPendingAction();
+        });
+        $unsavedSave.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $unsavedSave.prop('disabled', true).text('Saving...');
+            saveCurrentCv({
+                onSuccess: function() {
+                    proceedPendingAction();
+                },
+                onError: function() {
+                    $unsavedSave.prop('disabled', false).text('Save');
+                }
+            });
+        });
+        $unsavedModal.on('click', function(e) {
+            if ($(e.target).hasClass('cv-unsaved-modal__backdrop')) {
+                closeUnsavedModal();
+            }
+        });
+
+        // Leaving the page: use native prompt (browser-controlled)
+        window.addEventListener('beforeunload', function(e) {
+            if (!window.__cvBuilderDirty) return;
+            e.preventDefault();
+            e.returnValue = '';
+        });
+
+        // Intercept leave-page links if dirty (templates tab)
+        $(document).on('click', '.cv-builder-toolbar__tab--link', function(e) {
+            const href = $(this).attr('href');
+            if (!href) return;
+            if (!window.__cvBuilderDirty) return;
+            e.preventDefault();
+            openUnsavedModal(function() {
+                window.location.href = href;
+            });
+        });
+
+        // Template modal open
+        $tplTrigger.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeCreatePopover();
+            closeResumeDropdown();
+            $resumeList.find('.cv-resume-item__menu.is-open').removeClass('is-open').attr('aria-hidden', 'true');
+            toggleTemplateModal();
+        });
+
+        $('#cv-template-modal-close').on('click', function(e) {
+            e.preventDefault();
+            closeTemplateModal();
+        });
+
+        $tplModal.on('click', '.cv-template-modal__backdrop', function(e) {
+            e.preventDefault();
+            closeTemplateModal();
+        });
+
+        $tplModal.on('click', '.cv-template-tabs__btn', function(e) {
+            e.preventDefault();
+            const $btn = $(this);
+            const filter = String($btn.data('tab') || 'all');
+            $tplModal.find('.cv-template-tabs__btn').removeClass('is-active').attr('aria-selected', 'false');
+            $btn.addClass('is-active').attr('aria-selected', 'true');
+            $tplModalGrid.attr('aria-labelledby', $btn.attr('id') || 'cv-modal-tab-all');
+            applyTemplateModalFilter(filter);
+        });
+
+        $modalTabPrev.on('click', function() {
+            if ($modalTabScroll[0]) {
+                $modalTabScroll[0].scrollBy({ left: -modalTabScrollStep, behavior: 'smooth' });
+            }
+        });
+        $modalTabNext.on('click', function() {
+            if ($modalTabScroll[0]) {
+                $modalTabScroll[0].scrollBy({ left: modalTabScrollStep, behavior: 'smooth' });
+            }
+        });
+        if ($modalTabScroll.length) {
+            $modalTabScroll.on('scroll', updateTemplateModalTabScrollNav);
+        }
+        $(window).on('resize', updateTemplateModalTabScrollNav);
+        updateTemplateModalTabScrollNav();
+
+        // Navigate to another template — carry cv_id so the same resume loads on the new template page
+        $(document).on('click', 'a.cv-template-modal__pick', function(e) {
+            const rawHref = $(this).attr('href');
+            if (!rawHref || rawHref === '#') return;
+            const href = appendCvIdToUrl(rawHref);
+            e.preventDefault();
+            closeTemplateModal();
+            if (window.__cvBuilderDirty) {
+                openUnsavedModal(function() {
+                    window.location.href = href;
+                });
+            } else {
+                window.location.href = href;
+            }
+        });
+
+        const $createTrigger = $('#cv-header-create-trigger');
+        const $createPopover = $('#cv-resume-create-popover');
+
+        function closeCreatePopover() {
+            if (!$createPopover.length) return;
+            $createPopover.prop('hidden', true).attr('aria-hidden', 'true');
+            $createTrigger.attr('aria-expanded', 'false');
+        }
+
+        function openCreatePopover() {
+            if (!$createPopover.length) return;
+            $createPopover.prop('hidden', false).attr('aria-hidden', 'false');
+            $createTrigger.attr('aria-expanded', 'true');
+        }
+
+        function toggleCreatePopover() {
+            if (!$createPopover.length) return;
+            if ($createPopover.prop('hidden')) {
+                openCreatePopover();
+            } else {
+                closeCreatePopover();
+            }
+        }
+
+        $createTrigger.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $resumeList.find('.cv-resume-item__menu.is-open').removeClass('is-open').attr('aria-hidden', 'true');
+            toggleCreatePopover();
+        });
+
+        $(document).on('click', '.cv-resume-create-popover__item--resume', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const href = $(this).attr('data-href');
+            if (!href) return;
+            closeCreatePopover();
+            const go = function() {
+                window.location.href = href;
+            };
+            if (window.__cvBuilderDirty) {
+                openUnsavedModal(go);
+            } else {
+                go();
+            }
+        });
+
+        function closeResumeDropdown() {
+            if (!$resumeDropdown.length) return;
+            closeCreatePopover();
+            $resumeDropdown.removeClass('is-open');
+            $resumeTrigger.attr('aria-expanded', 'false');
+        }
+
+        function openResumeDropdown() {
+            if (!$resumeDropdown.length) return;
+            $resumeDropdown.addClass('is-open');
+            $resumeTrigger.attr('aria-expanded', 'true');
+        }
+
+        const LOAD_ALL_MIN_RESUMES = 5;
+        /** Max rows shown in the My Resumes dropdown; use Load All / Projects for the rest */
+        const RESUME_DROPDOWN_VISIBLE_MAX = 5;
+
+        function setLoadAllFooterVisibility(resumeCount) {
+            const $footer = $('#cv-resume-loadall-footer');
+            if (!$footer.length) return;
+            const show = resumeCount > LOAD_ALL_MIN_RESUMES;
+            $footer.prop('hidden', !show);
+        }
+
+        function renderResumeList(cvs) {
+            if (!$resumeList.length) return;
+            $resumeList.empty();
+
+            if (!cvs || !cvs.length) {
+                $resumeList.append('<div class="cv-resume-dropdown__empty">No resumes yet</div>');
+                setLoadAllFooterVisibility(0);
+                return;
+            }
+
+            // Keep selected CV pinned at top
+            const sorted = Array.isArray(cvs) ? cvs.slice() : [];
+            if (selectedCvId) {
+                sorted.sort(function(a, b) {
+                    if (String(a.id) === String(selectedCvId)) return -1;
+                    if (String(b.id) === String(selectedCvId)) return 1;
+                    return 0;
+                });
+            }
+
+            const visible = sorted.slice(0, RESUME_DROPDOWN_VISIBLE_MAX);
+
+            visible.forEach(function(cv) {
+                const name = cv.title || 'Untitled CV';
+                const dateStr = cv.updated_at ? new Date(cv.updated_at).toLocaleDateString() : '';
+                const $menu = $('<div class="cv-resume-item__menu" aria-hidden="true">')
+                    .append(
+                        $('<button type="button" class="cv-resume-item__menu-btn">')
+                            .append('<i class="far fa-pen-to-square" aria-hidden="true"></i>')
+                            .append('<span>Edit title</span>')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                const $row = $(this).closest('.cv-resume-item');
+                                const currentTitle = $row.attr('data-cv-title') || 'Resume';
+                                const $actions = $row.find('.cv-resume-item__actions');
+                                // close menu
+                                $menu.removeClass('is-open').attr('aria-hidden', 'true');
+
+                                // remove any existing popover
+                                $resumeList.find('.cv-resume-edit-popover').remove();
+
+                                const $popover = $('<div class="cv-resume-edit-popover" role="dialog" aria-label="Edit title">');
+                                $popover.on('click', function(ev) {
+                                    ev.stopPropagation();
+                                });
+                                $popover.append('<div class="cv-resume-edit-popover__title">Edit title</div>');
+
+                                const $rowWrap = $('<div class="cv-resume-edit-popover__row">');
+                                const $input = $('<input type="text" class="cv-resume-edit-popover__input">').val(currentTitle);
+                                const $ok = $('<button type="button" class="cv-resume-edit-popover__ok" aria-label="Save title">')
+                                    .append('<i class="fas fa-check" aria-hidden="true"></i>');
+
+                                $rowWrap.append($input).append($ok);
+                                $popover.append($rowWrap);
+
+                                $actions.append($popover);
+                                setTimeout(function() { $input.trigger('focus').select(); }, 0);
+
+                                function applyTitle(newTitleRaw) {
+                                    const newTitle = (newTitleRaw || '').trim() || 'Untitled CV';
+                                    const cvId = $row.attr('data-cv-id');
+                                    if (!cvId || !cvBuilderConfig.routes.updateTitle) return;
+
+                                    const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
+                                    $.ajax({
+                                        url: cvBuilderConfig.routes.updateTitle.replace('CV_ID', cvId),
+                                        method: 'POST',
+                                        data: {
+                                            _token: csrfToken,
+                                            title: newTitle
+                                        },
+                                        success: function(resp) {
+                                            if (resp && resp.success && resp.cv) {
+                                                const finalTitle = resp.cv.title || newTitle;
+                                                $row.attr('data-cv-title', finalTitle);
+                                                $row.find('.cv-resume-item__name').text(finalTitle);
+                                                setResumeTriggerLabel(finalTitle);
+
+                                                // Update hidden select option label (keep existing date suffix if present)
+                                                const $opt = $loadSelect.find('option[value=\"' + cvId + '\"]');
+                                                if ($opt.length) {
+                                                    const existing = $opt.text();
+                                                    const suffix = existing.includes('(') ? existing.slice(existing.indexOf(' (')) : (dateStr ? ' (' + dateStr + ')' : '');
+                                                    $opt.text(finalTitle + suffix);
+                                                }
+
+                                                showToast('success', 'Title updated');
+                                            } else {
+                                                showToast('error', (resp && resp.message) || 'Unable to update title');
+                                            }
+                                        },
+                                        error: function(xhr) {
+                                            const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Unable to update title';
+                                            showToast('error', msg);
+                                        }
+                                    });
+                                }
+
+                                $ok.on('click', function(ev) {
+                                    ev.preventDefault();
+                                    ev.stopPropagation();
+                                    applyTitle($input.val());
+                                    $popover.remove();
+                                });
+
+                                $input.on('keydown', function(ev) {
+                                    if (ev.key === 'Enter') {
+                                        ev.preventDefault();
+                                        applyTitle($input.val());
+                                        $popover.remove();
+                                    } else if (ev.key === 'Escape') {
+                                        ev.preventDefault();
+                                        $popover.remove();
+                                    }
+                                });
+                            })
+                    )
+                    .append(
+                        $('<button type="button" class="cv-resume-item__menu-btn cv-resume-item__menu-btn--danger">')
+                            .append('<i class="far fa-trash-can" aria-hidden="true"></i>')
+                            .append('<span>Delete</span>')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                const $row = $(this).closest('.cv-resume-item');
+                                const cvId = $row.attr('data-cv-id');
+                                if (!cvId || !cvBuilderConfig.routes.deleteCV) return;
+                                const $actions = $row.find('.cv-resume-item__actions');
+                                // close menu
+                                $menu.removeClass('is-open').attr('aria-hidden', 'true');
+
+                                // remove any existing popovers
+                                $resumeList.find('.cv-resume-edit-popover').remove();
+                                $resumeList.find('.cv-resume-delete-popover').remove();
+
+                                const $popover = $('<div class="cv-resume-delete-popover" role="dialog" aria-label="Delete resume">');
+                                $popover.on('click', function(ev) { ev.stopPropagation(); });
+                                $popover.append('<div class="cv-resume-delete-popover__title">Delete resume</div>');
+                                $popover.append('<div class="cv-resume-delete-popover__desc">Are you sure? This can\\\'t be undone.</div>');
+
+                                const $btnRow = $('<div class="cv-resume-delete-popover__actions">');
+                                const $cancel = $('<button type="button" class="cv-resume-delete-popover__btn cv-resume-delete-popover__btn--cancel">Cancel</button>');
+                                const $del = $('<button type="button" class="cv-resume-delete-popover__btn cv-resume-delete-popover__btn--delete">Delete</button>');
+                                $btnRow.append($cancel).append($del);
+                                $popover.append($btnRow);
+                                $actions.append($popover);
+
+                                $cancel.on('click', function(ev) {
+                                    ev.preventDefault();
+                                    ev.stopPropagation();
+                                    $popover.remove();
+                                });
+
+                                $del.on('click', function(ev) {
+                                    ev.preventDefault();
+                                    ev.stopPropagation();
+                                    $del.prop('disabled', true).text('Deleting...');
+
+                                    const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
+                                    $.ajax({
+                                        url: cvBuilderConfig.routes.deleteCV.replace('CV_ID', cvId),
+                                        method: 'POST',
+                                        data: {
+                                            _token: csrfToken,
+                                            _method: 'DELETE'
+                                        },
+                                        success: function(resp) {
+                                            if (resp && resp.success) {
+                                                // Remove from UI list + hidden select
+                                                $row.remove();
+                                                $loadSelect.find('option[value=\"' + cvId + '\"]').remove();
+                                                $resumeList.find('.cv-resume-item__menu.is-open').removeClass('is-open').attr('aria-hidden', 'true');
+                                                $resumeList.find('.cv-resume-edit-popover').remove();
+                                                $resumeList.find('.cv-resume-delete-popover').remove();
+                                                showToast('success', 'Resume deleted');
+
+                                                // If list empty, show empty state
+                                                if ($resumeList.find('.cv-resume-item').length === 0) {
+                                                    $resumeList.append('<div class=\"cv-resume-dropdown__empty\">No resumes yet</div>');
+                                                    setResumeTriggerLabel('Resume');
+                                                    selectedCvId = null;
+                                                } else if (selectedCvId && String(selectedCvId) === String(cvId)) {
+                                                    // If deleted selected, pick the first available
+                                                    const $first = $resumeList.find('.cv-resume-item').first();
+                                                    selectedCvId = $first.attr('data-cv-id') || null;
+                                                    applySelectedResumeToList();
+                                                }
+                                                setLoadAllFooterVisibility($resumeList.find('.cv-resume-item').length);
+                                            } else {
+                                                $del.prop('disabled', false).text('Delete');
+                                                showToast('error', (resp && resp.message) || 'Unable to delete');
+                                            }
+                                        },
+                                        error: function(xhr) {
+                                            $del.prop('disabled', false).text('Delete');
+                                            const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Unable to delete';
+                                            showToast('error', msg);
+                                        }
+                                    });
+                                });
+                            })
+                    );
+
+                const $moreBtn = $('<button type="button" class="cv-resume-item__more" aria-label="More">')
+                    .append('<i class="fas fa-ellipsis-vertical" aria-hidden="true"></i>')
+                    .on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Close other open menus
+                        $resumeList.find('.cv-resume-item__menu.is-open').not($menu).removeClass('is-open').attr('aria-hidden', 'true');
+                        const willOpen = !$menu.hasClass('is-open');
+                        $menu.toggleClass('is-open', willOpen).attr('aria-hidden', willOpen ? 'false' : 'true');
+                    });
+
+                const $row = $('<div class="cv-resume-item" role="button" tabindex="0">')
+                    .attr('data-cv-id', cv.id)
+                    .attr('data-cv-title', name)
+                    .append($('<div class="cv-resume-item__name">').text(name))
+                    .append(
+                        $('<div class="cv-resume-item__actions">')
+                            .append(
+                                $('<button type="button" class="cv-resume-item__duplicate">')
+                                    .attr('aria-label', 'Duplicate resume')
+                                    .append('<i class="far fa-clone" aria-hidden="true"></i>')
+                                    .append('<span>Duplicate</span>')
+                            )
+                            .append($moreBtn)
+                            .append($menu)
+                    );
+
+                if (selectedCvId && String(cv.id) === String(selectedCvId)) {
+                    $row.addClass('is-selected');
+                }
+                $resumeList.append($row);
+            });
+            setLoadAllFooterVisibility(sorted.length);
+        }
+
+        function applySelectedResumeToList() {
+            if (!selectedCvId || !$resumeList.length) return;
+            const $row = $resumeList.find('.cv-resume-item[data-cv-id="' + selectedCvId + '"]');
+            if (!$row.length) return;
+            $resumeList.find('.cv-resume-item').removeClass('is-selected');
+            $row.addClass('is-selected');
+            // Move selected to top (before first resume item, after header/empty is already removed when list exists)
+            $row.prependTo($resumeList);
+        }
+
+        function appendCvIdToUrl(href) {
+            if (!href || !selectedCvId) return href;
+            try {
+                const u = new URL(href, window.location.origin);
+                u.searchParams.set('cv_id', String(selectedCvId));
+                return u.pathname + u.search + u.hash;
+            } catch (err) {
+                return href;
+            }
+        }
+
+        function stripCvIdFromUrl() {
+            if (typeof history.replaceState !== 'function') return;
+            try {
+                const u = new URL(window.location.href);
+                if (!u.searchParams.has('cv_id')) return;
+                u.searchParams.delete('cv_id');
+                const qs = u.searchParams.toString();
+                history.replaceState({}, '', u.pathname + (qs ? '?' + qs : '') + u.hash);
+            } catch (e) { /* ignore */ }
+        }
+
+        function maybeLoadCvFromQuery(response) {
+            if (!response || !response.success || !response.cvs || !response.cvs.length) return;
+            let qId = null;
+            try {
+                qId = new URLSearchParams(window.location.search).get('cv_id');
+            } catch (e) {
+                return;
+            }
+            if (!qId) return;
+            const $opt = $loadSelect.find('option[value="' + qId + '"]');
+            if (!$opt.length) {
+                stripCvIdFromUrl();
+                return;
+            }
+            selectedCvId = String(qId);
+            $loadSelect.val(String(qId)).trigger('change');
+        }
+
+        function loadSavedCVsList(doneCallback) {
             $.ajax({
                 url: cvBuilderConfig.routes.saved,
                 method: 'GET',
                 success: function(response) {
                     if (response.success && response.cvs && response.cvs.length > 0) {
-                        $loadSelect.empty().append('<option value="">-- Select a saved CV --</option>');
+                        $loadSelect.empty().append('<option value="">-- My CVs/Resumes --</option>');
                         response.cvs.forEach(function(cv) {
                             const date = new Date(cv.updated_at).toLocaleDateString();
                             const optionText = (cv.title || 'Untitled CV') + ' (' + date + ')';
                             $loadSelect.append('<option value="' + cv.id + '">' + optionText + '</option>');
                         });
-                        $('#btn-load-cv').show();
+                        renderResumeList(response.cvs);
+                        applySelectedResumeToList();
+                        if (selectedCvId) {
+                            const $selOpt = $loadSelect.find('option[value="' + selectedCvId + '"]');
+                            if ($selOpt.length) $loadSelect.val(String(selectedCvId));
+                        }
+                        setResumeTriggerLabel(selectedCvId ? ($resumeList.find('.cv-resume-item[data-cv-id="' + selectedCvId + '"]').attr('data-cv-title') || 'Resume') : '-- My CVs/Resumes --');
                     } else {
                         $loadSelect.empty().append('<option value="">' + (response.message || 'No saved CVs found') + '</option>');
-                        $('#btn-load-cv').hide();
+                        renderResumeList([]);
+                        setResumeTriggerLabel('Resume');
+                    }
+                    if (typeof doneCallback === 'function') {
+                        doneCallback(response);
                     }
                 },
                 error: function(xhr) {
                     // Handle errors gracefully
                     if (xhr.status === 401) {
                         $loadSelect.empty().append('<option value="">Please login to load saved CVs</option>');
+                        renderResumeList([]);
+                        setResumeTriggerLabel('Resume');
                     } else {
                         $loadSelect.empty().append('<option value="">Unable to load saved CVs</option>');
+                        renderResumeList([]);
+                        setResumeTriggerLabel('Resume');
                     }
-                    $('#btn-load-cv').hide();
+                    if (typeof doneCallback === 'function') {
+                        doneCallback(null);
+                    }
                 }
             });
         }
+
+        function postDuplicateCvFromRow(cvId, $btn) {
+            if (!cvBuilderConfig.routes.duplicateCV) return;
+            const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
+            $btn.prop('disabled', true);
+            $.ajax({
+                url: cvBuilderConfig.routes.duplicateCV.replace('CV_ID', cvId),
+                method: 'POST',
+                data: { _token: csrfToken }
+            })
+                .done(function(resp) {
+                    if (!resp || !resp.success || !resp.cv) {
+                        showToast('error', (resp && resp.message) || 'Unable to duplicate');
+                        return;
+                    }
+                    const newId = String(resp.cv.id);
+                    loadSavedCVsList(function(response) {
+                        if (!response || !response.success) return;
+                        selectedCvId = newId;
+                        const $opt = $loadSelect.find('option[value="' + newId + '"]');
+                        if ($opt.length) {
+                            $loadSelect.val(newId).trigger('change');
+                        }
+                    });
+                })
+                .fail(function(xhr) {
+                    const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Unable to duplicate';
+                    showToast('error', msg);
+                })
+                .always(function() {
+                    $btn.prop('disabled', false);
+                });
+        }
+
+        $resumeList.on('click', '.cv-resume-item__duplicate', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const $btn = $(this);
+            const cvId = $btn.closest('.cv-resume-item').attr('data-cv-id');
+            if (!cvId) return;
+            const run = function() {
+                postDuplicateCvFromRow(cvId, $btn);
+            };
+            if (window.__cvBuilderDirty) {
+                openUnsavedModal(run);
+                return;
+            }
+            run();
+        });
 
         function loadCVData(cvData) {
             if (cvData.name) {
@@ -1307,24 +2105,19 @@
             if (cvData.phone) {
                 $phoneInput.val(cvData.phone).trigger('input');
             }
-            // Handle address - if we have combined address, try to split it, otherwise use individual fields
-            if (cvData.address) {
-                // Try to split combined address (format: "City, Country")
-                const addressParts = cvData.address.split(',').map(s => s.trim());
-                if (addressParts.length >= 2) {
-                    $cityInput.val(addressParts[0] || '').trigger('input');
-                    $countryInput.val(addressParts[1] || '').trigger('input');
-                } else if (addressParts.length === 1) {
-                    // If only one part, assume it's city
-                    $cityInput.val(addressParts[0] || '').trigger('input');
-                }
+            // Location: single field "City, Country" — merge from address or city/country
+            let locationStr = '';
+            if (cvData.address && String(cvData.address).trim()) {
+                locationStr = String(cvData.address).trim();
+            } else {
+                const c = (cvData.city && String(cvData.city).trim()) ? String(cvData.city).trim() : '';
+                const co = (cvData.country && String(cvData.country).trim()) ? String(cvData.country).trim() : '';
+                locationStr = c && co ? (c + ', ' + co) : (c || co);
             }
-            // Also check for individual fields (for backward compatibility)
-            if (cvData.city) {
-                $cityInput.val(cvData.city).trigger('input');
-            }
-            if (cvData.country) {
-                $countryInput.val(cvData.country).trigger('input');
+            if (locationStr) {
+                $cityInput.val(locationStr).trigger('input');
+            } else {
+                $cityInput.val('').trigger('input');
             }
             if (cvData.summary) {
                 $summaryInput.val(cvData.summary).trigger('input');
@@ -1332,11 +2125,13 @@
             if (cvData.photo) {
                 photoData = cvData.photo;
                 $photoPreview.attr('src', photoData);
-                $photoPreviewContainer.show();
+                $photoPreviewContainer.prop('hidden', false);
+                $photoCircle.addClass('has-photo');
             } else {
                 photoData = null;
                 $photoPreview.attr('src', '');
-                $photoPreviewContainer.hide();
+                $photoPreviewContainer.prop('hidden', true);
+                $photoCircle.removeClass('has-photo');
             }
 
             setTimeout(function() {
@@ -1407,77 +2202,144 @@
             }, 500);
         }
 
-        $loadSelect.on('change', function() {
-            if ($(this).val()) {
-                $loadBtn.show();
+        // Custom dropdown open/close
+        $resumeTrigger.on('click', function(e) {
+            e.preventDefault();
+            if ($resumeDropdown.hasClass('is-open')) {
+                closeResumeDropdown();
             } else {
-                $loadBtn.hide();
+                closeCreatePopover();
+                openResumeDropdown();
             }
         });
 
-        $loadBtn.on('click', function() {
-            const cvId = $loadSelect.val();
+        $resumeDropdown.on('click', function(e) {
+            if ($(e.target).closest('.cv-resume-dropdown__header-create-wrap').length) return;
+            closeCreatePopover();
+        });
+
+        $(document).on('click', function(e) {
+            if (!$resumeDropdown.length) return;
+            if ($(e.target).closest('#cv-resume-dropdown').length) return;
+            $resumeList.find('.cv-resume-item__menu.is-open').removeClass('is-open').attr('aria-hidden', 'true');
+            $resumeList.find('.cv-resume-edit-popover').remove();
+            $resumeList.find('.cv-resume-delete-popover').remove();
+            closeResumeDropdown();
+        });
+
+        $(document).on('keydown', function(e) {
+            if (e.key !== 'Escape') return;
+            if ($tplModal.length && $tplModal.hasClass('is-open')) {
+                closeTemplateModal();
+                e.stopPropagation();
+                return;
+            }
+            if ($createPopover.length && !$createPopover.prop('hidden')) {
+                closeCreatePopover();
+                e.stopPropagation();
+                return;
+            }
+            $resumeList.find('.cv-resume-item__menu.is-open').removeClass('is-open').attr('aria-hidden', 'true');
+            $resumeList.find('.cv-resume-edit-popover').remove();
+            $resumeList.find('.cv-resume-delete-popover').remove();
+            closeResumeDropdown();
+        });
+
+
+        // Selecting an item sets the hidden <select> and triggers the existing loader
+        $resumeList.on('click', '.cv-resume-item', function(e) {
+            // If the user clicked inside actions (duplicate / menu / popover), don't load the CV
+            if ($(e.target).closest('.cv-resume-item__actions').length) {
+                return;
+            }
+            const cvId = $(this).attr('data-cv-id');
+            const title = $(this).attr('data-cv-title');
             if (!cvId) return;
 
-            $loadBtn.prop('disabled', true).text('Loading...');
-            $loadMessage.hide().removeClass('success error');
+            const doSwitch = function() {
+                selectedCvId = String(cvId);
+                applySelectedResumeToList();
+                setResumeTriggerLabel(title);
+                closeResumeDropdown();
+                $loadSelect.val(cvId).trigger('change');
+            };
+
+            if (window.__cvBuilderDirty) {
+                openUnsavedModal(doSwitch);
+                return;
+            }
+            doSwitch();
+        });
+
+        $resumeList.on('keydown', '.cv-resume-item', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                $(this).trigger('click');
+            }
+        });
+
+        $loadSelect.on('change', function() {
+            const cvId = $(this).val();
+            if (!cvId) {
+                return;
+            }
+            selectedCvId = String(cvId);
+            applySelectedResumeToList();
+
+            $loadSelect.prop('disabled', true);
+            $resumeTrigger.prop('disabled', true);
+            hideToast();
 
             $.ajax({
                 url: cvBuilderConfig.routes.load.replace('CV_ID', cvId),
                 method: 'GET',
                 success: function(response) {
                     if (response.success && response.cv) {
+                        window.__cvBuilderHydrating = true;
                         $('#cv-title').val(response.cv.title || '');
+                        setResumeTriggerLabel(response.cv.title || 'Resume');
+                        // Ensure selected CV stays highlighted even after list reloads
+                        selectedCvId = String(response.cv.id || cvId);
+                        applySelectedResumeToList();
 
                         if (response.cv.cv_data) {
                             try {
                                 loadCVData(response.cv.cv_data);
 
-                                $loadMessage
-                                    .removeClass('error')
-                                    .addClass('success')
-                                    .text('CV loaded successfully!')
-                                    .fadeIn();
+                                showToast('success', 'CV loaded successfully!');
                             } catch (error) {
-                                $loadMessage
-                                    .removeClass('success')
-                                    .addClass('error')
-                                    .text('Error loading CV data: ' + error.message)
-                                    .fadeIn();
+                                showToast('error', 'Error loading CV data: ' + error.message);
                             }
                         } else {
-                            $loadMessage
-                                .removeClass('success')
-                                .addClass('error')
-                                .text('CV data is empty')
-                                .fadeIn();
+                            showToast('error', 'CV data is empty');
                         }
+                        setTimeout(function() {
+                            window.__cvBuilderHydrating = false;
+                            window.__cvBuilderDirty = false;
+                        }, 0);
+                        stripCvIdFromUrl();
                     } else {
-                        $loadMessage
-                            .removeClass('success')
-                            .addClass('error')
-                            .text(response.message || 'Error loading CV')
-                            .fadeIn();
+                        showToast('error', response.message || 'Error loading CV');
                     }
-                    setTimeout(function() {
-                        $loadBtn.prop('disabled', false).text('Load CV');
-                    }, 100);
                 },
                 error: function(xhr) {
                     let errorMessage = 'Error loading CV. Please try again.';
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMessage = xhr.responseJSON.message;
                     }
-                    $loadMessage
-                        .addClass('error')
-                        .text(errorMessage)
-                        .fadeIn();
-                    $loadBtn.prop('disabled', false).text('Load CV');
+                    showToast('error', errorMessage);
+                },
+                complete: function() {
+                    $loadSelect.prop('disabled', false);
+                    $resumeTrigger.prop('disabled', false);
+                    window.__cvBuilderHydrating = false;
                 }
             });
         });
 
-        loadSavedCVsList();
+        loadSavedCVsList(function(response) {
+            maybeLoadCvFromQuery(response);
+        });
 
         // Modal functions
         function populateModal() {
@@ -1817,6 +2679,13 @@
                             .text(response.message)
                             .fadeIn();
 
+                        // Mark newly saved CV as selected and refresh list
+                        if (response.cv_id) {
+                            selectedCvId = String(response.cv_id);
+                        }
+                        if (typeof loadSavedCVsList === 'function') loadSavedCVsList();
+                        if (response.cv && response.cv.title) setResumeTriggerLabel(response.cv.title);
+
                         setTimeout(function() {
                             $btn.prop('disabled', false).text('💾 Save CV');
                         }, 2000);
@@ -1852,7 +2721,7 @@
             const $btn = $(this);
             const $message = $('#export-message');
             
-            $btn.prop('disabled', true).html('⏳ Generating PDF...');
+            $btn.prop('disabled', true).html('<span class="cv-builder-toolbar__download-text">Generating PDF...</span><i class="fas fa-spinner fa-spin cv-builder-toolbar__download-icon" aria-hidden="true"></i>');
             $message.hide().removeClass('success error');
 
             const cvData = collectFormData();
@@ -1884,7 +2753,7 @@
 
             // Re-enable button after a delay (in case of error)
             setTimeout(function() {
-                $btn.prop('disabled', false).html('📄 Download PDF');
+                $btn.prop('disabled', false).html('<span class="cv-builder-toolbar__download-text">Download</span><i class="fas fa-file-arrow-down cv-builder-toolbar__download-icon" aria-hidden="true"></i>');
             }, 3000);
         });
     }

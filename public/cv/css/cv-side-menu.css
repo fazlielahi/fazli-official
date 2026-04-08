@@ -1,0 +1,74 @@
+/* Side menu (CV templates page) */
+.cv-side-menu {
+    position: absolute;
+    left: 14px;
+    top: 0;
+    transform: none;
+    width: 92px;
+    padding: 10px 8px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(26, 32, 44, 0.08);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+    z-index: 120;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    font-family: "Outfit", system-ui, sans-serif;
+}
+
+.cv-side-menu__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #6b7280;
+    user-select: none;
+}
+
+.cv-side-menu__item[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+}
+
+.cv-side-menu__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(26, 32, 44, 0.08);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
+    color: #7c3aed;
+}
+
+.cv-side-menu__icon i {
+    font-size: 1.05rem;
+}
+
+.cv-side-menu__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.cv-side-menu__item.is-active .cv-side-menu__icon {
+    background: rgba(124, 58, 237, 0.14);
+    border-color: rgba(124, 58, 237, 0.24);
+}
+
+.cv-side-menu__item.is-active .cv-side-menu__label {
+    color: #1f2937;
+}
+
+@media (max-width: 991px) {
+    .cv-side-menu {
+        display: none;
+    }
+}
+

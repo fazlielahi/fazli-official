@@ -97,7 +97,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-home.css') }}" />
     
     <!-- CV Templates Section CSS -->
-    <link rel="stylesheet" href="{{ asset('styles/home-page-cv-section.css') }}" />
+    <link rel="stylesheet" href="{{ asset('cv/css/home-page-cv-section.css') }}" />
 
     <!-- Template styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />

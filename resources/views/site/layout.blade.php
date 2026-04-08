@@ -135,7 +135,7 @@
 
 </head>
 
-<body onresize="add_collapse()" id="body">
+<body onresize="add_collapse()" id="body" class="@yield('body_class')">
     @include("site.inc.header")
     @include("site.inc.cv")
 

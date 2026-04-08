@@ -17,24 +17,29 @@ class CvController extends Controller
      */
     public function index()
     {
-        // Get all ACTIVE templates from database (primary source - managed from admin panel)
-        $dbTemplates = CvTemplate::where('is_active', true)->get();
-        
+        $templateFolders = $this->buildActiveTemplateFolders();
+
+        return view('cv.index', compact('templateFolders'));
+    }
+
+    /**
+     * Active templates for gallery + builder template picker (preview, tab, etc.).
+     */
+    private function buildActiveTemplateFolders(): array
+    {
+        $dbTemplates = CvTemplate::where('is_active', true)->orderBy('name')->get();
+
         $templatesPath = resource_path('views/cv/templates');
         $templateFolders = [];
-        
-        // Process each active template from database ONLY
-        // Gallery will ONLY show templates managed from admin panel
+
         foreach ($dbTemplates as $dbTemplate) {
             $templateSlug = $dbTemplate->slug;
             $templateFolder = $templatesPath . '/' . $templateSlug;
-            
-            // Get preview path from database (admin panel managed)
+
             $previewPath = null;
             if ($dbTemplate->preview_path) {
                 $previewPath = asset($dbTemplate->preview_path);
             } else {
-                // Fallback: check filesystem for preview image (if not uploaded via admin)
                 $previewExtensions = ['webp', 'png', 'jpg', 'jpeg'];
                 foreach ($previewExtensions as $ext) {
                     $previewFile = public_path('cv-templates/previews/' . $templateSlug . '-preview.' . $ext);
@@ -44,19 +49,47 @@ class CvController extends Controller
                     }
                 }
             }
-            
-            // Use database data (from admin panel) as source of truth
-            // Show template even if folder doesn't exist (admin can create template first, then add files)
+
             $templateFolders[] = [
                 'slug' => $dbTemplate->slug,
                 'name' => $dbTemplate->name,
                 'description' => $dbTemplate->description ?? 'Professional CV template',
                 'preview_path' => $previewPath,
-                'folder_exists' => File::exists($templateFolder) // For debugging/warnings
+                'folder_exists' => File::exists($templateFolder),
+                'tab' => $this->resolveCvTemplateTab($dbTemplate->slug, $dbTemplate->config),
             ];
         }
-        
-        return view('cv.index', compact('templateFolders'));
+
+        return $templateFolders;
+    }
+
+    /**
+     * Which filter tab a template belongs to: popular | simple | modern | creative.
+     * Optional override: config.tab or config.filter in CvTemplate JSON.
+     */
+    private function resolveCvTemplateTab(string $slug, $config): string
+    {
+        $config = is_array($config) ? $config : [];
+        $fromConfig = $config['tab'] ?? $config['filter'] ?? null;
+        if (is_string($fromConfig)) {
+            $t = strtolower($fromConfig);
+            if (in_array($t, ['popular', 'simple', 'modern', 'creative'], true)) {
+                return $t;
+            }
+        }
+
+        $slug = strtolower($slug);
+        if (str_contains($slug, 'modern')) {
+            return 'modern';
+        }
+        if (str_contains($slug, 'creative')) {
+            return 'creative';
+        }
+        if (str_contains($slug, 'popular') || str_contains($slug, 'classic')) {
+            return 'popular';
+        }
+
+        return 'simple';
     }
     
     /**
@@ -120,14 +153,17 @@ class CvController extends Controller
             'phone' => '+966 59 230 4816',
             'summary' => 'Experienced E-commerce Seller managing online stores on Amazon, Shopify, and TikTok.'
         ];
-        
+
+        $templateFolders = $this->buildActiveTemplateFolders();
+
         return view('cv.builder', [
             'templateSlug' => $slug,
             'lang' => $lang,
             'config' => $config,
             'template' => $template,
             'templateExists' => $templateExists,
-            'data' => $dummyData
+            'data' => $dummyData,
+            'templateFolders' => $templateFolders,
         ]);
     }
     
@@ -146,26 +182,50 @@ class CvController extends Controller
             'template_slug' => 'required|string',
             'cv_data' => 'required|array',
             'title' => 'nullable|string|max:255',
+            'cv_id' => 'nullable|integer',
         ]);
         
         try {
-            // Create or update CV
-            $cv = UserCV::updateOrCreate(
-                [
+            $title = $request->input('title') ?? 'My CV';
+
+            // If cv_id is provided, update that CV (must belong to user). Otherwise create a new CV.
+            if ($request->filled('cv_id')) {
+                $cv = UserCV::where('id', $request->input('cv_id'))
+                    ->where('user_id', $userId)
+                    ->first();
+
+                if (!$cv) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'CV not found'
+                    ], 404);
+                }
+
+                $cv->template_slug = $request->input('template_slug');
+                $cv->title = $title;
+                $cv->cv_data = $request->input('cv_data');
+                $cv->is_active = true;
+                $cv->save();
+            } else {
+                $cv = UserCV::create([
                     'user_id' => $userId,
                     'template_slug' => $request->input('template_slug'),
-                    'is_active' => true // For now, save as active
-                ],
-                [
-                    'title' => $request->input('title') ?? 'My CV',
+                    'title' => $title,
                     'cv_data' => $request->input('cv_data'),
-                ]
-            );
+                    'is_active' => true,
+                ]);
+            }
             
             return response()->json([
                 'success' => true,
                 'message' => 'CV saved successfully!',
-                'cv_id' => $cv->id
+                'cv_id' => $cv->id,
+                'cv' => [
+                    'id' => $cv->id,
+                    'title' => $cv->title,
+                    'template_slug' => $cv->template_slug,
+                    'updated_at' => $cv->updated_at,
+                ]
             ]);
             
         } catch (\Exception $e) {
@@ -203,6 +263,23 @@ class CvController extends Controller
                 'cvs' => []
             ], 500);
         }
+    }
+
+    /**
+     * Projects page (saved resumes grouped as projects).
+     * Auth middleware protects this route.
+     */
+    public function projects(Request $request)
+    {
+        $userId = Auth::id();
+
+        $cvs = UserCV::where('user_id', $userId)
+            ->orderBy('updated_at', 'desc')
+            ->get(['id', 'title', 'template_slug', 'created_at', 'updated_at']);
+
+        return view('cv.projects', [
+            'cvs' => $cvs,
+        ]);
     }
     
     /**
@@ -252,6 +329,146 @@ class CvController extends Controller
                 'message' => 'Error loading CV: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Update the title of a saved CV (authenticated).
+     */
+    public function updateTitle(Request $request, $lang, $id)
+    {
+        $userId = Auth::id();
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        try {
+            $cv = UserCV::where('id', $id)->where('user_id', $userId)->first();
+            if (!$cv) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'CV not found'
+                ], 404);
+            }
+
+            $cv->title = $request->input('title');
+            $cv->save();
+
+            return response()->json([
+                'success' => true,
+                'cv' => [
+                    'id' => $cv->id,
+                    'title' => $cv->title,
+                    'updated_at' => $cv->updated_at,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating title: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a saved CV (authenticated).
+     */
+    public function deleteSaved(Request $request, $lang, $id)
+    {
+        $userId = Auth::id();
+
+        try {
+            $cv = UserCV::where('id', $id)->where('user_id', $userId)->first();
+            if (!$cv) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'CV not found'
+                ], 404);
+            }
+
+            $cv->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'CV deleted'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting CV: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Duplicate a saved CV (same data & template). Title becomes {base}-copy01, {base}-copy02, …
+     */
+    public function duplicateSaved(Request $request, $lang, $id)
+    {
+        $userId = Auth::id();
+
+        try {
+            $source = UserCV::where('id', $id)->where('user_id', $userId)->first();
+            if (!$source) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'CV not found',
+                ], 404);
+            }
+
+            $title = $this->nextDuplicateCvTitleForUser((string) ($source->title ?? 'My CV'), (int) $userId);
+
+            $copy = UserCV::create([
+                'user_id' => $userId,
+                'template_slug' => $source->template_slug,
+                'title' => $title,
+                'cv_data' => $source->cv_data,
+                'is_active' => true,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'CV duplicated',
+                'cv' => [
+                    'id' => $copy->id,
+                    'title' => $copy->title,
+                    'template_slug' => $copy->template_slug,
+                    'created_at' => $copy->created_at,
+                    'updated_at' => $copy->updated_at,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error duplicating CV: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Next title in the form "{base}-copyNN" where base is the source title without a trailing -copyNN.
+     */
+    private function nextDuplicateCvTitleForUser(string $sourceTitle, int $userId): string
+    {
+        $base = preg_replace('/-copy\d+$/i', '', $sourceTitle);
+        $base = trim($base);
+        if ($base === '') {
+            $base = 'My CV';
+        }
+
+        $pattern = '/^' . preg_quote($base, '/') . '-copy(\d+)$/i';
+
+        $maxN = 0;
+        $titles = UserCV::where('user_id', $userId)->pluck('title');
+        foreach ($titles as $t) {
+            if (preg_match($pattern, (string) $t, $m)) {
+                $maxN = max($maxN, (int) $m[1]);
+            }
+        }
+
+        $next = $maxN + 1;
+
+        return $base . '-copy' . sprintf('%02d', $next);
     }
     
     /**

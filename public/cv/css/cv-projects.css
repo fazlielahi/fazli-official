@@ -1,0 +1,228 @@
+/* Projects page (saved resumes) */
+html:has(body.page-cv-projects) {
+    height: 100%;
+    overflow: hidden;
+    background-color: #eef2f7;
+}
+
+body.page-cv-projects {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+body.page-cv-projects .footer {
+    display: none;
+}
+
+body.page-cv-projects .scroll-to-top {
+    display: none !important;
+}
+
+.cv-projects {
+    position: relative;
+    height: calc(100vh - 52px);
+    overflow: hidden;
+    background-color: #eef2f7;
+    padding: 16px 0 12px;
+}
+
+.cv-projects::before {
+    content: "";
+    position: absolute;
+    inset: -12px;
+    z-index: 0;
+    background-color: #eef2f7;
+    background-image: url("../../cv-templates/images/cv-page-background-image.jpg");
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: cover;
+    filter: blur(6px);
+    transform: scale(1.04);
+    pointer-events: none;
+}
+
+.cv-projects > .container {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    min-height: 0;
+    max-width: 100%;
+    padding-left: 122px;
+    padding-right: 14px;
+}
+
+.cv-projects-panel {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.52);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.10);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.cv-projects-panel__tabs {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 12px;
+    border-bottom: 0;
+    background: rgba(255, 255, 255, 0.55);
+    font-family: "Outfit", system-ui, sans-serif;
+    margin: 10px 12px 0;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 14px;
+}
+
+.cv-projects-tab {
+    appearance: none;
+    border: 1px solid #1a202c;
+    background: transparent;
+    color: #1a202c;
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.2;
+}
+
+.cv-projects-tab i {
+    font-size: 0.9em;
+    opacity: 0.95;
+}
+
+.cv-projects-tab.is-active {
+    background: #ffffff;
+    border-color: rgba(26, 32, 44, 0.12);
+    color: #1a202c;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+}
+
+.cv-projects-tab--soon {
+    opacity: 0.75;
+}
+
+.cv-projects-tab--soon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 8px);
+    transform: translate(-50%, -6px);
+    opacity: 0;
+    pointer-events: none;
+    background: rgba(17, 24, 39, 0.92);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+    transition: opacity 140ms ease, transform 140ms ease;
+    z-index: 4000;
+}
+
+.cv-projects-tab--soon.is-tooltip-open::after,
+.cv-projects-tab--soon:hover::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.cv-projects-panel__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 18px 18px;
+}
+
+.cv-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.cv-project-card {
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(26, 32, 44, 0.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    padding: 12px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: "Outfit", system-ui, sans-serif;
+}
+
+.cv-project-card__title {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.cv-project-card__sub {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.cv-project-card__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #1a1f36;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.78rem;
+    white-space: nowrap;
+}
+
+.cv-project-card__btn:hover {
+    background: #252b4a;
+    color: #fff;
+}
+
+.cv-projects-empty {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 10px;
+}
+
+.cv-projects-empty img {
+    width: min(820px, 100%);
+    height: auto;
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
+}
+
+@media (max-width: 991px) {
+    .cv-projects > .container {
+        padding-left: 14px;
+    }
+    .cv-side-menu {
+        display: none;
+    }
+}
+

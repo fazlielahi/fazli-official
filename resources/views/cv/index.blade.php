@@ -1,5 +1,7 @@
 @extends('site.layout')
 
+@section('body_class', 'page-cv-templates')
+
 @section('title', 'CV Templates - ' . __('lang.DEFAULT_TITLE'))
 
 @section('meta')
@@ -26,251 +28,129 @@
     
     <!-- Theme styles -->
     <link rel="stylesheet" href="{{ asset('styles/theme.css') }}" />
-    <style>
-        .cv-gallery {
-            padding: 60px 0;
-            background: #f8f9fa;
-        }
-        .cv-gallery h1 {
-            text-align: center;
-            margin-bottom: 40px;
-            color: #333;
-        }
-        .templates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .template-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .template-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-        .template-preview {
-            width: 100%;
-            height: 400px;
-            background: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .template-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .template-preview-placeholder {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #999;
-            font-size: 18px;
-            z-index: 0;
-        }
-        .template-info {
-            padding: 20px;
-        }
-        .template-info h3 {
-            margin: 0 0 10px 0;
-            color: #333;
-        }
-        .template-info p {
-            color: #666;
-            margin: 0 0 15px 0;
-            font-size: 14px;
-        }
-        .template-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .btn-use-template {
-            flex: 1;
-            padding: 10px 20px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-            transition: background 0.3s;
-        }
-        .btn-use-template:hover {
-            background: #1e40af;
-        }
-        .btn-preview {
-            padding: 10px 20px;
-            background: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .btn-preview:hover {
-            background: #5a6268;
-        }
-        /* Preview Modal Styles */
-        .preview-modal .modal-dialog {
-            max-width: 90%;
-            margin: 3rem auto;
-            max-height: calc(100vh - 6rem);
-            display: flex;
-            flex-direction: column;
-        }
-        @media (max-width: 768px) {
-            .preview-modal .modal-dialog {
-                margin: 1rem auto;
-                max-height: calc(100vh - 2rem);
-            }
-        }
-        .preview-modal .modal-content {
-            background: #f8f9fa;
-            max-height: calc(100vh - 6rem);
-            display: flex;
-            flex-direction: column;
-            border-radius: 8px;
-        }
-        @media (max-width: 768px) {
-            .preview-modal .modal-content {
-                max-height: calc(100vh - 2rem);
-            }
-        }
-        .preview-modal .modal-header {
-            flex-shrink: 0;
-            padding: 1rem 1.5rem;
-        }
-        .preview-modal .modal-body {
-            padding: 1.5rem;
-            text-align: center;
-            background: white;
-            overflow-y: auto;
-            flex: 1 1 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 0;
-        }
-        .preview-modal .modal-body img {
-            max-width: 100%;
-            max-height: calc(100vh - 14rem);
-            width: auto;
-            height: auto;
-            object-fit: contain;
-        }
-        @media (max-width: 768px) {
-            .preview-modal .modal-body img {
-                max-height: calc(100vh - 10rem);
-            }
-        }
-        .preview-modal .modal-footer {
-            flex-shrink: 0;
-            padding: 1rem 1.5rem;
-        }
-        .preview-modal .modal-header {
-            border-bottom: 1px solid #dee2e6;
-            background: white;
-        }
-        .preview-modal .modal-header .modal-title {
-            font-weight: 600;
-            color: #333;
-        }
-        .preview-modal .modal-footer {
-            border-top: 1px solid #dee2e6;
-            background: white;
-        }
-        .preview-modal .btn-use-from-modal {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .preview-modal .btn-use-from-modal:hover {
-            background: #1e40af;
-        }
-        .create-cv-default {
-            text-align: center;
-            margin: 40px 0;
-        }
-        .btn-create-default {
-            display: inline-block;
-            padding: 15px 40px;
-            background: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 18px;
-            transition: background 0.3s;
-        }
-        .btn-create-default:hover {
-            background: #218838;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('cv/css/cv-templates.css') }}" />
+    <link rel="stylesheet" href="{{ asset('cv/css/cv-side-menu.css') }}" />
 @endsection
 
 @section('content')
     <div class="cv-gallery">
         <div class="container">
-            <h1>Choose Your CV Template</h1>
+            @php $cvBreadcrumbRtl = app()->getLocale() === 'ar'; @endphp
+            <aside class="cv-side-menu" aria-label="Quick menu">
+                <a class="cv-side-menu__item is-active" href="#" aria-current="page">
+                    <span class="cv-side-menu__icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                    <span class="cv-side-menu__label">Create</span>
+                </a>
+                <a class="cv-side-menu__item" href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}">
+                    <span class="cv-side-menu__icon"><i class="fas fa-house" aria-hidden="true"></i></span>
+                    <span class="cv-side-menu__label">Home</span>
+                </a>
+                <a class="cv-side-menu__item" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
+                    <span class="cv-side-menu__icon"><i class="far fa-folder" aria-hidden="true"></i></span>
+                    <span class="cv-side-menu__label">Projects</span>
+                </a>
+                <a class="cv-side-menu__item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
+                    <span class="cv-side-menu__icon"><i class="fas fa-layer-group" aria-hidden="true"></i></span>
+                    <span class="cv-side-menu__label">Templates</span>
+                </a>
+                <a class="cv-side-menu__item" href="#" tabindex="-1" aria-disabled="true">
+                    <span class="cv-side-menu__icon"><i class="fas fa-crown" aria-hidden="true"></i></span>
+                    <span class="cv-side-menu__label">Brand</span>
+                </a>
+                <a class="cv-side-menu__item" href="#" tabindex="-1" aria-disabled="true">
+                    <span class="cv-side-menu__icon"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i></span>
+                    <span class="cv-side-menu__label">Canva AI</span>
+                </a>
+                <a class="cv-side-menu__item" href="#" tabindex="-1" aria-disabled="true">
+                    <span class="cv-side-menu__icon"><i class="fas fa-ellipsis" aria-hidden="true"></i></span>
+                    <span class="cv-side-menu__label">More</span>
+                </a>
+            </aside>
             
-            <div class="templates-grid">
+            <div class="templates-showcase">
+                <div class="cv-template-tabs-wrap{{ $cvBreadcrumbRtl ? ' cv-template-tabs-wrap--rtl' : '' }}">
+                    <button type="button" class="cv-template-tabs__nav cv-template-tabs__nav--prev cv-template-tabs__nav--concealed" id="cv-template-tabs-prev" aria-controls="cv-template-tabs-scroll" aria-label="{{ __('lang.CV tabs scroll prev') }}" aria-hidden="true" disabled>
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <div class="cv-template-tabs-scroll" id="cv-template-tabs-scroll" dir="ltr">
+                        <div class="cv-template-tabs{{ $cvBreadcrumbRtl ? ' cv-template-tabs--rtl' : '' }}" role="tablist" aria-label="{{ __('lang.CV Templates') }}">
+                            <button type="button" class="cv-template-tabs__btn is-active" role="tab" aria-selected="true" data-tab="all" id="cv-tab-all">
+                                <i class="fas fa-table-cells" aria-hidden="true"></i>
+                                <span>{{ __('lang.All') }}</span>
+                            </button>
+                            <button type="button" class="cv-template-tabs__btn" role="tab" aria-selected="false" data-tab="popular" id="cv-tab-popular">
+                                <i class="far fa-star" aria-hidden="true"></i>
+                                <span>{{ __('lang.CV filter Popular') }}</span>
+                            </button>
+                            <button type="button" class="cv-template-tabs__btn" role="tab" aria-selected="false" data-tab="simple" id="cv-tab-simple">
+                                <i class="fas fa-briefcase" aria-hidden="true"></i>
+                                <span>{{ __('lang.CV filter Simple') }}</span>
+                            </button>
+                            <button type="button" class="cv-template-tabs__btn" role="tab" aria-selected="false" data-tab="modern" id="cv-tab-modern">
+                                <i class="fas fa-cube" aria-hidden="true"></i>
+                                <span>{{ __('lang.CV filter Modern') }}</span>
+                            </button>
+                            <button type="button" class="cv-template-tabs__btn" role="tab" aria-selected="false" data-tab="creative" id="cv-tab-creative">
+                                <i class="fas fa-palette" aria-hidden="true"></i>
+                                <span>{{ __('lang.CV filter Creative') }}</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="cv-template-tabs__nav cv-template-tabs__nav--next" id="cv-template-tabs-next" aria-controls="cv-template-tabs-scroll" aria-label="{{ __('lang.CV tabs scroll next') }}" disabled>
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            <div class="templates-grid" id="cv-templates-grid" role="tabpanel" aria-labelledby="cv-tab-all">
                 @forelse($templateFolders as $template)
-                    <div class="template-card">
+                    <article class="template-card" data-tab="{{ $template['tab'] }}">
                         <div class="template-preview">
+                            <div class="template-preview__frame template-preview__frame--overlay">
                             @if(!empty($template['preview_path']))
                                 <img src="{{ $template['preview_path'] }}" alt="{{ $template['name'] }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                 <div class="template-preview-placeholder" style="display: none;">Preview</div>
                             @else
                                 <div class="template-preview-placeholder">Preview</div>
                             @endif
-                        </div>
-                        <div class="template-info">
-                            <h3>{{ $template['name'] }}</h3>
-                            <p>{{ $template['description'] ?: 'Professional CV template' }}</p>
-                            <div class="template-actions">
-                                <a href="{{ route('localized.cv.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]) }}" class="btn-use-template">
-                                    Use Template
-                                </a>
-                                @if(!empty($template['preview_path']))
-                                    <button class="btn-preview" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#previewModal"
-                                            data-preview-image="{{ $template['preview_path'] }}"
-                                            data-template-name="{{ $template['name'] }}"
-                                            data-template-slug="{{ $template['slug'] }}">
-                                        Preview
-                                    </button>
-                                @else
-                                    <button class="btn-preview" disabled title="No preview available">Preview</button>
-                                @endif
+                                <div class="template-preview__actions-overlay">
+                                    <div class="template-actions">
+                                        <a href="{{ route('localized.cv.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]) }}" class="btn-use-template">
+                                            {{ __('lang.Use Template') }}
+                                        </a>
+                                        @if(!empty($template['preview_path']))
+                                            <button class="btn-preview" 
+                                                    type="button"
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#previewModal"
+                                                    data-preview-image="{{ $template['preview_path'] }}"
+                                                    data-template-name="{{ $template['name'] }}"
+                                                    data-template-slug="{{ $template['slug'] }}">
+                                                {{ __('lang.Preview') }}
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn-preview" disabled title="No preview available">{{ __('lang.Preview') }}</button>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="template-info">
+                            <h3 class="template-info__title">{{ $template['name'] }}</h3>
+                        </div>
+                    </article>
                 @empty
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                        <p>No templates available yet.</p>
+                    <div class="cv-templates-grid-empty cv-templates-grid-empty--initial">
+                        <div class="cv-templates-empty-banner" role="status" aria-live="polite">
+                            <img src="{{ asset('cv-templates/images/cv-templates-placeholder.png') }}" alt="No templates available" loading="lazy">
+                        </div>
                     </div>
                 @endforelse
+
+                <div class="cv-templates-tab-empty" id="cv-templates-tab-empty" hidden>
+                    <div class="cv-templates-empty-banner" role="status" aria-live="polite">
+                        <img src="{{ asset('cv-templates/images/cv-templates-placeholder.png') }}" alt="No templates in this category" loading="lazy">
+                    </div>
+                </div>
             </div>
-            
-            <div class="create-cv-default">
-                <a href="{{ route('localized.cv.builder', ['lang' => app()->getLocale(), 'slug' => 'classic']) }}" class="btn-create-default">
-                    Create CV with Default Template
-                </a>
             </div>
         </div>
     </div>
@@ -352,6 +232,78 @@
             $('#previewModal').on('hidden.bs.modal', function() {
                 $(this).find('.image-error-message').remove();
             });
+
+            // Template filter tabs
+            var $tabBtns = $('.cv-template-tabs__btn');
+            var $cards = $('#cv-templates-grid .template-card');
+            var $tabEmpty = $('#cv-templates-tab-empty');
+
+            function applyCvTabFilter(tab) {
+                var visible = 0;
+                if (tab === 'all') {
+                    $cards.show();
+                    visible = $cards.length;
+                } else {
+                    $cards.each(function() {
+                        var $c = $(this);
+                        var show = $c.data('tab') === tab;
+                        $c.toggle(show);
+                        if (show) visible++;
+                    });
+                }
+                var hasInitialEmpty = $('#cv-templates-grid .cv-templates-grid-empty--initial').length > 0;
+                var hasFilterableCards = $('#cv-templates-grid .template-card').length > 0;
+                var shouldShowEmpty = !hasInitialEmpty && (visible === 0 && hasFilterableCards);
+                $tabEmpty.prop('hidden', !shouldShowEmpty);
+            }
+
+            $tabBtns.on('click', function() {
+                var tab = $(this).data('tab');
+                $tabBtns.removeClass('is-active').attr('aria-selected', 'false');
+                $(this).addClass('is-active').attr('aria-selected', 'true');
+                $('#cv-templates-grid').attr('aria-labelledby', $(this).attr('id'));
+                applyCvTabFilter(tab);
+            });
+
+            // Mobile: horizontal tab strip scroll + prev/next
+            var $tabScroll = $('#cv-template-tabs-scroll');
+            var $tabPrev = $('#cv-template-tabs-prev');
+            var $tabNext = $('#cv-template-tabs-next');
+            var tabScrollStep = 180;
+
+            function updateCvTabScrollNav() {
+                if (window.matchMedia('(min-width: 768px)').matches) {
+                    $tabPrev.addClass('cv-template-tabs__nav--concealed').prop('disabled', true).attr('aria-hidden', 'true');
+                    $tabNext.prop('disabled', true);
+                    return;
+                }
+                var el = $tabScroll[0];
+                if (!el) return;
+                var max = el.scrollWidth - el.clientWidth;
+                if (max <= 1) {
+                    $tabPrev.addClass('cv-template-tabs__nav--concealed').prop('disabled', true).attr('aria-hidden', 'true');
+                    $tabNext.prop('disabled', true);
+                    return;
+                }
+                var sl = el.scrollLeft;
+                var atStart = sl <= 1;
+                if (atStart) {
+                    $tabPrev.addClass('cv-template-tabs__nav--concealed').prop('disabled', true).attr('aria-hidden', 'true');
+                } else {
+                    $tabPrev.removeClass('cv-template-tabs__nav--concealed').prop('disabled', false).attr('aria-hidden', 'false');
+                }
+                $tabNext.prop('disabled', sl >= max - 1);
+            }
+
+            $tabPrev.on('click', function() {
+                $tabScroll[0].scrollBy({ left: -tabScrollStep, behavior: 'smooth' });
+            });
+            $tabNext.on('click', function() {
+                $tabScroll[0].scrollBy({ left: tabScrollStep, behavior: 'smooth' });
+            });
+            $tabScroll.on('scroll', updateCvTabScrollNav);
+            $(window).on('resize', updateCvTabScrollNav);
+            updateCvTabScrollNav();
         });
     </script>
 @endsection
