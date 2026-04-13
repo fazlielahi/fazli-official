@@ -454,6 +454,8 @@ return [
     'CV form professional summary' => 'Professional Summary',
     'CV form professional summary placeholder' => 'Brief summary of your experience and goals…',
     'CV form toggle personal' => 'Show or hide personal details',
+    'CV form see more fields' => 'Contact details & summary',
+    'CV form view less' => 'Show less',
     'Books' => 'Books',
     'Explore Jobs' => 'Explore Jobs',
     'Comment submitted successfully!' => 'Comment submitted successfully!',

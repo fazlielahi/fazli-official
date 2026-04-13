@@ -1098,42 +1098,51 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     max-width: 560px;
     min-height: 0;
     align-self: stretch;
-    background: rgba(255, 255, 255, 0.96);
-    padding: 20px;
+    background: transparent;
+    padding: 0px 5px;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     border-radius: 14px;
-    border: 1px solid rgba(26, 32, 44, 0.08);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+    border: none;
+    box-shadow: none;
 }
 
 /* Personal details card (photo → summary) */
 .cv-personal-card {
     margin-bottom: 20px;
-    padding: 16px 16px 18px;
+    padding: 22px 22px 20px;
     background: #fff;
     border: 1px solid rgba(26, 32, 44, 0.08);
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
 }
 
 .cv-personal-card__header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 14px;
-    padding-bottom: 2px;
+    gap: 10px 12px;
+    margin-bottom: 18px;
+}
+
+.cv-personal-card__header-start {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
 }
 
 .cv-personal-card__title {
     margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #1e1b4b;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0f172a;
     letter-spacing: -0.02em;
     line-height: 1.25;
+    min-width: 0;
 }
 
 .cv-personal-card__header-actions {
@@ -1147,14 +1156,14 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 8px;
+    padding: 6px 6px;
     margin: 0;
     border: none;
     background: transparent;
     font-family: inherit;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #4a5568;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0f172a;
     cursor: pointer;
     border-radius: 8px;
     transition: background 0.15s ease, color 0.15s ease;
@@ -1162,15 +1171,16 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .cv-personal-card__tips:hover {
     background: rgba(0, 0, 0, 0.04);
-    color: #1a202c;
+    color: #0f172a;
 }
 
 .cv-personal-card__tips i {
-    font-size: 0.9rem;
-    opacity: 0.85;
+    font-size: 1rem;
+    opacity: 0.8;
 }
 
 .cv-personal-card__toggle {
+    flex-shrink: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1179,7 +1189,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     padding: 0;
     border: none;
     background: transparent;
-    color: #4a5568;
+    color: #64748b;
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease;
@@ -1187,7 +1197,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .cv-personal-card__toggle:hover {
     background: rgba(0, 0, 0, 0.05);
-    color: #1a202c;
+    color: #0f172a;
 }
 
 .cv-personal-card__toggle-icon {
@@ -1207,12 +1217,72 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     padding-top: 2px;
 }
 
+.cv-personal-card__extra {
+    margin-top: 2px;
+}
+
+.cv-personal-card__see-more {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 12px 16px;
+    border: 1px dashed rgba(26, 32, 44, 0.18);
+    border-radius: 10px;
+    background: #f8fafc;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.cv-personal-card__see-more:hover {
+    background: #f1f5f9;
+    border-color: rgba(26, 32, 44, 0.26);
+    color: #0f172a;
+}
+
+.cv-personal-card__extra-panel {
+    padding-top: 14px;
+}
+
+.cv-personal-card__extra-panel[hidden] {
+    display: none !important;
+}
+
+.cv-personal-card__extra-footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.cv-personal-card__view-less {
+    margin: 0;
+    padding: 8px 14px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 8px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s ease;
+}
+
+.cv-personal-card__view-less:hover {
+    color: #0f172a;
+}
+
 .cv-personal-card__top {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 16px 20px;
     align-items: start;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
 }
 
 @media (max-width: 520px) {
@@ -1244,10 +1314,10 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .cv-field__label {
     display: block;
-    margin-bottom: 6px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #1e1b4b;
+    margin-bottom: 8px;
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #0f172a;
     letter-spacing: 0.01em;
 }
 
@@ -1257,10 +1327,10 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .cv-field__input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 14px 16px;
     border: none;
-    border-radius: 8px;
-    font-size: 0.875rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
     font-family: inherit;
     line-height: 1.35;
     color: #1a202c;
@@ -1303,7 +1373,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     display: flex;
     align-items: stretch;
     gap: 0;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #f3f4f6;
     overflow: hidden;
     transition: box-shadow 0.15s ease;
@@ -1330,8 +1400,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     align-items: center;
     justify-content: center;
     flex: 0 0 36px;
-    color: #cbd5e1;
-    font-size: 0.75rem;
+    color: #94a3b8;
+    font-size: 0.85rem;
     user-select: none;
     pointer-events: none;
     background: #f3f4f6;
@@ -1357,10 +1427,10 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .cv-photo-upload__circle {
     position: relative;
-    width: 112px;
-    height: 112px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    background: #e8eaef;
+    background: #e5e7eb;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1386,8 +1456,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #94a3b8;
-    font-size: 1.75rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 2rem;
     pointer-events: none;
 }
 
@@ -2042,23 +2112,68 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     background: #5a6268;
 }
 .added-section {
-    margin-top: 30px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 5px;
-    border: 1px solid #e0e0e0;
+    margin-top: 24px;
+    padding: 18px 18px 16px;
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid rgba(26, 32, 44, 0.08);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
 }
 .section-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
+    gap: 10px 12px;
+    margin-bottom: 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(26, 32, 44, 0.08);
 }
-.section-header h4 {
+.section-header__start {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+}
+.added-section__title {
     margin: 0;
-    color: #2563eb;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+}
+.added-section__toggle {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.added-section__toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #0f172a;
+}
+.added-section__chev {
+    display: inline-flex;
+    transition: transform 0.2s ease;
+}
+.added-section.is-collapsed .added-section__chev {
+    transform: rotate(180deg);
+}
+.added-section__body {
+    padding-top: 14px;
+}
+.added-section.is-collapsed .added-section__body {
+    display: none;
 }
 .btn-remove-section {
     padding: 5px 15px;

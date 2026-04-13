@@ -449,6 +449,8 @@ return [
     'CV form professional summary' => 'پیشہ ورانہ خلاصہ',
     'CV form professional summary placeholder' => 'اپنے تجربے اور اہداف کا مختصر خلاصہ…',
     'CV form toggle personal' => 'ذاتی تفصیلات دکھائیں یا چھپائیں',
+    'CV form see more fields' => 'رابطہ کی تفصیلات اور خلاصہ',
+    'CV form view less' => 'کم دکھائیں',
     'Books' => 'کتابیں',
     'Explore Jobs' => 'نوکریاں دریافت کریں',
     'Comment submitted successfully!' => 'تبصرہ کامیابی سے جمع کرایا گیا!',

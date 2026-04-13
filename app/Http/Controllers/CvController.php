@@ -146,14 +146,6 @@ class CvController extends Controller
         $templateBladePath = $templatePath . '/template.blade.php';
         $templateExists = File::exists($templateBladePath);
         
-        // Dummy data for preview (Phase 1)
-        $dummyData = [
-            'name' => 'Zahra Al-Khalil',
-            'email' => 'zahra@thefazli.com',
-            'phone' => '+966 59 230 4816',
-            'summary' => 'Experienced E-commerce Seller managing online stores on Amazon, Shopify, and TikTok.'
-        ];
-
         $templateFolders = $this->buildActiveTemplateFolders();
 
         return view('cv.builder', [
@@ -162,7 +154,7 @@ class CvController extends Controller
             'config' => $config,
             'template' => $template,
             'templateExists' => $templateExists,
-            'data' => $dummyData,
+            'data' => [],
             'templateFolders' => $templateFolders,
         ]);
     }

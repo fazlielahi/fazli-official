@@ -844,6 +844,15 @@
             }
         });
 
+        $form.on('click', '.added-section__toggle', function(e) {
+            e.preventDefault();
+            const $btn = $(this);
+            const $section = $btn.closest('.added-section');
+            const expanded = $btn.attr('aria-expanded') === 'true';
+            $btn.attr('aria-expanded', expanded ? 'false' : 'true');
+            $section.toggleClass('is-collapsed', expanded);
+        });
+
         // Handle photo upload
         $photoInput.on('change', function(e) {
             const file = e.target.files[0];
@@ -916,6 +925,43 @@
             if (msg && typeof showToast === 'function') {
                 showToast('info', msg, 4000);
             }
+        });
+
+        const $personalExtraPanel = $('#cv-personal-extra-panel');
+        const $personalExtraExpand = $('#cv-personal-extra-expand');
+        const $personalExtraCollapse = $('#cv-personal-extra-collapse');
+
+        function personalExtraPanelHasContent() {
+            return !!(
+                ($emailInput.val() && String($emailInput.val()).trim()) ||
+                ($phoneInput.val() && String($phoneInput.val()).trim()) ||
+                ($cityInput.val() && String($cityInput.val()).trim()) ||
+                ($summaryInput.val() && String($summaryInput.val()).trim())
+            );
+        }
+
+        function syncPersonalExtraPanelOpen() {
+            if (!$personalExtraPanel.length || !$personalExtraExpand.length) return;
+            if (personalExtraPanelHasContent()) {
+                $personalExtraPanel.prop('hidden', false);
+                $personalExtraExpand.attr('aria-expanded', 'true').prop('hidden', true);
+            } else {
+                $personalExtraPanel.prop('hidden', true);
+                $personalExtraExpand.prop('hidden', false).attr('aria-expanded', 'false');
+            }
+        }
+
+        $personalExtraExpand.on('click', function(e) {
+            e.preventDefault();
+            $personalExtraPanel.prop('hidden', false);
+            $(this).attr('aria-expanded', 'true').prop('hidden', true);
+        });
+
+        $personalExtraCollapse.on('click', function(e) {
+            e.preventDefault();
+            $personalExtraPanel.prop('hidden', true);
+            $personalExtraExpand.prop('hidden', false).attr('aria-expanded', 'false');
+            $personalExtraExpand.trigger('focus');
         });
 
         // Load initial photo if exists in template
@@ -2134,6 +2180,8 @@
                 $photoCircle.removeClass('has-photo');
             }
 
+            syncPersonalExtraPanelOpen();
+
             setTimeout(function() {
                 handleFormChange();
             }, 100);
@@ -2461,33 +2509,52 @@
         // Generate section container with first entry
         function generateSectionFields(sectionKey, sectionConfig) {
             const sectionId = 'section-' + sectionKey;
+            const collapseBodyId = sectionId + '-body';
+
             const $sectionContainer = $('<div>')
                 .addClass('added-section')
                 .attr('id', sectionId)
                 .attr('data-section-key', sectionKey);
 
+            const $toggle = $('<button>')
+                .attr('type', 'button')
+                .addClass('added-section__toggle')
+                .attr('aria-expanded', 'true')
+                .attr('aria-controls', collapseBodyId)
+                .attr('aria-label', 'Show or hide ' + sectionConfig.name)
+                .append(
+                    $('<span class="added-section__chev" aria-hidden="true">')
+                        .html('<i class="fas fa-chevron-up"></i>')
+                );
+
+            const $title = $('<h4>')
+                .addClass('added-section__title')
+                .html(sectionConfig.icon + ' ' + sectionConfig.name);
+
             const $sectionHeader = $('<div>')
                 .addClass('section-header')
                 .append(
-                    $('<h4>').html(sectionConfig.icon + ' ' + sectionConfig.name)
+                    $('<div>')
+                        .addClass('section-header__start')
+                        .append($toggle)
+                        .append($title)
                 )
                 .append(
                     $('<button>')
                         .addClass('btn-remove-section')
                         .attr('type', 'button')
                         .text('Remove Section')
-                        .on('click', function() {
+                        .on('click', function(ev) {
+                            ev.stopPropagation();
                             removeSection(sectionKey);
                         })
                 );
 
             $sectionContainer.append($sectionHeader);
 
-            // Create entries container
             const $entriesContainer = $('<div>')
                 .addClass('entries-container')
                 .attr('data-section-key', sectionKey);
-            $sectionContainer.append($entriesContainer);
 
             // Initialize entry count for this section
             sectionEntryCounts[sectionKey] = 1;
@@ -2505,7 +2572,13 @@
                     addEntryToSection(sectionKey, sectionConfig);
                 });
 
-            $sectionContainer.append($addEntryBtn);
+            const $body = $('<div>')
+                .addClass('added-section__body')
+                .attr('id', collapseBodyId)
+                .append($entriesContainer)
+                .append($addEntryBtn);
+
+            $sectionContainer.append($body);
 
             // Attach event handlers to form fields
             const debouncedHandler = debounce(handleFormChange, 300);

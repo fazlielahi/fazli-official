@@ -446,6 +446,8 @@ return [
     'CV form professional summary' => 'الملخص المهني',
     'CV form professional summary placeholder' => 'ملخص موجز عن خبرتك وأهدافك…',
     'CV form toggle personal' => 'إظهار أو إخفاء البيانات الشخصية',
+    'CV form see more fields' => 'بيانات التواصل والملخص',
+    'CV form view less' => 'عرض أقل',
     'Books' => 'الكتب',
     'Explore Jobs' => 'استكشاف الوظائف',
     'Comment submitted successfully!' => '!تم إرسال التعليق بنجاح',

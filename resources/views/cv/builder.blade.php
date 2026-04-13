@@ -160,14 +160,16 @@
                 @endphp
                 <section class="cv-personal-card" aria-labelledby="cv-personal-card-title">
                     <div class="cv-personal-card__header">
-                        <h2 class="cv-personal-card__title" id="cv-personal-card-title">{{ __('lang.CV form personal section title') }}</h2>
+                        <div class="cv-personal-card__header-start">
+                            <button type="button" class="cv-personal-card__toggle" id="cv-personal-card-toggle" aria-expanded="true" aria-controls="cv-personal-card-body" aria-label="{{ __('lang.CV form toggle personal') }}">
+                                <span class="cv-personal-card__toggle-icon" aria-hidden="true"><i class="fas fa-chevron-up"></i></span>
+                            </button>
+                            <h2 class="cv-personal-card__title" id="cv-personal-card-title">{{ __('lang.CV form personal section title') }}</h2>
+                        </div>
                         <div class="cv-personal-card__header-actions">
                             <button type="button" class="cv-personal-card__tips" id="cv-personal-get-tips" aria-label="{{ __('lang.CV form get tips') }}" title="{{ __('lang.CV form get tips hint') }}" data-hint="{{ e(__('lang.CV form get tips hint')) }}">
                                 <i class="fas fa-lightbulb" aria-hidden="true"></i>
                                 <span>{{ __('lang.CV form get tips') }}</span>
-                            </button>
-                            <button type="button" class="cv-personal-card__toggle" id="cv-personal-card-toggle" aria-expanded="true" aria-controls="cv-personal-card-body" aria-label="{{ __('lang.CV form toggle personal') }}">
-                                <span class="cv-personal-card__toggle-icon" aria-hidden="true"><i class="fas fa-chevron-up"></i></span>
                             </button>
                         </div>
                     </div>
@@ -196,35 +198,46 @@
                                             <i class="fas fa-camera"></i>
                                         </div>
                                     </div>
-                                    <p class="cv-photo-upload__hint">{{ __('lang.CV form photo hint') }}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="cv-field cv-field--row">
-                            <label class="cv-field__label" for="cv-input-email">{{ __('lang.CV form email label') }}</label>
-                            <div class="cv-field__control">
-                                <input class="cv-field__input" type="email" id="cv-input-email" name="email" value="{{ $data['email'] ?? '' }}" placeholder="{{ __('lang.CV form email placeholder') }}" autocomplete="email">
-                                <span class="cv-field__grip" aria-hidden="true" title=""><i class="fas fa-arrows-up-down"></i></span>
+                        <div class="cv-personal-card__extra">
+                            <button type="button" class="cv-personal-card__see-more" id="cv-personal-extra-expand" aria-expanded="false" aria-controls="cv-personal-extra-panel">
+                                {{ __('lang.CV form see more fields') }}
+                            </button>
+                            <div class="cv-personal-card__extra-panel" id="cv-personal-extra-panel" hidden>
+                                <div class="cv-field cv-field--row">
+                                    <label class="cv-field__label" for="cv-input-email">{{ __('lang.CV form email label') }}</label>
+                                    <div class="cv-field__control">
+                                        <input class="cv-field__input" type="email" id="cv-input-email" name="email" value="{{ $data['email'] ?? '' }}" placeholder="{{ __('lang.CV form email placeholder') }}" autocomplete="email">
+                                        <span class="cv-field__grip" aria-hidden="true" title=""><i class="fas fa-arrows-up-down"></i></span>
+                                    </div>
+                                </div>
+                                <div class="cv-field cv-field--row">
+                                    <label class="cv-field__label" for="cv-input-location">{{ __('lang.CV form location') }}</label>
+                                    <div class="cv-field__control">
+                                        <input class="cv-field__input" type="text" id="cv-input-location" name="city" value="{{ $locationDefault }}" placeholder="{{ __('lang.CV form location placeholder') }}" autocomplete="address-level2">
+                                        <span class="cv-field__grip" aria-hidden="true"><i class="fas fa-arrows-up-down"></i></span>
+                                    </div>
+                                </div>
+                                <div class="cv-field cv-field--row">
+                                    <label class="cv-field__label" for="cv-input-phone">{{ __('lang.CV form phone label') }}</label>
+                                    <div class="cv-field__control">
+                                        <input class="cv-field__input" type="tel" id="cv-input-phone" name="phone" value="{{ $data['phone'] ?? '' }}" placeholder="{{ __('lang.CV form phone placeholder') }}" autocomplete="tel">
+                                        <span class="cv-field__grip" aria-hidden="true"><i class="fas fa-arrows-up-down"></i></span>
+                                    </div>
+                                </div>
+                                <div class="cv-field cv-field--summary">
+                                    <label class="cv-field__label" for="cv-input-summary">{{ __('lang.CV form professional summary') }}</label>
+                                    <textarea class="cv-field__input cv-field__input--textarea" id="cv-input-summary" name="summary" rows="4" placeholder="{{ __('lang.CV form professional summary placeholder') }}">{{ $data['summary'] ?? '' }}</textarea>
+                                </div>
+                                <div class="cv-personal-card__extra-footer">
+                                    <button type="button" class="cv-personal-card__view-less" id="cv-personal-extra-collapse" aria-controls="cv-personal-extra-panel">
+                                        {{ __('lang.CV form view less') }}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="cv-field cv-field--row">
-                            <label class="cv-field__label" for="cv-input-location">{{ __('lang.CV form location') }}</label>
-                            <div class="cv-field__control">
-                                <input class="cv-field__input" type="text" id="cv-input-location" name="city" value="{{ $locationDefault }}" placeholder="{{ __('lang.CV form location placeholder') }}" autocomplete="address-level2">
-                                <span class="cv-field__grip" aria-hidden="true"><i class="fas fa-arrows-up-down"></i></span>
-                            </div>
-                        </div>
-                        <div class="cv-field cv-field--row">
-                            <label class="cv-field__label" for="cv-input-phone">{{ __('lang.CV form phone label') }}</label>
-                            <div class="cv-field__control">
-                                <input class="cv-field__input" type="tel" id="cv-input-phone" name="phone" value="{{ $data['phone'] ?? '' }}" placeholder="{{ __('lang.CV form phone placeholder') }}" autocomplete="tel">
-                                <span class="cv-field__grip" aria-hidden="true"><i class="fas fa-arrows-up-down"></i></span>
-                            </div>
-                        </div>
-                        <div class="cv-field cv-field--summary">
-                            <label class="cv-field__label" for="cv-input-summary">{{ __('lang.CV form professional summary') }}</label>
-                            <textarea class="cv-field__input cv-field__input--textarea" id="cv-input-summary" name="summary" rows="4" placeholder="{{ __('lang.CV form professional summary placeholder') }}">{{ $data['summary'] ?? '' }}</textarea>
                         </div>
                     </div>
                 </section>
