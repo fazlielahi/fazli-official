@@ -8,10 +8,42 @@ use App\Models\CvTemplate;
 use App\Models\UserCV;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Browsershot\Browsershot;
 
 class CvController extends Controller
 {
+    private function sanitizeRichText(?string $html): string
+    {
+        $html = (string) ($html ?? '');
+        if (trim($html) === '') return '';
+
+        // Allow a small safe subset used by Quill.
+        $clean = strip_tags($html, '<p><br><strong><em><u><ol><ul><li><a><span>');
+
+        // Remove inline event handlers and javascript: URLs.
+        $clean = preg_replace('/\son\w+="[^"]*"/i', '', $clean);
+        $clean = preg_replace("/\son\w+='[^']*'/i", '', $clean);
+        $clean = preg_replace('/href\s*=\s*("|\')\s*javascript:[^"\']*\1/i', 'href="#"', $clean);
+
+        return $clean;
+    }
+
+    private function sanitizeCvData($data)
+    {
+        if (!is_array($data)) return $data;
+        foreach ($data as $k => $v) {
+            if (is_array($v)) {
+                $data[$k] = $this->sanitizeCvData($v);
+            } else {
+                if ($k === 'description') {
+                    $data[$k] = $this->sanitizeRichText(is_string($v) ? $v : '');
+                }
+            }
+        }
+        return $data;
+    }
     /**
      * Show CV template gallery
      */
@@ -179,6 +211,7 @@ class CvController extends Controller
         
         try {
             $title = $request->input('title') ?? 'My CV';
+            $cvData = $this->sanitizeCvData($request->input('cv_data'));
 
             // If cv_id is provided, update that CV (must belong to user). Otherwise create a new CV.
             if ($request->filled('cv_id')) {
@@ -195,7 +228,7 @@ class CvController extends Controller
 
                 $cv->template_slug = $request->input('template_slug');
                 $cv->title = $title;
-                $cv->cv_data = $request->input('cv_data');
+                $cv->cv_data = $cvData;
                 $cv->is_active = true;
                 $cv->save();
             } else {
@@ -203,7 +236,7 @@ class CvController extends Controller
                     'user_id' => $userId,
                     'template_slug' => $request->input('template_slug'),
                     'title' => $title,
-                    'cv_data' => $request->input('cv_data'),
+                    'cv_data' => $cvData,
                     'is_active' => true,
                 ]);
             }
@@ -224,6 +257,45 @@ class CvController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error saving CV: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Step 3: Upload a resume file for import (authenticated).
+     * Stores the file and returns an import_id for the next processing steps.
+     */
+    public function importUpload(Request $request, $lang)
+    {
+        $userId = Auth::id();
+
+        $request->validate([
+            'resume' => 'required|file|max:15360|mimes:pdf,doc,docx,jpg,jpeg,png,webp',
+        ]);
+
+        try {
+            /** @var \Illuminate\Http\UploadedFile $file */
+            $file = $request->file('resume');
+
+            $importId = (string) Str::uuid();
+            $ext = strtolower($file->getClientOriginalExtension() ?: $file->extension() ?: 'bin');
+            $storedName = $importId . '.' . $ext;
+
+            $dir = 'cv-imports/' . $userId;
+            $storedPath = $file->storeAs($dir, $storedName);
+
+            return response()->json([
+                'success' => true,
+                'import_id' => $importId,
+                'original_name' => $file->getClientOriginalName(),
+                'mime' => $file->getClientMimeType(),
+                'size' => $file->getSize(),
+                'stored_path' => $storedPath,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Upload failed: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -499,7 +571,7 @@ class CvController extends Controller
             }
             
             // Prepare data for template
-            $data = $cv->cv_data ?? [];
+            $data = $this->sanitizeCvData($cv->cv_data ?? []);
             
             // Render the template to HTML
             $html = view('cv.templates.' . $cv->template_slug . '.template', [
@@ -704,6 +776,8 @@ class CvController extends Controller
             } else {
                 $data = $cvDataInput;
             }
+
+            $data = $this->sanitizeCvData($data);
             
             // Validate that we have data
             if (empty($data) || !is_array($data)) {

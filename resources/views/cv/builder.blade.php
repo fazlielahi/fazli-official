@@ -36,6 +36,9 @@
     <!-- CV Builder CSS -->
     <link rel="stylesheet" href="{{ asset('cv/css/cv-builder.css') }}">
     <link rel="stylesheet" href="{{ asset('cv/css/cv-templates.css') }}">
+
+    <!-- Rich text editor (Quill) -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
     
     <!-- Template-specific CSS -->
     @if(file_exists(public_path('cv-templates/assets/' . $templateSlug . '/style.css')))
@@ -85,6 +88,7 @@
                         <span>AI Tools</span>
                     </span>
                 </nav>
+                
                 <div class="cv-builder-toolbar__actions">
                     <div class="cv-builder-toolbar__saved">
                         <div class="cv-resume-dropdown" id="cv-resume-dropdown">
@@ -129,6 +133,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="cv-builder-toolbar__import-wrap">
+                        <button type="button" id="cv-import-resume-trigger-toolbar" class="cv-builder-toolbar__import">
+                            <i class="fas fa-cloud-arrow-up cv-builder-toolbar__import-icon" aria-hidden="true"></i>
+                            <span class="cv-builder-toolbar__import-text">Import Resume</span>
+                        </button>
+                    </div>
                     <div class="cv-builder-toolbar__download-wrap">
                         <button type="button" id="btn-export-pdf" class="cv-builder-toolbar__download">
                             <span class="cv-builder-toolbar__download-text">Download</span>
@@ -141,6 +151,7 @@
                     </button>
                 </div>
             </div>
+            
             <div id="load-message" class="cv-toast" role="status" aria-live="polite" aria-atomic="true" style="display:none;">
                 <span class="cv-toast__text" id="load-message-text"></span>
                 <button type="button" class="cv-toast__close" id="cv-toast-close" aria-label="Close message">&times;</button>
@@ -158,7 +169,41 @@
                         . ($data['country'] ?? '')
                     );
                 @endphp
-                <section class="cv-personal-card" aria-labelledby="cv-personal-card-title">
+                <!-- Personal details: view mode -->
+                <section class="cv-personal-view-card" id="cv-personal-view" aria-label="Personal details">
+                    <div class="cv-personal-view-card__inner">
+                        <div class="cv-personal-view-card__main">
+                            <div class="cv-personal-view-card__name" id="cv-personal-view-name">Your Name</div>
+                            <div class="cv-personal-view-card__title" id="cv-personal-view-title">Professional title</div>
+                            <div class="cv-personal-view-card__meta">
+                                <div class="cv-personal-view-card__meta-item" id="cv-personal-view-email-wrap" hidden>
+                                    <i class="far fa-envelope" aria-hidden="true"></i>
+                                    <span id="cv-personal-view-email"></span>
+                                </div>
+                                <div class="cv-personal-view-card__meta-item" id="cv-personal-view-phone-wrap" hidden>
+                                    <i class="fas fa-phone" aria-hidden="true"></i>
+                                    <span id="cv-personal-view-phone"></span>
+                                </div>
+                                <div class="cv-personal-view-card__meta-item" id="cv-personal-view-location-wrap" hidden>
+                                    <i class="fas fa-location-dot" aria-hidden="true"></i>
+                                    <span id="cv-personal-view-location"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cv-personal-view-card__photo">
+                            <div class="cv-personal-view-card__photo-circle" id="cv-personal-view-photo">
+                                <img id="cv-personal-view-photo-img" alt="" hidden>
+                                <i class="fas fa-camera" id="cv-personal-view-photo-icon" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <button type="button" class="cv-personal-view-card__edit" id="cv-personal-view-edit" aria-label="Edit personal details">
+                            <i class="fas fa-pen" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Personal details: edit mode -->
+                <section class="cv-personal-card is-hidden" id="cv-personal-edit" aria-labelledby="cv-personal-card-title">
                     <div class="cv-personal-card__header">
                         <div class="cv-personal-card__header-start">
                             <button type="button" class="cv-personal-card__toggle" id="cv-personal-card-toggle" aria-expanded="true" aria-controls="cv-personal-card-body" aria-label="{{ __('lang.CV form toggle personal') }}">
@@ -167,10 +212,24 @@
                             <h2 class="cv-personal-card__title" id="cv-personal-card-title">{{ __('lang.CV form personal section title') }}</h2>
                         </div>
                         <div class="cv-personal-card__header-actions">
-                            <button type="button" class="cv-personal-card__tips" id="cv-personal-get-tips" aria-label="{{ __('lang.CV form get tips') }}" title="{{ __('lang.CV form get tips hint') }}" data-hint="{{ e(__('lang.CV form get tips hint')) }}">
-                                <i class="fas fa-lightbulb" aria-hidden="true"></i>
-                                <span>{{ __('lang.CV form get tips') }}</span>
-                            </button>
+                            <div class="cv-personal-save-wrap" id="cv-personal-save-wrap">
+                                <button type="button" class="cv-personal-card__tips" id="cv-personal-save-resume" aria-haspopup="dialog" aria-expanded="false" aria-controls="cv-save-resume-popover">
+                                    <i class="fas fa-floppy-disk" aria-hidden="true"></i>
+                                    <span>Save Resume</span>
+                                </button>
+                                <div class="cv-save-resume-popover" id="cv-save-resume-popover" role="dialog" aria-label="Save resume" aria-hidden="true" hidden>
+                                    <div class="cv-save-resume-popover__title">Save Resume</div>
+                                    <div class="cv-save-resume-popover__field" id="cv-save-resume-title-field">
+                                        <label class="cv-save-resume-popover__label" for="cv-save-resume-title">Title (Optional)</label>
+                                        <input type="text" class="cv-save-resume-popover__input" id="cv-save-resume-title" placeholder="e.g., My Professional CV, Updated CV 2024">
+                                        <small class="cv-save-resume-popover__hint">Give your CV a name to identify it later</small>
+                                    </div>
+                                    <div class="cv-save-resume-popover__actions">
+                                        <button type="button" class="cv-save-resume-popover__btn cv-save-resume-popover__btn--cancel" id="cv-save-resume-cancel">Cancel</button>
+                                        <button type="button" class="cv-save-resume-popover__btn cv-save-resume-popover__btn--primary" id="cv-save-resume-confirm">Save</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="cv-personal-card__body" id="cv-personal-card-body">
@@ -240,23 +299,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="cv-personal-card__footer">
+                        <button type="button" class="cv-personal-card__done cv-personal-card__done--cta" id="cv-personal-done">
+                            <i class="fas fa-check" aria-hidden="true"></i>
+                            <span>Done</span>
+                        </button>
+                    </div>
                 </section>
                 
                 <!-- Add More Sections Button -->
-                <button type="button" id="btn-add-sections" class="btn-add-entry" style="background: #17a2b8; margin-top: 20px;">
-                    ➕ Add More Sections
+                <button type="button" id="btn-add-sections" class="btn-add-entry" style="margin-top: 20px;">
+                    <span class="btn-add-content__icon" aria-hidden="true">+</span>
+                    <span class="btn-add-content__text">Add Content</span>
                 </button>
                 
-                <!-- Save CV Section -->
-                <div class="form-group" style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #2563eb;">
-                    <label for="cv-title">CV Title (Optional)</label>
-                    <input type="text" id="cv-title" class="form-control" placeholder="e.g., My Professional CV, Updated CV 2024">
-                    <small class="form-text text-muted">Give your CV a name to identify it later</small>
-                </div>
-                <div class="form-group">
-                    <button type="button" id="btn-save-cv" class="btn-save-cv">💾 Save CV</button>
-                    <div id="save-message" style="margin-top: 10px;"></div>
-                </div>
+                <!-- Keep a hidden title input for JS save/load logic (title UI moved to toolbar popover) -->
+                <input type="text" id="cv-title" class="form-control" hidden aria-hidden="true">
+                <div id="save-message" hidden aria-hidden="true"></div>
             </form>
         </div>
         
@@ -292,16 +351,56 @@
         <!-- Add More Sections Modal -->
         <div id="add-sections-modal" class="modal-overlay">
             <div class="add-sections-modal">
-                <h3>Add More Sections to Your CV</h3>
-                <p style="margin-bottom: 20px; color: #666;">Select the sections you want to add to your CV:</p>
+                <div class="add-sections-modal__header">
+                    <div class="add-sections-modal__heading">
+                        <h3>Add More Sections to Your CV</h3>
+                        <p class="add-sections-modal__subtitle">Select the sections you want to add to your CV:</p>
+                    </div>
+                    <button type="button" class="add-sections-modal__close" id="add-sections-modal-close" aria-label="Close">
+                        <i class="fas fa-xmark" aria-hidden="true"></i>
+                    </button>
+                    <div class="add-sections-modal__quickstart" aria-label="Quick start">
+                        <span class="add-sections-modal__quickstart-label">Quick start:</span>
+                        <button type="button" class="add-sections-modal__quickstart-btn" id="cv-import-resume-trigger">
+                            <i class="fas fa-cloud-arrow-up" aria-hidden="true"></i>
+                            <span>Import Resume</span>
+                        </button>
+                        <input
+                            type="file"
+                            id="cv-import-resume-input"
+                            accept=".pdf,.doc,.docx,image/*"
+                            hidden
+                            aria-hidden="true"
+                            tabindex="-1"
+                        >
+                    </div>
+                </div>
                 
                 <div class="sections-list" id="sections-list">
                     <!-- Sections will be populated by JavaScript -->
                 </div>
-                
-                <div class="modal-actions">
-                    <button type="button" class="btn-modal btn-modal-secondary" id="btn-close-modal">Cancel</button>
-                    <button type="button" class="btn-modal btn-modal-primary" id="btn-add-selected-sections">Add Selected</button>
+            </div>
+        </div>
+
+        <!-- Delete section confirmation modal -->
+        <div class="cv-delete-section-modal" id="cv-delete-section-modal" aria-hidden="true" hidden>
+            <div class="cv-delete-section-modal__backdrop" id="cv-delete-section-backdrop"></div>
+            <div class="cv-delete-section-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="cv-delete-section-title">
+                <button type="button" class="cv-delete-section-modal__close" id="cv-delete-section-close" aria-label="Close">
+                    <i class="fas fa-xmark" aria-hidden="true"></i>
+                </button>
+                <div class="cv-delete-section-modal__title" id="cv-delete-section-title">Delete section?</div>
+                <div class="cv-delete-section-modal__desc">
+                    This will permanently delete this section and all its entries.<br>
+                    This action can't be undone.
+                </div>
+                <label class="cv-delete-section-modal__check">
+                    <input type="checkbox" id="cv-delete-section-confirm-check">
+                    <span>I understand, continue.</span>
+                </label>
+                <div class="cv-delete-section-modal__actions">
+                    <button type="button" class="cv-delete-section-modal__btn cv-delete-section-modal__btn--cancel" id="cv-delete-section-cancel">Cancel</button>
+                    <button type="button" class="cv-delete-section-modal__btn cv-delete-section-modal__btn--danger" id="cv-delete-section-confirm" disabled aria-disabled="true">Delete Section</button>
                 </div>
             </div>
         </div>
@@ -417,6 +516,10 @@
     
     <script src="{{ asset('assets/js/script.js') }}"></script>
     
+    <!-- Rich text editor (Quill) + sanitizer (DOMPurify) -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.9/dist/purify.min.js"></script>
+
     <!-- CV Builder JavaScript -->
     <script src="{{ asset('cv/js/cv-builder.js') }}"></script>
     
@@ -430,6 +533,7 @@
                         saved: '{{ route("localized.cv.saved", ["lang" => app()->getLocale()]) }}',
                         load: '{{ route("localized.cv.load", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         save: '{{ route("localized.cv.save", ["lang" => app()->getLocale()]) }}',
+                        importUpload: '{{ route("localized.cv.import.upload", ["lang" => app()->getLocale()]) }}',
                         updateTitle: '{{ route("localized.cv.updateTitle", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         duplicateCV: '{{ route("localized.cv.duplicate", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         deleteCV: '{{ route("localized.cv.delete", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',

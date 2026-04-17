@@ -30,6 +30,9 @@
             <h2 class="section-title">Professional Experience</h2>
             <div class="section-content">
                 @foreach($data['experience'] as $exp)
+                @if(isset($exp['is_hidden']) && (string) $exp['is_hidden'] === '1')
+                    @continue
+                @endif
                 <div class="experience-item">
                     <div class="item-header">
                         <div class="item-title-row">
@@ -40,7 +43,7 @@
                     </div>
                     @if(isset($exp['description']) && !empty($exp['description']))
                     <div class="item-description">
-                        <p>{{ $exp['description'] }}</p>
+                        {!! $exp['description'] !!}
                     </div>
                     @endif
                 </div>
@@ -54,11 +57,19 @@
             <h2 class="section-title">Education</h2>
             <div class="section-content">
                 @foreach($data['education'] as $edu)
+                @if(isset($edu['is_hidden']) && (string) $edu['is_hidden'] === '1')
+                    @continue
+                @endif
                 <div class="education-item">
                     <div class="item-header">
                         <div class="item-title-row">
                             <h3 class="item-title">{{ $edu['degree'] ?? 'Degree' }}</h3>
-                            <span class="item-period">{{ $edu['period'] ?? 'Period' }}</span>
+                            <div class="item-meta">
+                                <span class="item-period">{{ $edu['period'] ?? 'Period' }}</span>
+                                @if(isset($edu['location']) && !empty($edu['location']))
+                                    <span class="item-location">{{ $edu['location'] }}</span>
+                                @endif
+                            </div>
                         </div>
                         <p class="item-institution">{{ $edu['institution'] ?? 'Institution' }}</p>
                     </div>
@@ -74,6 +85,9 @@
             <div class="section-content">
                 <div class="skills-list">
                     @foreach($data['skills'] as $skill)
+                    @if(isset($skill['is_hidden']) && (string) $skill['is_hidden'] === '1')
+                        @continue
+                    @endif
                     <span class="skill-item">
                         {{ $skill['skill'] ?? 'Skill' }}
                         @if(isset($skill['level']) && !empty($skill['level']))
@@ -91,6 +105,9 @@
             <h2 class="section-title">Certifications</h2>
             <div class="section-content">
                 @foreach($data['certifications'] as $cert)
+                @if(isset($cert['is_hidden']) && (string) $cert['is_hidden'] === '1')
+                    @continue
+                @endif
                 <div class="certification-item">
                     <div class="item-header">
                         <div class="item-title-row">
@@ -113,6 +130,9 @@
             <h2 class="section-title">Projects</h2>
             <div class="section-content">
                 @foreach($data['projects'] as $project)
+                @if(isset($project['is_hidden']) && (string) $project['is_hidden'] === '1')
+                    @continue
+                @endif
                 <div class="project-item">
                     <div class="item-header">
                         <div class="item-title-row">
@@ -127,7 +147,7 @@
                     </div>
                     @if(isset($project['description']) && !empty($project['description']))
                     <div class="item-description">
-                        <p>{{ $project['description'] }}</p>
+                        {!! $project['description'] !!}
                     </div>
                     @endif
                 </div>
@@ -142,6 +162,9 @@
             <div class="section-content">
                 <div class="languages-list">
                     @foreach($data['languages'] as $lang)
+                    @if(isset($lang['is_hidden']) && (string) $lang['is_hidden'] === '1')
+                        @continue
+                    @endif
                     <div class="language-item">
                         <span class="language-name">{{ $lang['language'] ?? 'Language' }}</span>
                         @if(isset($lang['proficiency']) && !empty($lang['proficiency']))
@@ -159,6 +182,9 @@
             <h2 class="section-title">Awards & Recognition</h2>
             <div class="section-content">
                 @foreach($data['awards'] as $award)
+                @if(isset($award['is_hidden']) && (string) $award['is_hidden'] === '1')
+                    @continue
+                @endif
                 <div class="award-item">
                     <div class="item-header">
                         <div class="item-title-row">
@@ -169,7 +195,7 @@
                     </div>
                     @if(isset($award['description']) && !empty($award['description']))
                     <div class="item-description">
-                        <p>{{ $award['description'] }}</p>
+                        {!! $award['description'] !!}
                     </div>
                     @endif
                 </div>
@@ -184,6 +210,9 @@
             <div class="section-content">
                 <div class="references-list">
                     @foreach($data['references'] as $ref)
+                    @if(isset($ref['is_hidden']) && (string) $ref['is_hidden'] === '1')
+                        @continue
+                    @endif
                     <div class="reference-item">
                         <h3 class="ref-name">{{ $ref['name'] ?? 'Name' }}</h3>
                         <p class="ref-position">{{ $ref['position'] ?? 'Position' }}</p>

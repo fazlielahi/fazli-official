@@ -474,6 +474,149 @@
     text-align: justify;
 }
 
+/* Awards */
+.cv-template.modern .right-content section.awards {
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    box-shadow: 0 !important;
+}
+
+.cv-template.modern .right-content .award-item {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    text-align: left;
+    border-left: 3px solid #8fae6f;
+    padding-left: 15px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.cv-template.modern .right-content .award-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.cv-template.modern .right-content .award-item .item-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cv-template.modern .right-content .award-item .item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0F1A1A;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.cv-template.modern .right-content .award-item .item-period {
+    color: #888;
+    font-style: italic;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.cv-template.modern .right-content .award-item .item-organization {
+    margin: 6px 0 0 0;
+    font-size: 12px;
+    color: #355b5a;
+    font-weight: 500;
+}
+
+.cv-template.modern .right-content .award-item .item-description {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #555;
+    margin-top: 10px;
+    text-align: justify;
+}
+
+.cv-template.modern .right-content .award-item .item-description p {
+    margin: 0;
+}
+
+.cv-template.modern .right-content .award-item .item-description ul,
+.cv-template.modern .right-content .award-item .item-description ol {
+    margin: 6px 0 0 18px;
+    padding: 0;
+}
+
+/* Projects */
+.cv-template.modern .right-content section.projects {
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    box-shadow: 0 !important;
+}
+
+.cv-template.modern .right-content .project-item {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    text-align: left;
+    border-left: 3px solid #8fae6f;
+    padding-left: 15px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.cv-template.modern .right-content .project-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.cv-template.modern .right-content .project-item .item-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cv-template.modern .right-content .project-item .item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0F1A1A;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.cv-template.modern .right-content .project-item .project-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: #355b5a;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.cv-template.modern .right-content .project-item .project-link:hover {
+    text-decoration: underline;
+}
+
+.cv-template.modern .right-content .project-item .item-technologies {
+    margin: 6px 0 0 0;
+    font-size: 12px;
+    color: #355b5a;
+    font-weight: 500;
+}
+
+.cv-template.modern .right-content .project-item .item-description {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #555;
+    margin-top: 10px;
+    text-align: justify;
+}
+
+.cv-template.modern .right-content .project-item .item-description p {
+    margin: 0;
+}
+
+.cv-template.modern .right-content .project-item .item-description ul,
+.cv-template.modern .right-content .project-item .item-description ol {
+    margin: 6px 0 0 18px;
+    padding: 0;
+}
+
 /* Skills */
 .cv-template.modern .right-content .skills-list {
     display: grid;

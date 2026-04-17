@@ -47,6 +47,7 @@ Route::group([
     Route::post('/cv/save', [\App\Http\Controllers\CvController::class, 'save'])->name('cv.save');
     Route::get('/cv/saved', [\App\Http\Controllers\CvController::class, 'getSavedCVs'])->name('cv.saved');
     Route::get('/cv/load/{id}', [\App\Http\Controllers\CvController::class, 'loadCV'])->name('cv.load');
+    Route::post('/cv/import/upload', [\App\Http\Controllers\CvController::class, 'importUpload'])->name('cv.import.upload');
     Route::post('/cv/{id}/title', [\App\Http\Controllers\CvController::class, 'updateTitle'])->name('cv.updateTitle');
     Route::post('/cv/{id}/duplicate', [\App\Http\Controllers\CvController::class, 'duplicateSaved'])->name('cv.duplicate');
     Route::delete('/cv/{id}', [\App\Http\Controllers\CvController::class, 'deleteSaved'])->name('cv.delete');

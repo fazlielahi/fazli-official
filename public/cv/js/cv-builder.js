@@ -13,7 +13,8 @@
             saved: '',
             load: '',
             save: '',
-            duplicateCV: ''
+            duplicateCV: '',
+            importUpload: ''
         },
         csrfToken: ''
     };
@@ -49,6 +50,63 @@
         const $photoPreviewContainer = $('#photo-preview-container');
         let photoData = null;
 
+        // Personal details view/edit toggle
+        const $personalView = $('#cv-personal-view');
+        const $personalEdit = $('#cv-personal-edit');
+        const $personalEditOpen = $('#cv-personal-view-edit');
+        const $personalEditDone = $('#cv-personal-done');
+
+        function showPersonalEdit() {
+            $personalView.prop('hidden', true).attr('aria-hidden', 'true');
+            $personalEdit.removeClass('is-hidden').attr('aria-hidden', 'false');
+            setTimeout(function() { $nameInput.trigger('focus'); }, 0);
+        }
+
+        function showPersonalView() {
+            $personalEdit.addClass('is-hidden').attr('aria-hidden', 'true');
+            $personalView.prop('hidden', false).attr('aria-hidden', 'false');
+        }
+
+        $personalEditOpen.on('click', function(e) {
+            e.preventDefault();
+            showPersonalEdit();
+        });
+
+        $personalEditDone.on('click', function(e) {
+            e.preventDefault();
+            showPersonalView();
+        });
+
+        function updatePersonalViewCard(data) {
+            if (!$personalView.length) return;
+
+            $('#cv-personal-view-name').text((data.name || '').trim() || 'Your Name');
+            $('#cv-personal-view-title').text((data.job_title || '').trim() || 'Professional title');
+
+            const email = (data.email || '').trim();
+            const phone = (data.phone || '').trim();
+            const loc = (data.address || '').trim();
+
+            $('#cv-personal-view-email').text(email);
+            $('#cv-personal-view-email-wrap').prop('hidden', !email);
+
+            $('#cv-personal-view-phone').text(phone);
+            $('#cv-personal-view-phone-wrap').prop('hidden', !phone);
+
+            $('#cv-personal-view-location').text(loc);
+            $('#cv-personal-view-location-wrap').prop('hidden', !loc);
+
+            const $img = $('#cv-personal-view-photo-img');
+            const $icon = $('#cv-personal-view-photo-icon');
+            if (data.photo && String(data.photo).trim()) {
+                $img.attr('src', data.photo).prop('hidden', false);
+                $icon.prop('hidden', true);
+            } else {
+                $img.attr('src', '').prop('hidden', true);
+                $icon.prop('hidden', false);
+            }
+        }
+
         // Debounce function
         function debounce(func, wait) {
             let timeout;
@@ -72,26 +130,33 @@
         const availableSections = {
             'experience': {
                 name: 'Experience',
-                icon: '💼',
+                description: 'Add your professional roles and employer history.',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 7V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M4 7h16a2 2 0 0 1 2 2v3a4 4 0 0 1-4 4h-2v-2H8v2H6a4 4 0 0 1-4-4V9a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 14h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
                 fields: [
                     { name: 'title', label: 'Job Title', type: 'text', placeholder: 'e.g., Senior Developer' },
                     { name: 'company', label: 'Company', type: 'text', placeholder: 'e.g., Tech Company Inc.' },
-                    { name: 'period', label: 'Period', type: 'text', placeholder: 'e.g., Jan 2020 - Present' },
+                    { name: 'start_date', label: 'Start Date', type: 'text', placeholder: 'MM/YYYY' },
+                    { name: 'end_date', label: 'End Date', type: 'text', placeholder: 'MM/YYYY' },
+                    { name: 'location', label: 'Location', type: 'text', placeholder: 'City, Country' },
                     { name: 'description', label: 'Description (Optional)', type: 'textarea', placeholder: 'Brief description of your role and achievements' }
                 ]
             },
             'education': {
                 name: 'Education',
-                icon: '🎓',
+                description: 'Add your degrees and schools.',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3 2 8l10 5 10-5-10-5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M6 10.5V16c0 1.7 3 3 6 3s6-1.3 6-3v-5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M22 8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
                 fields: [
                     { name: 'degree', label: 'Degree', type: 'text', placeholder: 'e.g., Bachelor of Science in Computer Science' },
                     { name: 'institution', label: 'Institution', type: 'text', placeholder: 'e.g., University Name' },
-                    { name: 'period', label: 'Period', type: 'text', placeholder: 'e.g., 2016 - 2020' }
+                    { name: 'start_date', label: 'Start Date', type: 'text', placeholder: 'MM/YYYY' },
+                    { name: 'end_date', label: 'End Date', type: 'text', placeholder: 'MM/YYYY' },
+                    { name: 'location', label: 'Location', type: 'text', placeholder: 'City, Country' }
                 ]
             },
             'certifications': {
                 name: 'Certifications',
-                icon: '🏆',
+                description: 'Add your certifications or licenses.',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 9.5 5l-3.7.6 2.7 2.6-.7 3.7L12 10.8l3.2 1.7-.7-3.7 2.7-2.6L14.5 5 12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 13l-1 9 4-2 4 2-1-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
                 fields: [
                     { name: 'name', label: 'Certification Name', type: 'text', placeholder: 'e.g., AWS Certified Solutions Architect' },
                     { name: 'issuer', label: 'Issuing Organization', type: 'text', placeholder: 'e.g., Amazon Web Services' },
@@ -101,7 +166,8 @@
             },
             'awards': {
                 name: 'Awards',
-                icon: '⭐',
+                description: 'Add your awards and recognitions.',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 9.6 7.1 4 7.9l4.1 4-1 5.8L12 15.9l4.9 2.6-1-5.8 4.1-4-5.6-.8L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
                 fields: [
                     { name: 'title', label: 'Award Title', type: 'text', placeholder: 'e.g., Employee of the Year' },
                     { name: 'organization', label: 'Organization', type: 'text', placeholder: 'e.g., Company Name' },
@@ -111,7 +177,8 @@
             },
             'languages': {
                 name: 'Languages',
-                icon: '🌐',
+                description: 'Add languages and proficiency.',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12a10 10 0 1 0 20 0A10 10 0 0 0 2 12Z" stroke="currentColor" stroke-width="1.8"/><path d="M2 12h20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 2c2.8 3 2.8 17 0 20-2.8-3-2.8-17 0-20Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
                 fields: [
                     { name: 'language', label: 'Language', type: 'text', placeholder: 'e.g., English' },
                     { name: 'proficiency', label: 'Proficiency Level', type: 'select', options: [
@@ -126,7 +193,8 @@
             },
             'projects': {
                 name: 'Projects',
-                icon: '💼',
+                description: 'Add projects with links and impact.',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 11a5 5 0 0 1 0 7l-1 1a5 5 0 0 1-7-7l1-1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
                 fields: [
                     { name: 'name', label: 'Project Name', type: 'text', placeholder: 'e.g., E-commerce Platform' },
                     { name: 'description', label: 'Description', type: 'textarea', placeholder: 'Brief description of the project' },
@@ -136,7 +204,8 @@
             },
             'skills': {
                 name: 'Skills',
-                icon: '🛠️',
+                description: 'Add hard and soft skills.',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a4 4 0 0 1 5.7 5.7l-3.4 3.4-5.7-5.7 3.4-3.4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M2 22l7.6-2-5.6-5.6L2 22Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
                 fields: [
                     { name: 'skill', label: 'Skill Name', type: 'text', placeholder: 'e.g., JavaScript' },
                     { name: 'level', label: 'Proficiency Level', type: 'select', options: [
@@ -150,7 +219,8 @@
             },
             'references': {
                 name: 'References',
-                icon: '📞',
+                description: 'Add references and contact details.',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 10.8c1.2 2.3 3.1 4.2 5.4 5.4l1.8-1.8c.3-.3.7-.4 1.1-.3 1.2.4 2.5.6 3.9.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.9 21 3 13.1 3 3c0-.6.4-1 1-1h3.3c.6 0 1 .4 1 1 0 1.4.2 2.7.6 3.9.1.4 0 .8-.3 1.1l-2 1.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
                 fields: [
                     { name: 'name', label: 'Name', type: 'text', placeholder: 'Full Name' },
                     { name: 'position', label: 'Position', type: 'text', placeholder: 'e.g., Senior Manager' },
@@ -159,6 +229,27 @@
                     { name: 'phone', label: 'Phone (Optional)', type: 'text', placeholder: '+1234567890' }
                 ]
             }
+        };
+
+        // Sections that use "list view" + per-entry hide flag in the builder
+        const listViewSections = new Set([
+            'experience',
+            'education',
+            'skills',
+            'certifications',
+            'awards',
+            'projects',
+            'languages',
+            'references',
+        ]);
+
+        // Which fields to show in list view per section
+        const listViewSummaryFields = {
+            certifications: { primary: 'name', secondary: 'issuer' },
+            awards: { primary: 'title', secondary: 'organization' },
+            projects: { primary: 'name', secondary: 'technologies' },
+            languages: { primary: 'language', secondary: 'proficiency' },
+            references: { primary: 'name', secondary: 'company' },
         };
 
         // Collect form data
@@ -210,10 +301,94 @@
                     });
                 });
 
+                // Compatibility mapping for preview/templates
+                // Experience preview currently renders `item.period`, so derive it from new fields when present.
+                if (Array.isArray(data.experience)) {
+                    data.experience.forEach(function(item) {
+                        if (!item) return;
+                        const start = String(item.start_date || '').trim();
+                        const end = String(item.end_date || '').trim();
+                        if (!String(item.period || '').trim() && (start || end)) {
+                            if (start && end) item.period = start + ' - ' + end;
+                            else if (start && !end) item.period = start + ' - Present';
+                            else item.period = end;
+                        }
+                    });
+                }
+
+                // Education templates render `period`, so derive it from new fields when present.
+                if (Array.isArray(data.education)) {
+                    data.education.forEach(function(item) {
+                        if (!item) return;
+                        const start = String(item.start_date || '').trim();
+                        const end = String(item.end_date || '').trim();
+                        if (!String(item.period || '').trim() && (start || end)) {
+                            if (start && end) item.period = start + ' - ' + end;
+                            else if (start && !end) item.period = start + ' - Present';
+                            else item.period = end;
+                        }
+                    });
+                }
+
                 return data;
             } catch (error) {
                 return formData;
             }
+        }
+
+        // Rich text editors (Quill) synced into existing textareas
+        function initRichTextEditors($root) {
+            const $scope = $root && $root.length ? $root : $(document);
+            const hasQuill = typeof window.Quill !== 'undefined';
+            if (!hasQuill) return;
+
+            $scope.find('textarea[data-richtext="quill"]').each(function() {
+                const $textarea = $(this);
+                if ($textarea.data('quill-initialized')) return;
+
+                const editorId = $textarea.attr('data-richtext-editor');
+                if (!editorId) return;
+                const editorEl = document.getElementById(editorId);
+                if (!editorEl) return;
+
+                const toolbarEl = $textarea.closest('.cv-richtext').find('.cv-richtext__toolbar')[0] || null;
+                const quill = new window.Quill(editorEl, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: toolbarEl || true
+                    }
+                });
+
+                // Ensure alignment buttons work with our custom toolbar
+                if (toolbarEl) {
+                    toolbarEl.querySelectorAll('button.ql-align').forEach(function(btn) {
+                        btn.addEventListener('click', function(ev) {
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            const raw = btn.getAttribute('value');
+                            const val = (raw === null) ? null : String(raw);
+                            // Quill expects false to clear alignment (left/default)
+                            quill.format('align', (val && val.length) ? val : false);
+                        });
+                    });
+                }
+
+                // Hydrate from existing value (HTML)
+                const initialHtml = String($textarea.val() || '').trim();
+                if (initialHtml) {
+                    quill.clipboard.dangerouslyPasteHTML(initialHtml);
+                }
+
+                quill.on('text-change', function() {
+                    const html = quill.root.innerHTML || '';
+                    $textarea.val(html);
+                    // trigger preview update
+                    $textarea.trigger('input');
+                });
+
+                $textarea.data('quill-initialized', true);
+                $textarea.data('quill', quill);
+            });
         }
 
         // Escape HTML to prevent XSS
@@ -222,6 +397,23 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        function sanitizeHtml(html) {
+            if (!html) return '';
+            try {
+                if (window.DOMPurify && typeof window.DOMPurify.sanitize === 'function') {
+                    return window.DOMPurify.sanitize(String(html), {
+                        USE_PROFILES: { html: true },
+                        ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'a', 'span'],
+                        // allow class for Quill alignment (ql-align-*)
+                        ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
+                    });
+                }
+            } catch (e) {
+                // fall through
+            }
+            return escapeHtml(String(html));
         }
 
         // Generate section item HTML - Template-agnostic (uses standard class names)
@@ -233,18 +425,28 @@
                     '<div class="item-header">' +
                     '<div class="item-title-row">' +
                     '<h3 class="item-title">' + escapeHtml(item.title || 'Job Title') + '</h3>' +
-                    (item.period ? '<span class="item-period">' + escapeHtml(item.period) + '</span>' : '') +
+                    ((item.period || item.location)
+                        ? '<div class="item-meta">' +
+                            (item.period ? '<span class="item-period">' + escapeHtml(item.period) + '</span>' : '') +
+                            (item.location ? '<span class="item-location">' + escapeHtml(item.location) + '</span>' : '') +
+                          '</div>'
+                        : '') +
                     '</div>' +
                     (item.company ? '<p class="item-company">' + escapeHtml(item.company) + '</p>' : '') +
                     '</div>' +
-                    (item.description ? '<div class="item-description"><p>' + escapeHtml(item.description) + '</p></div>' : '') +
+                    (item.description ? '<div class="item-description">' + sanitizeHtml(item.description) + '</div>' : '') +
                     '</div>';
             } else if (sectionKey === 'education') {
                 html = '<div class="education-item">' +
                     '<div class="item-header">' +
                     '<div class="item-title-row">' +
                     '<h3 class="item-title">' + escapeHtml(item.degree || 'Degree') + '</h3>' +
-                    (item.period ? '<span class="item-period">' + escapeHtml(item.period) + '</span>' : '') +
+                    ((item.period || item.location)
+                        ? '<div class="item-meta">' +
+                            (item.period ? '<span class="item-period">' + escapeHtml(item.period) + '</span>' : '') +
+                            (item.location ? '<span class="item-location">' + escapeHtml(item.location) + '</span>' : '') +
+                          '</div>'
+                        : '') +
                     '</div>' +
                     (item.institution ? '<p class="item-institution">' + escapeHtml(item.institution) + '</p>' : '') +
                     '</div>' +
@@ -269,7 +471,7 @@
                     '</div>' +
                     (item.organization ? '<p class="item-organization">' + escapeHtml(item.organization) + '</p>' : '') +
                     '</div>' +
-                    (item.description ? '<div class="item-description"><p>' + escapeHtml(item.description) + '</p></div>' : '') +
+                    (item.description ? '<div class="item-description">' + sanitizeHtml(item.description) + '</div>' : '') +
                     '</div>';
             } else if (sectionKey === 'projects') {
                 html = '<div class="project-item">' +
@@ -280,7 +482,7 @@
                     '</div>' +
                     (item.technologies ? '<p class="item-technologies">' + escapeHtml(item.technologies) + '</p>' : '') +
                     '</div>' +
-                    (item.description ? '<div class="item-description"><p>' + escapeHtml(item.description) + '</p></div>' : '') +
+                    (item.description ? '<div class="item-description">' + sanitizeHtml(item.description) + '</div>' : '') +
                     '</div>';
             } else if (sectionKey === 'skills') {
                 // Map skill levels to percentages
@@ -367,6 +569,9 @@
                 if ($subtitle.length > 0) {
                     $subtitle.text(data.job_title || 'Professional');
                 }
+
+                // Keep the personal details view card in sync
+                updatePersonalViewCard(data);
                 
                 // Update profile photo
                 const $photoBox = $template.find('.photo-box .profile-placeholder');
@@ -570,6 +775,14 @@
                     }
                     
                     const validItems = data[sectionKey].filter(function(item) {
+                        if (sectionKey === 'experience') {
+                            const isHidden = item && (String(item.is_hidden || '').trim() === '1');
+                            if (isHidden) return false;
+                        }
+                        if (sectionKey === 'education') {
+                            const isHidden = item && (String(item.is_hidden || '').trim() === '1');
+                            if (isHidden) return false;
+                        }
                         return Object.values(item).some(function(val) {
                             return val && val.toString().trim() !== '';
                         });
@@ -654,6 +867,8 @@
                     if (!sectionConfig) return;
 
                     const validItems = (data[sectionKey] || []).filter(function(item) {
+                        const isHidden = item && (String(item.is_hidden || '').trim() === '1');
+                        if (isHidden) return false;
                         return Object.values(item).some(function(val) {
                             return val && val.toString().trim() !== '';
                         });
@@ -835,6 +1050,53 @@
                 }
             }, DEBOUNCE_DELAY);
         }
+
+        // Experience / Education list view: keep list synced on input
+        $form.on('input change', 'input[name^="experience["]', function() {
+            const $section = $('#section-experience');
+            if ($section.length) renderExperienceList($section);
+        });
+        $form.on('input change', 'input[name^="education["]', function() {
+            const $section = $('#section-education');
+            if ($section.length) renderEducationList($section);
+        });
+        $form.on('input change', 'input[name^="skills["], select[name^="skills["]', function() {
+            const $section = $('#section-skills');
+            if ($section.length) renderSkillsList($section);
+        });
+        $form.on('input change', 'input[name^="certifications["], select[name^="certifications["]', function() {
+            const $section = $('#section-certifications');
+            if ($section.length) renderGenericList('certifications', $section);
+        });
+        $form.on('input change', 'input[name^="awards["], select[name^="awards["], textarea[name^="awards["]', function() {
+            const $section = $('#section-awards');
+            if ($section.length) renderGenericList('awards', $section);
+        });
+        $form.on('input change', 'input[name^="projects["], select[name^="projects["], textarea[name^="projects["]', function() {
+            const $section = $('#section-projects');
+            if ($section.length) renderGenericList('projects', $section);
+        });
+        $form.on('input change', 'input[name^="languages["], select[name^="languages["]', function() {
+            const $section = $('#section-languages');
+            if ($section.length) renderGenericList('languages', $section);
+        });
+        $form.on('input change', 'input[name^="references["], select[name^="references["]', function() {
+            const $section = $('#section-references');
+            if ($section.length) renderGenericList('references', $section);
+        });
+
+        // Experience / Education editor Done button
+        $form.on('click', '.cv-section-editor-view__done', function(e) {
+            e.preventDefault();
+            const $section = $(this).closest('.added-section');
+            const sectionId = String($section.attr('id') || '');
+            if (sectionId === 'section-education') closeEducationEntryEditor($section);
+            else if (sectionId === 'section-skills') closeSkillsEntryEditor($section);
+            else if (sectionId === 'section-certifications' || sectionId === 'section-awards' || sectionId === 'section-projects' || sectionId === 'section-languages' || sectionId === 'section-references') {
+                closeGenericEntryEditor(sectionId.replace(/^section-/, ''), $section);
+            }
+            else closeExperienceEntryEditor($section);
+        });
 
         // Listen to form input changes
         $form.on('input change', 'input, textarea, select', function() {
@@ -1332,6 +1594,7 @@
         
         // Initial preview update - delay slightly to ensure CSS is loaded
         setTimeout(function() {
+            initRichTextEditors($(document));
             formData = collectFormData();
             // Only update if there's actual data or if template is not already rendered
             const templateClass = cvBuilderConfig.templateSlug || 'classic';
@@ -1340,6 +1603,7 @@
             if (!hasExistingTemplate || hasData) {
                 updatePreview(formData);
             }
+            updatePersonalViewCard(formData);
             // Wrap content in pages after initial render
             // Use longer delay to ensure template is fully rendered
             setTimeout(function() {
@@ -1571,6 +1835,129 @@
                 if (typeof options.onError === 'function') options.onError(xhr);
             });
         }
+
+        // Save Resume popover (replaces "Get Tips" button)
+        const $saveResumeTrigger = $('#cv-personal-save-resume');
+        const $saveResumePopover = $('#cv-save-resume-popover');
+        const $saveResumeTitleField = $('#cv-save-resume-title-field');
+        const $saveResumeTitleInput = $('#cv-save-resume-title');
+        const $saveResumeCancel = $('#cv-save-resume-cancel');
+        const $saveResumeConfirm = $('#cv-save-resume-confirm');
+
+        function isAlreadySavedResume() {
+            return !!selectedCvId;
+        }
+
+        function closeSaveResumePopover() {
+            if (!$saveResumePopover.length) return;
+            $saveResumePopover.prop('hidden', true).attr('aria-hidden', 'true');
+            $saveResumeTrigger.attr('aria-expanded', 'false');
+            $saveResumeConfirm.prop('disabled', false).text('Save');
+        }
+
+        function openSaveResumePopover() {
+            if (!$saveResumePopover.length) return;
+
+            const saved = isAlreadySavedResume();
+            const currentTitle = String($('#cv-title').val() || '').trim();
+
+            if (saved) {
+                $saveResumeTitleField.prop('hidden', true).attr('aria-hidden', 'true');
+                $saveResumeConfirm.text('Save');
+            } else {
+                $saveResumeTitleField.prop('hidden', false).attr('aria-hidden', 'false');
+                $saveResumeConfirm.text('Save');
+                $saveResumeTitleInput.val(currentTitle);
+            }
+
+            $saveResumePopover.prop('hidden', false).attr('aria-hidden', 'false');
+            $saveResumeTrigger.attr('aria-expanded', 'true');
+
+            setTimeout(function() {
+                if (!saved) {
+                    $saveResumeTitleInput.trigger('focus');
+                } else {
+                    $saveResumeConfirm.trigger('focus');
+                }
+            }, 0);
+        }
+
+        function toggleSaveResumePopover() {
+            if (!$saveResumePopover.length) return;
+            if ($saveResumePopover.prop('hidden')) openSaveResumePopover();
+            else closeSaveResumePopover();
+        }
+
+        $saveResumeTrigger.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            // If already saved, clicking should just save/update (no popover)
+            if (isAlreadySavedResume()) {
+                closeSaveResumePopover();
+                const $btn = $(this);
+                const originalHtml = $btn.html();
+                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>Saving...</span>');
+                saveCurrentCv({
+                    onSuccess: function(resp) {
+                        if (resp && resp.cv && resp.cv.title) {
+                            $('#cv-title').val(resp.cv.title || '');
+                            setResumeTriggerLabel(resp.cv.title);
+                        }
+                        $btn.prop('disabled', false).html(originalHtml);
+                    },
+                    onError: function() {
+                        $btn.prop('disabled', false).html(originalHtml);
+                    }
+                });
+                return;
+            }
+
+            toggleSaveResumePopover();
+        });
+
+        $saveResumePopover.on('click', function(e) {
+            e.stopPropagation();
+        });
+
+        $saveResumeCancel.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeSaveResumePopover();
+        });
+
+        $saveResumeConfirm.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Only apply title for new resumes; existing ones keep their title unless edited in the list
+            if (!isAlreadySavedResume()) {
+                $('#cv-title').val(String($saveResumeTitleInput.val() || '').trim());
+            }
+
+            $saveResumeConfirm.prop('disabled', true).text('Saving...');
+            saveCurrentCv({
+                onSuccess: function(resp) {
+                    if (resp && resp.cv && resp.cv.title) {
+                        $('#cv-title').val(resp.cv.title || '');
+                        setResumeTriggerLabel(resp.cv.title);
+                    }
+                    closeSaveResumePopover();
+                },
+                onError: function() {
+                    $saveResumeConfirm.prop('disabled', false).text('Save');
+                }
+            });
+        });
+
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Escape') closeSaveResumePopover();
+        });
+
+        $(document).on('click', function(e) {
+            if (!$saveResumePopover.length) return;
+            if ($(e.target).closest('#cv-personal-save-wrap').length) return;
+            closeSaveResumePopover();
+        });
 
         // Unsaved modal buttons
         $unsavedCancel.on('click', function(e) {
@@ -2226,6 +2613,9 @@
                                 }
                             }
                         });
+
+                        // Initialize Quill editors after values are set (so HTML hydrates)
+                        initRichTextEditors($newEntry);
                         
                         // Attach event handlers
                         const debouncedHandler = debounce(handleFormChange, 300);
@@ -2235,6 +2625,14 @@
                     // Update entry count
                     sectionEntryCounts[sectionKey] = cvData[sectionKey].length;
                     
+                    // Experience/Education/Skills use list view; refresh it after loading data
+                    if (sectionKey === 'experience') renderExperienceList($section);
+                    if (sectionKey === 'education') renderEducationList($section);
+                    if (sectionKey === 'skills') renderSkillsList($section);
+                    if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
+                        renderGenericList(sectionKey, $section);
+                    }
+
                     // Show/hide remove buttons based on entry count
                     if (cvData[sectionKey].length > 1) {
                         $entriesContainer.find('.btn-remove-entry').show();
@@ -2399,19 +2797,24 @@
                 const isAdded = addedSections.has(sectionKey);
 
                 const $option = $('<div class="section-option">')
+                    .attr('data-section-key', sectionKey)
+                    .attr('role', 'button')
+                    .attr('tabindex', isAdded ? '-1' : '0')
                     .append(
-                        $('<input>')
-                            .attr('type', 'checkbox')
-                            .attr('id', 'section-' + sectionKey)
-                            .attr('data-section-key', sectionKey)
-                            .prop('disabled', isAdded)
-                            .prop('checked', isAdded)
+                        $('<div class="section-option__icon" aria-hidden="true">').html(section.iconSvg || '')
                     )
                     .append(
-                        $('<label>')
-                            .attr('for', 'section-' + sectionKey)
-                            .html(section.icon + ' ' + section.name + (isAdded ? ' <span style="color: green;">(Added)</span>' : ''))
+                        $('<div class="section-option__content">')
+                            .append($('<div class="section-option__name">').text(section.name || ''))
+                            .append($('<div class="section-option__desc">').text(section.description || ''))
+                            .append(isAdded ? $('<div class="section-option__added">(Added)</div>') : '')
                     );
+
+                if (isAdded) {
+                    $option.addClass('is-added').attr('aria-disabled', 'true');
+                } else {
+                    $option.attr('aria-disabled', 'false');
+                }
 
                 $sectionsList.append($option);
             });
@@ -2424,14 +2827,176 @@
 
         function closeModal() {
             $('#add-sections-modal').removeClass('active');
-            $('#sections-list input[type="checkbox"]').prop('checked', false);
+            // no multi-select; nothing to reset
         }
 
+        // Import Resume
+        const $importResumeTrigger = $('#cv-import-resume-trigger, #cv-import-resume-trigger-toolbar');
+        const $importResumeInput = $('#cv-import-resume-input');
+        let pendingResumeImportFile = null;
+        let pendingResumeImportId = null;
+        let resumeImportInFlight = false;
+
+        function isAllowedResumeFile(file) {
+            if (!file) return false;
+            const name = String(file.name || '').toLowerCase();
+            const type = String(file.type || '').toLowerCase();
+            const looksLikeImage = type.startsWith('image/');
+            const looksLikePdf = type === 'application/pdf' || name.endsWith('.pdf');
+            const looksLikeDoc =
+                type === 'application/msword' ||
+                type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+                name.endsWith('.doc') ||
+                name.endsWith('.docx');
+            return looksLikeImage || looksLikePdf || looksLikeDoc;
+        }
+
+        $importResumeTrigger.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!$importResumeInput.length) {
+                showToast('error', 'Import input not found');
+                return;
+            }
+            $importResumeInput.trigger('click');
+        });
+
+        $importResumeInput.on('change', function() {
+            const file = (this.files && this.files[0]) ? this.files[0] : null;
+            if (!file) return;
+
+            // Basic validation (kept simple for MVP)
+            const maxBytes = 15 * 1024 * 1024; // 15MB
+            if (!isAllowedResumeFile(file)) {
+                pendingResumeImportFile = null;
+                $(this).val('');
+                showToast('error', 'Unsupported file. Please upload PDF, DOC/DOCX, or an image.');
+                return;
+            }
+            if (file.size && file.size > maxBytes) {
+                pendingResumeImportFile = null;
+                $(this).val('');
+                showToast('error', 'File is too large. Please upload a file up to 15MB.');
+                return;
+            }
+
+            pendingResumeImportFile = file;
+            pendingResumeImportId = null;
+            showToast('success', 'Selected: ' + file.name);
+
+            // Upload immediately (Step 3)
+            const uploadUrl = (cvBuilderConfig && cvBuilderConfig.routes) ? cvBuilderConfig.routes.importUpload : '';
+            if (!uploadUrl) {
+                showToast('info', 'Upload route not configured yet.', 4500);
+                return;
+            }
+            if (resumeImportInFlight) {
+                showToast('info', 'Upload already in progress…', 3000);
+                return;
+            }
+
+            resumeImportInFlight = true;
+            showToast('info', 'Uploading resume…', 4000);
+
+            const fd = new FormData();
+            fd.append('resume', file);
+            fd.append('template_slug', cvBuilderConfig.templateSlug || '');
+
+            $.ajax({
+                url: uploadUrl,
+                method: 'POST',
+                data: fd,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': cvBuilderConfig.csrfToken || ''
+                },
+                success: function(resp) {
+                    if (resp && resp.success && resp.import_id) {
+                        pendingResumeImportId = String(resp.import_id);
+                        showToast('success', 'Uploaded. Import ID: ' + pendingResumeImportId, 5000);
+                        showToast('info', 'Next: extract text + parse fields (Step 4–5).', 4500);
+                    } else {
+                        showToast('error', (resp && resp.message) ? resp.message : 'Upload failed');
+                    }
+                },
+                error: function(xhr) {
+                    // Common auth/session issues in Laravel
+                    if (xhr && (xhr.status === 401 || xhr.status === 403)) {
+                        showToast('error', 'Please login to import a resume.');
+                        return;
+                    }
+                    if (xhr && xhr.status === 419) {
+                        showToast('error', 'Session expired. Please refresh and try again.');
+                        return;
+                    }
+
+                    let msg = 'Upload failed. Please try again.';
+                    if (xhr && xhr.responseJSON) {
+                        if (xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                        // Validation errors
+                        if (xhr.responseJSON.errors && xhr.responseJSON.errors.resume && xhr.responseJSON.errors.resume[0]) {
+                            msg = xhr.responseJSON.errors.resume[0];
+                        }
+                    }
+                    showToast('error', msg);
+                },
+                complete: function() {
+                    resumeImportInFlight = false;
+                }
+            });
+        });
+
         $('#btn-add-sections').on('click', openModal);
-        $('#btn-close-modal').on('click', closeModal);
+        $('#add-sections-modal-close').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeModal();
+        });
         $('#add-sections-modal').on('click', function(e) {
             if ($(e.target).hasClass('modal-overlay')) {
                 closeModal();
+            }
+        });
+
+        // Click-to-add (no footer buttons)
+        $('#sections-list').on('click', '.section-option', function(e) {
+            e.preventDefault();
+            const $option = $(this);
+            const sectionKey = String($option.attr('data-section-key') || '');
+            if (!sectionKey) return;
+            if (addedSections.has(sectionKey)) return;
+
+            const sectionConfig = availableSections[sectionKey];
+            if (!sectionConfig) return;
+
+            const $sectionFields = generateSectionFields(sectionKey, sectionConfig);
+            $('#btn-add-sections').before($sectionFields);
+            addedSections.add(sectionKey);
+
+            const debouncedHandler = debounce(handleFormChange, 300);
+            $sectionFields.find('input, textarea').on('input change', debouncedHandler);
+
+            // Init Quill editors inside the newly added section
+            initRichTextEditors($sectionFields);
+
+            // If Experience/Education is being added for the first time, open editor directly
+            if (sectionKey === 'experience') openExperienceEntryEditor($sectionFields, 0);
+            if (sectionKey === 'education') openEducationEntryEditor($sectionFields, 0);
+            if (sectionKey === 'skills') openSkillsEntryEditor($sectionFields, 0);
+            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
+                openGenericEntryEditor(sectionKey, $sectionFields, 0);
+            }
+
+            handleFormChange();
+            closeModal();
+        });
+
+        // Keyboard support for cards
+        $('#sections-list').on('keydown', '.section-option', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                $(this).trigger('click');
             }
         });
 
@@ -2439,7 +3004,18 @@
         function generateEntryFields(sectionKey, sectionConfig, entryIndex) {
             const $entryContainer = $('<div>')
                 .addClass('entry-container')
-                .attr('data-entry-index', entryIndex);
+                .attr('data-entry-index', entryIndex)
+                .attr('data-section-key', sectionKey);
+
+            // Per-entry flags (used by Experience/Education/Skills list view)
+            if (listViewSections.has(sectionKey)) {
+                $entryContainer.append(
+                    $('<input type="hidden">')
+                        .attr('name', sectionKey + '[' + entryIndex + '][is_hidden]')
+                        .addClass('cv-entry-flag-hidden')
+                        .val('')
+                );
+            }
 
             const $entryHeader = $('<div>')
                 .addClass('entry-header')
@@ -2451,7 +3027,8 @@
             const $removeEntryBtn = $('<button>')
                 .addClass('btn-remove-entry')
                 .attr('type', 'button')
-                .html('🗑️ Remove Entry')
+                .attr('aria-label', 'Remove entry')
+                .html('<i class="far fa-trash-can" aria-hidden="true"></i>')
                 .on('click', function() {
                     removeEntry(sectionKey, entryIndex);
                 });
@@ -2467,6 +3044,12 @@
             // Create form fields for this entry
             sectionConfig.fields.forEach(function(field) {
                 const $formGroup = $('<div>').addClass('form-group');
+                if (sectionKey === 'experience' && (field.name === 'title' || field.name === 'company')) {
+                    $formGroup.addClass('entry-field--full');
+                }
+                if (sectionKey === 'education' && (field.name === 'degree' || field.name === 'institution')) {
+                    $formGroup.addClass('entry-field--full');
+                }
                 const $label = $('<label>').text(field.label);
                 $formGroup.append($label);
 
@@ -2475,7 +3058,40 @@
                         .attr('name', sectionKey + '[' + entryIndex + '][' + field.name + ']')
                         .attr('placeholder', field.placeholder || '')
                         .addClass('form-control');
-                    $formGroup.append($input);
+
+                    // Rich text editor for description field (Quill -> sync HTML into textarea)
+                    if (field.name === 'description') {
+                        const editorId = 'cv-rt-' + sectionKey + '-' + entryIndex + '-' + field.name + '-' + Date.now();
+                        const $wrap = $('<div class="cv-richtext">');
+
+                        const $toolbar = $('<div class="cv-richtext__toolbar">')
+                            .append('<button type="button" class="cv-richtext__btn ql-bold" aria-label="Bold"></button>')
+                            .append('<button type="button" class="cv-richtext__btn ql-italic" aria-label="Italic"></button>')
+                            .append('<button type="button" class="cv-richtext__btn ql-underline" aria-label="Underline"></button>')
+                            .append('<span class="cv-richtext__sep" aria-hidden="true"></span>')
+                            .append('<button type="button" class="cv-richtext__btn ql-list" value="ordered" aria-label="Numbered list"></button>')
+                            .append('<button type="button" class="cv-richtext__btn ql-list" value="bullet" aria-label="Bulleted list"></button>')
+                            .append('<button type="button" class="cv-richtext__btn ql-link" aria-label="Link"></button>')
+                            .append('<span class="cv-richtext__sep" aria-hidden="true"></span>')
+                            .append('<button type="button" class="cv-richtext__btn ql-align" value="" aria-label="Align left"></button>')
+                            .append('<button type="button" class="cv-richtext__btn ql-align" value="center" aria-label="Align center"></button>')
+                            .append('<button type="button" class="cv-richtext__btn ql-align" value="right" aria-label="Align right"></button>')
+                            .append('<button type="button" class="cv-richtext__btn ql-align" value="justify" aria-label="Justify"></button>');
+
+                        const $editor = $('<div class="cv-richtext__editor">').attr('id', editorId);
+
+                        $input
+                            .addClass('cv-richtext__source')
+                            .attr('data-richtext', 'quill')
+                            .attr('data-richtext-editor', editorId)
+                            .prop('hidden', true)
+                            .attr('aria-hidden', 'true');
+
+                        $wrap.append($toolbar).append($editor).append($input);
+                        $formGroup.append($wrap);
+                    } else {
+                        $formGroup.append($input);
+                    }
                 } else if (field.type === 'select') {
                     const $select = $('<select>')
                         .attr('name', sectionKey + '[' + entryIndex + '][' + field.name + ']')
@@ -2529,7 +3145,12 @@
 
             const $title = $('<h4>')
                 .addClass('added-section__title')
-                .html(sectionConfig.icon + ' ' + sectionConfig.name);
+                .append(
+                    $('<span class="added-section__icon" aria-hidden="true">').html(sectionConfig.iconSvg || '')
+                )
+                .append(
+                    $('<span class="added-section__text">').text(sectionConfig.name || '')
+                );
 
             const $sectionHeader = $('<div>')
                 .addClass('section-header')
@@ -2540,14 +3161,26 @@
                         .append($title)
                 )
                 .append(
-                    $('<button>')
-                        .addClass('btn-remove-section')
-                        .attr('type', 'button')
-                        .text('Remove Section')
-                        .on('click', function(ev) {
-                            ev.stopPropagation();
-                            removeSection(sectionKey);
-                        })
+                    $('<div class="section-header__actions">')
+                        .append(
+                            $('<button type="button" class="btn-section-tips cv-soon" aria-disabled="true" tabindex="-1" data-tooltip="Coming soon">')
+                                .append('<i class="fas fa-lightbulb" aria-hidden="true"></i>')
+                                .append('<span>Get Tips</span>')
+                        )
+                        .append(
+                            $('<button>')
+                                .addClass('btn-remove-section')
+                                .attr('type', 'button')
+                                .attr('aria-label', 'Delete section')
+                                .html('<i class="far fa-trash-can" aria-hidden="true"></i>')
+                                .on('click', function(ev) {
+                                    ev.stopPropagation();
+                                    const sectionLabel = sectionKey === 'experience'
+                                        ? 'WORK EXPERIENCE'
+                                        : (sectionConfig && sectionConfig.name ? String(sectionConfig.name).toUpperCase() : 'SECTION');
+                                    openDeleteSectionModal(sectionKey, sectionLabel);
+                                })
+                        )
                 );
 
             $sectionContainer.append($sectionHeader);
@@ -2563,20 +3196,58 @@
             const $firstEntry = generateEntryFields(sectionKey, sectionConfig, 0);
             $entriesContainer.append($firstEntry);
 
-            // Add "Add Another Entry" button
-            const $addEntryBtn = $('<button>')
-                .addClass('btn-add-entry')
-                .attr('type', 'button')
-                .html('➕ Add Another ' + sectionConfig.name)
-                .on('click', function() {
+            // List-view sections: start in list view; others show full form by default
+            let $addEntryBtn;
+            let $listWrap = null;
+            let $editorWrap = null;
+            if (listViewSections.has(sectionKey)) {
+                $listWrap = $('<div class="cv-section-list-view">')
+                    .append('<div class="cv-section-list" role="list"></div>')
+                    .append(
+                        $('<div class="cv-section-list__footer">')
+                            .append('<button type="button" class="cv-section-list__add"><i class="fas fa-plus" aria-hidden="true"></i><span>Add Entry</span></button>')
+                    );
+
+                $editorWrap = $('<div class="cv-section-editor-view" hidden aria-hidden="true">')
+                    .append($entriesContainer);
+                $editorWrap.append(
+                    '<div class="cv-section-editor-view__footer">' +
+                    '  <button type="button" class="cv-section-editor-view__done cv-section-editor-view__done--cta">' +
+                    '    <i class="fas fa-check" aria-hidden="true"></i>' +
+                    '    <span>Done</span>' +
+                    '  </button>' +
+                    '</div>'
+                );
+
+                // Hide entries initially (list view)
+                $entriesContainer.find('.entry-container').prop('hidden', true).attr('aria-hidden', 'true');
+
+                $addEntryBtn = $listWrap.find('.cv-section-list__add');
+                $addEntryBtn.on('click', function() {
                     addEntryToSection(sectionKey, sectionConfig);
+                    // open the newest entry
+                    const newIndex = (sectionEntryCounts[sectionKey] || 1) - 1;
+                    if (sectionKey === 'education') openEducationEntryEditor($sectionContainer, newIndex);
+                    else if (sectionKey === 'skills') openSkillsEntryEditor($sectionContainer, newIndex);
+                    else if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') openGenericEntryEditor(sectionKey, $sectionContainer, newIndex);
+                    else openExperienceEntryEditor($sectionContainer, newIndex);
                 });
+            } else {
+                // Add "Add Another Entry" button
+                $addEntryBtn = $('<button>')
+                    .addClass('btn-add-entry')
+                    .attr('type', 'button')
+                    .html('➕ Add Another ' + sectionConfig.name)
+                    .on('click', function() {
+                        addEntryToSection(sectionKey, sectionConfig);
+                    });
+            }
 
             const $body = $('<div>')
                 .addClass('added-section__body')
                 .attr('id', collapseBodyId)
-                .append($entriesContainer)
-                .append($addEntryBtn);
+                .append(listViewSections.has(sectionKey) ? $listWrap : $entriesContainer)
+                .append(listViewSections.has(sectionKey) ? $editorWrap : $addEntryBtn);
 
             $sectionContainer.append($body);
 
@@ -2584,7 +3255,410 @@
             const debouncedHandler = debounce(handleFormChange, 300);
             $sectionContainer.find('input, textarea, select').on('input change', debouncedHandler);
 
+            if (sectionKey === 'experience') renderExperienceList($sectionContainer);
+            if (sectionKey === 'education') renderEducationList($sectionContainer);
+            if (sectionKey === 'skills') renderSkillsList($sectionContainer);
+            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
+                renderGenericList(sectionKey, $sectionContainer);
+            }
+
             return $sectionContainer;
+        }
+
+        function renderExperienceList($section) {
+            const $list = $section.find('.cv-section-list');
+            const $entries = $section.find('.entries-container .entry-container');
+            if (!$list.length) return;
+            $list.empty();
+            $entries.each(function() {
+                const $entry = $(this);
+                const idx = Number($entry.attr('data-entry-index'));
+                const title = String($entry.find('input[name^="experience[' + idx + '][title]"]').val() || '').trim() || 'Job Title';
+                const company = String($entry.find('input[name^="experience[' + idx + '][company]"]').val() || '').trim();
+                const isHidden = String($entry.find('input[name^="experience[' + idx + '][is_hidden]"]').val() || '').trim() === '1';
+
+                const $row = $('<div class="cv-section-list__row" role="listitem">')
+                    .attr('draggable', 'true')
+                    .attr('data-entry-index', String(idx))
+                    .append('<span class="cv-section-list__handle" aria-hidden="true" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>')
+                    .append(
+                        $('<button type="button" class="cv-section-list__text" aria-label="Edit entry">')
+                            .append($('<span class="cv-section-list__title">').text(title))
+                            .append(company ? $('<span class="cv-section-list__company">').text(', ' + company) : '')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                openExperienceEntryEditor($section, idx);
+                            })
+                    )
+                    .append(
+                        $('<button type="button" class="cv-section-list__open" aria-label="Hide/unhide in preview">')
+                            .html(isHidden ? '<i class="far fa-eye-slash" aria-hidden="true"></i>' : '<i class="far fa-eye" aria-hidden="true"></i>')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                const $flag = $entry.find('input[name^="experience[' + idx + '][is_hidden]"]');
+                                const nowHidden = String($flag.val() || '').trim() !== '1';
+                                $flag.val(nowHidden ? '1' : '');
+                                renderExperienceList($section);
+                                handleFormChange();
+                            })
+                    );
+
+                $list.append($row);
+            });
+        }
+
+        function renderEducationList($section) {
+            const $list = $section.find('.cv-section-list');
+            const $entries = $section.find('.entries-container .entry-container');
+            if (!$list.length) return;
+            $list.empty();
+            $entries.each(function() {
+                const $entry = $(this);
+                const idx = Number($entry.attr('data-entry-index'));
+                const degree = String($entry.find('input[name^="education[' + idx + '][degree]"]').val() || '').trim() || 'Degree';
+                const institution = String($entry.find('input[name^="education[' + idx + '][institution]"]').val() || '').trim();
+                const isHidden = String($entry.find('input[name^="education[' + idx + '][is_hidden]"]').val() || '').trim() === '1';
+
+                const $row = $('<div class="cv-section-list__row" role="listitem">')
+                    .attr('draggable', 'true')
+                    .attr('data-entry-index', String(idx))
+                    .append('<span class="cv-section-list__handle" aria-hidden="true" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>')
+                    .append(
+                        $('<button type="button" class="cv-section-list__text" aria-label="Edit entry">')
+                            .append($('<span class="cv-section-list__title">').text(degree))
+                            .append(institution ? $('<span class="cv-section-list__company">').text(', ' + institution) : '')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                openEducationEntryEditor($section, idx);
+                            })
+                    )
+                    .append(
+                        $('<button type="button" class="cv-section-list__open" aria-label="Hide/unhide in preview">')
+                            .html(isHidden ? '<i class="far fa-eye-slash" aria-hidden="true"></i>' : '<i class="far fa-eye" aria-hidden="true"></i>')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                const $flag = $entry.find('input[name^="education[' + idx + '][is_hidden]"]');
+                                const nowHidden = String($flag.val() || '').trim() !== '1';
+                                $flag.val(nowHidden ? '1' : '');
+                                renderEducationList($section);
+                                handleFormChange();
+                            })
+                    );
+
+                $list.append($row);
+            });
+        }
+
+        function renderSkillsList($section) {
+            const $list = $section.find('.cv-section-list');
+            const $entries = $section.find('.entries-container .entry-container');
+            if (!$list.length) return;
+            $list.empty();
+            $entries.each(function() {
+                const $entry = $(this);
+                const idx = Number($entry.attr('data-entry-index'));
+                const skill = String($entry.find('input[name^="skills[' + idx + '][skill]"]').val() || '').trim() || 'Skill';
+                const level = String($entry.find('select[name^="skills[' + idx + '][level]"]').val() || '').trim();
+                const isHidden = String($entry.find('input[name^="skills[' + idx + '][is_hidden]"]').val() || '').trim() === '1';
+
+                const $row = $('<div class="cv-section-list__row" role="listitem">')
+                    .attr('draggable', 'true')
+                    .attr('data-entry-index', String(idx))
+                    .append('<span class="cv-section-list__handle" aria-hidden="true" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>')
+                    .append(
+                        $('<button type="button" class="cv-section-list__text" aria-label="Edit entry">')
+                            .append($('<span class="cv-section-list__title">').text(skill))
+                            .append(level ? $('<span class="cv-section-list__company">').text(', ' + level) : '')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                openSkillsEntryEditor($section, idx);
+                            })
+                    )
+                    .append(
+                        $('<button type="button" class="cv-section-list__open" aria-label="Hide/unhide in preview">')
+                            .html(isHidden ? '<i class="far fa-eye-slash" aria-hidden="true"></i>' : '<i class="far fa-eye" aria-hidden="true"></i>')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                const $flag = $entry.find('input[name^="skills[' + idx + '][is_hidden]"]');
+                                const nowHidden = String($flag.val() || '').trim() !== '1';
+                                $flag.val(nowHidden ? '1' : '');
+                                renderSkillsList($section);
+                                handleFormChange();
+                            })
+                    );
+
+                $list.append($row);
+            });
+        }
+
+        function _getEntryFieldValue(sectionKey, idx, fieldName, $entry) {
+            const selectorBase = sectionKey + '[' + idx + '][' + fieldName + ']';
+            const $field = $entry.find('input[name^="' + selectorBase + '"], textarea[name^="' + selectorBase + '"], select[name^="' + selectorBase + '"]');
+            if (!$field.length) return '';
+            return String($field.val() || '').trim();
+        }
+
+        function renderGenericList(sectionKey, $section) {
+            const $list = $section.find('.cv-section-list');
+            const $entries = $section.find('.entries-container .entry-container');
+            if (!$list.length) return;
+            $list.empty();
+
+            const cfg = listViewSummaryFields[sectionKey] || {};
+            const primaryField = cfg.primary || (availableSections[sectionKey] && availableSections[sectionKey].fields && availableSections[sectionKey].fields[0] ? availableSections[sectionKey].fields[0].name : '');
+            const secondaryField = cfg.secondary || '';
+
+            $entries.each(function() {
+                const $entry = $(this);
+                const idx = Number($entry.attr('data-entry-index'));
+                const primary = _getEntryFieldValue(sectionKey, idx, primaryField, $entry) || (primaryField ? primaryField.replace(/_/g, ' ') : 'Entry');
+                const secondary = secondaryField ? _getEntryFieldValue(sectionKey, idx, secondaryField, $entry) : '';
+                const isHidden = String($entry.find('input[name^="' + sectionKey + '[' + idx + '][is_hidden]"]').val() || '').trim() === '1';
+
+                const $row = $('<div class="cv-section-list__row" role="listitem">')
+                    .attr('draggable', 'true')
+                    .attr('data-entry-index', String(idx))
+                    .append('<span class="cv-section-list__handle" aria-hidden="true" title="Drag to reorder"><i class="fas fa-grip-vertical"></i></span>')
+                    .append(
+                        $('<button type="button" class="cv-section-list__text" aria-label="Edit entry">')
+                            .append($('<span class="cv-section-list__title">').text(primary || 'Entry'))
+                            .append(secondary ? $('<span class="cv-section-list__company">').text(', ' + secondary) : '')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                openGenericEntryEditor(sectionKey, $section, idx);
+                            })
+                    )
+                    .append(
+                        $('<button type="button" class="cv-section-list__open" aria-label="Hide/unhide in preview">')
+                            .html(isHidden ? '<i class="far fa-eye-slash" aria-hidden="true"></i>' : '<i class="far fa-eye" aria-hidden="true"></i>')
+                            .on('click', function(e) {
+                                e.preventDefault();
+                                const $flag = $entry.find('input[name^="' + sectionKey + '[' + idx + '][is_hidden]"]');
+                                const nowHidden = String($flag.val() || '').trim() !== '1';
+                                $flag.val(nowHidden ? '1' : '');
+                                renderGenericList(sectionKey, $section);
+                                handleFormChange();
+                            })
+                    );
+
+                $list.append($row);
+            });
+        }
+
+        function _openEntryEditorCommon($section, entryIndex) {
+            const $listWrap = $section.find('.cv-section-list-view');
+            const $editorWrap = $section.find('.cv-section-editor-view');
+            const $entries = $section.find('.entries-container .entry-container');
+            $entries.prop('hidden', true).attr('aria-hidden', 'true');
+            const $target = $section.find('.entries-container .entry-container[data-entry-index="' + entryIndex + '"]');
+            $target.prop('hidden', false).attr('aria-hidden', 'false');
+            $listWrap.prop('hidden', true).attr('aria-hidden', 'true');
+            $editorWrap.prop('hidden', false).attr('aria-hidden', 'false');
+            initRichTextEditors($target);
+            setTimeout(function() {
+                $target.find('input, textarea, select').first().trigger('focus');
+            }, 0);
+        }
+
+        function _closeEntryEditorCommon($section) {
+            const $listWrap = $section.find('.cv-section-list-view');
+            const $editorWrap = $section.find('.cv-section-editor-view');
+            const $entries = $section.find('.entries-container .entry-container');
+            $entries.prop('hidden', true).attr('aria-hidden', 'true');
+            $editorWrap.prop('hidden', true).attr('aria-hidden', 'true');
+            $listWrap.prop('hidden', false).attr('aria-hidden', 'false');
+        }
+
+        // Drag & drop reorder for Experience list
+        let __expDragFromIdx = null;
+        $form.on('dragstart', '#section-experience .cv-section-list__row', function(e) {
+            __expDragFromIdx = $(this).attr('data-entry-index');
+            try { e.originalEvent.dataTransfer.effectAllowed = 'move'; } catch (_) {}
+            $(this).addClass('is-dragging');
+        });
+        $form.on('dragend', '#section-experience .cv-section-list__row', function() {
+            $(this).removeClass('is-dragging');
+        });
+        $form.on('dragover', '#section-experience .cv-section-list__row', function(e) {
+            e.preventDefault();
+            try { e.originalEvent.dataTransfer.dropEffect = 'move'; } catch (_) {}
+        });
+        $form.on('drop', '#section-experience .cv-section-list__row', function(e) {
+            e.preventDefault();
+            const $targetRow = $(this);
+            const toIdx = $targetRow.attr('data-entry-index');
+            const fromIdx = __expDragFromIdx;
+            if (fromIdx === null || fromIdx === undefined) return;
+            if (String(fromIdx) === String(toIdx)) return;
+
+            const $section = $('#section-experience');
+            const $entriesContainer = $section.find('.entries-container');
+            const $fromEntry = $entriesContainer.find('.entry-container[data-entry-index="' + fromIdx + '"]');
+            const $toEntry = $entriesContainer.find('.entry-container[data-entry-index="' + toIdx + '"]');
+            if (!$fromEntry.length || !$toEntry.length) return;
+
+            // Move the entry containers to match the list order
+            const toPos = $toEntry.index();
+            if ($fromEntry.index() < toPos) $toEntry.after($fromEntry);
+            else $toEntry.before($fromEntry);
+
+            // Reindex names/indices so everything stays consistent
+            reindexSectionEntries('experience');
+            renderExperienceList($section);
+            handleFormChange();
+        });
+
+        // Drag & drop reorder for Education list
+        let __eduDragFromIdx = null;
+        $form.on('dragstart', '#section-education .cv-section-list__row', function(e) {
+            __eduDragFromIdx = $(this).attr('data-entry-index');
+            try { e.originalEvent.dataTransfer.effectAllowed = 'move'; } catch (_) {}
+            $(this).addClass('is-dragging');
+        });
+        $form.on('dragend', '#section-education .cv-section-list__row', function() {
+            $(this).removeClass('is-dragging');
+        });
+        $form.on('dragover', '#section-education .cv-section-list__row', function(e) {
+            e.preventDefault();
+            try { e.originalEvent.dataTransfer.dropEffect = 'move'; } catch (_) {}
+        });
+        $form.on('drop', '#section-education .cv-section-list__row', function(e) {
+            e.preventDefault();
+            const $targetRow = $(this);
+            const toIdx = $targetRow.attr('data-entry-index');
+            const fromIdx = __eduDragFromIdx;
+            if (fromIdx === null || fromIdx === undefined) return;
+            if (String(fromIdx) === String(toIdx)) return;
+
+            const $section = $('#section-education');
+            const $entriesContainer = $section.find('.entries-container');
+            const $fromEntry = $entriesContainer.find('.entry-container[data-entry-index="' + fromIdx + '"]');
+            const $toEntry = $entriesContainer.find('.entry-container[data-entry-index="' + toIdx + '"]');
+            if (!$fromEntry.length || !$toEntry.length) return;
+
+            const toPos = $toEntry.index();
+            if ($fromEntry.index() < toPos) $toEntry.after($fromEntry);
+            else $toEntry.before($fromEntry);
+
+            reindexSectionEntries('education');
+            renderEducationList($section);
+            handleFormChange();
+        });
+
+        function openExperienceEntryEditor($section, entryIndex) {
+            _openEntryEditorCommon($section, entryIndex);
+        }
+
+        function closeExperienceEntryEditor($section) {
+            _closeEntryEditorCommon($section);
+            renderExperienceList($section);
+        }
+
+        function openEducationEntryEditor($section, entryIndex) {
+            _openEntryEditorCommon($section, entryIndex);
+        }
+
+        function closeEducationEntryEditor($section) {
+            _closeEntryEditorCommon($section);
+            renderEducationList($section);
+        }
+
+        // Drag & drop reorder for Skills list
+        let __skillsDragFromIdx = null;
+        $form.on('dragstart', '#section-skills .cv-section-list__row', function(e) {
+            __skillsDragFromIdx = $(this).attr('data-entry-index');
+            try { e.originalEvent.dataTransfer.effectAllowed = 'move'; } catch (_) {}
+            $(this).addClass('is-dragging');
+        });
+        $form.on('dragend', '#section-skills .cv-section-list__row', function() {
+            $(this).removeClass('is-dragging');
+        });
+        $form.on('dragover', '#section-skills .cv-section-list__row', function(e) {
+            e.preventDefault();
+            try { e.originalEvent.dataTransfer.dropEffect = 'move'; } catch (_) {}
+        });
+        $form.on('drop', '#section-skills .cv-section-list__row', function(e) {
+            e.preventDefault();
+            const $targetRow = $(this);
+            const toIdx = $targetRow.attr('data-entry-index');
+            const fromIdx = __skillsDragFromIdx;
+            if (fromIdx === null || fromIdx === undefined) return;
+            if (String(fromIdx) === String(toIdx)) return;
+
+            const $section = $('#section-skills');
+            const $entriesContainer = $section.find('.entries-container');
+            const $fromEntry = $entriesContainer.find('.entry-container[data-entry-index="' + fromIdx + '"]');
+            const $toEntry = $entriesContainer.find('.entry-container[data-entry-index="' + toIdx + '"]');
+            if (!$fromEntry.length || !$toEntry.length) return;
+
+            const toPos = $toEntry.index();
+            if ($fromEntry.index() < toPos) $toEntry.after($fromEntry);
+            else $toEntry.before($fromEntry);
+
+            reindexSectionEntries('skills');
+            renderSkillsList($section);
+            handleFormChange();
+        });
+
+        function openSkillsEntryEditor($section, entryIndex) {
+            _openEntryEditorCommon($section, entryIndex);
+        }
+
+        function closeSkillsEntryEditor($section) {
+            _closeEntryEditorCommon($section);
+            renderSkillsList($section);
+        }
+
+        // Drag & drop reorder for generic list sections
+        const __genericDragFromIdx = {};
+        $form.on('dragstart', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row', function(e) {
+            const $row = $(this);
+            const $section = $row.closest('.added-section');
+            const sectionId = String($section.attr('id') || '');
+            const sectionKey = sectionId.replace(/^section-/, '');
+            __genericDragFromIdx[sectionKey] = $row.attr('data-entry-index');
+            try { e.originalEvent.dataTransfer.effectAllowed = 'move'; } catch (_) {}
+            $row.addClass('is-dragging');
+        });
+        $form.on('dragend', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row', function() {
+            $(this).removeClass('is-dragging');
+        });
+        $form.on('dragover', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row', function(e) {
+            e.preventDefault();
+            try { e.originalEvent.dataTransfer.dropEffect = 'move'; } catch (_) {}
+        });
+        $form.on('drop', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row', function(e) {
+            e.preventDefault();
+            const $targetRow = $(this);
+            const $section = $targetRow.closest('.added-section');
+            const sectionId = String($section.attr('id') || '');
+            const sectionKey = sectionId.replace(/^section-/, '');
+            const toIdx = $targetRow.attr('data-entry-index');
+            const fromIdx = __genericDragFromIdx[sectionKey];
+            if (fromIdx === null || fromIdx === undefined) return;
+            if (String(fromIdx) === String(toIdx)) return;
+
+            const $entriesContainer = $section.find('.entries-container');
+            const $fromEntry = $entriesContainer.find('.entry-container[data-entry-index="' + fromIdx + '"]');
+            const $toEntry = $entriesContainer.find('.entry-container[data-entry-index="' + toIdx + '"]');
+            if (!$fromEntry.length || !$toEntry.length) return;
+
+            const toPos = $toEntry.index();
+            if ($fromEntry.index() < toPos) $toEntry.after($fromEntry);
+            else $toEntry.before($fromEntry);
+
+            reindexSectionEntries(sectionKey);
+            renderGenericList(sectionKey, $section);
+            handleFormChange();
+        });
+
+        function openGenericEntryEditor(sectionKey, $section, entryIndex) {
+            _openEntryEditorCommon($section, entryIndex);
+        }
+
+        function closeGenericEntryEditor(sectionKey, $section) {
+            _closeEntryEditorCommon($section);
+            renderGenericList(sectionKey, $section);
         }
 
         // Add a new entry to an existing section
@@ -2610,8 +3684,28 @@
             const debouncedHandler = debounce(handleFormChange, 300);
             $newEntry.find('input, textarea, select').on('input change', debouncedHandler);
 
+            // Init Quill editor for the new entry (if any)
+            initRichTextEditors($newEntry);
+
             // Update preview
             handleFormChange();
+
+            if (sectionKey === 'experience') {
+                const $section = $('#section-' + sectionKey);
+                renderExperienceList($section);
+            }
+            if (sectionKey === 'education') {
+                const $section = $('#section-' + sectionKey);
+                renderEducationList($section);
+            }
+            if (sectionKey === 'skills') {
+                const $section = $('#section-' + sectionKey);
+                renderSkillsList($section);
+            }
+            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
+                const $section = $('#section-' + sectionKey);
+                renderGenericList(sectionKey, $section);
+            }
         }
 
         // Remove a specific entry from a section
@@ -2676,35 +3770,7 @@
             });
         }
 
-        $('#btn-add-selected-sections').on('click', function() {
-            const selectedSections = [];
-
-            $('#sections-list input[type="checkbox"]:checked').each(function() {
-                const sectionKey = $(this).data('section-key');
-                if (sectionKey && !addedSections.has(sectionKey)) {
-                    selectedSections.push(sectionKey);
-                }
-            });
-
-            if (selectedSections.length === 0) {
-                alert('Please select at least one section to add.');
-                return;
-            }
-
-            selectedSections.forEach(function(sectionKey) {
-                const sectionConfig = availableSections[sectionKey];
-                const $sectionFields = generateSectionFields(sectionKey, sectionConfig);
-
-                $('#btn-add-sections').before($sectionFields);
-                addedSections.add(sectionKey);
-
-                const debouncedHandler = debounce(handleFormChange, 300);
-                $sectionFields.find('input, textarea').on('input change', debouncedHandler);
-            });
-
-            handleFormChange();
-            closeModal();
-        });
+        // Multi-select add removed (sections are added on click)
 
         function removeSection(sectionKey) {
             const $section = $('#section-' + sectionKey);
@@ -2719,71 +3785,74 @@
             }
         }
 
-        // Save CV functionality
+        // Delete section confirmation modal
+        const $deleteModal = $('#cv-delete-section-modal');
+        const $deleteBackdrop = $('#cv-delete-section-backdrop');
+        const $deleteClose = $('#cv-delete-section-close');
+        const $deleteCancel = $('#cv-delete-section-cancel');
+        const $deleteConfirm = $('#cv-delete-section-confirm');
+        const $deleteCheck = $('#cv-delete-section-confirm-check');
+        const $deleteTitle = $('#cv-delete-section-title');
+        let pendingDeleteSectionKey = null;
+
+        function setDeleteConfirmEnabled(enabled) {
+            $deleteConfirm.prop('disabled', !enabled);
+            $deleteConfirm.attr('aria-disabled', enabled ? 'false' : 'true');
+        }
+
+        function openDeleteSectionModal(sectionKey, sectionLabel) {
+            pendingDeleteSectionKey = sectionKey;
+            $deleteTitle.text(`Delete “${sectionLabel}” section?`);
+            $deleteCheck.prop('checked', false);
+            setDeleteConfirmEnabled(false);
+
+            $deleteModal.removeAttr('hidden').attr('aria-hidden', 'false');
+            $('body').addClass('cv-modal-open');
+        }
+
+        function closeDeleteSectionModal() {
+            pendingDeleteSectionKey = null;
+            $deleteModal.attr('aria-hidden', 'true').attr('hidden', 'hidden');
+            $('body').removeClass('cv-modal-open');
+        }
+
+        $deleteCheck.on('change', function() {
+            setDeleteConfirmEnabled($(this).is(':checked'));
+        });
+
+        $deleteConfirm.on('click', function() {
+            if ($(this).prop('disabled')) return;
+            if (!pendingDeleteSectionKey) return;
+            removeSection(pendingDeleteSectionKey);
+            closeDeleteSectionModal();
+        });
+
+        $deleteCancel.on('click', closeDeleteSectionModal);
+        $deleteClose.on('click', closeDeleteSectionModal);
+        $deleteBackdrop.on('click', closeDeleteSectionModal);
+
+        $(document).on('keydown', function(e) {
+            if ($deleteModal.attr('aria-hidden') === 'false' && (e.key === 'Escape' || e.key === 'Esc')) {
+                closeDeleteSectionModal();
+            }
+        });
+
+        // Save CV legacy button (if present): route through saveCurrentCv()
         $('#btn-save-cv').on('click', function() {
             const $btn = $(this);
             const $message = $('#save-message');
-            const cvTitle = $('#cv-title').val() || 'My CV';
-
             $btn.prop('disabled', true).text('Saving...');
-            $message.hide().removeClass('success error');
+            if ($message.length) $message.hide().removeClass('success error');
 
-            const cvData = collectFormData();
-            
-            // Get CSRF token from meta tag (fresh token) or use config token
-            const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
-
-            $.ajax({
-                url: cvBuilderConfig.routes.save,
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                data: {
-                    _token: csrfToken,
-                    template_slug: cvBuilderConfig.templateSlug,
-                    title: cvTitle,
-                    cv_data: cvData
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $message
-                            .addClass('success')
-                            .text(response.message)
-                            .fadeIn();
-
-                        // Mark newly saved CV as selected and refresh list
-                        if (response.cv_id) {
-                            selectedCvId = String(response.cv_id);
-                        }
-                        if (typeof loadSavedCVsList === 'function') loadSavedCVsList();
-                        if (response.cv && response.cv.title) setResumeTriggerLabel(response.cv.title);
-
-                        setTimeout(function() {
-                            $btn.prop('disabled', false).text('💾 Save CV');
-                        }, 2000);
-                    } else {
-                        $message
-                            .addClass('error')
-                            .text(response.message)
-                            .fadeIn();
-                        $btn.prop('disabled', false).text('💾 Save CV');
+            saveCurrentCv({
+                onSuccess: function(resp) {
+                    if ($message.length) {
+                        $message.addClass('success').text((resp && resp.message) || 'Saved').fadeIn();
                     }
+                    setTimeout(function() { $btn.prop('disabled', false).text('💾 Save CV'); }, 700);
                 },
-                error: function(xhr) {
-                    let errorMessage = 'Error saving CV. Please try again.';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    } else if (xhr.status === 401) {
-                        errorMessage = 'Please login to save your CV';
-                    } else if (xhr.status === 419) {
-                        errorMessage = 'Session expired. Please refresh the page and try again.';
-                    }
-
-                    $message
-                        .addClass('error')
-                        .text(errorMessage)
-                        .fadeIn();
+                onError: function() {
+                    if ($message.length) $message.addClass('error').text('Unable to save').fadeIn();
                     $btn.prop('disabled', false).text('💾 Save CV');
                 }
             });
