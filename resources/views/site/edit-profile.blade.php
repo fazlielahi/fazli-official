@@ -287,7 +287,12 @@
                 <div class="photo-preview-container" id="photoPreview">
                     @if($user->photo)
                         <div class="preview-wrapper">
-                            <img src="{{ asset('images/' . $user->photo) }}" alt="Current Profile Photo" class="preview-image">
+                            @php
+                                $rawPhoto = trim((string) ($user->photo ?? ''));
+                                $isRemotePhoto = $rawPhoto !== '' && \Illuminate\Support\Str::startsWith($rawPhoto, ['http://', 'https://']);
+                                $photoSrc = $isRemotePhoto ? $rawPhoto : asset('images/' . $rawPhoto);
+                            @endphp
+                            <img src="{{ $photoSrc }}" alt="Current Profile Photo" class="preview-image">
                             <button type="button" class="remove-preview" onclick="removeCurrentPhoto()">
                                 <i class="fas fa-times"></i>
                             </button>

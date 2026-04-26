@@ -48,7 +48,12 @@
                                 <h6>{{ __('lang.Profile Photo') }}</h6>
                                 <div class="media">
                                     <div class="media-left m-r-15">
-                                        <img src="{{ asset('images/' . $user->photo) }}" class="user-photo media-object" alt="User" width="150">
+                                        @php
+                                            $rawPhoto = trim((string) ($user->photo ?? ''));
+                                            $isRemotePhoto = $rawPhoto !== '' && \Illuminate\Support\Str::startsWith($rawPhoto, ['http://', 'https://']);
+                                            $photoSrc = $isRemotePhoto ? $rawPhoto : asset('images/' . ($rawPhoto !== '' ? $rawPhoto : 'default.svg'));
+                                        @endphp
+                                        <img src="{{ $photoSrc }}" class="user-photo media-object" alt="User" width="150">
                                     </div>
                                     <div class="media-body">
                                         <p>{{ __('lang.Upload your photo.') }}<br> <em>{{ __('lang.Image should be at least 140px x 140px') }}</em></p> 

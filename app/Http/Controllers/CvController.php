@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use App\Models\CvTemplate;
 use App\Models\UserCV;
 use App\Models\User;
@@ -270,7 +271,7 @@ class CvController extends Controller
         $userId = Auth::id();
 
         $request->validate([
-            'resume' => 'required|file|max:15360|mimes:pdf,doc,docx,jpg,jpeg,png,webp',
+            'resume' => 'required|file|max:3072|mimes:pdf,docx,jpg,jpeg,png,webp',
         ]);
 
         try {
@@ -283,6 +284,18 @@ class CvController extends Controller
 
             $dir = 'cv-imports/' . $userId;
             $storedPath = $file->storeAs($dir, $storedName);
+
+            // Write a small metadata file so Step 4 can find this upload by import_id.
+            $meta = [
+                'import_id' => $importId,
+                'user_id' => (int) $userId,
+                'stored_path' => $storedPath,
+                'original_name' => $file->getClientOriginalName(),
+                'mime' => $file->getClientMimeType(),
+                'size' => $file->getSize(),
+                'uploaded_at' => now()->toISOString(),
+            ];
+            Storage::put($dir . '/' . $importId . '.meta.json', json_encode($meta, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 
             return response()->json([
                 'success' => true,
@@ -298,6 +311,604 @@ class CvController extends Controller
                 'message' => 'Upload failed: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Step 4: Extract raw text from an uploaded resume.
+     * - DOCX: local extraction
+     * - PDF: try local text extraction (pdftotext), fallback to Vision OCR if empty/low
+     * - Image: Vision OCR
+     */
+    public function importExtract(Request $request, $lang, string $importId)
+    {
+        $userId = Auth::id();
+
+        $dir = 'cv-imports/' . $userId;
+        $metaPath = $dir . '/' . $importId . '.meta.json';
+        if (!Storage::exists($metaPath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Import not found',
+            ], 404);
+        }
+
+        $meta = json_decode(Storage::get($metaPath), true) ?: [];
+        $storedPath = $meta['stored_path'] ?? null;
+        if (!is_string($storedPath) || $storedPath === '' || !Storage::exists($storedPath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Stored file missing',
+            ], 404);
+        }
+
+        $abs = Storage::path($storedPath);
+        $ext = strtolower(pathinfo($abs, PATHINFO_EXTENSION));
+
+        try {
+            $result = $this->extractResumeText($abs, $ext);
+
+            $out = [
+                'success' => true,
+                'import_id' => $importId,
+                'method' => $result['method'] ?? 'unknown',
+                'raw_text' => $result['raw_text'] ?? '',
+                'warnings' => $result['warnings'] ?? [],
+            ];
+
+            // persist extracted text for later steps
+            Storage::put($dir . '/' . $importId . '.text.json', json_encode([
+                'import_id' => $importId,
+                'method' => $out['method'],
+                'raw_text' => $out['raw_text'],
+                'warnings' => $out['warnings'],
+                'extracted_at' => now()->toISOString(),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+            return response()->json($out);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Extraction failed: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Step 5: Parse extracted resume text with Gemini into builder-shaped JSON.
+     */
+    public function importParse(Request $request, $lang, string $importId)
+    {
+        $userId = Auth::id();
+        $apiKey = (string) (config('services.gemini.api_key') ?: env('GEMINI_API_KEY') ?: '');
+        if ($apiKey === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gemini is not configured. Set GEMINI_API_KEY in .env.',
+            ], 503);
+        }
+
+        $dir = 'cv-imports/' . $userId;
+        $textPath = $dir . '/' . $importId . '.text.json';
+        if (!Storage::exists($textPath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Extracted text not found. Run extract first.',
+            ], 404);
+        }
+
+        $textPayload = json_decode(Storage::get($textPath), true) ?: [];
+        $rawText = isset($textPayload['raw_text']) ? (string) $textPayload['raw_text'] : '';
+        if (trim($rawText) === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'No text to parse.',
+            ], 422);
+        }
+
+        // Keep prompt size reasonable (2–3 page CVs should be well under this).
+        $maxChars = 50000;
+        if (mb_strlen($rawText) > $maxChars) {
+            $rawText = mb_substr($rawText, 0, $maxChars);
+        }
+
+        $model = (string) (config('services.gemini.model') ?: env('GEMINI_MODEL') ?: 'gemini-2.0-flash');
+        $url = sprintf(
+            'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent',
+            rawurlencode($model)
+        );
+
+        try {
+            $prompt = $this->geminiCvParsePrompt($rawText);
+
+            $httpResp = Http::timeout(120)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->post($url . '?key=' . rawurlencode($apiKey), [
+                    'contents' => [
+                        [
+                            'role' => 'user',
+                            'parts' => [['text' => $prompt]],
+                        ],
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.1,
+                        'responseMimeType' => 'application/json',
+                    ],
+                ]);
+
+            if (!$httpResp->successful()) {
+                $err = $httpResp->json('error.message') ?? $httpResp->body();
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gemini request failed: ' . (is_string($err) ? $err : json_encode($err)),
+                ], 502);
+            }
+
+            $body = $httpResp->json();
+            $jsonText = $body['candidates'][0]['content']['parts'][0]['text'] ?? null;
+            if (!is_string($jsonText) || trim($jsonText) === '') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gemini returned no parseable JSON.',
+                ], 502);
+            }
+
+            $parsed = json_decode($this->stripJsonFences($jsonText), true);
+            if (!is_array($parsed)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Model output was not valid JSON.',
+                ], 502);
+            }
+
+            $parsedCv = $this->normalizeParsedCvForBuilder($parsed);
+
+            Storage::put($dir . '/' . $importId . '.parsed.json', json_encode([
+                'import_id' => $importId,
+                'model' => $model,
+                'parsed_cv' => $parsedCv,
+                'parsed_at' => now()->toISOString(),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+            return response()->json([
+                'success' => true,
+                'import_id' => $importId,
+                'parsed_cv' => $parsedCv,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parse failed: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    private function geminiCvParsePrompt(string $resumeText): string
+    {
+        return <<<PROMPT
+You are a resume parser. Extract structured data from the resume text below.
+
+Rules:
+- Output a single JSON object only. No markdown, no commentary.
+- Use ONLY these top-level keys (all strings unless noted as arrays):
+  name, job_title, email, phone, city, country, address, summary, photo,
+  experience (array), education (array), skills (array), certifications (array),
+  awards (array), projects (array), languages (array), references (array).
+- If a value is unknown, use "" or [] — do not invent email/phone/employers.
+- summary: plain text only (no HTML).
+- experience items: title, company, start_date, end_date, location, description, period (strings).
+  Prefer start_date/end_date as MM/YYYY when possible; use "" if unclear.
+  If end is current, end_date may be "" and you may set period like "01/2022 - Present" if dates support it.
+- education items: degree, institution, start_date, end_date, location, period (strings). Same date preference.
+- skills items: skill (string), level (string). level must be one of: "", "Beginner", "Intermediate", "Advanced", "Expert".
+- languages items: language (string), proficiency (string). proficiency must be one of: "", "Native", "Fluent", "Advanced", "Intermediate", "Basic".
+- certifications: name, issuer, date, credential_id
+- awards: title, organization, date, description
+- projects: name, description, technologies, link
+- references: name, position, company, email, phone
+- photo: always "" (we do not extract photos).
+- Keep at most 12 items per array section.
+
+Resume text:
+---
+{$resumeText}
+---
+PROMPT;
+    }
+
+    private function stripJsonFences(string $text): string
+    {
+        $t = trim($text);
+        if (preg_match('/^```(?:json)?\s*(.*?)\s*```$/is', $t, $m)) {
+            return trim($m[1]);
+        }
+
+        return $t;
+    }
+
+    private function normalizeParsedCvForBuilder(array $in): array
+    {
+        $out = $this->cvParseContractSkeleton();
+
+        foreach (['name', 'job_title', 'email', 'phone', 'city', 'country', 'address', 'summary', 'photo'] as $k) {
+            if (isset($in[$k]) && (is_string($in[$k]) || is_numeric($in[$k]))) {
+                $out[$k] = trim((string) $in[$k]);
+            }
+        }
+
+        $out['summary'] = $this->sanitizeRichText($out['summary']);
+        $out['photo'] = '';
+
+        $skillLevels = ['' => true, 'Beginner' => true, 'Intermediate' => true, 'Advanced' => true, 'Expert' => true];
+        $langLevels = ['' => true, 'Native' => true, 'Fluent' => true, 'Advanced' => true, 'Intermediate' => true, 'Basic' => true];
+
+        $out['experience'] = $this->normalizeSectionList(
+            $in['experience'] ?? [],
+            ['title', 'company', 'start_date', 'end_date', 'location', 'description', 'period'],
+            12,
+            ['description']
+        );
+
+        $out['education'] = $this->normalizeSectionList(
+            $in['education'] ?? [],
+            ['degree', 'institution', 'start_date', 'end_date', 'location', 'period'],
+            12,
+            []
+        );
+
+        $skills = [];
+        if (is_array($in['skills'] ?? null)) {
+            foreach (array_slice($in['skills'], 0, 12) as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+                $level = isset($row['level']) ? trim((string) $row['level']) : '';
+                if (!isset($skillLevels[$level])) {
+                    $level = '';
+                }
+                $skills[] = [
+                    'skill' => isset($row['skill']) ? trim((string) $row['skill']) : '',
+                    'level' => $level,
+                ];
+            }
+        }
+        $out['skills'] = $skills;
+
+        $out['certifications'] = $this->normalizeSectionList(
+            $in['certifications'] ?? [],
+            ['name', 'issuer', 'date', 'credential_id'],
+            12,
+            []
+        );
+
+        $out['awards'] = $this->normalizeSectionList(
+            $in['awards'] ?? [],
+            ['title', 'organization', 'date', 'description'],
+            12,
+            ['description']
+        );
+
+        $out['projects'] = $this->normalizeSectionList(
+            $in['projects'] ?? [],
+            ['name', 'description', 'technologies', 'link'],
+            12,
+            ['description']
+        );
+
+        $langs = [];
+        if (is_array($in['languages'] ?? null)) {
+            foreach (array_slice($in['languages'], 0, 12) as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+                $p = isset($row['proficiency']) ? trim((string) $row['proficiency']) : '';
+                if (!isset($langLevels[$p])) {
+                    $p = '';
+                }
+                $langs[] = [
+                    'language' => isset($row['language']) ? trim((string) $row['language']) : '',
+                    'proficiency' => $p,
+                ];
+            }
+        }
+        $out['languages'] = $langs;
+
+        $out['references'] = $this->normalizeSectionList(
+            $in['references'] ?? [],
+            ['name', 'position', 'company', 'email', 'phone'],
+            12,
+            []
+        );
+
+        return $this->sanitizeCvData($out);
+    }
+
+    private function cvParseContractSkeleton(): array
+    {
+        return [
+            'name' => '',
+            'job_title' => '',
+            'email' => '',
+            'phone' => '',
+            'city' => '',
+            'country' => '',
+            'address' => '',
+            'summary' => '',
+            'photo' => '',
+            'experience' => [],
+            'education' => [],
+            'skills' => [],
+            'certifications' => [],
+            'awards' => [],
+            'projects' => [],
+            'languages' => [],
+            'references' => [],
+        ];
+    }
+
+    /**
+     * @param  array<int, string>  $richKeys  Keys to run through sanitizeRichText
+     * @return array<int, array<string, string>>
+     */
+    private function normalizeSectionList($list, array $allowedKeys, int $max, array $richKeys = []): array
+    {
+        if (!is_array($list)) {
+            return [];
+        }
+
+        $richSet = array_fill_keys($richKeys, true);
+        $out = [];
+        foreach (array_slice($list, 0, $max) as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $item = [];
+            foreach ($allowedKeys as $k) {
+                $v = $row[$k] ?? '';
+                $v = is_string($v) || is_numeric($v) ? trim((string) $v) : '';
+                if (isset($richSet[$k])) {
+                    $v = $this->sanitizeRichText($v);
+                }
+                $item[$k] = $v;
+            }
+            $out[] = $item;
+        }
+
+        return $out;
+    }
+
+    private function extractResumeText(string $absPath, string $ext): array
+    {
+        $ext = strtolower($ext);
+
+        if ($ext === 'docx') {
+            return [
+                'method' => 'docx',
+                'raw_text' => $this->extractDocxText($absPath),
+                'warnings' => [],
+            ];
+        }
+
+        if ($ext === 'pdf') {
+            $text = $this->extractPdfTextViaPoppler($absPath);
+            $clean = $this->normalizeExtractedText($text);
+
+            // Heuristic: if too little text, treat as scanned and OCR.
+            if (mb_strlen($clean) < 200) {
+                $ocrText = $this->extractPdfTextViaVisionOcr($absPath);
+                return [
+                    'method' => 'vision_ocr_pdf',
+                    'raw_text' => $this->normalizeExtractedText($ocrText),
+                    'warnings' => ['PDF text extraction returned very little text; used OCR fallback.'],
+                ];
+            }
+
+            return [
+                'method' => 'pdf_text',
+                'raw_text' => $clean,
+                'warnings' => [],
+            ];
+        }
+
+        // images → OCR
+        if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
+            $ocrText = $this->extractImageTextViaVisionOcr($absPath);
+            return [
+                'method' => 'vision_ocr_image',
+                'raw_text' => $this->normalizeExtractedText($ocrText),
+                'warnings' => [],
+            ];
+        }
+
+        throw new \RuntimeException('Unsupported file type: ' . $ext);
+    }
+
+    private function normalizeExtractedText(string $text): string
+    {
+        $t = str_replace(["\r\n", "\r"], "\n", (string) $text);
+        // collapse 3+ newlines to 2
+        $t = preg_replace("/\n{3,}/", "\n\n", $t) ?? $t;
+        return trim($t);
+    }
+
+    private function extractPdfTextViaPoppler(string $absPath): string
+    {
+        // Requires poppler's pdftotext to be installed and on PATH.
+        $tmpOut = tempnam(sys_get_temp_dir(), 'cv_pdf_');
+        if ($tmpOut === false) {
+            throw new \RuntimeException('Unable to create temp file');
+        }
+
+        // pdftotext writes to file; we read it back.
+        $outFile = $tmpOut . '.txt';
+        @unlink($outFile);
+
+        $bin = $this->resolvePopplerBin('pdftotext', env('POPPLER_PDFTOTEXT'));
+        $cmd = [$bin, '-layout', $absPath, $outFile];
+        $proc = new \Symfony\Component\Process\Process($cmd);
+        $proc->setTimeout(60);
+        $proc->run();
+
+        if (!$proc->isSuccessful()) {
+            throw new \RuntimeException('pdftotext failed (bin=' . $bin . '): ' . $proc->getErrorOutput());
+        }
+
+        $text = is_file($outFile) ? file_get_contents($outFile) : '';
+        @unlink($outFile);
+        @unlink($tmpOut);
+
+        return (string) ($text ?: '');
+    }
+
+    private function extractDocxText(string $absPath): string
+    {
+        if (!class_exists(\PhpOffice\PhpWord\IOFactory::class)) {
+            throw new \RuntimeException('PHPWord is not installed');
+        }
+
+        $phpWord = \PhpOffice\PhpWord\IOFactory::load($absPath, 'Word2007');
+        $parts = [];
+        foreach ($phpWord->getSections() as $section) {
+            foreach ($section->getElements() as $el) {
+                // best-effort: convert common element types to text
+                if (method_exists($el, 'getText')) {
+                    $parts[] = (string) $el->getText();
+                } elseif ($el instanceof \PhpOffice\PhpWord\Element\TextRun) {
+                    $runText = '';
+                    foreach ($el->getElements() as $runEl) {
+                        if (method_exists($runEl, 'getText')) {
+                            $runText .= (string) $runEl->getText();
+                        }
+                    }
+                    if (trim($runText) !== '') $parts[] = $runText;
+                } elseif ($el instanceof \PhpOffice\PhpWord\Element\Table) {
+                    foreach ($el->getRows() as $row) {
+                        $rowParts = [];
+                        foreach ($row->getCells() as $cell) {
+                            $cellText = '';
+                            foreach ($cell->getElements() as $cellEl) {
+                                if (method_exists($cellEl, 'getText')) {
+                                    $cellText .= (string) $cellEl->getText() . ' ';
+                                }
+                            }
+                            $rowParts[] = trim($cellText);
+                        }
+                        $line = trim(implode(' | ', array_filter($rowParts, fn($v) => $v !== '')));
+                        if ($line !== '') $parts[] = $line;
+                    }
+                }
+            }
+        }
+        return trim(implode("\n", array_filter(array_map('trim', $parts), fn($v) => $v !== '')));
+    }
+
+    private function visionClient(): \Google\Cloud\Vision\V1\Client\ImageAnnotatorClient
+    {
+        $keyFilePath = storage_path('app/keys/google-vision.json');
+        if (!is_file($keyFilePath)) {
+            throw new \RuntimeException('Google Vision key file not found at: ' . $keyFilePath);
+        }
+        return new \Google\Cloud\Vision\V1\Client\ImageAnnotatorClient([
+            'credentials' => $keyFilePath,
+        ]);
+    }
+
+    private function extractImageTextViaVisionOcr(string $absPath): string
+    {
+        $client = $this->visionClient();
+        try {
+            $imageData = file_get_contents($absPath);
+            if ($imageData === false) throw new \RuntimeException('Unable to read image');
+
+            $img = new \Google\Cloud\Vision\V1\Image();
+            $img->setContent($imageData);
+
+            $feature = new \Google\Cloud\Vision\V1\Feature();
+            $feature->setType(\Google\Cloud\Vision\V1\Feature\Type::DOCUMENT_TEXT_DETECTION);
+
+            $req = new \Google\Cloud\Vision\V1\AnnotateImageRequest();
+            $req->setImage($img);
+            $req->setFeatures([$feature]);
+
+            $batch = new \Google\Cloud\Vision\V1\BatchAnnotateImagesRequest();
+            $batch->setRequests([$req]);
+
+            // GAPIC client uses batchAnnotateImages to perform OCR.
+            $batchResp = $client->batchAnnotateImages($batch);
+            $responses = $batchResp->getResponses();
+            if (count($responses) < 1) return '';
+
+            $first = $responses[0];
+            $annotation = $first->getFullTextAnnotation();
+            return $annotation ? (string) $annotation->getText() : '';
+        } finally {
+            $client->close();
+        }
+    }
+
+    private function extractPdfTextViaVisionOcr(string $absPath): string
+    {
+        // MVP approach: rasterize PDF pages to images using poppler's pdftoppm, then OCR each page.
+        // Requires pdftoppm on PATH.
+        $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cv_pdf_' . Str::random(8);
+        if (!@mkdir($tmpDir, 0777, true) && !is_dir($tmpDir)) {
+            throw new \RuntimeException('Unable to create temp dir');
+        }
+
+        $prefix = $tmpDir . DIRECTORY_SEPARATOR . 'page';
+        $bin = $this->resolvePopplerBin('pdftoppm', env('POPPLER_PDFTOPPM'));
+        $cmd = [$bin, '-png', '-r', '200', $absPath, $prefix];
+        $proc = new \Symfony\Component\Process\Process($cmd);
+        $proc->setTimeout(120);
+        $proc->run();
+        if (!$proc->isSuccessful()) {
+            throw new \RuntimeException('pdftoppm failed (bin=' . $bin . '): ' . $proc->getErrorOutput());
+        }
+
+        $files = glob($prefix . '-*.png') ?: [];
+        sort($files, SORT_NATURAL);
+
+        $all = [];
+        foreach ($files as $img) {
+            $all[] = $this->extractImageTextViaVisionOcr($img);
+        }
+
+        // cleanup
+        foreach ($files as $img) @unlink($img);
+        @rmdir($tmpDir);
+
+        return trim(implode("\n\n", array_filter(array_map('trim', $all), fn($v) => $v !== '')));
+    }
+
+    private function resolvePopplerBin(string $baseName, $configuredPath = null): string
+    {
+        $configuredPath = is_string($configuredPath) ? trim($configuredPath) : '';
+        $isWindows = DIRECTORY_SEPARATOR === '\\';
+        $exe = $isWindows ? ($baseName . '.exe') : $baseName;
+
+        $candidates = [];
+        if ($configuredPath !== '') {
+            $candidates[] = $configuredPath;
+        }
+
+        // Common Windows install locations (including user's provided folder pattern)
+        if ($isWindows) {
+            $candidates[] = 'C:\\poppler-25.12.0\\Library\\bin\\' . $exe;
+            $candidates[] = 'C:\\poppler\\Library\\bin\\' . $exe;
+            $candidates[] = 'C:\\Program Files\\poppler\\Library\\bin\\' . $exe;
+            $candidates[] = 'C:\\Program Files (x86)\\poppler\\Library\\bin\\' . $exe;
+        }
+
+        // Fall back to relying on PATH
+        $candidates[] = $baseName;
+
+        foreach ($candidates as $p) {
+            if ($p === $baseName) return $baseName;
+            if (is_file($p)) return $p;
+        }
+
+        // If we got here, PATH fallback is last resort (will yield a clear error)
+        return $baseName;
     }
     
     /**
@@ -385,7 +996,7 @@ class CvController extends Controller
                     'template_slug' => $cv->template_slug,
                     'cv_data' => $cv->cv_data
                 ]
-            ]);
+            ])->header('Cache-Control', 'private, no-store, no-cache, must-revalidate');
             
         } catch (\Exception $e) {
             return response()->json([
@@ -647,7 +1258,7 @@ class CvController extends Controller
             grid-template-columns: 57.2mm 6.3mm 1fr !important;
             grid-template-areas: "left-green gap right-content" !important;
         }
-        /* Prevent sections from breaking across pages */
+        /* Page breaks (modern): keep entries intact, but allow long lists to continue across pages */
         .cv-template.modern section {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
@@ -655,6 +1266,18 @@ class CvController extends Controller
         .cv-template.modern .section-content {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
+        }
+
+        .cv-template.modern section.experience,
+        .cv-template.modern section.education {
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+        }
+
+        .cv-template.modern section.experience .section-content,
+        .cv-template.modern section.education .section-content {
+            page-break-inside: auto !important;
+            break-inside: auto !important;
         }
         .cv-template.modern .experience-item,
         .cv-template.modern .education-item,
@@ -876,7 +1499,7 @@ class CvController extends Controller
             grid-template-columns: 57.2mm 6.3mm 1fr !important;
             grid-template-areas: "left-green gap right-content" !important;
         }
-        /* Prevent sections from breaking across pages */
+        /* Page breaks (modern): keep entries intact, but allow long lists to continue across pages */
         .cv-template.modern section {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
@@ -884,6 +1507,18 @@ class CvController extends Controller
         .cv-template.modern .section-content {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
+        }
+
+        .cv-template.modern section.experience,
+        .cv-template.modern section.education {
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+        }
+
+        .cv-template.modern section.experience .section-content,
+        .cv-template.modern section.education .section-content {
+            page-break-inside: auto !important;
+            break-inside: auto !important;
         }
         .cv-template.modern .experience-item,
         .cv-template.modern .education-item,

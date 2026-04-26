@@ -1,3 +1,5 @@
+@php $locale = app()->getLocale(); @endphp
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
     <a href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.home') ? 'active' : '' }}">
@@ -96,11 +98,6 @@
             </ul>
         </div>
         <div class="header-button d-flex align-items-center">
-            <!-- Create CV Button with Confetti -->
-            <a href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}" class="btn btn-create-cv" id="createCvBtn">
-                <i class="fas fa-file-alt me-2"></i>{{ __('lang.Create CV') }}
-            </a>
-            
             <!-- Theme Toggle -->
             <div class="theme-toggle-container">
                 <span class="theme-toggle-label d-none d-md-inline">{{ __('lang.Theme') }}</span>
@@ -116,24 +113,42 @@
             @endphp
 
             @if($user)
+                @php
+                    $displayName = trim((string) ($user->name ?? ''));
+                    $firstName = $displayName !== '' ? preg_split('/\s+/', $displayName)[0] : 'User';
+                @endphp
                 <div class="dropdown ms-3">
                     <button class="btn dropdown-toggle d-flex align-items-center justify-content-between w-100" 
-                            style="background-color:rgb(0, 0, 0);min-width: 159px !important; color: #fff; justify-content: flex-end !important; margin-bottom: 2px"
+                            style="color: #fff; justify-content: flex-end !important; margin-bottom: 2px"
                             type="button" id="userDropdown" 
                             data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="me-2">{{ $user->name }}</span>
-                        <img 
-                            src="{{ $user->photo ? asset('images/' . $user->photo) : asset('images/default.png') }}"
+                        <span class="me-2">{{ $firstName }}</span>
+                        @php
+                            $rawPhoto = trim((string) ($user->photo ?? ''));
+                            $isRemotePhoto = $rawPhoto !== '' && \Illuminate\Support\Str::startsWith($rawPhoto, ['http://', 'https://']);
+                            $photoSrc = $isRemotePhoto
+                                ? $rawPhoto
+                                : (($rawPhoto !== '' && file_exists(public_path('images/' . $rawPhoto)))
+                                    ? asset('images/' . $rawPhoto)
+                                    : asset('images/default.svg'));
+                        @endphp
+                        <img
+                            src="{{ $photoSrc }}"
                             class="rounded-circle me-1" 
                             width="30" 
                             height="30" 
                             style="object-fit: cover; border-radius: 50%; border: 1px solid rgb(173, 172, 172);" 
-                            alt="{{ e($user->name ?? 'User profile picture') }}">
+                            alt="{{ e($displayName ?: 'User profile picture') }}">
                     </button>
-                    <ul class="dropdown-menu w-100" aria-labelledby="userDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="min-width: 200px;">
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.profile', ['lang' => app()->getLocale()]) }}">
                                 <i class="fas fa-user-circle me-2"></i>{{ __('lang.My Profile') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
+                                <i class="fas fa-file-lines me-2"></i>Create Resume
                             </a>
                         </li>
                         <li>
@@ -160,5 +175,3 @@
         </div>
     </div>
 </nav>
-
-@php $locale = app()->getLocale(); @endphp

@@ -14,7 +14,9 @@
             load: '',
             save: '',
             duplicateCV: '',
-            importUpload: ''
+            importUpload: '',
+            importExtract: '',
+            importParse: ''
         },
         csrfToken: ''
     };
@@ -26,6 +28,19 @@
         const $form = $('#cv-form');
         const $preview = $('#cv-preview');
         const $pagesWrapper = $preview.find('.cv-pages-wrapper');
+
+        /** First page only — avoids matching continuation-page clones of `.cv-template`. */
+        function getPrimaryPreviewTemplate() {
+            const $page = $pagesWrapper.find('.cv-page-container').first();
+            if ($page.length) {
+                const $tpl = $page.children('.cv-template').first();
+                if ($tpl.length) {
+                    return $tpl;
+                }
+            }
+            return $pagesWrapper.children('.cv-template').first();
+        }
+
         let formData = {};
         let updateTimer = null;
         let isUpdating = false;
@@ -48,6 +63,7 @@
         const $photoInput = $('#photo-upload');
         const $photoPreview = $('#photo-preview');
         const $photoPreviewContainer = $('#photo-preview-container');
+        const $removePhoto = $('#remove-photo');
         let photoData = null;
 
         // Personal details view/edit toggle
@@ -77,6 +93,11 @@
             showPersonalView();
         });
 
+        function resumeShowFromData(val) {
+            if (val === false || val === 0 || val === '0') return false;
+            return true;
+        }
+
         function updatePersonalViewCard(data) {
             if (!$personalView.length) return;
 
@@ -86,15 +107,27 @@
             const email = (data.email || '').trim();
             const phone = (data.phone || '').trim();
             const loc = (data.address || '').trim();
+            const showEmail = resumeShowFromData(data.resume_show_email);
+            const showPhone = resumeShowFromData(data.resume_show_phone);
+            const showLoc = resumeShowFromData(data.resume_show_location);
 
             $('#cv-personal-view-email').text(email);
-            $('#cv-personal-view-email-wrap').prop('hidden', !email);
+            const $emailWrap = $('#cv-personal-view-email-wrap');
+            $emailWrap.prop('hidden', !email);
+            $emailWrap.toggleClass('cv-personal-view-card__meta-item--resume-hidden', !!email && !showEmail);
+            $emailWrap.find('.cv-personal-view-card__hidden-tooltip').attr('aria-hidden', !email || showEmail ? 'true' : 'false');
 
             $('#cv-personal-view-phone').text(phone);
-            $('#cv-personal-view-phone-wrap').prop('hidden', !phone);
+            const $phoneWrap = $('#cv-personal-view-phone-wrap');
+            $phoneWrap.prop('hidden', !phone);
+            $phoneWrap.toggleClass('cv-personal-view-card__meta-item--resume-hidden', !!phone && !showPhone);
+            $phoneWrap.find('.cv-personal-view-card__hidden-tooltip').attr('aria-hidden', !phone || showPhone ? 'true' : 'false');
 
             $('#cv-personal-view-location').text(loc);
-            $('#cv-personal-view-location-wrap').prop('hidden', !loc);
+            const $locWrap = $('#cv-personal-view-location-wrap');
+            $locWrap.prop('hidden', !loc);
+            $locWrap.toggleClass('cv-personal-view-card__meta-item--resume-hidden', !!loc && !showLoc);
+            $locWrap.find('.cv-personal-view-card__hidden-tooltip').attr('aria-hidden', !loc || showLoc ? 'true' : 'false');
 
             const $img = $('#cv-personal-view-photo-img');
             const $icon = $('#cv-personal-view-photo-icon');
@@ -252,6 +285,134 @@
             references: { primary: 'name', secondary: 'company' },
         };
 
+        function readResumeShowHidden($el) {
+            if (!$el || !$el.length) return true;
+            return String($el.val()) !== '0';
+        }
+
+        /**
+         * Show/hide contact lines in the right-panel preview from resume_show_* flags (does not remove data).
+         */
+        function applyResumeContactVisibility($template, data) {
+            if (!$template || !$template.length) return;
+            const showEmail = resumeShowFromData(data.resume_show_email);
+            const showPhone = resumeShowFromData(data.resume_show_phone);
+            const showLoc = resumeShowFromData(data.resume_show_location);
+            const email = (data.email || '').trim();
+            const phone = (data.phone || '').trim();
+            const addr = (data.address || '').trim();
+
+            $template.find('.contact-info').each(function() {
+                const $ci = $(this);
+                const $plainItems = $ci.children('.contact-item').filter(function() {
+                    return $(this).find('.contact-icon').length === 0;
+                });
+
+                $ci.children('.contact-item').each(function() {
+                    const $item = $(this);
+                    const $iconI = $item.find('.contact-icon i');
+                    let hide = false;
+                    if ($iconI.length) {
+                        const cls = $iconI.attr('class') || '';
+                        if (cls.indexOf('fa-envelope') !== -1) {
+                            hide = !showEmail || !email;
+                        } else if (cls.indexOf('fa-phone') !== -1) {
+                            hide = !showPhone || !phone;
+                        } else if (cls.indexOf('fa-map-marker-alt') !== -1) {
+                            hide = !showLoc || !addr;
+                        }
+                    } else {
+                        const pi = $plainItems.index($item);
+                        if (pi === 0) {
+                            hide = !showEmail || !email;
+                        } else if (pi === 1) {
+                            hide = !showPhone || !phone;
+                        }
+                    }
+                    $item.toggleClass('cv-preview-contact-hidden', hide);
+                });
+
+                const eVis = $plainItems.length >= 1 && !$plainItems.eq(0).hasClass('cv-preview-contact-hidden');
+                const pVis = $plainItems.length >= 2 && !$plainItems.eq(1).hasClass('cv-preview-contact-hidden');
+                $ci.children('.contact-separator').toggleClass('cv-preview-contact-hidden', !eVis || !pVis);
+
+                const $contactSection = $ci.closest('section.contact');
+                if ($contactSection.length) {
+                    const anyContactVisible = $ci.find('.contact-item').filter(function() {
+                        return !$(this).hasClass('cv-preview-contact-hidden');
+                    }).length > 0;
+                    $contactSection.toggleClass('cv-preview-contact-hidden', !anyContactVisible);
+                }
+            });
+        }
+
+        function syncResumeVisibilityButton($btn) {
+            if (!$btn || !$btn.length) return;
+            const controls = $btn.attr('aria-controls');
+            if (!controls) return;
+            const $h = $('#' + controls);
+            if (!$h.length) return;
+            const visible = readResumeShowHidden($h);
+            $btn.attr('aria-pressed', visible ? 'true' : 'false');
+            const $icon = $btn.find('i').first();
+            $icon.removeClass('fa-eye fa-eye-slash').addClass(visible ? 'fa-eye' : 'fa-eye-slash');
+            $btn.attr('title', visible ? 'Shown in resume preview' : 'Hidden from resume preview');
+            const id = $btn.attr('id') || '';
+            if (id === 'cv-toggle-resume-email') {
+                $btn.attr('aria-label', visible ? 'Email shown in resume preview. Click to hide.' : 'Email hidden from resume preview. Click to show.');
+            } else if (id === 'cv-toggle-resume-location') {
+                $btn.attr('aria-label', visible ? 'Location shown in resume preview. Click to hide.' : 'Location hidden from resume preview. Click to show.');
+            } else if (id === 'cv-toggle-resume-phone') {
+                $btn.attr('aria-label', visible ? 'Phone shown in resume preview. Click to hide.' : 'Phone hidden from resume preview. Click to show.');
+            }
+        }
+
+        function normalizePresentValue(raw) {
+            const v = String(raw || '').trim().toLowerCase();
+            return v === 'present' || v === 'current' || v === 'now' || v === 'currently work here';
+        }
+
+        function syncExperienceEndDateUi($root) {
+            const $scope = $root && $root.length ? $root : $(document);
+            $scope.find('.cv-end-date-mode-value').each(function() {
+                const $modeValue = $(this);
+                const $group = $modeValue.closest('.form-group');
+                const $endInput = $group.find('input.cv-end-date-input').first();
+                const $dropdown = $group.find('.cv-end-date-mode-dropdown').first();
+                const $dateRow = $group.find('.cv-end-date-date-row').first();
+                const $labelSpan = $group.find('.cv-end-date-mode-trigger-label').first();
+                if (!$endInput.length) return;
+
+                const rawMode = String($modeValue.val() || '').trim();
+                const isPresent = rawMode === 'present' || normalizePresentValue($endInput.val());
+
+                $modeValue.val(isPresent ? 'present' : 'date');
+
+                if (isPresent) {
+                    $endInput.val('');
+                }
+
+                // UI swap (ensure date row is flex so caret stays beside input)
+                if ($dropdown.length) {
+                    $dropdown.css('display', isPresent ? '' : 'none');
+                }
+                if ($dateRow.length) {
+                    $dateRow.css('display', isPresent ? 'none' : 'flex');
+                }
+
+                // Input enable/disable
+                $endInput.prop('disabled', isPresent);
+                $endInput.attr('aria-disabled', isPresent ? 'true' : 'false');
+
+                // Label text
+                if ($labelSpan.length) {
+                    const label = isPresent ? 'Currently work here' : 'End date';
+                    $labelSpan.text(label);
+                    $labelSpan.attr('title', label);
+                }
+            });
+        }
+
         // Collect form data
         function collectFormData() {
             try {
@@ -277,7 +438,10 @@
                     city: cityVal,
                     country: countryVal,
                     summary: $summaryInput.val() || '',
-                    photo: photoData || ''
+                    photo: photoData || '',
+                    resume_show_email: readResumeShowHidden($('#cv-resume-show-email')),
+                    resume_show_phone: readResumeShowHidden($('#cv-resume-show-phone')),
+                    resume_show_location: readResumeShowHidden($('#cv-resume-show-location'))
                 };
 
                 addedSections.forEach(function(sectionKey) {
@@ -308,9 +472,16 @@
                         if (!item) return;
                         const start = String(item.start_date || '').trim();
                         const end = String(item.end_date || '').trim();
-                        if (!String(item.period || '').trim() && (start || end)) {
-                            if (start && end) item.period = start + ' - ' + end;
-                            else if (start && !end) item.period = start + ' - Present';
+                        const mode = String(item.end_date_mode || '').trim();
+                        const isPresent = mode === 'present' || normalizePresentValue(end);
+
+                        // Keep the stored end_date clean when present is selected.
+                        if (isPresent) item.end_date = '';
+
+                        if (!String(item.period || '').trim() && (start || end || isPresent)) {
+                            if (start && !isPresent && end) item.period = start + ' - ' + end;
+                            else if (start && (isPresent || !end)) item.period = start + ' - Present';
+                            else if (!start && isPresent) item.period = 'Present';
                             else item.period = end;
                         }
                     });
@@ -529,7 +700,7 @@
             if (isUpdating) return;
 
             try {
-                const $template = $preview.find('.cv-template');
+                const $template = getPrimaryPreviewTemplate();
                 const hasError = $preview.find('h3:contains("Template Files Not Found")').length > 0;
 
                 if (hasError && $template.length === 0) {
@@ -613,8 +784,52 @@
                 
                 // Update contact info
                 const $contactInfo = $template.find('.contact-info');
+                const isModernTemplate = $template.hasClass('modern') || $template.find('.left-green, .right-content').length > 0;
                 const hasContactIcons = $template.find('.contact-icon').length > 0;
                 
+                // If this is the modern template but contact lines were previously created using the classic structure
+                // (plain spans, missing .contact-icon), rebuild them so icons and sizing are correct.
+                if ($contactInfo.length > 0 && isModernTemplate) {
+                    const hasBrokenClassicItems = $contactInfo.children('.contact-item').filter(function() {
+                        return $(this).is('span') || $(this).find('.contact-icon').length === 0;
+                    }).length > 0;
+
+                    if (!hasContactIcons || hasBrokenClassicItems) {
+                        const email = (data.email || '').trim();
+                        const phone = (data.phone || '').trim();
+                        const addr = (data.address || '').trim();
+
+                        $contactInfo.empty();
+                        if (email) {
+                            $contactInfo.append(
+                                '<div class="contact-item">' +
+                                '<span class="contact-icon"><i class="fas fa-envelope"></i></span>' +
+                                '<span class="contact-text-wrapper"><span class="contact-text"></span></span>' +
+                                '</div>'
+                            );
+                            $contactInfo.find('.contact-item:last .contact-text').text(email);
+                        }
+                        if (phone) {
+                            $contactInfo.append(
+                                '<div class="contact-item">' +
+                                '<span class="contact-icon"><i class="fas fa-phone"></i></span>' +
+                                '<span class="contact-text-wrapper"><span class="contact-text"></span></span>' +
+                                '</div>'
+                            );
+                            $contactInfo.find('.contact-item:last .contact-text').text(phone);
+                        }
+                        if (addr) {
+                            $contactInfo.append(
+                                '<div class="contact-item">' +
+                                '<span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>' +
+                                '<span class="contact-text-wrapper"><span class="contact-text"></span></span>' +
+                                '</div>'
+                            );
+                            $contactInfo.find('.contact-item:last .contact-text').text(addr);
+                        }
+                    }
+                }
+
                 if ($contactInfo.length > 0 && hasContactIcons) {
                     // Modern template: update text content while preserving icons and structure
                     // Only update if structure is intact (has icon and text wrapper)
@@ -683,6 +898,10 @@
                             $addressItem.remove();
                         }
                     });
+
+                    // Safety: the classic template uses a "|" separator between plain contact spans.
+                    // If it ever got injected into the modern template, remove it so we don't show a stray bar.
+                    $contactInfo.children('.contact-separator').remove();
                 } else if ($contactInfo.length > 0) {
                     // Classic template or other: use old update logic
                     // Update email
@@ -746,19 +965,37 @@
                     }
                 }
 
+                applyResumeContactVisibility($template, data);
+
                 // Update summary
                 const $summarySection = $template.find('.summary');
                 if (data.summary && data.summary.trim()) {
                     if ($summarySection.length === 0) {
-                        // Create summary section if it doesn't exist
+                        // Create summary section if it doesn't exist.
+                        // Modern template doesn't have .cv-body; it uses .right-content.
+                        const $rightContent = $template.find('.right-content');
                         const $cvBody = $template.find('.cv-body');
-                        if ($cvBody.length > 0) {
-                            $cvBody.prepend(
-                                '<section class="summary">' +
-                                '<h2 class="section-title">Professional Summary</h2>' +
-                                '<div class="section-content"><p></p></div>' +
-                                '</section>'
-                            );
+
+                        const isModern = $template.hasClass('modern') || $template.find('.left-green, .right-content').length > 0;
+                        const summaryTitle = isModern ? 'ABOUT ME' : 'Professional Summary';
+
+                        const $summaryEl = $(
+                            '<section class="summary">' +
+                            '<h2 class="section-title">' + summaryTitle + '</h2>' +
+                            '<div class="section-content"><p></p></div>' +
+                            '</section>'
+                        );
+
+                        if ($rightContent.length > 0) {
+                            // Ensure summary stays at top of right content, before experience if present
+                            const $exp = $rightContent.find('section.experience').first();
+                            if ($exp.length) $exp.before($summaryEl);
+                            else $rightContent.prepend($summaryEl);
+                        } else if ($cvBody.length > 0) {
+                            $cvBody.prepend($summaryEl);
+                        } else {
+                            // Last resort: prepend to template root
+                            $template.prepend($summaryEl);
                         }
                     }
                     $template.find('.summary .section-content p').text(data.summary);
@@ -917,6 +1154,19 @@
                                         $targetContainer.append($newSection);
                                     }
                                 }
+                            } else if (sectionKey === 'awards' || sectionKey === 'projects') {
+                                // Place awards/projects directly under experience section
+                                const $experience = $targetContainer.find('section.experience');
+                                if ($experience.length > 0) {
+                                    $experience.after($newSection);
+                                } else {
+                                    const $summary = $targetContainer.find('section.summary');
+                                    if ($summary.length > 0) {
+                                        $summary.after($newSection);
+                                    } else {
+                                        $targetContainer.append($newSection);
+                                    }
+                                }
                             } else if (sectionKey === 'certifications') {
                                 // Place certifications section after skills section
                                 const $skills = $targetContainer.find('section.skills');
@@ -963,6 +1213,14 @@
                                 if ($leftGreen.length > 0 && $rightContent.length > 0 && $section.closest('.right-content').length > 0) {
                                     // Move the entire section to left-green
                                     $leftGreen.append($section);
+                                }
+                            }
+                            if (sectionKey === 'awards' || sectionKey === 'projects') {
+                                // Keep awards/projects directly under experience
+                                const $targetContainer = $rightContent.length > 0 ? $rightContent : $cvBody;
+                                const $experience = $targetContainer.find('section.experience').first();
+                                if ($experience.length) {
+                                    $experience.after($section);
                                 }
                             }
                             
@@ -1138,6 +1396,7 @@
                     photoData = e.target.result;
                     $photoPreview.attr('src', photoData);
                     $photoPreviewContainer.prop('hidden', false);
+                    $removePhoto.prop('hidden', false);
                     $photoCircle.addClass('has-photo');
                     handleFormChange();
                     if (!window.__cvBuilderHydrating) {
@@ -1160,6 +1419,7 @@
             $photoInput.val('');
             $photoPreview.attr('src', '');
             $photoPreviewContainer.prop('hidden', true);
+            $removePhoto.prop('hidden', true);
             $photoCircle.removeClass('has-photo');
             handleFormChange();
         });
@@ -1226,12 +1486,49 @@
             $personalExtraExpand.trigger('focus');
         });
 
+        $personalView.on('click', '.cv-personal-view-card__unhide', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showPersonalEdit();
+            if ($personalExtraPanel.length && $personalExtraExpand.length) {
+                $personalExtraPanel.prop('hidden', false);
+                $personalExtraExpand.attr('aria-expanded', 'true').prop('hidden', true);
+            }
+        });
+
+        function setResumeVisibilityFromData(cvData) {
+            cvData = cvData || {};
+            $('#cv-resume-show-email').val(resumeShowFromData(cvData.resume_show_email) ? '1' : '0');
+            $('#cv-resume-show-phone').val(resumeShowFromData(cvData.resume_show_phone) ? '1' : '0');
+            $('#cv-resume-show-location').val(resumeShowFromData(cvData.resume_show_location) ? '1' : '0');
+            syncResumeVisibilityButton($('#cv-toggle-resume-email'));
+            syncResumeVisibilityButton($('#cv-toggle-resume-location'));
+            syncResumeVisibilityButton($('#cv-toggle-resume-phone'));
+        }
+
+        $form.on('click', '.cv-field__resume-visibility-toggle', function(e) {
+            e.preventDefault();
+            const $btn = $(this);
+            const cid = $btn.attr('aria-controls');
+            if (!cid) return;
+            const $h = $('#' + cid);
+            if (!$h.length) return;
+            $h.val(String($h.val()) === '0' ? '1' : '0');
+            syncResumeVisibilityButton($btn);
+            handleFormChange();
+        });
+
+        syncResumeVisibilityButton($('#cv-toggle-resume-email'));
+        syncResumeVisibilityButton($('#cv-toggle-resume-location'));
+        syncResumeVisibilityButton($('#cv-toggle-resume-phone'));
+
         // Load initial photo if exists in template
         const $initialPhoto = $preview.find('.profile-photo');
         if ($initialPhoto.length > 0 && $initialPhoto.attr('src')) {
             photoData = $initialPhoto.attr('src');
             $photoPreview.attr('src', photoData);
             $photoPreviewContainer.prop('hidden', false);
+            $removePhoto.prop('hidden', false);
             $photoCircle.addClass('has-photo');
         }
 
@@ -1290,8 +1587,18 @@
             // Force a reflow to get accurate measurements
             $firstPage[0].offsetHeight;
             
-            // Use section-based page breaking
-            distributeSectionsAcrossPages($firstPage, $content);
+            // Use section-based page breaking (create as many continuation pages as needed)
+            let $currentPage = $firstPage;
+            let guard = 0;
+            while ($currentPage && $currentPage.length && guard < 12) {
+                guard++;
+                const $currentContent = $currentPage.find('.cv-template');
+                if ($currentContent.length === 0) break;
+
+                const $nextPage = distributeSectionsAcrossPages($currentPage, $currentContent);
+                if (!$nextPage || !$nextPage.length) break;
+                $currentPage = $nextPage;
+            }
         }
         
         function distributeSectionsAcrossPages($firstPage, $content) {
@@ -1320,6 +1627,11 @@
                     'display': '',
                     'visibility': 'visible'
                 });
+            });
+            // Clear per-entry visibility from a previous pagination pass (sections alone are not enough)
+            $content.find('.experience-item, .education-item').css({
+                'display': '',
+                'visibility': ''
             });
             
             // Force reflow to get accurate measurements with all sections visible
@@ -1377,12 +1689,14 @@
                     'visibility': 'visible'
                 });
                 $firstPage.nextAll('.cv-page-container').remove();
-                return;
+                return null;
             }
             
             // Content overflows - find which section causes overflow
             // Use offsetTop which is relative to offsetParent (more reliable)
             let firstOverflowSectionIndex = -1;
+            let overflowExperienceItemIndex = -1;
+            let overflowSectionIsExperience = false;
             
             $allSections.each(function(index) {
                 if (firstOverflowSectionIndex >= 0) return false; // break - already found
@@ -1448,22 +1762,61 @@
                 'max-height': '297mm',
                 'height': '297mm'
             });
+
+            // If the overflow section is Experience, split by items instead of moving whole section
+            if (firstOverflowSectionIndex >= 0) {
+                const $overflowSection = $allSections.eq(firstOverflowSectionIndex);
+                if ($overflowSection.length && $overflowSection.hasClass('experience')) {
+                    const $items = $overflowSection.find('.experience-item');
+                    if ($items.length > 0) {
+                        overflowSectionIsExperience = true;
+                        const pageRect = $firstPage[0].getBoundingClientRect();
+                        const pageBottom = pageRect.bottom;
+
+                        // Find first experience item that exceeds the *actual* page bottom.
+                        // NOTE: offsetTop inside nested containers is not reliable for this layout.
+                        $items.each(function(i) {
+                            const el = this;
+                            el.offsetHeight; // force layout
+                            const r = el.getBoundingClientRect();
+                            if (r.bottom > pageBottom + 0.5) {
+                                overflowExperienceItemIndex = i;
+                                return false;
+                            }
+                        });
+                    }
+                }
+            }
             
             // Now hide sections on first page that overflow (we already have all sections visible from measurement)
             if (firstOverflowSectionIndex >= 0) {
                 $allSections.each(function(index) {
-                    if (index >= firstOverflowSectionIndex) {
-                        // Hide sections that should move to next page
-                        $(this).css({
-                            'display': 'none',
-                            'visibility': 'hidden'
+                    const $sec = $(this);
+                    if (index < firstOverflowSectionIndex) {
+                        $sec.css({ 'display': '', 'visibility': 'visible' });
+                        return;
+                    }
+
+                    if (index > firstOverflowSectionIndex) {
+                        // Move all following sections to next page
+                        $sec.css({ 'display': 'none', 'visibility': 'hidden' });
+                        return;
+                    }
+
+                    // index === firstOverflowSectionIndex
+                    if (overflowSectionIsExperience && overflowExperienceItemIndex >= 0) {
+                        // Keep section header; move only overflowing items
+                        $sec.css({ 'display': '', 'visibility': 'visible' });
+                        const $items = $sec.find('.experience-item');
+                        $items.each(function(i) {
+                            $(this).css({
+                                'display': i >= overflowExperienceItemIndex ? 'none' : '',
+                                'visibility': i >= overflowExperienceItemIndex ? 'hidden' : 'visible'
+                            });
                         });
                     } else {
-                        // Ensure sections that fit are visible
-                        $(this).css({
-                            'display': '',
-                            'visibility': 'visible'
-                        });
+                        // Default behavior: move whole section
+                        $sec.css({ 'display': 'none', 'visibility': 'hidden' });
                     }
                 });
             } else {
@@ -1486,7 +1839,7 @@
                         if (existingFirstVisibleIndex === firstOverflowSectionIndex) {
                             // Just ensure sections on page 1 are correctly hidden/shown
                             // (already done above)
-                            return;
+                            return $existingPage2;
                         }
                     }
                 }
@@ -1526,19 +1879,40 @@
                 
                 // Clone the content
                 const $contentClone = $content.clone(true);
+                // Cloned nodes copy inline display/visibility from the live DOM; clear before applying page-2 rules
+                $contentClone.find('.experience-item, .education-item').css({
+                    display: '',
+                    visibility: ''
+                });
                 
-                // Restore original states on first page
+                // Restore first-page visibility (must match the computed split, not "hide everything after overflow index")
                 $allSections.each(function(index) {
-                    if (index >= firstOverflowSectionIndex) {
-                        $(this).css({
-                            'display': 'none',
-                            'visibility': 'hidden'
-                        });
-                    } else {
-                        $(this).css({
+                    const $sec = $(this);
+                    if (index < firstOverflowSectionIndex) {
+                        $sec.css({
                             'display': originalStates[index].display || '',
                             'visibility': originalStates[index].visibility || 'visible'
                         });
+                        return;
+                    }
+
+                    if (index > firstOverflowSectionIndex) {
+                        $sec.css({ 'display': 'none', 'visibility': 'hidden' });
+                        return;
+                    }
+
+                    // index === firstOverflowSectionIndex
+                    if (overflowSectionIsExperience && overflowExperienceItemIndex >= 0) {
+                        $sec.css({ 'display': '', 'visibility': 'visible' });
+                        const $items = $sec.find('.experience-item');
+                        $items.each(function(i) {
+                            $(this).css({
+                                'display': i >= overflowExperienceItemIndex ? 'none' : '',
+                                'visibility': i >= overflowExperienceItemIndex ? 'hidden' : 'visible'
+                            });
+                        });
+                    } else {
+                        $sec.css({ 'display': 'none', 'visibility': 'hidden' });
                     }
                 });
                 
@@ -1548,20 +1922,65 @@
                 // Hide sections that should stay on first page, show only overflow sections
                 const $cloneSections = $contentClone.find('section');
                 $cloneSections.each(function(index) {
+                    const $sec = $(this);
                     if (index < firstOverflowSectionIndex) {
-                        // Hide sections that are on first page
-                        $(this).css({
-                            'display': 'none',
-                            'visibility': 'hidden'
-                        });
+                        $sec.css({ 'display': 'none', 'visibility': 'hidden' });
+                        return;
+                    }
+
+                    if (index > firstOverflowSectionIndex) {
+                        $sec.css({ 'display': 'block', 'visibility': 'visible' });
+                        return;
+                    }
+
+                    // index === firstOverflowSectionIndex
+                    if (overflowSectionIsExperience && $sec.hasClass('experience')) {
+                        $sec.css({ 'display': 'block', 'visibility': 'visible' });
+                        const $items = $sec.find('.experience-item');
+                        if (overflowExperienceItemIndex >= 0) {
+                            $items.each(function(i) {
+                                $(this).css({
+                                    'display': i < overflowExperienceItemIndex ? 'none' : 'block',
+                                    'visibility': i < overflowExperienceItemIndex ? 'hidden' : 'visible'
+                                });
+                            });
+                        } else {
+                            // No per-item split (e.g. whole section continues here): show every job entry
+                            $items.css({ 'display': '', 'visibility': 'visible' });
+                        }
                     } else {
-                        // Show sections that overflow - explicitly reset
-                        $(this).css({
-                            'display': 'block',
-                            'visibility': 'visible'
-                        });
+                        $sec.css({ 'display': 'block', 'visibility': 'visible' });
                     }
                 });
+
+                // IMPORTANT for multi-page preview:
+                // Remove hidden sections/items from the clone so subsequent pagination passes
+                // don't temporarily re-show them (which causes duplicated sidebar/right-content blocks).
+                $contentClone.find('section').each(function() {
+                    const $sec = $(this);
+                    if ($sec.css('display') === 'none' || $sec.css('visibility') === 'hidden') {
+                        $sec.remove();
+                    }
+                });
+                $contentClone.find('.experience-item, .education-item').each(function() {
+                    const $item = $(this);
+                    if ($item.css('display') === 'none' || $item.css('visibility') === 'hidden') {
+                        $item.remove();
+                    }
+                });
+
+                // If nothing is left for the continuation page, don't create an empty trailing page
+                if ($contentClone.find('section').length === 0) {
+                    return null;
+                }
+
+                // Continuation page: don't repeat "JOB EXPERIENCE" if it already appeared on page 1
+                if (overflowSectionIsExperience && overflowExperienceItemIndex >= 0) {
+                    $contentClone.find('section.experience > .section-title').css({
+                        display: 'none',
+                        visibility: 'hidden'
+                    });
+                }
                 
                 // Append clone to next page
                 $nextPage.append($contentClone);
@@ -1586,9 +2005,11 @@
                         $previewContainer[0].scrollTop = $previewContainer[0].scrollHeight;
                     }
                 }, 50);
+                return $nextPage;
             } else {
                 // All sections fit - remove continuation pages
                 $firstPage.nextAll('.cv-page-container').remove();
+                return null;
             }
         }
         
@@ -1771,6 +2192,9 @@
         }
 
         let selectedCvId = null;
+        /** Monotonic id so only the latest /cv/load response may apply to the UI */
+        let loadCvRequestId = 0;
+        let loadCvXhr = null;
         window.__cvBuilderDirty = window.__cvBuilderDirty || false;
         window.__cvBuilderHydrating = window.__cvBuilderHydrating || false;
         let pendingAction = null;
@@ -2117,9 +2541,43 @@
             }
         });
 
+        const $resumeDropdownFeedback = $('#cv-resume-dropdown-feedback');
+
+        function clearResumeDropdownFeedback() {
+            if (!$resumeDropdownFeedback.length) return;
+            const prev = $resumeDropdownFeedback.data('hideTimer');
+            if (prev) clearTimeout(prev);
+            $resumeDropdownFeedback.removeData('hideTimer');
+            $resumeDropdownFeedback
+                .removeClass('cv-resume-dropdown__feedback--success cv-resume-dropdown__feedback--error')
+                .empty()
+                .prop('hidden', true)
+                .attr('aria-hidden', 'true');
+        }
+
+        function showResumeDropdownFeedback(message, variant, autoHideMs) {
+            if (!$resumeDropdownFeedback.length || !message) return;
+            variant = variant || 'success';
+            const ms = typeof autoHideMs === 'number' ? autoHideMs : 5000;
+            clearResumeDropdownFeedback();
+            $resumeDropdownFeedback
+                .removeClass('cv-resume-dropdown__feedback--success cv-resume-dropdown__feedback--error')
+                .addClass('cv-resume-dropdown__feedback--' + variant)
+                .text(message)
+                .prop('hidden', false)
+                .attr('aria-hidden', 'false');
+            if (ms > 0) {
+                const t = setTimeout(function() {
+                    clearResumeDropdownFeedback();
+                }, ms);
+                $resumeDropdownFeedback.data('hideTimer', t);
+            }
+        }
+
         function closeResumeDropdown() {
             if (!$resumeDropdown.length) return;
             closeCreatePopover();
+            clearResumeDropdownFeedback();
             $resumeDropdown.removeClass('is-open');
             $resumeTrigger.attr('aria-expanded', 'false');
         }
@@ -2310,35 +2768,47 @@
                                         },
                                         success: function(resp) {
                                             if (resp && resp.success) {
-                                                // Remove from UI list + hidden select
-                                                $row.remove();
-                                                $loadSelect.find('option[value=\"' + cvId + '\"]').remove();
+                                                const deletedId = String(cvId);
+                                                const wasSelected = selectedCvId && String(selectedCvId) === deletedId;
+
                                                 $resumeList.find('.cv-resume-item__menu.is-open').removeClass('is-open').attr('aria-hidden', 'true');
                                                 $resumeList.find('.cv-resume-edit-popover').remove();
                                                 $resumeList.find('.cv-resume-delete-popover').remove();
-                                                showToast('success', 'Resume deleted');
 
-                                                // If list empty, show empty state
-                                                if ($resumeList.find('.cv-resume-item').length === 0) {
-                                                    $resumeList.append('<div class=\"cv-resume-dropdown__empty\">No resumes yet</div>');
-                                                    setResumeTriggerLabel('Resume');
+                                                if (wasSelected) {
                                                     selectedCvId = null;
-                                                } else if (selectedCvId && String(selectedCvId) === String(cvId)) {
-                                                    // If deleted selected, pick the first available
-                                                    const $first = $resumeList.find('.cv-resume-item').first();
-                                                    selectedCvId = $first.attr('data-cv-id') || null;
-                                                    applySelectedResumeToList();
                                                 }
-                                                setLoadAllFooterVisibility($resumeList.find('.cv-resume-item').length);
+
+                                                loadSavedCVsList(function(response) {
+                                                    if (!response || !response.success) return;
+                                                    showResumeDropdownFeedback('Resume deleted', 'success');
+                                                    if (wasSelected && response.cvs && response.cvs.length > 0) {
+                                                        selectedCvId = String(response.cvs[0].id);
+                                                        renderResumeList(response.cvs);
+                                                        applySelectedResumeToList();
+                                                        if ($loadSelect.find('option[value="' + selectedCvId + '"]').length) {
+                                                            $loadSelect.val(String(selectedCvId));
+                                                        }
+                                                        setResumeTriggerLabel(
+                                                            $resumeList.find('.cv-resume-item[data-cv-id="' + selectedCvId + '"]').attr('data-cv-title') || 'Resume'
+                                                        );
+                                                        loadCvIntoBuilderInPlace(selectedCvId, {
+                                                            skipGlobalLoadedToast: true,
+                                                            syncUrlCvId: true
+                                                        });
+                                                    } else if (wasSelected) {
+                                                        selectedCvId = null;
+                                                    }
+                                                });
                                             } else {
                                                 $del.prop('disabled', false).text('Delete');
-                                                showToast('error', (resp && resp.message) || 'Unable to delete');
+                                                showResumeDropdownFeedback((resp && resp.message) || 'Unable to delete', 'error');
                                             }
                                         },
                                         error: function(xhr) {
                                             $del.prop('disabled', false).text('Delete');
                                             const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Unable to delete';
-                                            showToast('error', msg);
+                                            showResumeDropdownFeedback(msg, 'error');
                                         }
                                     });
                                 });
@@ -2412,6 +2882,28 @@
             } catch (e) { /* ignore */ }
         }
 
+        function getCvIdFromUrl() {
+            try {
+                const v = new URLSearchParams(window.location.search).get('cv_id');
+                return v != null && String(v).trim() !== '' ? String(v).trim() : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        /** When true, the next #load-cv-select change hydrates via AJAX (post-refresh); avoids redirect loops */
+        let suppressCvUrlNavigationOnce = false;
+
+        function navigateToCvWithPageReload(cvId) {
+            try {
+                const u = new URL(window.location.href);
+                u.searchParams.set('cv_id', String(cvId));
+                window.location.assign(u.pathname + u.search + u.hash);
+            } catch (e) {
+                window.location.href = window.location.pathname + '?cv_id=' + encodeURIComponent(String(cvId));
+            }
+        }
+
         function maybeLoadCvFromQuery(response) {
             if (!response || !response.success || !response.cvs || !response.cvs.length) return;
             let qId = null;
@@ -2427,6 +2919,7 @@
                 return;
             }
             selectedCvId = String(qId);
+            suppressCvUrlNavigationOnce = true;
             $loadSelect.val(String(qId)).trigger('change');
         }
 
@@ -2487,22 +2980,29 @@
             })
                 .done(function(resp) {
                     if (!resp || !resp.success || !resp.cv) {
-                        showToast('error', (resp && resp.message) || 'Unable to duplicate');
+                        showResumeDropdownFeedback((resp && resp.message) || 'Unable to duplicate', 'error');
                         return;
                     }
                     const newId = String(resp.cv.id);
+                    const dupTitle = String((resp.cv.title || 'Untitled CV')).trim();
+                    selectedCvId = newId;
                     loadSavedCVsList(function(response) {
                         if (!response || !response.success) return;
-                        selectedCvId = newId;
-                        const $opt = $loadSelect.find('option[value="' + newId + '"]');
-                        if ($opt.length) {
-                            $loadSelect.val(newId).trigger('change');
+                        showResumeDropdownFeedback('Duplicated: ' + dupTitle, 'success');
+                        if ($loadSelect.find('option[value="' + newId + '"]').length) {
+                            $loadSelect.val(String(newId));
                         }
+                        setResumeTriggerLabel(dupTitle || 'Resume');
+                        applySelectedResumeToList();
+                        loadCvIntoBuilderInPlace(newId, {
+                            skipGlobalLoadedToast: true,
+                            syncUrlCvId: true
+                        });
                     });
                 })
                 .fail(function(xhr) {
                     const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Unable to duplicate';
-                    showToast('error', msg);
+                    showResumeDropdownFeedback(msg, 'error');
                 })
                 .always(function() {
                     $btn.prop('disabled', false);
@@ -2525,19 +3025,50 @@
             run();
         });
 
+        function collapseAllAddedSections() {
+            $form.find('.added-section').each(function() {
+                const $section = $(this);
+                $section.addClass('is-collapsed');
+                $section.find('.added-section__toggle').attr('aria-expanded', 'false');
+            });
+        }
+
+        /**
+         * Tear down section UI from a previously loaded CV so the next load cannot
+         * merge old sections into collectFormData() or the preview.
+         */
+        function resetBuilderSectionsForCvLoad() {
+            $form.find('.added-section').remove();
+            addedSections.clear();
+            Object.keys(availableSections).forEach(function(sectionKey) {
+                delete sectionEntryCounts[sectionKey];
+            });
+        }
+
+        /** API may return cv_data as object, null, or (rarely) a JSON string */
+        function normalizeCvDataPayload(raw) {
+            if (raw == null) return {};
+            if (typeof raw === 'string') {
+                try {
+                    const parsed = JSON.parse(raw);
+                    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+                } catch (e) {
+                    return {};
+                }
+            }
+            if (typeof raw === 'object' && !Array.isArray(raw)) return raw;
+            return {};
+        }
+
         function loadCVData(cvData) {
-            if (cvData.name) {
-                $nameInput.val(cvData.name).trigger('input');
-            }
-            if (cvData.job_title) {
-                $jobTitleInput.val(cvData.job_title).trigger('input');
-            }
-            if (cvData.email) {
-                $emailInput.val(cvData.email).trigger('input');
-            }
-            if (cvData.phone) {
-                $phoneInput.val(cvData.phone).trigger('input');
-            }
+            cvData = (cvData && typeof cvData === 'object') ? cvData : {};
+
+            resetBuilderSectionsForCvLoad();
+
+            $nameInput.val(cvData.name != null ? String(cvData.name) : '').trigger('input');
+            $jobTitleInput.val(cvData.job_title != null ? String(cvData.job_title) : '').trigger('input');
+            $emailInput.val(cvData.email != null ? String(cvData.email) : '').trigger('input');
+            $phoneInput.val(cvData.phone != null ? String(cvData.phone) : '').trigger('input');
             // Location: single field "City, Country" — merge from address or city/country
             let locationStr = '';
             if (cvData.address && String(cvData.address).trim()) {
@@ -2547,23 +3078,20 @@
                 const co = (cvData.country && String(cvData.country).trim()) ? String(cvData.country).trim() : '';
                 locationStr = c && co ? (c + ', ' + co) : (c || co);
             }
-            if (locationStr) {
-                $cityInput.val(locationStr).trigger('input');
-            } else {
-                $cityInput.val('').trigger('input');
-            }
-            if (cvData.summary) {
-                $summaryInput.val(cvData.summary).trigger('input');
-            }
+            $cityInput.val(locationStr).trigger('input');
+            setResumeVisibilityFromData(cvData);
+            $summaryInput.val(cvData.summary != null ? String(cvData.summary) : '').trigger('input');
             if (cvData.photo) {
                 photoData = cvData.photo;
                 $photoPreview.attr('src', photoData);
                 $photoPreviewContainer.prop('hidden', false);
+                $removePhoto.prop('hidden', false);
                 $photoCircle.addClass('has-photo');
             } else {
                 photoData = null;
                 $photoPreview.attr('src', '');
                 $photoPreviewContainer.prop('hidden', true);
+                $removePhoto.prop('hidden', true);
                 $photoCircle.removeClass('has-photo');
             }
 
@@ -2622,6 +3150,11 @@
                         $newEntry.find('input, textarea, select').on('input change', debouncedHandler);
                     });
 
+                    // Normalize "Present" end-date UI (experience only)
+                    if (sectionKey === 'experience') {
+                        syncExperienceEndDateUi($section);
+                    }
+
                     // Update entry count
                     sectionEntryCounts[sectionKey] = cvData[sectionKey].length;
                     
@@ -2641,6 +3174,8 @@
                     }
                 }
             });
+
+            collapseAllAddedSections();
 
             setTimeout(function() {
                 const freshData = collectFormData();
@@ -2692,22 +3227,18 @@
         });
 
 
-        // Selecting an item sets the hidden <select> and triggers the existing loader
+        // Selecting a resume: full page reload with ?cv_id= so each CV starts from a clean JS/DOM state
         $resumeList.on('click', '.cv-resume-item', function(e) {
             // If the user clicked inside actions (duplicate / menu / popover), don't load the CV
             if ($(e.target).closest('.cv-resume-item__actions').length) {
                 return;
             }
             const cvId = $(this).attr('data-cv-id');
-            const title = $(this).attr('data-cv-title');
             if (!cvId) return;
 
             const doSwitch = function() {
-                selectedCvId = String(cvId);
-                applySelectedResumeToList();
-                setResumeTriggerLabel(title);
                 closeResumeDropdown();
-                $loadSelect.val(cvId).trigger('change');
+                navigateToCvWithPageReload(cvId);
             };
 
             if (window.__cvBuilderDirty) {
@@ -2724,51 +3255,78 @@
             }
         });
 
-        $loadSelect.on('change', function() {
-            const cvId = $(this).val();
-            if (!cvId) {
-                return;
-            }
-            selectedCvId = String(cvId);
+        /**
+         * Load CV JSON into the builder without a full page navigation.
+         * @param {string} cvId
+         * @param {{ syncUrlCvId?: boolean, skipGlobalLoadedToast?: boolean }} [opts]
+         */
+        function loadCvIntoBuilderInPlace(cvId, opts) {
+            opts = opts || {};
+            cvId = String(cvId || '');
+            if (!cvId) return;
+
+            selectedCvId = cvId;
             applySelectedResumeToList();
 
             $loadSelect.prop('disabled', true);
             $resumeTrigger.prop('disabled', true);
-            hideToast();
+            if (!opts.skipGlobalLoadedToast) {
+                hideToast();
+            }
 
-            $.ajax({
+            const requestId = ++loadCvRequestId;
+            if (loadCvXhr && typeof loadCvXhr.abort === 'function') {
+                try {
+                    loadCvXhr.abort();
+                } catch (eAbort) { /* ignore */ }
+            }
+
+            loadCvXhr = $.ajax({
                 url: cvBuilderConfig.routes.load.replace('CV_ID', cvId),
                 method: 'GET',
+                cache: false,
                 success: function(response) {
+                    if (requestId !== loadCvRequestId) return;
                     if (response.success && response.cv) {
                         window.__cvBuilderHydrating = true;
                         $('#cv-title').val(response.cv.title || '');
                         setResumeTriggerLabel(response.cv.title || 'Resume');
-                        // Ensure selected CV stays highlighted even after list reloads
                         selectedCvId = String(response.cv.id || cvId);
                         applySelectedResumeToList();
 
-                        if (response.cv.cv_data) {
-                            try {
-                                loadCVData(response.cv.cv_data);
+                        if ($loadSelect.find('option[value="' + selectedCvId + '"]').length) {
+                            $loadSelect.val(String(selectedCvId));
+                        }
 
+                        if (opts.syncUrlCvId && typeof history.replaceState === 'function') {
+                            try {
+                                const u = new URL(window.location.href);
+                                u.searchParams.set('cv_id', String(selectedCvId));
+                                const qs = u.searchParams.toString();
+                                history.replaceState({}, '', u.pathname + (qs ? '?' + qs : '') + u.hash);
+                            } catch (eUrl) { /* ignore */ }
+                        }
+
+                        try {
+                            const payload = normalizeCvDataPayload(response.cv.cv_data);
+                            loadCVData(payload);
+                            if (!opts.skipGlobalLoadedToast) {
                                 showToast('success', 'CV loaded successfully!');
-                            } catch (error) {
-                                showToast('error', 'Error loading CV data: ' + error.message);
                             }
-                        } else {
-                            showToast('error', 'CV data is empty');
+                        } catch (error) {
+                            showToast('error', 'Error loading CV data: ' + error.message);
                         }
                         setTimeout(function() {
                             window.__cvBuilderHydrating = false;
                             window.__cvBuilderDirty = false;
                         }, 0);
-                        stripCvIdFromUrl();
                     } else {
                         showToast('error', response.message || 'Error loading CV');
                     }
                 },
                 error: function(xhr) {
+                    if (requestId !== loadCvRequestId) return;
+                    if (xhr && (xhr.status === 0 || xhr.statusText === 'abort')) return;
                     let errorMessage = 'Error loading CV. Please try again.';
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMessage = xhr.responseJSON.message;
@@ -2776,11 +3334,29 @@
                     showToast('error', errorMessage);
                 },
                 complete: function() {
+                    if (requestId !== loadCvRequestId) return;
                     $loadSelect.prop('disabled', false);
                     $resumeTrigger.prop('disabled', false);
                     window.__cvBuilderHydrating = false;
                 }
             });
+        }
+
+        $loadSelect.on('change', function() {
+            const cvId = $(this).val();
+            if (!cvId) {
+                return;
+            }
+
+            const urlCvId = getCvIdFromUrl();
+            const sameAsUrl = suppressCvUrlNavigationOnce || String(cvId) === String(urlCvId || '');
+            if (!sameAsUrl) {
+                navigateToCvWithPageReload(cvId);
+                return;
+            }
+            suppressCvUrlNavigationOnce = false;
+
+            loadCvIntoBuilderInPlace(String(cvId), {});
         });
 
         loadSavedCVsList(function(response) {
@@ -2843,12 +3419,10 @@
             const type = String(file.type || '').toLowerCase();
             const looksLikeImage = type.startsWith('image/');
             const looksLikePdf = type === 'application/pdf' || name.endsWith('.pdf');
-            const looksLikeDoc =
-                type === 'application/msword' ||
+            const looksLikeDocx =
                 type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-                name.endsWith('.doc') ||
                 name.endsWith('.docx');
-            return looksLikeImage || looksLikePdf || looksLikeDoc;
+            return looksLikeImage || looksLikePdf || looksLikeDocx;
         }
 
         $importResumeTrigger.on('click', function(e) {
@@ -2866,17 +3440,17 @@
             if (!file) return;
 
             // Basic validation (kept simple for MVP)
-            const maxBytes = 15 * 1024 * 1024; // 15MB
+            const maxBytes = 3 * 1024 * 1024; // 3MB
             if (!isAllowedResumeFile(file)) {
                 pendingResumeImportFile = null;
                 $(this).val('');
-                showToast('error', 'Unsupported file. Please upload PDF, DOC/DOCX, or an image.');
+                showToast('error', 'Unsupported file. Please upload PDF, DOCX, or an image.');
                 return;
             }
             if (file.size && file.size > maxBytes) {
                 pendingResumeImportFile = null;
                 $(this).val('');
-                showToast('error', 'File is too large. Please upload a file up to 15MB.');
+                showToast('error', 'File is too large. Please upload a file up to 3MB.');
                 return;
             }
 
@@ -2915,7 +3489,81 @@
                     if (resp && resp.success && resp.import_id) {
                         pendingResumeImportId = String(resp.import_id);
                         showToast('success', 'Uploaded. Import ID: ' + pendingResumeImportId, 5000);
-                        showToast('info', 'Next: extract text + parse fields (Step 4–5).', 4500);
+                        // Step 4: extract text
+                        const extractTpl = (cvBuilderConfig && cvBuilderConfig.routes) ? cvBuilderConfig.routes.importExtract : '';
+                        if (!extractTpl) {
+                            showToast('info', 'Next: extract text + parse fields (Step 4–5).', 4500);
+                            return;
+                        }
+
+                        const extractUrl = String(extractTpl).replace('IMPORT_ID', encodeURIComponent(pendingResumeImportId));
+                        showToast('info', 'Extracting text…', 4000);
+
+                        $.ajax({
+                            url: extractUrl,
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': cvBuilderConfig.csrfToken || ''
+                            },
+                            success: function(r2) {
+                                if (r2 && r2.success) {
+                                    const method = r2.method ? String(r2.method) : 'unknown';
+                                    const len = r2.raw_text ? String(r2.raw_text).length : 0;
+                                    showToast('success', 'Text extracted (' + method + '). ' + len + ' chars.', 6000);
+
+                                    const parseTpl = (cvBuilderConfig && cvBuilderConfig.routes) ? cvBuilderConfig.routes.importParse : '';
+                                    if (!parseTpl) {
+                                        showToast('info', 'Parse route not configured.', 4000);
+                                        return;
+                                    }
+
+                                    const parseUrl = String(parseTpl).replace('IMPORT_ID', encodeURIComponent(pendingResumeImportId));
+                                    showToast('info', 'Parsing resume with Gemini…', 5000);
+
+                                    $.ajax({
+                                        url: parseUrl,
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': cvBuilderConfig.csrfToken || ''
+                                        },
+                                        success: function(r3) {
+                                            if (r3 && r3.success && r3.parsed_cv) {
+                                                try {
+                                                    window.__cvBuilderHydrating = true;
+                                                    loadCVData(r3.parsed_cv);
+                                                    showToast('success', 'Resume imported — please review your details.', 8000);
+                                                    setTimeout(function() {
+                                                        window.__cvBuilderHydrating = false;
+                                                        window.__cvBuilderDirty = true;
+                                                    }, 0);
+                                                } catch (err) {
+                                                    showToast('error', 'Could not apply parsed data: ' + (err && err.message ? err.message : String(err)));
+                                                }
+                                            } else {
+                                                showToast('error', (r3 && r3.message) ? r3.message : 'Parse failed');
+                                            }
+                                        },
+                                        error: function(xhr3) {
+                                            let msg3 = 'Parse failed. Please try again.';
+                                            if (xhr3 && xhr3.status === 419) msg3 = 'Session expired. Please refresh and try again.';
+                                            if (xhr3 && xhr3.status === 503 && xhr3.responseJSON && xhr3.responseJSON.message) {
+                                                msg3 = xhr3.responseJSON.message;
+                                            }
+                                            if (xhr3 && xhr3.responseJSON && xhr3.responseJSON.message) msg3 = xhr3.responseJSON.message;
+                                            showToast('error', msg3);
+                                        }
+                                    });
+                                } else {
+                                    showToast('error', (r2 && r2.message) ? r2.message : 'Extraction failed');
+                                }
+                            },
+                            error: function(xhr2) {
+                                let msg2 = 'Extraction failed. Please try again.';
+                                if (xhr2 && xhr2.status === 419) msg2 = 'Session expired. Please refresh and try again.';
+                                if (xhr2 && xhr2.responseJSON && xhr2.responseJSON.message) msg2 = xhr2.responseJSON.message;
+                                showToast('error', msg2);
+                            }
+                        });
                     } else {
                         showToast('error', (resp && resp.message) ? resp.message : 'Upload failed');
                     }
@@ -2990,6 +3638,73 @@
 
             handleFormChange();
             closeModal();
+        });
+
+        function closeEndDateMenus() {
+            $('.cv-end-date-mode-menu').prop('hidden', true).attr('aria-hidden', 'true');
+            $('.cv-end-date-mode-trigger').attr('aria-expanded', 'false');
+        }
+
+        // Experience end date mode: custom dropdown behavior (delegated)
+        $form.on('click', '.cv-end-date-mode-trigger', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const $btn = $(this);
+            // Prefer the menu that belongs to the clicked trigger (date-row caret vs full-width dropdown)
+            let $menu = $btn.siblings('.cv-end-date-mode-menu').first();
+            if (!$menu.length) {
+                $menu = $btn.parent().find('.cv-end-date-mode-menu').first();
+            }
+            if (!$menu.length) {
+                const $group = $btn.closest('.form-group');
+                $menu = $group.find('.cv-end-date-mode-menu').filter(function() {
+                    return $(this).closest('.cv-end-date-date-row').length > 0;
+                }).first();
+                if (!$menu.length) {
+                    $menu = $group.find('.cv-end-date-mode-menu').first();
+                }
+            }
+            if (!$menu.length) return;
+
+            const isOpen = !$menu.prop('hidden');
+            closeEndDateMenus();
+            if (!isOpen) {
+                $menu.prop('hidden', false).attr('aria-hidden', 'false');
+                $btn.attr('aria-expanded', 'true');
+            }
+        });
+
+        $form.on('click', '.cv-end-date-mode-item', function(e) {
+            e.preventDefault();
+            const $item = $(this);
+            const mode = String($item.attr('data-mode') || '').trim(); // present|date
+            const $group = $item.closest('.form-group');
+            const $modeValue = $group.find('input.cv-end-date-mode-value').first();
+            if (!$modeValue.length) return;
+
+            $modeValue.val(mode);
+            syncExperienceEndDateUi($group);
+            closeEndDateMenus();
+
+            // trigger preview update
+            const $endInput = $group.find('input.cv-end-date-input').first();
+            if ($endInput.length) $endInput.trigger('input');
+        });
+
+        $(document).on('click', function() {
+            closeEndDateMenus();
+        });
+
+        $form.on('input', 'input.cv-end-date-input', function() {
+            const $endInput = $(this);
+            const val = String($endInput.val() || '').trim();
+            if (!val) return;
+            const $group = $endInput.closest('.form-group');
+            const $modeValue = $group.find('input.cv-end-date-mode-value').first();
+            if ($modeValue.length && String($modeValue.val() || '') !== 'date') {
+                $modeValue.val('date');
+                syncExperienceEndDateUi($group);
+            }
         });
 
         // Keyboard support for cards
@@ -3108,12 +3823,159 @@
                     
                     $formGroup.append($select);
                 } else {
-                    const $input = $('<input>')
-                        .attr('type', field.type)
-                        .attr('name', sectionKey + '[' + entryIndex + '][' + field.name + ']')
-                        .attr('placeholder', field.placeholder || '')
-                        .addClass('form-control');
-                    $formGroup.append($input);
+                    // Experience end date: dropdown that swaps to date field (caret stays available)
+                    if (sectionKey === 'experience' && field.name === 'end_date') {
+                        const $modeValue = $('<input>')
+                            .attr('type', 'hidden')
+                            .attr('name', sectionKey + '[' + entryIndex + '][end_date_mode]')
+                            .addClass('cv-end-date-mode-value')
+                            .val('present');
+
+                        const $modeDropdown = $('<div>')
+                            .addClass('cv-end-date-mode-dropdown')
+                            .css({ position: 'relative' });
+
+                        const $modeTrigger = $('<button>')
+                            .attr('type', 'button')
+                            .addClass('cv-end-date-mode-trigger')
+                            .attr('aria-haspopup', 'menu')
+                            .attr('aria-expanded', 'false')
+                            .css({
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '10px',
+                                padding: '6px 14px',
+                                borderRadius: '10px',
+                                border: '1px solid #e6e6e6',
+                                background: '#f3f5f8',
+                                fontWeight: '600',
+                                fontSize: '0.85rem'
+                            })
+                            .append(
+                                $('<span>')
+                                    .addClass('cv-end-date-mode-trigger-label')
+                                    .css({
+                                        flex: '1 1 auto',
+                                        minWidth: 0,
+                                        maxWidth: '80px',
+                                        overflow: 'hidden',
+                                        whiteSpace: 'nowrap',
+                                        textOverflow: 'ellipsis',
+                                        display: 'block',
+                                    })
+                                    .attr('title', 'Currently work here')
+                                    .text('Currently work here')
+                            )
+                            .append($('<i class="fas fa-chevron-down" aria-hidden="true">').css({ opacity: 0.8 }));
+
+                        const $modeMenu = $('<div>')
+                            .addClass('cv-end-date-mode-menu')
+                            .attr('role', 'menu')
+                            .prop('hidden', true)
+                            .attr('aria-hidden', 'true')
+                            .css({
+                                position: 'absolute',
+                                zIndex: 20,
+                                left: 0,
+                                right: 0,
+                                width: '150px',
+                                top: 'calc(100% + 6px)',
+                                background: '#fff',
+                                border: '1px solid #e6e6e6',
+                                borderRadius: '10px',
+                                overflow: 'hidden',
+                                fontSize: '0.85rem',
+                                boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+                            });
+
+                        const $itemPresent = $('<button type="button">')
+                            .addClass('cv-end-date-mode-item')
+                            .attr('role', 'menuitem')
+                            .attr('data-mode', 'present')
+                            .css({ width: '100%', textAlign: 'left', padding: '12px 14px', background: 'transparent', border: 0, cursor: 'pointer' })
+                            .text('Currently work here');
+
+                        const $itemDate = $('<button type="button">')
+                            .addClass('cv-end-date-mode-item')
+                            .attr('role', 'menuitem')
+                            .attr('data-mode', 'date')
+                            .css({ width: '100%', textAlign: 'left', padding: '12px 14px', background: 'transparent', border: 0, cursor: 'pointer' })
+                            .text('End date');
+
+                        $modeMenu.append($itemPresent).append($itemDate);
+                        $modeDropdown.append($modeTrigger).append($modeMenu);
+
+                        const $input = $('<input>')
+                            .attr('type', field.type)
+                            .attr('name', sectionKey + '[' + entryIndex + '][' + field.name + ']')
+                            .attr('placeholder', field.placeholder || '')
+                            .addClass('form-control cv-end-date-input');
+
+                        const $dateRow = $('<div>')
+                            .addClass('cv-end-date-date-row')
+                            .css({ display: 'none', gap: '10px', alignItems: 'center' });
+
+                        const $caretBtn = $('<button>')
+                            .attr('type', 'button')
+                            .addClass('cv-end-date-mode-trigger')
+                            .attr('aria-haspopup', 'menu')
+                            .attr('aria-expanded', 'false')
+                            .attr('aria-label', 'Change end date mode')
+                            .css({
+                                flex: '0 0 auto',
+                                width: '44px',
+                                height: '44px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderRadius: '10px',
+                                border: '1px solid #e6e6e6',
+                                background: '#f3f5f8',
+                                cursor: 'pointer'
+                            })
+                            .append($('<i class="fas fa-chevron-down" aria-hidden="true">').css({ opacity: 0.8 }));
+
+                        const $dateMenu = $('<div>')
+                            .addClass('cv-end-date-mode-menu')
+                            .attr('role', 'menu')
+                            .prop('hidden', true)
+                            .attr('aria-hidden', 'true')
+                            .css({
+                                position: 'absolute',
+                                zIndex: 20,
+                                right: 0,
+                                top: 'calc(100% + 6px)',
+                                width: '240px',
+                                background: '#fff',
+                                border: '1px solid #e6e6e6',
+                                borderRadius: '10px',
+                                overflow: 'hidden',
+                                boxShadow: '0 10px 30px rgba(0,0,0,0.08)'
+                            })
+                            .append($itemPresent.clone())
+                            .append($itemDate.clone());
+
+                        const $dateMenuWrap = $('<div>')
+                            .css({ position: 'relative', flex: '0 0 auto' })
+                            .append($caretBtn)
+                            .append($dateMenu);
+
+                        // show end date input in date mode; keep dropdown caret to change mode
+                        $dateRow.append(
+                            $('<div>').css({ flex: '1 1 auto' }).append($input)
+                        ).append($dateMenuWrap);
+
+                        $formGroup.append($modeValue).append($modeDropdown).append($dateRow);
+                    } else {
+                        const $input = $('<input>')
+                            .attr('type', field.type)
+                            .attr('name', sectionKey + '[' + entryIndex + '][' + field.name + ']')
+                            .attr('placeholder', field.placeholder || '')
+                            .addClass('form-control');
+                        $formGroup.append($input);
+                    }
                 }
 
                 $entryContainer.append($formGroup);

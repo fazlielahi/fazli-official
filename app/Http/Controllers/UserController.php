@@ -143,10 +143,22 @@ class UserController extends Controller
         }
 
         // Authentication failed
-        // Return with generic error message (don't reveal if email exists)
-        return back()->withErrors([
-            'email' => 'These credentials do not match our records.',
-        ])->withInput($request->only('email'));
+        // Show field-specific error message as requested
+        $emailExists = User::query()->where('email', $request->input('email'))->exists();
+
+        if (!$emailExists) {
+            $errors = ['email' => ['Email does not exist.']];
+            if ($request->expectsJson()) {
+                return response()->json(['errors' => $errors], 422);
+            }
+            return back()->withErrors($errors)->withInput($request->only('email'));
+        }
+
+        $errors = ['password' => ['Incorrect password.']];
+        if ($request->expectsJson()) {
+            return response()->json(['errors' => $errors], 422);
+        }
+        return back()->withErrors($errors)->withInput($request->only('email'));
       }
 
         /**

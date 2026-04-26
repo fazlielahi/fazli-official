@@ -135,7 +135,11 @@
 
 </head>
 
-<body onresize="add_collapse()" id="body" class="@yield('body_class')">
+@php
+    $bodyClass = trim((string) $__env->yieldContent('body_class'));
+    $isCvPage = str_starts_with($bodyClass, 'page-cv');
+@endphp
+<body onresize="add_collapse()" id="body" class="{{ $bodyClass }}"{{ $isCvPage ? ' data-theme-lock=dark' : '' }}>
     @include("site.inc.header")
     @include("site.inc.cv")
 

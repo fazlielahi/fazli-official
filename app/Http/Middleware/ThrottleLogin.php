@@ -33,11 +33,23 @@ class ThrottleLogin extends ThrottleRequests
                 // Redirect back to login with user-friendly error message
                 $locale = app()->getLocale() ?: 'en';
                 $seconds = $e->getHeaders()['Retry-After'] ?? 60;
+                $msg = "Too many login attempts. Please try again in {$seconds} seconds.";
+
+                // If request expects JSON (AJAX), return 429 JSON instead of redirect
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'message' => $msg,
+                        'errors' => [
+                            'email' => [$msg],
+                        ],
+                        'throttle_seconds' => (int) $seconds,
+                    ], 429);
+                }
                 
                 return redirect()
                     ->route('localized.login', ['lang' => $locale])
                     ->withErrors([
-                        'email' => "Too many login attempts. Please try again in {$seconds} seconds."
+                        'email' => $msg
                     ])
                     ->with('throttle_seconds', $seconds) // Pass seconds for countdown
                     ->withInput($request->only('email'));

@@ -137,6 +137,30 @@
                     </div>
                 </section>
                 @endif
+
+                <!-- Languages Section (sidebar — matches builder preview / PDF) -->
+                @if(isset($data['languages']) && count($data['languages']) > 0)
+                <section class="languages">
+                    <h2 class="section-title">LANGUAGES</h2>
+                    <div class="section-content">
+                        <div class="languages-list">
+                            @foreach($data['languages'] as $lang)
+                            @if(isset($lang['is_hidden']) && (string) $lang['is_hidden'] === '1')
+                                @continue
+                            @endif
+                            <div class="language-item">
+                                <div class="language-name-row">
+                                    <span class="language-name">{{ $lang['language'] ?? 'Language' }}</span>
+                                    @if(isset($lang['proficiency']) && !empty($lang['proficiency']))
+                                    <span class="language-proficiency-badge">{{ $lang['proficiency'] }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </section>
+                @endif
             </div>
 
             <!-- Right Content Area -->
@@ -168,6 +192,65 @@
                             </div>
                             @if(isset($exp['description']) && !empty($exp['description']))
                             <div class="item-description">{!! $exp['description'] !!}</div>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                </section>
+                @endif
+
+                <!-- Awards Section (under Experience) -->
+                @if(isset($data['awards']) && count($data['awards']) > 0)
+                <section class="awards">
+                    <h2 class="section-title">AWARDS</h2>
+                    <div class="section-content">
+                        @foreach($data['awards'] as $award)
+                        @if(isset($award['is_hidden']) && (string) $award['is_hidden'] === '1')
+                            @continue
+                        @endif
+                        <div class="award-item">
+                            <div class="item-title-row">
+                                <h3 class="item-title">{{ $award['title'] ?? 'Award' }}</h3>
+                                @if(isset($award['period']) && !empty($award['period']))
+                                <span class="item-period">{{ $award['period'] }}</span>
+                                @endif
+                            </div>
+                            @if(isset($award['organization']) && !empty($award['organization']))
+                            <div class="item-organization">{{ $award['organization'] }}</div>
+                            @endif
+                            @if(isset($award['description']) && !empty($award['description']))
+                            <div class="item-description">{!! $award['description'] !!}</div>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                </section>
+                @endif
+
+                <!-- Projects Section (under Experience) -->
+                @if(isset($data['projects']) && count($data['projects']) > 0)
+                <section class="projects">
+                    <h2 class="section-title">PROJECTS</h2>
+                    <div class="section-content">
+                        @foreach($data['projects'] as $project)
+                        @if(isset($project['is_hidden']) && (string) $project['is_hidden'] === '1')
+                            @continue
+                        @endif
+                        <div class="project-item">
+                            <div class="item-title-row">
+                                <h3 class="item-title">{{ $project['name'] ?? 'Project' }}</h3>
+                                @if(isset($project['period']) && !empty($project['period']))
+                                <span class="item-period">{{ $project['period'] }}</span>
+                                @endif
+                            </div>
+                            @if(isset($project['technologies']) && !empty($project['technologies']))
+                            <div class="item-technologies">{{ $project['technologies'] }}</div>
+                            @endif
+                            @if(isset($project['link']) && !empty($project['link']))
+                            <a class="project-link" href="{{ $project['link'] }}" target="_blank" rel="noopener noreferrer">{{ $project['link'] }}</a>
+                            @endif
+                            @if(isset($project['description']) && !empty($project['description']))
+                            <div class="item-description">{!! $project['description'] !!}</div>
                             @endif
                         </div>
                         @endforeach
@@ -228,30 +311,6 @@
                             @endif
                         </div>
                         @endforeach
-                    </div>
-                </section>
-                @endif
-
-                <!-- Languages Section -->
-                @if(isset($data['languages']) && count($data['languages']) > 0)
-                <section class="languages">
-                    <h2 class="section-title">LANGUAGES</h2>
-                    <div class="section-content">
-                        <div class="languages-list">
-                            @foreach($data['languages'] as $lang)
-                            @if(isset($lang['is_hidden']) && (string) $lang['is_hidden'] === '1')
-                                @continue
-                            @endif
-                            <div class="language-item">
-                                <div class="language-name-row">
-                                    <span class="language-name">{{ $lang['language'] ?? 'Language' }}</span>
-                                    @if(isset($lang['proficiency']) && !empty($lang['proficiency']))
-                                    <span class="language-proficiency-badge">{{ $lang['proficiency'] }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
                     </div>
                 </section>
                 @endif

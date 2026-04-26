@@ -139,6 +139,7 @@
     grid-template-columns: 57.2mm 6.3mm 1fr;
     grid-template-areas: "left-green gap right-content";
     width: 100%;
+    height: 100vh !important;
 }
 
 /* ---------- LEFT GREEN SECTION ---------- */
@@ -218,6 +219,13 @@
     line-height: 1.4;
 }
 
+.cv-template.modern .left-green .education-item .item-location {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85) !important;
+    display: inline-block;
+    line-height: 1.4;
+}
+
 /* Contact Items */
 .cv-template.modern .left-green .contact-info {
     display: flex;
@@ -237,14 +245,14 @@
 }
 
 .cv-template.modern .left-green .contact-icon {
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 5px;
     flex-shrink: 0;
-    font-size: 14px;
+    font-size: 16px;
     color: rgba(255, 255, 255, 0.9) !important;
     background: rgba(130, 161, 79, 0.5);
     border-radius: 50%;
@@ -262,10 +270,18 @@
 .cv-template.modern .left-green .contact-text {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.9) !important;
-    word-break: break-word;
+    /* Wrap long emails/phones cleanly without odd mid-word splits */
+    word-break: normal;
+    overflow-wrap: anywhere;
     display: block;
     line-height: 1.6;
     text-align: center;
+    max-width: 150px;
+}
+
+/* Prevent any classic contact separators from showing in modern sidebar */
+.cv-template.modern .left-green .contact-separator {
+    display: none !important;
 }
 
 /* Languages */
@@ -857,7 +873,7 @@
         padding-top: 0 !important;
     }
     
-    /* Prevent sections from breaking across pages */
+    /* Page breaks: keep individual entries intact, but allow long lists to continue */
     .cv-template.modern section {
         page-break-inside: avoid;
         break-inside: avoid;
@@ -866,6 +882,19 @@
     .cv-template.modern .section-content {
         page-break-inside: avoid;
         break-inside: avoid;
+    }
+
+    /* Experience/Education are lists: allow the section wrapper + list container to split */
+    .cv-template.modern section.experience,
+    .cv-template.modern section.education {
+        page-break-inside: auto;
+        break-inside: auto;
+    }
+
+    .cv-template.modern section.experience .section-content,
+    .cv-template.modern section.education .section-content {
+        page-break-inside: auto;
+        break-inside: auto;
     }
     
     .cv-template.modern .experience-item,

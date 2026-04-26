@@ -225,9 +225,10 @@ body[data-theme="light"] .sidebar__newsletter {
   position: relative;
   width: 50px;
   height: 25px;
-  background: #2a2a2a;
+  /* brand: dark blue track */
+  background: #0F3A6D;
   border-radius: 25px;
-  border: 2px solid #495057;
+  border: 2px solid rgba(15, 58, 109, 0.85);
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -240,7 +241,8 @@ body[data-theme="light"] .sidebar__newsletter {
   position: absolute;
   width: 19px;
   height: 19px;
-  background: var(--fistudy-base);
+  /* brand: orange thumb */
+  background: #F4A32C;
   border-radius: 50%;
   transition: all 0.3s ease;
   left: 2px;
@@ -292,11 +294,11 @@ body[data-theme="light"] .navbar-nav .nav-item a {
 }
 
 body[data-theme="light"] .navbar-nav .nav-item a:hover {
-  color: var(--fistudy-base) !important;
+  color: #F4A32C !important;
 }
 
 body[data-theme="light"] .navbar-nav .nav-item a.active {
-  color: var(--fistudy-base) !important;
+  color: #F4A32C !important;
 }
 
 /* Cards and containers */
@@ -427,7 +429,7 @@ body[data-theme="light"] .contact-three__right h2 {
 body[data-theme="light"] p, 
 body[data-theme="light"] span, 
 body[data-theme="light"] div {
-  color: var(--light-text-primary) !important;
+  color: var(--light-text-primary);
 }
 
 body[data-theme="light"] .text-muted {

@@ -13,12 +13,19 @@ use App\Http\Controllers\Admin\CKEditorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 
 // 1) Root — redirect "/" to the current locale's home
 Route::get('/', [HomeController::class, 'index'])->name('root.redirect');
 
 // 2) Language switcher (no locale prefix here)
 Route::get('/switch-language/{lang}', [LanguageController::class, 'switch'])->name('lang.switch');
+
+// Google OAuth (non-localized callback; uses session locale)
+Route::middleware(['web', 'App\Http\Middleware\SetLocale'])->group(function () {
+    Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+});
 
 // 3) All localized routes
 Route::group([
@@ -48,6 +55,8 @@ Route::group([
     Route::get('/cv/saved', [\App\Http\Controllers\CvController::class, 'getSavedCVs'])->name('cv.saved');
     Route::get('/cv/load/{id}', [\App\Http\Controllers\CvController::class, 'loadCV'])->name('cv.load');
     Route::post('/cv/import/upload', [\App\Http\Controllers\CvController::class, 'importUpload'])->name('cv.import.upload');
+    Route::post('/cv/import/{importId}/extract', [\App\Http\Controllers\CvController::class, 'importExtract'])->name('cv.import.extract');
+    Route::post('/cv/import/{importId}/parse', [\App\Http\Controllers\CvController::class, 'importParse'])->name('cv.import.parse');
     Route::post('/cv/{id}/title', [\App\Http\Controllers\CvController::class, 'updateTitle'])->name('cv.updateTitle');
     Route::post('/cv/{id}/duplicate', [\App\Http\Controllers\CvController::class, 'duplicateSaved'])->name('cv.duplicate');
     Route::delete('/cv/{id}', [\App\Http\Controllers\CvController::class, 'deleteSaved'])->name('cv.delete');

@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-2.0-flash'),
+    ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        // Keep this non-localized so you only configure one callback in Google Cloud Console.
+        'redirect' => env('GOOGLE_REDIRECT_URI', rtrim(env('APP_URL', ''), '/') . '/auth/google/callback'),
+    ],
+
 ];

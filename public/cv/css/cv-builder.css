@@ -496,11 +496,11 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     gap: 8px;
     min-width: 168px;
     max-width: min(240px, 48vw);
-    padding: 7px 12px;
+    padding: 12px 12px;
     font-size: 0.86rem;
     font-weight: 600;
     line-height: 1.25;
-    border-radius: 12px;
+    border-radius: 20px;
     border: 1px solid #dde1e8;
     background: #fafbfc;
     color: #2d3748;
@@ -603,6 +603,33 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     background: #ede7f3;
     border-color: rgba(173, 20, 87, 0.35);
     color: #ad1457;
+}
+
+.cv-resume-dropdown__feedback {
+    margin: 5px 0 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.cv-resume-dropdown__feedback[hidden] {
+    display: none !important;
+}
+
+.cv-resume-dropdown__feedback--success {
+    background: rgba(16, 185, 129, 0.12);
+    color: #047857;
+}
+
+.cv-resume-dropdown__feedback--error {
+    background: rgba(239, 68, 68, 0.08);
+    color: #b91c1c;
 }
 
 .cv-resume-create-popover {
@@ -1112,7 +1139,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     height: 36px;
     flex-shrink: 0;
     padding: 0;
-    border-radius: 10px;
+    border-radius: 50%;
     border: 1.5px solid #1a1f36;
     background: #fff;
     color: #1a1f36;
@@ -1176,6 +1203,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .cv-personal-card {
     padding: 14px 14px 12px;
     background: #fff;
+    margin-bottom: 10px;
     border: 1px solid rgba(26, 32, 44, 0.08);
     border-radius: 14px;
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
@@ -1190,6 +1218,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     border-radius: 14px;
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
     font-family: "Outfit", system-ui, sans-serif;
+    overflow: visible;
 }
 
 .cv-personal-view-card__inner {
@@ -1198,10 +1227,12 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px 14px;
     align-items: center;
+    overflow: visible;
 }
 
 .cv-personal-view-card__main {
     min-width: 0;
+    overflow: visible;
 }
 
 .cv-personal-view-card__name {
@@ -1224,20 +1255,148 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     gap: 8px;
     color: #0f172a;
     font-size: 14px;
+    overflow: visible;
+    position: relative;
+    z-index: 0;
 }
 
 .cv-personal-view-card__meta-item {
-    display: inline-flex;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 10px;
+    gap: 8px 10px;
     color: #111827;
+    position: relative;
+    overflow: visible;
 }
 
 .cv-personal-view-card__meta-item i {
     width: 18px;
+    flex-shrink: 0;
     text-align: center;
     color: #111827;
     opacity: 0.9;
+}
+
+.cv-personal-view-card__meta-text {
+    flex: 1 1 140px;
+    min-width: 0;
+    word-break: break-word;
+}
+
+/* Muted row only via color — avoid opacity so the tooltip stays fully opaque */
+.cv-personal-view-card__meta-item--resume-hidden {
+    color: #64748b;
+}
+
+.cv-personal-view-card__meta-item--resume-hidden i {
+    color: #94a3b8;
+}
+
+.cv-personal-view-card__meta-item--resume-hidden .cv-personal-view-card__meta-text {
+    color: #64748b;
+}
+
+.cv-personal-view-card__meta-item--resume-hidden:hover .cv-personal-view-card__meta-text,
+.cv-personal-view-card__meta-item--resume-hidden:hover i {
+    color: #475569;
+}
+
+.cv-personal-view-card__meta-item--resume-hidden:hover,
+.cv-personal-view-card__meta-item--resume-hidden:focus-within {
+    z-index: 5;
+}
+
+/* Tooltip: only for rows hidden from CV preview */
+.cv-personal-view-card__meta-item:not(.cv-personal-view-card__meta-item--resume-hidden) .cv-personal-view-card__hidden-tooltip {
+    display: none;
+}
+
+.cv-personal-view-card__hidden-tooltip {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    bottom: auto;
+    max-width: 240px;
+    padding: 8px 10px 10px;
+    border-radius: 8px;
+    background: #1e293b;
+    color: #f1f5f9;
+    font-size: 11px;
+    line-height: 1.35;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-2px);
+    transition: opacity 0.12s ease, visibility 0.12s ease, transform 0.12s ease;
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Invisible hit area between row and tooltip so the cursor can reach the panel without losing hover */
+.cv-personal-view-card__hidden-tooltip::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 14px;
+}
+
+.cv-personal-view-card__hidden-tooltip__msg {
+    margin: 0 0 8px;
+    padding: 0;
+    color: #e2e8f0;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.cv-personal-view-card__meta-item--resume-hidden:hover .cv-personal-view-card__hidden-tooltip,
+.cv-personal-view-card__meta-item--resume-hidden:focus-within .cv-personal-view-card__hidden-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.cv-personal-view-card__hidden-tooltip::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: -4px;
+    bottom: auto;
+    width: 10px;
+    height: 10px;
+    background: #1e293b;
+    transform: rotate(45deg);
+    box-shadow: -1px -1px 0 rgba(15, 23, 42, 0.08);
+}
+
+.cv-personal-view-card__unhide {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 6px 8px;
+    border: none;
+    border-radius: 6px;
+    background: #334155;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    color: #fda4d0;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.cv-personal-view-card__unhide:hover {
+    background: #475569;
+    color: #fff;
+}
+
+.cv-personal-view-card__unhide:focus-visible {
+    outline: 2px solid rgba(253, 164, 208, 0.85);
+    outline-offset: 1px;
 }
 
 .cv-personal-view-card__photo-circle {
@@ -1729,16 +1888,48 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     background: transparent;
 }
 
-.cv-field__grip {
+.cv-field__control--with-resume-toggle .cv-field__input {
+    padding-right: 6px;
+}
+
+.cv-field__resume-visibility-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 36px;
-    color: #94a3b8;
-    font-size: 0.85rem;
-    user-select: none;
+    flex: 0 0 40px;
+    min-width: 40px;
+    margin: 4px 4px 4px 0;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: #e5e7eb;
+    color: #475569;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.cv-field__resume-visibility-toggle:hover {
+    background: #d8dce2;
+    color: #1e293b;
+}
+
+.cv-field__resume-visibility-toggle:focus-visible {
+    outline: 2px solid rgba(173, 20, 87, 0.45);
+    outline-offset: 2px;
+}
+
+.cv-field__resume-visibility-toggle[aria-pressed="false"] {
+    opacity: 0.65;
+}
+
+.cv-field__resume-visibility-toggle i {
+    font-size: 0.95rem;
     pointer-events: none;
-    background: #f3f4f6;
+}
+
+/* Live preview: hide contact lines when toggled off (builder only) */
+#cv-preview .cv-preview-contact-hidden {
+    display: none !important;
 }
 
 .cv-photo-upload {
@@ -1805,6 +1996,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     border-radius: 50%;
     overflow: hidden;
     margin: 0;
+    z-index: 1;
 }
 
 .cv-photo-upload__preview-wrap[hidden] {
@@ -1820,8 +2012,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .cv-photo-upload__remove {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: 4px;
+    right: 4px;
     width: 26px;
     height: 26px;
     padding: 0;
@@ -1836,7 +2028,12 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     align-items: center;
     justify-content: center;
     transition: background 0.15s ease;
-    z-index: 2;
+    z-index: 3;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.cv-photo-upload__remove[hidden] {
+    display: none !important;
 }
 
 .cv-photo-upload__remove:hover {
@@ -1869,7 +2066,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     min-width: 0;
     min-height: 0;
     align-self: stretch;
-    padding: 40px;
+    padding: 12px;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     background: rgba(255, 255, 255, 0.96);
@@ -1906,7 +2103,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 .cv-preview-container {
     background: #e9ecef;
-    padding: 40px 20px;
+    padding: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     max-width: 100%;
     width: 100%;
@@ -1926,7 +2123,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     .cv-page-container {
         width: 100%;
         max-width: 210mm;
-        padding: 10mm;
+        padding: 5mm;
         min-height: auto;
     }
     
@@ -1951,7 +2148,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     max-height: 297mm;
     background: white;
     margin: 0 auto;
-    padding: 15mm;
+    padding: 0mm;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 
                 0 0 0 1px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -2047,10 +2244,20 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 /* Prevent sections from breaking across pages */
+/* Allow sections to split across pages in the builder preview.
+   Individual items (experience-item, etc.) are still kept intact. */
 .cv-page-container section {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
+    page-break-inside: auto;
+    break-inside: auto;
+    -webkit-column-break-inside: auto;
+}
+
+/* Modern template lists: allow the list container to split while keeping each entry intact */
+.cv-page-container .experience .section-content,
+.cv-page-container .education .section-content {
+    page-break-inside: auto;
+    break-inside: auto;
+    -webkit-column-break-inside: auto;
 }
 
 /* Prevent section items from breaking */
@@ -2077,6 +2284,25 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     width: 100% !important;
     min-height: auto !important;
     margin: 0 !important;
+}
+
+/*
+ * Continuation preview: JS removes .top-green / header from the clone, but the modern
+ * template grid still expects a "top-bar" row and .main-content uses height:100vh — that
+ * collapses or clips content so experience can disappear on page 2 while PDF (full HTML) is fine.
+ */
+.cv-page-container.cv-page-continuation .cv-template.modern .cv-page {
+    grid-template-rows: minmax(0, 1fr) !important;
+    grid-template-areas: "main" !important;
+    min-height: 297mm !important;
+    height: auto !important;
+    align-content: start;
+}
+
+.cv-page-container.cv-page-continuation .cv-template.modern .main-content {
+    grid-area: main !important;
+    height: auto !important;
+    min-height: 0 !important;
 }
 
 /* First page container */
@@ -2859,6 +3085,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .added-section {
     padding: 14px 14px 12px;
     background: #fff;
+    margin-bottom: 10px;
     border-radius: 18px;
     border: 1px solid rgba(26, 32, 44, 0.08);
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
@@ -3167,33 +3394,42 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .cv-delete-section-modal {
     position: fixed;
     inset: 0;
-    z-index: 1100;
+    z-index: 5500;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: max(72px, 12vh) 16px 24px;
+    box-sizing: border-box;
 }
 
 .cv-delete-section-modal__backdrop {
     position: absolute;
     inset: 0;
+    z-index: 0;
     background: rgba(15, 23, 42, 0.45);
     backdrop-filter: blur(2px);
 }
 
 .cv-delete-section-modal__dialog {
     position: relative;
-    width: min(720px, calc(100vw - 32px));
-    margin: 10vh auto 0;
+    z-index: 1;
+    width: min(400px, calc(100vw - 32px));
+    margin: 0;
+    flex-shrink: 0;
     background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 30px 80px rgba(2, 6, 23, 0.25);
-    padding: 28px 28px 22px;
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.22);
+    padding: 20px 20px 16px;
+    border: 1px solid rgba(26, 32, 44, 0.1);
 }
 
 .cv-delete-section-modal__close {
     position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
     border: 1px solid #e5e7eb;
     background: #fff;
     color: #111827;
@@ -3208,42 +3444,43 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .cv-delete-section-modal__title {
-    font-size: 22px;
+    font-size: 17px;
     font-weight: 800;
     color: #0f172a;
     letter-spacing: -0.02em;
-    margin: 2px 44px 8px 0;
+    line-height: 1.25;
+    margin: 0 40px 8px 0;
 }
 
 .cv-delete-section-modal__desc {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 13px;
+    line-height: 1.45;
     color: #64748b;
-    margin: 0 0 18px 0;
+    margin: 0 0 14px 0;
 }
 
 .cv-delete-section-modal__check {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 14px;
+    gap: 10px;
+    padding: 12px 12px;
     border: 1px solid #e5e7eb;
-    border-radius: 14px;
+    border-radius: 12px;
     background: #fff;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     user-select: none;
 }
 
 .cv-delete-section-modal__check input[type="checkbox"] {
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
     accent-color: #111827;
     cursor: pointer;
 }
 
 .cv-delete-section-modal__check span {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: #0f172a;
 }
@@ -3251,14 +3488,14 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .cv-delete-section-modal__actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 10px;
 }
 
 .cv-delete-section-modal__btn {
-    height: 52px;
-    border-radius: 16px;
+    height: 44px;
+    border-radius: 12px;
     border: 1px solid transparent;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
     cursor: pointer;
 }
@@ -3294,9 +3531,11 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 @media (max-width: 520px) {
+    .cv-delete-section-modal {
+        padding: max(64px, 10vh) 14px 20px;
+    }
     .cv-delete-section-modal__dialog {
-        margin-top: 8vh;
-        padding: 22px 18px 16px;
+        padding: 18px 16px 14px;
     }
     .cv-delete-section-modal__actions {
         grid-template-columns: 1fr;

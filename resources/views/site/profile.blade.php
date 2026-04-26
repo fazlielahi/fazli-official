@@ -254,8 +254,15 @@
                 }
             @endphp
             <div style="display: flex; align-items: center;" class="profile-photo-box">
+                @php
+                    $rawProfilePhoto = trim((string) ($profile_photo ?? ''));
+                    $isRemoteProfilePhoto = $rawProfilePhoto !== '' && \Illuminate\Support\Str::startsWith($rawProfilePhoto, ['http://', 'https://']);
+                    $profilePhotoSrc = $isRemoteProfilePhoto
+                        ? $rawProfilePhoto
+                        : ($rawProfilePhoto !== '' ? asset('images/' . $rawProfilePhoto) : asset('images/default.svg'));
+                @endphp
                 <img 
-                    src="{{ $profile_photo ? asset('images/' . $profile_photo) : asset('default.png') }}"
+                    src="{{ $profilePhotoSrc }}"
                     alt="{{ e($profile_name ?? 'User profile picture') }}"
                     class="rounded-circle mx-2" style="width: 80px; height: 80px; object-fit: cover;">
                 <div>

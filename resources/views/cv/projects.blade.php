@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/theme.css') }}" />
 
+    <!-- Template base styles (needed for consistent header layout) -->
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
+
     <link rel="stylesheet" href="{{ asset('cv/css/cv-side-menu.css') }}" />
     <link rel="stylesheet" href="{{ asset('cv/css/cv-projects.css') }}" />
 @endsection

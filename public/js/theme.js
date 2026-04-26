@@ -1,7 +1,9 @@
 // Theme Management JavaScript
 class ThemeManager {
     constructor() {
-        this.currentTheme = localStorage.getItem('theme') || 'light';
+        const lockTheme = document.body ? document.body.getAttribute('data-theme-lock') : null;
+        this.lockTheme = lockTheme && String(lockTheme).trim() ? String(lockTheme).trim() : null;
+        this.currentTheme = this.lockTheme || localStorage.getItem('theme') || 'light';
         this.init();
     }
 
@@ -9,8 +11,12 @@ class ThemeManager {
         // Set initial theme
         this.setTheme(this.currentTheme);
         
-        // Add event listeners
-        this.addEventListeners();
+        // If theme is locked (e.g. CV pages), disable toggling
+        if (!this.lockTheme) {
+            this.addEventListeners();
+        } else {
+            this.disableToggleUi();
+        }
         
         // Update toggle button state
         this.updateToggleButton();
@@ -63,6 +69,22 @@ class ThemeManager {
                 this.toggleTheme();
             }
         });
+    }
+
+    disableToggleUi() {
+        const toggle = document.querySelector('.theme-toggle');
+        if (!toggle) return;
+        toggle.setAttribute('aria-disabled', 'true');
+        toggle.setAttribute('title', "Theme toggle isn't available in Resume tool.");
+        toggle.style.pointerEvents = 'none';
+        toggle.style.opacity = '0.65';
+        toggle.style.cursor = 'not-allowed';
+
+        const container = toggle.closest('.theme-toggle-container');
+        if (container) {
+            container.setAttribute('title', "Theme toggle isn't available in Resume tool.");
+            container.style.cursor = 'not-allowed';
+        }
     }
 
     // Get current theme

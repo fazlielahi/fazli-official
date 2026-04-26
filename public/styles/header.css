@@ -9,11 +9,18 @@
 }
 
 .btn:hover {
-    color: #1da370 !important;
+    /* hover accent -> brand orange */
+    color: #F4A32C !important;
 }
 
 .dropdown-item {
     color: #fff !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: #dcdee0 !important;
+    color: #111 !important;
 }
 
 .dropdown-divider{
@@ -45,10 +52,12 @@
 
 .dropdown-item.active{
     background-color: #dcdee0 !important;
+    color: #111 !important;
 }
 
 .navbar .nav-item a.active {
-    color: var(--fistudy-base);
+    /* active accent -> brand orange */
+    color: #F4A32C;
     border-bottom: 1px dashed;
 }
 
@@ -83,7 +92,8 @@
 }
 
 .btn-create-cv:hover {
-    background: #0d8a5a;
+    /* hover accent -> brand orange */
+    background: #F4A32C;
     color: #fff !important;
     transform: translateY(-2px);
 }
@@ -96,7 +106,7 @@ body[data-theme="light"] .btn-create-cv {
 
 body[data-theme="light"] .btn-create-cv:hover {
     color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(29, 163, 112, 0.4);
+    box-shadow: 0 4px 12px rgba(244, 163, 44, 0.4);
 }
 
 /* Simple Confetti Particles */
@@ -104,7 +114,8 @@ body[data-theme="light"] .btn-create-cv:hover {
     position: absolute;
     width: 6px;
     height: 6px;
-    background: #1da370;
+    /* accent particles -> brand orange */
+    background: #F4A32C;
     border-radius: 50%;
     pointer-events: none;
     z-index: 1000;

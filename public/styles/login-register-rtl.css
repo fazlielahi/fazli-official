@@ -1,0 +1,78 @@
+/* RTL overrides for auth pages (login/register only) */
+
+body.page-login,
+body.page-register{
+  direction: rtl;
+}
+
+/* Mirror the two-panel card: media on the right, form on the left */
+@media (min-width: 921px){
+  body.page-login .auth-card,
+  body.page-register .auth-card{
+    /* Keep layout stable; map areas instead of column hacks */
+    grid-template-columns: 1.05fr 1fr;
+    grid-template-areas: "main media";
+  }
+
+  body.page-login .auth-media,
+  body.page-register .auth-media{
+    grid-area: media;
+    min-height: 100%;
+  }
+
+  body.page-login .auth-main,
+  body.page-register .auth-main{
+    grid-area: main;
+    min-height: 0;
+  }
+}
+
+/* Keep the left image panel text aligned nicely in RTL */
+body.page-login .auth-media-inner,
+body.page-register .auth-media-inner{
+  text-align: right;
+}
+
+/* Keep headings/description centered in RTL */
+body.page-login .auth-heading p,
+body.page-register .auth-heading p{
+  text-align: center;
+}
+
+/* Keep headings/description centered in RTL */
+body.page-login .media-quote,
+body.page-register .media-quote{
+  max-width: 100% !important;
+}
+
+/* Ensure bg image stretches in RTL layouts too */
+body.page-login .auth-media,
+body.page-register .auth-media{
+  position: relative;
+}
+
+/* Floating labels: move notch to the right */
+body.page-login .auth-field--float .auth-input-wrap label,
+body.page-register .auth-field--float .auth-input-wrap label{
+  left: auto;
+  right: 10px;
+}
+
+body.page-login .auth-field--float.is-float .auth-input-wrap label,
+body.page-register .auth-field--float.is-float .auth-input-wrap label{
+  left: auto;
+  right: 8px;
+}
+
+/* Forgot + remember row: better spacing in RTL */
+body.page-login .auth-row,
+body.page-register .auth-row{
+  gap: 10px;
+}
+
+/* Footer alignment */
+body.page-login .auth-foot,
+body.page-register .auth-foot{
+  text-align: center;
+}
+

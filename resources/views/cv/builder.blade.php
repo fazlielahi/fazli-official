@@ -121,6 +121,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="cv-resume-dropdown__feedback" id="cv-resume-dropdown-feedback" role="status" aria-live="polite" hidden aria-hidden="true"></div>
                                 <div class="cv-resume-dropdown__list" id="cv-resume-list">
                                     <div class="cv-resume-dropdown__empty">No resumes yet</div>
                                 </div>
@@ -133,8 +134,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="cv-builder-toolbar__import-wrap">
-                        <button type="button" id="cv-import-resume-trigger-toolbar" class="cv-builder-toolbar__import">
+                    <div class="cv-builder-toolbar__import-wrap cv-soon" data-tooltip="Coming soon">
+                        <button type="button" id="cv-import-resume-trigger-toolbar" class="cv-builder-toolbar__import" disabled aria-disabled="true" tabindex="-1">
                             <i class="fas fa-cloud-arrow-up cv-builder-toolbar__import-icon" aria-hidden="true"></i>
                             <span class="cv-builder-toolbar__import-text">Import Resume</span>
                         </button>
@@ -168,6 +169,9 @@
                         . ((isset($data['city']) && $data['city'] !== '' && isset($data['country']) && $data['country'] !== '') ? ', ' : '')
                         . ($data['country'] ?? '')
                     );
+                    $resumeShowEmail = ! array_key_exists('resume_show_email', $data ?? []) ? true : filter_var($data['resume_show_email'], FILTER_VALIDATE_BOOLEAN);
+                    $resumeShowPhone = ! array_key_exists('resume_show_phone', $data ?? []) ? true : filter_var($data['resume_show_phone'], FILTER_VALIDATE_BOOLEAN);
+                    $resumeShowLocation = ! array_key_exists('resume_show_location', $data ?? []) ? true : filter_var($data['resume_show_location'], FILTER_VALIDATE_BOOLEAN);
                 @endphp
                 <!-- Personal details: view mode -->
                 <section class="cv-personal-view-card" id="cv-personal-view" aria-label="Personal details">
@@ -178,15 +182,27 @@
                             <div class="cv-personal-view-card__meta">
                                 <div class="cv-personal-view-card__meta-item" id="cv-personal-view-email-wrap" hidden>
                                     <i class="far fa-envelope" aria-hidden="true"></i>
-                                    <span id="cv-personal-view-email"></span>
+                                    <span id="cv-personal-view-email" class="cv-personal-view-card__meta-text"></span>
+                                    <div class="cv-personal-view-card__hidden-tooltip" role="tooltip" aria-hidden="true">
+                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the CV.</p>
+                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-email-unhide" aria-label="Unhide email in CV and open editor">Unhide</button>
+                                    </div>
                                 </div>
                                 <div class="cv-personal-view-card__meta-item" id="cv-personal-view-phone-wrap" hidden>
                                     <i class="fas fa-phone" aria-hidden="true"></i>
-                                    <span id="cv-personal-view-phone"></span>
+                                    <span id="cv-personal-view-phone" class="cv-personal-view-card__meta-text"></span>
+                                    <div class="cv-personal-view-card__hidden-tooltip" role="tooltip" aria-hidden="true">
+                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the CV.</p>
+                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-phone-unhide" aria-label="Unhide phone in CV and open editor">Unhide</button>
+                                    </div>
                                 </div>
                                 <div class="cv-personal-view-card__meta-item" id="cv-personal-view-location-wrap" hidden>
                                     <i class="fas fa-location-dot" aria-hidden="true"></i>
-                                    <span id="cv-personal-view-location"></span>
+                                    <span id="cv-personal-view-location" class="cv-personal-view-card__meta-text"></span>
+                                    <div class="cv-personal-view-card__hidden-tooltip" role="tooltip" aria-hidden="true">
+                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the CV.</p>
+                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-location-unhide" aria-label="Unhide location in CV and open editor">Unhide</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -251,8 +267,8 @@
                                     <div class="cv-photo-upload__circle" role="button" tabindex="0" aria-label="{{ __('lang.CV form photo label') }}">
                                         <div id="photo-preview-container" class="cv-photo-upload__preview-wrap" hidden>
                                             <img id="photo-preview" src="" alt="">
-                                            <button type="button" id="remove-photo" class="cv-photo-upload__remove" aria-label="{{ __('lang.CV form remove photo') }}">&times;</button>
                                         </div>
+                                        <button type="button" id="remove-photo" class="cv-photo-upload__remove" hidden aria-label="{{ __('lang.CV form remove photo') }}">&times;</button>
                                         <div class="cv-photo-upload__placeholder" id="photo-placeholder" aria-hidden="true">
                                             <i class="fas fa-camera"></i>
                                         </div>
@@ -268,23 +284,32 @@
                             <div class="cv-personal-card__extra-panel" id="cv-personal-extra-panel" hidden>
                                 <div class="cv-field cv-field--row">
                                     <label class="cv-field__label" for="cv-input-email">{{ __('lang.CV form email label') }}</label>
-                                    <div class="cv-field__control">
+                                    <div class="cv-field__control cv-field__control--with-resume-toggle">
                                         <input class="cv-field__input" type="email" id="cv-input-email" name="email" value="{{ $data['email'] ?? '' }}" placeholder="{{ __('lang.CV form email placeholder') }}" autocomplete="email">
-                                        <span class="cv-field__grip" aria-hidden="true" title=""><i class="fas fa-arrows-up-down"></i></span>
+                                        <input type="hidden" id="cv-resume-show-email" value="{{ $resumeShowEmail ? '1' : '0' }}" autocomplete="off" aria-hidden="true">
+                                        <button type="button" class="cv-field__resume-visibility-toggle" id="cv-toggle-resume-email" aria-controls="cv-resume-show-email" aria-pressed="{{ $resumeShowEmail ? 'true' : 'false' }}" title="{{ $resumeShowEmail ? 'Shown in resume preview' : 'Hidden from resume preview' }}" aria-label="{{ $resumeShowEmail ? 'Email shown in resume preview. Click to hide.' : 'Email hidden from resume preview. Click to show.' }}">
+                                            <i class="fas {{ $resumeShowEmail ? 'fa-eye' : 'fa-eye-slash' }}" aria-hidden="true"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="cv-field cv-field--row">
                                     <label class="cv-field__label" for="cv-input-location">{{ __('lang.CV form location') }}</label>
-                                    <div class="cv-field__control">
+                                    <div class="cv-field__control cv-field__control--with-resume-toggle">
                                         <input class="cv-field__input" type="text" id="cv-input-location" name="city" value="{{ $locationDefault }}" placeholder="{{ __('lang.CV form location placeholder') }}" autocomplete="address-level2">
-                                        <span class="cv-field__grip" aria-hidden="true"><i class="fas fa-arrows-up-down"></i></span>
+                                        <input type="hidden" id="cv-resume-show-location" value="{{ $resumeShowLocation ? '1' : '0' }}" autocomplete="off" aria-hidden="true">
+                                        <button type="button" class="cv-field__resume-visibility-toggle" id="cv-toggle-resume-location" aria-controls="cv-resume-show-location" aria-pressed="{{ $resumeShowLocation ? 'true' : 'false' }}" title="{{ $resumeShowLocation ? 'Shown in resume preview' : 'Hidden from resume preview' }}" aria-label="{{ $resumeShowLocation ? 'Location shown in resume preview. Click to hide.' : 'Location hidden from resume preview. Click to show.' }}">
+                                            <i class="fas {{ $resumeShowLocation ? 'fa-eye' : 'fa-eye-slash' }}" aria-hidden="true"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="cv-field cv-field--row">
                                     <label class="cv-field__label" for="cv-input-phone">{{ __('lang.CV form phone label') }}</label>
-                                    <div class="cv-field__control">
+                                    <div class="cv-field__control cv-field__control--with-resume-toggle">
                                         <input class="cv-field__input" type="tel" id="cv-input-phone" name="phone" value="{{ $data['phone'] ?? '' }}" placeholder="{{ __('lang.CV form phone placeholder') }}" autocomplete="tel">
-                                        <span class="cv-field__grip" aria-hidden="true"><i class="fas fa-arrows-up-down"></i></span>
+                                        <input type="hidden" id="cv-resume-show-phone" value="{{ $resumeShowPhone ? '1' : '0' }}" autocomplete="off" aria-hidden="true">
+                                        <button type="button" class="cv-field__resume-visibility-toggle" id="cv-toggle-resume-phone" aria-controls="cv-resume-show-phone" aria-pressed="{{ $resumeShowPhone ? 'true' : 'false' }}" title="{{ $resumeShowPhone ? 'Shown in resume preview' : 'Hidden from resume preview' }}" aria-label="{{ $resumeShowPhone ? 'Phone shown in resume preview. Click to hide.' : 'Phone hidden from resume preview. Click to show.' }}">
+                                            <i class="fas {{ $resumeShowPhone ? 'fa-eye' : 'fa-eye-slash' }}" aria-hidden="true"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="cv-field cv-field--summary">
@@ -359,16 +384,16 @@
                     <button type="button" class="add-sections-modal__close" id="add-sections-modal-close" aria-label="Close">
                         <i class="fas fa-xmark" aria-hidden="true"></i>
                     </button>
-                    <div class="add-sections-modal__quickstart" aria-label="Quick start">
+                    <div class="add-sections-modal__quickstart cv-soon" aria-label="Quick start" data-tooltip="Coming soon">
                         <span class="add-sections-modal__quickstart-label">Quick start:</span>
-                        <button type="button" class="add-sections-modal__quickstart-btn" id="cv-import-resume-trigger">
+                        <button type="button" class="add-sections-modal__quickstart-btn" id="cv-import-resume-trigger" disabled aria-disabled="true" tabindex="-1">
                             <i class="fas fa-cloud-arrow-up" aria-hidden="true"></i>
                             <span>Import Resume</span>
                         </button>
                         <input
                             type="file"
                             id="cv-import-resume-input"
-                            accept=".pdf,.doc,.docx,image/*"
+                            accept=".pdf,.docx,image/*"
                             hidden
                             aria-hidden="true"
                             tabindex="-1"
@@ -534,6 +559,8 @@
                         load: '{{ route("localized.cv.load", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         save: '{{ route("localized.cv.save", ["lang" => app()->getLocale()]) }}',
                         importUpload: '{{ route("localized.cv.import.upload", ["lang" => app()->getLocale()]) }}',
+                        importExtract: '{{ route("localized.cv.import.extract", ["lang" => app()->getLocale(), "importId" => "IMPORT_ID"]) }}',
+                        importParse: '{{ route("localized.cv.import.parse", ["lang" => app()->getLocale(), "importId" => "IMPORT_ID"]) }}',
                         updateTitle: '{{ route("localized.cv.updateTitle", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         duplicateCV: '{{ route("localized.cv.duplicate", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         deleteCV: '{{ route("localized.cv.delete", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',

@@ -19,6 +19,10 @@
     <!-- Main styles -->
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" />
     <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+
+    <!-- Template base styles (needed for consistent header layout) -->
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
