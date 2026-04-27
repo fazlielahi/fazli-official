@@ -40,38 +40,32 @@
     <div class="cv-gallery">
         <div class="container">
             @php $cvBreadcrumbRtl = app()->getLocale() === 'ar'; @endphp
-            <aside class="cv-side-menu" aria-label="Quick menu">
-                <a class="cv-side-menu__item is-active" href="#" aria-current="page">
-                    <span class="cv-side-menu__icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
-                    <span class="cv-side-menu__label">Create</span>
-                </a>
-                <a class="cv-side-menu__item" href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}">
-                    <span class="cv-side-menu__icon"><i class="fas fa-house" aria-hidden="true"></i></span>
-                    <span class="cv-side-menu__label">Home</span>
-                </a>
-                <a class="cv-side-menu__item" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
-                    <span class="cv-side-menu__icon"><i class="far fa-folder" aria-hidden="true"></i></span>
-                    <span class="cv-side-menu__label">Projects</span>
-                </a>
-                <a class="cv-side-menu__item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
-                    <span class="cv-side-menu__icon"><i class="fas fa-layer-group" aria-hidden="true"></i></span>
-                    <span class="cv-side-menu__label">Templates</span>
-                </a>
-                <a class="cv-side-menu__item" href="#" tabindex="-1" aria-disabled="true">
-                    <span class="cv-side-menu__icon"><i class="fas fa-crown" aria-hidden="true"></i></span>
-                    <span class="cv-side-menu__label">Brand</span>
-                </a>
-                <a class="cv-side-menu__item" href="#" tabindex="-1" aria-disabled="true">
-                    <span class="cv-side-menu__icon"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i></span>
-                    <span class="cv-side-menu__label">Canva AI</span>
-                </a>
-                <a class="cv-side-menu__item" href="#" tabindex="-1" aria-disabled="true">
-                    <span class="cv-side-menu__icon"><i class="fas fa-ellipsis" aria-hidden="true"></i></span>
-                    <span class="cv-side-menu__label">More</span>
-                </a>
-            </aside>
-            
-            <div class="templates-showcase">
+            <div class="cv-gallery__layout">
+                <aside class="cv-side-menu" aria-label="Quick menu">
+                    <a class="cv-side-menu__item is-active" href="#" aria-current="page">
+                        <span class="cv-side-menu__icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__label">Create</span>
+                    </a>
+                    <a class="cv-side-menu__item" href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}">
+                        <span class="cv-side-menu__icon"><i class="fas fa-house" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__label">Home</span>
+                    </a>
+                    <a class="cv-side-menu__item" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
+                        <span class="cv-side-menu__icon"><i class="far fa-folder" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__label">Projects</span>
+                    </a>
+                    <a class="cv-side-menu__item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
+                        <span class="cv-side-menu__icon"><i class="fas fa-layer-group" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__label">Templates</span>
+                    </a>
+                  
+                    <a class="cv-side-menu__item" href="#" tabindex="-1" aria-disabled="true">
+                        <span class="cv-side-menu__icon"><i class="fas fa-ellipsis" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__label">More</span>
+                    </a>
+                </aside>
+                
+                <div class="templates-showcase">
                 <div class="cv-template-tabs-wrap{{ $cvBreadcrumbRtl ? ' cv-template-tabs-wrap--rtl' : '' }}">
                     <button type="button" class="cv-template-tabs__nav cv-template-tabs__nav--prev cv-template-tabs__nav--concealed" id="cv-template-tabs-prev" aria-controls="cv-template-tabs-scroll" aria-label="{{ __('lang.CV tabs scroll prev') }}" aria-hidden="true" disabled>
                         <i class="fas fa-chevron-left" aria-hidden="true"></i>
@@ -154,6 +148,7 @@
                         <img src="{{ asset('cv-templates/images/cv-templates-placeholder.png') }}" alt="No templates in this category" loading="lazy">
                     </div>
                 </div>
+            </div>
             </div>
             </div>
         </div>

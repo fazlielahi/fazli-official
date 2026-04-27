@@ -134,6 +134,9 @@
 
             <form id="loginForm" class="auth-form" method="post" action="{{ route('localized.login', ['lang' => app()->getlocale()]) }}">
                 @csrf
+                @if(!empty($next))
+                    <input type="hidden" name="next" value="{{ $next }}" />
+                @endif
 
                 <div class="auth-field auth-field--float @error('email') is-error @enderror">
                     <div class="auth-input-wrap">
@@ -182,7 +185,11 @@
 
                 <div class="auth-divider" role="separator"><span class="auth-divider__text">{{ __('lang.AUTH_OR') }}</span></div>
 
-                <a href="{{ route('auth.google.redirect') }}" class="auth-oauth" aria-label="Continue with Google">
+                <a
+                    href="{{ route('auth.google.redirect') }}{{ !empty($next) ? ('?next=' . urlencode($next)) : '' }}"
+                    class="auth-oauth"
+                    aria-label="Continue with Google"
+                >
                     <span class="gmark" aria-hidden="true">
                         <svg viewBox="0 0 24 24" width="17" height="17">
                             <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.6 3.9-5.5 3.9-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.4l2.6-2.5C17.8 3.4 15.2 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.8 0 9.6-4.1 9.6-9.8 0-.7-.1-1.2-.2-1.7H12z"/>
@@ -196,7 +203,7 @@
 
                 <div class="auth-foot">
                     {{ __('lang.AUTH_DONT_HAVE_ACCOUNT') }}
-                    <a href="{{ route('localized.register', ['lang' => app()->getlocale()]) }}">{{ __('lang.Sign Up') }}</a>
+                    <a href="{{ route('localized.register', ['lang' => app()->getlocale()]) }}{{ !empty($next) ? ('?next=' . urlencode($next)) : '' }}">{{ __('lang.Sign Up') }}</a>
                 </div>
             </form>
         </main>

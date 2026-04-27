@@ -17,9 +17,12 @@ class UserController extends Controller
      * Show the user registration form 
      */
 
-     public function showRegisterForm()
+     public function showRegisterForm(Request $request)
      {
-         return view('admin.register'); 
+         $next = $this->sanitizeInternalNextUrl($request->query('next'));
+         return view('admin.register', [
+             'next' => $next,
+         ]);
      }
 
      /**
@@ -38,6 +41,7 @@ class UserController extends Controller
             'password' => 'required|min:8|confirmed',
             'type' => 'nullable|in:admin,super_admin',
             'photo' => 'nullable|mimes:jpg,png,jpeg,gif|max:2028',
+            'next' => 'nullable|string|max:2048',
         ],
         [
             // Custom messages
@@ -79,6 +83,12 @@ class UserController extends Controller
         // Automatically log in the user after registration using Laravel Auth
         Auth::login($user);
 
+        $next = $this->sanitizeInternalNextUrl($request->input('next'));
+        if ($next) {
+            return redirect()->to($next)
+                ->with('success', 'Account created successfully! You are now logged in.');
+        }
+
         // Redirect based on user type (same as login)
         // User is now automatically logged in, so redirect to their appropriate dashboard
         if ($user->type === 'admin') {
@@ -95,9 +105,12 @@ class UserController extends Controller
      /**
       * show the user login form
       */
-     public function showLoginForm()
+     public function showLoginForm(Request $request)
      {
-        return view('admin.login'); 
+        $next = $this->sanitizeInternalNextUrl($request->query('next'));
+        return view('admin.login', [
+            'next' => $next,
+        ]);
      }
 
    /**
@@ -113,6 +126,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required',
             'remember' => 'nullable',
+            'next' => 'nullable|string|max:2048',
         ],
         [
             'email.required' => 'Please Enter Your Email Address',
@@ -134,12 +148,17 @@ class UserController extends Controller
             // Get the authenticated user
             $user = Auth::user();
 
-                // Redirect based on user type/status
-                if ($user->type === 'admin') {
-                    return redirect()->route('localized.profile', ['lang' => app()->getLocale()]);
-                } else {
-                    return redirect()->route('localized.admin.dashboard', ['lang' => app()->getLocale()]);
-                }
+            $next = $this->sanitizeInternalNextUrl($request->input('next'));
+            if ($next) {
+                return redirect()->to($next);
+            }
+
+            // Redirect based on user type/status
+            if ($user->type === 'admin') {
+                return redirect()->route('localized.profile', ['lang' => app()->getLocale()]);
+            }
+
+            return redirect()->route('localized.admin.dashboard', ['lang' => app()->getLocale()]);
         }
 
         // Authentication failed
@@ -151,15 +170,63 @@ class UserController extends Controller
             if ($request->expectsJson()) {
                 return response()->json(['errors' => $errors], 422);
             }
-            return back()->withErrors($errors)->withInput($request->only('email'));
+            return back()->withErrors($errors)->withInput($request->only('email', 'next'));
         }
 
         $errors = ['password' => ['Incorrect password.']];
         if ($request->expectsJson()) {
             return response()->json(['errors' => $errors], 422);
         }
-        return back()->withErrors($errors)->withInput($request->only('email'));
+        return back()->withErrors($errors)->withInput($request->only('email', 'next'));
       }
+
+    /**
+     * Prevent open redirects while allowing same-site absolute URLs and safe relative paths.
+     */
+    protected function sanitizeInternalNextUrl(?string $next): ?string
+    {
+        if (!$next) {
+            return null;
+        }
+
+        $next = trim($next);
+        if ($next === '') {
+            return null;
+        }
+
+        // Relative in-app paths are safest.
+        if (str_starts_with($next, '/') && !str_starts_with($next, '//')) {
+            return $next;
+        }
+
+        // Allow absolute URLs only when they target this application host.
+        $appUrl = (string) config('app.url', '');
+        if ($appUrl === '') {
+            return null;
+        }
+
+        $target = parse_url($next);
+        if (!is_array($target) || empty($target['host'])) {
+            return null;
+        }
+
+        $app = parse_url($appUrl);
+        if (!is_array($app) || empty($app['host'])) {
+            return null;
+        }
+
+        $targetHost = strtolower($target['host']);
+        $appHost = strtolower($app['host']);
+        if ($targetHost !== $appHost) {
+            return null;
+        }
+
+        $path = $target['path'] ?? '/';
+        $query = isset($target['query']) && $target['query'] !== '' ? ('?' . $target['query']) : '';
+        $fragment = isset($target['fragment']) && $target['fragment'] !== '' ? ('#' . $target['fragment']) : '';
+
+        return $path . $query . $fragment;
+    }
 
         /**
        * log the user out (destroy session)

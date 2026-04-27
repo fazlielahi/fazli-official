@@ -91,48 +91,55 @@
                 
                 <div class="cv-builder-toolbar__actions">
                     <div class="cv-builder-toolbar__saved">
-                        <div class="cv-resume-dropdown" id="cv-resume-dropdown">
-                            <button type="button" class="cv-resume-dropdown__trigger" id="cv-resume-trigger" aria-haspopup="dialog" aria-expanded="false">
-                                <span class="cv-resume-dropdown__trigger-text" id="cv-resume-trigger-text">Resume</span>
-                                <i class="fas fa-chevron-down cv-resume-dropdown__trigger-icon" aria-hidden="true"></i>
-                            </button>
+                        @auth
+                            <div class="cv-resume-dropdown" id="cv-resume-dropdown">
+                                <button type="button" class="cv-resume-dropdown__trigger" id="cv-resume-trigger" aria-haspopup="dialog" aria-expanded="false">
+                                    <span class="cv-resume-dropdown__trigger-text" id="cv-resume-trigger-text">Resume</span>
+                                    <i class="fas fa-chevron-down cv-resume-dropdown__trigger-icon" aria-hidden="true"></i>
+                                </button>
 
-                            <select id="load-cv-select" class="cv-builder-toolbar__select cv-resume-dropdown__native" aria-hidden="true" tabindex="-1">
-                                <option value="">-- MY CVs/RESUMES --</option>
-                            </select>
+                                <select id="load-cv-select" class="cv-builder-toolbar__select cv-resume-dropdown__native" aria-hidden="true" tabindex="-1">
+                                    <option value="">-- MY CVs/RESUMES --</option>
+                                </select>
 
-                            <div class="cv-resume-dropdown__panel" id="cv-resume-panel" role="dialog" aria-label="My Resumes">
-                                <div class="cv-resume-dropdown__header">
-                                    <span class="cv-resume-dropdown__header-title">My Resumes</span>
-                                    <div class="cv-resume-dropdown__header-create-wrap">
-                                        <button type="button" class="cv-resume-dropdown__header-create" id="cv-header-create-trigger" aria-expanded="false" aria-haspopup="menu" aria-controls="cv-resume-create-popover" aria-label="{{ __('lang.Create new resume') }}">
-                                            <i class="fas fa-plus" aria-hidden="true"></i>
-                                        </button>
-                                        <div class="cv-resume-create-popover" id="cv-resume-create-popover" role="menu" hidden aria-hidden="true">
-                                            <button type="button" role="menuitem" class="cv-resume-create-popover__item cv-resume-create-popover__item--resume" data-href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
-                                                <i class="fas fa-file-lines cv-resume-create-popover__icon" aria-hidden="true"></i>
-                                                <span class="cv-resume-create-popover__label">{{ __('lang.CV create option resume') }}</span>
+                                <div class="cv-resume-dropdown__panel" id="cv-resume-panel" role="dialog" aria-label="My Resumes">
+                                    <div class="cv-resume-dropdown__header">
+                                        <span class="cv-resume-dropdown__header-title">My Resumes</span>
+                                        <div class="cv-resume-dropdown__header-create-wrap">
+                                            <button type="button" class="cv-resume-dropdown__header-create" id="cv-header-create-trigger" aria-expanded="false" aria-haspopup="menu" aria-controls="cv-resume-create-popover" aria-label="{{ __('lang.Create new resume') }}">
+                                                <i class="fas fa-plus" aria-hidden="true"></i>
                                             </button>
-                                            <button type="button" role="menuitem" class="cv-resume-create-popover__item cv-resume-create-popover__item--soon" disabled aria-disabled="true">
-                                                <i class="fas fa-envelope-open-text cv-resume-create-popover__icon" aria-hidden="true"></i>
-                                                <span class="cv-resume-create-popover__label">{{ __('lang.CV create option cover letter') }}</span>
-                                                <span class="cv-resume-create-popover__badge">{{ __('lang.Coming soon') }}</span>
-                                            </button>
+                                            <div class="cv-resume-create-popover" id="cv-resume-create-popover" role="menu" hidden aria-hidden="true">
+                                                <button type="button" role="menuitem" class="cv-resume-create-popover__item cv-resume-create-popover__item--resume" data-href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
+                                                    <i class="fas fa-file-lines cv-resume-create-popover__icon" aria-hidden="true"></i>
+                                                    <span class="cv-resume-create-popover__label">{{ __('lang.CV create option resume') }}</span>
+                                                </button>
+                                                <button type="button" role="menuitem" class="cv-resume-create-popover__item cv-resume-create-popover__item--soon" disabled aria-disabled="true">
+                                                    <i class="fas fa-envelope-open-text cv-resume-create-popover__icon" aria-hidden="true"></i>
+                                                    <span class="cv-resume-create-popover__label">{{ __('lang.CV create option cover letter') }}</span>
+                                                    <span class="cv-resume-create-popover__badge">{{ __('lang.Coming soon') }}</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="cv-resume-dropdown__feedback" id="cv-resume-dropdown-feedback" role="status" aria-live="polite" hidden aria-hidden="true"></div>
-                                <div class="cv-resume-dropdown__list" id="cv-resume-list">
-                                    <div class="cv-resume-dropdown__empty">No resumes yet</div>
-                                </div>
-                                <div class="cv-resume-dropdown__footer" id="cv-resume-loadall-footer" hidden>
-                                    <a class="cv-resume-dropdown__add" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
-                                        <i class="fas fa-folder-open cv-resume-dropdown__add-icon" aria-hidden="true"></i>
-                                        <span>Load All</span>
-                                    </a>
+                                    <div class="cv-resume-dropdown__feedback" id="cv-resume-dropdown-feedback" role="status" aria-live="polite" hidden aria-hidden="true"></div>
+                                    <div class="cv-resume-dropdown__list" id="cv-resume-list">
+                                        <div class="cv-resume-dropdown__empty">No resumes yet</div>
+                                    </div>
+                                    <div class="cv-resume-dropdown__footer" id="cv-resume-loadall-footer" hidden>
+                                        <a class="cv-resume-dropdown__add" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
+                                            <i class="fas fa-folder-open cv-resume-dropdown__add-icon" aria-hidden="true"></i>
+                                            <span>Load All</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @else
+                            <button type="button" class="cv-resume-dropdown__trigger" id="cv-guest-save-trigger">
+                                <span class="cv-resume-dropdown__trigger-text">Save resume</span>
+                                <i class="fas fa-floppy-disk cv-resume-dropdown__trigger-icon" aria-hidden="true"></i>
+                            </button>
+                        @endauth
                     </div>
                     <div class="cv-builder-toolbar__import-wrap cv-soon" data-tooltip="Coming soon">
                         <button type="button" id="cv-import-resume-trigger-toolbar" class="cv-builder-toolbar__import" disabled aria-disabled="true" tabindex="-1">
@@ -228,24 +235,7 @@
                             <h2 class="cv-personal-card__title" id="cv-personal-card-title">{{ __('lang.CV form personal section title') }}</h2>
                         </div>
                         <div class="cv-personal-card__header-actions">
-                            <div class="cv-personal-save-wrap" id="cv-personal-save-wrap">
-                                <button type="button" class="cv-personal-card__tips" id="cv-personal-save-resume" aria-haspopup="dialog" aria-expanded="false" aria-controls="cv-save-resume-popover">
-                                    <i class="fas fa-floppy-disk" aria-hidden="true"></i>
-                                    <span>Save Resume</span>
-                                </button>
-                                <div class="cv-save-resume-popover" id="cv-save-resume-popover" role="dialog" aria-label="Save resume" aria-hidden="true" hidden>
-                                    <div class="cv-save-resume-popover__title">Save Resume</div>
-                                    <div class="cv-save-resume-popover__field" id="cv-save-resume-title-field">
-                                        <label class="cv-save-resume-popover__label" for="cv-save-resume-title">Title (Optional)</label>
-                                        <input type="text" class="cv-save-resume-popover__input" id="cv-save-resume-title" placeholder="e.g., My Professional CV, Updated CV 2024">
-                                        <small class="cv-save-resume-popover__hint">Give your CV a name to identify it later</small>
-                                    </div>
-                                    <div class="cv-save-resume-popover__actions">
-                                        <button type="button" class="cv-save-resume-popover__btn cv-save-resume-popover__btn--cancel" id="cv-save-resume-cancel">Cancel</button>
-                                        <button type="button" class="cv-save-resume-popover__btn cv-save-resume-popover__btn--primary" id="cv-save-resume-confirm">Save</button>
-                                    </div>
-                                </div>
-                            </div>
+                            {{-- Manual save UI removed: drafts autosave locally; account save happens on login/download flow --}}
                         </div>
                     </div>
                     <div class="cv-personal-card__body" id="cv-personal-card-body">
@@ -253,11 +243,11 @@
                             <div class="cv-personal-card__col cv-personal-card__col--fields">
                                 <div class="cv-field">
                                     <label class="cv-field__label" for="cv-input-name">{{ __('lang.CV form full name') }}</label>
-                                    <input class="cv-field__input" type="text" id="cv-input-name" name="name" value="{{ $data['name'] ?? '' }}" placeholder="" autocomplete="name">
+                                    <input class="cv-field__input" type="text" id="cv-input-name" name="name" value="{{ $data['name'] ?? '' }}" placeholder=" " autocomplete="name">
                                 </div>
                                 <div class="cv-field">
                                     <label class="cv-field__label" for="cv-input-job-title">{{ __('lang.CV form professional title') }}</label>
-                                    <input class="cv-field__input" type="text" id="cv-input-job-title" name="job_title" value="{{ $data['job_title'] ?? '' }}" placeholder="{{ __('lang.CV form professional title placeholder') }}" autocomplete="organization-title">
+                                    <input class="cv-field__input" type="text" id="cv-input-job-title" name="job_title" value="{{ $data['job_title'] ?? '' }}" placeholder=" " data-placeholder="{{ __('lang.CV form professional title placeholder') }}" autocomplete="organization-title">
                                 </div>
                             </div>
                             <div class="cv-personal-card__col cv-personal-card__col--photo">
@@ -285,7 +275,7 @@
                                 <div class="cv-field cv-field--row">
                                     <label class="cv-field__label" for="cv-input-email">{{ __('lang.CV form email label') }}</label>
                                     <div class="cv-field__control cv-field__control--with-resume-toggle">
-                                        <input class="cv-field__input" type="email" id="cv-input-email" name="email" value="{{ $data['email'] ?? '' }}" placeholder="{{ __('lang.CV form email placeholder') }}" autocomplete="email">
+                                        <input class="cv-field__input" type="email" id="cv-input-email" name="email" value="{{ $data['email'] ?? '' }}" placeholder=" " data-placeholder="{{ __('lang.CV form email placeholder') }}" autocomplete="email">
                                         <input type="hidden" id="cv-resume-show-email" value="{{ $resumeShowEmail ? '1' : '0' }}" autocomplete="off" aria-hidden="true">
                                         <button type="button" class="cv-field__resume-visibility-toggle" id="cv-toggle-resume-email" aria-controls="cv-resume-show-email" aria-pressed="{{ $resumeShowEmail ? 'true' : 'false' }}" title="{{ $resumeShowEmail ? 'Shown in resume preview' : 'Hidden from resume preview' }}" aria-label="{{ $resumeShowEmail ? 'Email shown in resume preview. Click to hide.' : 'Email hidden from resume preview. Click to show.' }}">
                                             <i class="fas {{ $resumeShowEmail ? 'fa-eye' : 'fa-eye-slash' }}" aria-hidden="true"></i>
@@ -295,7 +285,7 @@
                                 <div class="cv-field cv-field--row">
                                     <label class="cv-field__label" for="cv-input-location">{{ __('lang.CV form location') }}</label>
                                     <div class="cv-field__control cv-field__control--with-resume-toggle">
-                                        <input class="cv-field__input" type="text" id="cv-input-location" name="city" value="{{ $locationDefault }}" placeholder="{{ __('lang.CV form location placeholder') }}" autocomplete="address-level2">
+                                        <input class="cv-field__input" type="text" id="cv-input-location" name="city" value="{{ $locationDefault }}" placeholder=" " data-placeholder="{{ __('lang.CV form location placeholder') }}" autocomplete="address-level2">
                                         <input type="hidden" id="cv-resume-show-location" value="{{ $resumeShowLocation ? '1' : '0' }}" autocomplete="off" aria-hidden="true">
                                         <button type="button" class="cv-field__resume-visibility-toggle" id="cv-toggle-resume-location" aria-controls="cv-resume-show-location" aria-pressed="{{ $resumeShowLocation ? 'true' : 'false' }}" title="{{ $resumeShowLocation ? 'Shown in resume preview' : 'Hidden from resume preview' }}" aria-label="{{ $resumeShowLocation ? 'Location shown in resume preview. Click to hide.' : 'Location hidden from resume preview. Click to show.' }}">
                                             <i class="fas {{ $resumeShowLocation ? 'fa-eye' : 'fa-eye-slash' }}" aria-hidden="true"></i>
@@ -305,7 +295,7 @@
                                 <div class="cv-field cv-field--row">
                                     <label class="cv-field__label" for="cv-input-phone">{{ __('lang.CV form phone label') }}</label>
                                     <div class="cv-field__control cv-field__control--with-resume-toggle">
-                                        <input class="cv-field__input" type="tel" id="cv-input-phone" name="phone" value="{{ $data['phone'] ?? '' }}" placeholder="{{ __('lang.CV form phone placeholder') }}" autocomplete="tel">
+                                        <input class="cv-field__input" type="tel" id="cv-input-phone" name="phone" value="{{ $data['phone'] ?? '' }}" placeholder=" " data-placeholder="{{ __('lang.CV form phone placeholder') }}" autocomplete="tel">
                                         <input type="hidden" id="cv-resume-show-phone" value="{{ $resumeShowPhone ? '1' : '0' }}" autocomplete="off" aria-hidden="true">
                                         <button type="button" class="cv-field__resume-visibility-toggle" id="cv-toggle-resume-phone" aria-controls="cv-resume-show-phone" aria-pressed="{{ $resumeShowPhone ? 'true' : 'false' }}" title="{{ $resumeShowPhone ? 'Shown in resume preview' : 'Hidden from resume preview' }}" aria-label="{{ $resumeShowPhone ? 'Phone shown in resume preview. Click to hide.' : 'Phone hidden from resume preview. Click to show.' }}">
                                             <i class="fas {{ $resumeShowPhone ? 'fa-eye' : 'fa-eye-slash' }}" aria-hidden="true"></i>
@@ -314,7 +304,7 @@
                                 </div>
                                 <div class="cv-field cv-field--summary">
                                     <label class="cv-field__label" for="cv-input-summary">{{ __('lang.CV form professional summary') }}</label>
-                                    <textarea class="cv-field__input cv-field__input--textarea" id="cv-input-summary" name="summary" rows="4" placeholder="{{ __('lang.CV form professional summary placeholder') }}">{{ $data['summary'] ?? '' }}</textarea>
+                                    <textarea class="cv-field__input cv-field__input--textarea" id="cv-input-summary" name="summary" rows="4" placeholder=" " data-placeholder="{{ __('lang.CV form professional summary placeholder') }}">{{ $data['summary'] ?? '' }}</textarea>
                                 </div>
                                 <div class="cv-personal-card__extra-footer">
                                     <button type="button" class="cv-personal-card__view-less" id="cv-personal-extra-collapse" aria-controls="cv-personal-extra-panel">
@@ -521,12 +511,93 @@
             <div class="cv-unsaved-modal__backdrop"></div>
             <div class="cv-unsaved-modal__dialog" role="dialog" aria-modal="true" aria-label="Unsaved changes">
                 <div class="cv-unsaved-modal__title">Unsaved changes</div>
-                <div class="cv-unsaved-modal__desc">You have unsaved changes. Save before continuing?</div>
+                <div class="cv-unsaved-modal__desc" id="cv-unsaved-desc">You have changes that are only stored in this browser. Sign in to keep them in your account, discard them, or stay here.</div>
                 <div class="cv-unsaved-modal__actions">
                     <button type="button" class="cv-unsaved-modal__btn cv-unsaved-modal__btn--ghost" id="cv-unsaved-cancel">Cancel</button>
                     <button type="button" class="cv-unsaved-modal__btn cv-unsaved-modal__btn--ghost" id="cv-unsaved-discard">Don't save</button>
-                    <button type="button" class="cv-unsaved-modal__btn cv-unsaved-modal__btn--primary" id="cv-unsaved-save">Save</button>
+                    <button type="button" class="cv-unsaved-modal__btn cv-unsaved-modal__btn--primary" id="cv-unsaved-save">Login &amp; save</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Auth required modal -->
+        <div id="cv-auth-required-modal" class="cv-unsaved-modal" aria-hidden="true">
+            <div class="cv-unsaved-modal__backdrop" id="cv-auth-required-backdrop"></div>
+            <div class="cv-unsaved-modal__dialog" role="dialog" aria-modal="true" aria-label="Login required">
+                <div class="cv-unsaved-modal__title" id="cv-auth-required-title">Login required</div>
+                <div class="cv-unsaved-modal__desc" id="cv-auth-required-desc">Sign in to download your PDF and save this CV to your account.</div>
+                <div class="cv-unsaved-modal__actions">
+                    <button type="button" class="cv-unsaved-modal__btn cv-unsaved-modal__btn--ghost" id="cv-auth-required-cancel">Cancel</button>
+                    <button type="button" class="cv-unsaved-modal__btn cv-unsaved-modal__btn--primary" id="cv-auth-required-login">Login</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Draft found modal (guest restore prompt) -->
+        <div id="cv-draft-found-modal" class="cv-unsaved-modal cv-draft-found-modal" aria-hidden="true">
+            <div class="cv-unsaved-modal__backdrop" id="cv-draft-found-backdrop"></div>
+            <div class="cv-unsaved-modal__dialog cv-draft-found-modal__dialog" role="dialog" aria-modal="true" aria-label="Draft found">
+                <div class="cv-draft-found-modal__header">
+                    <div class="cv-draft-found-modal__badge" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15V8a2 2 0 0 0-2-2h-5l-2-2H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h9" />
+                            <path d="M16 19h6" />
+                            <path d="M19 16v6" />
+                        </svg>
+                    </div>
+                    <div class="cv-draft-found-modal__heading">
+                        <div class="cv-unsaved-modal__title">Draft found</div>
+                        <div class="cv-unsaved-modal__desc" id="cv-draft-found-desc">We found an unsaved draft. What would you like to do?</div>
+                    </div>
+                </div>
+
+                <div class="cv-draft-found-modal__grid" role="group" aria-label="Draft actions">
+                    <button type="button" class="cv-draft-found-modal__action cv-draft-found-modal__action--primary" id="cv-draft-found-continue">
+                        <span class="cv-draft-found-modal__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 12a8 8 0 1 1-2.34-5.66" />
+                                <path d="M20 4v6h-6" />
+                            </svg>
+                        </span>
+                        <span class="cv-draft-found-modal__label">Continue draft</span>
+                    </button>
+
+                    <button type="button" class="cv-draft-found-modal__action" id="cv-draft-found-startnew">
+                        <span class="cv-draft-found-modal__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <path d="M14 2v6h6" />
+                                <path d="M12 18v-6" />
+                                <path d="M9 15h6" />
+                            </svg>
+                        </span>
+                        <span class="cv-draft-found-modal__label">Start new</span>
+                    </button>
+
+                    <button type="button" class="cv-draft-found-modal__action" id="cv-draft-found-login-save">
+                        <span class="cv-draft-found-modal__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2a5 5 0 0 0-5 5v4" />
+                                <rect x="4" y="11" width="16" height="11" rx="2" />
+                                <path d="M8 16h8" />
+                            </svg>
+                        </span>
+                        <span class="cv-draft-found-modal__label">Login to save</span>
+                    </button>
+                </div>
+
+                <button type="button" class="cv-draft-found-modal__discard" id="cv-draft-found-discard">
+                    <span class="cv-draft-found-modal__discard-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18" />
+                            <path d="M8 6V4h8v2" />
+                            <path d="M19 6l-1 14H6L5 6" />
+                            <path d="M10 11v6" />
+                            <path d="M14 11v6" />
+                        </svg>
+                    </span>
+                    Discard draft
+                </button>
             </div>
         </div>
     </div>
@@ -554,10 +625,12 @@
             if (typeof window.CVBuilder !== 'undefined') {
                 window.CVBuilder.init({
                     templateSlug: '{{ $templateSlug }}',
+                    isAuthenticated: @json(auth()->check()),
                     routes: {
                         saved: '{{ route("localized.cv.saved", ["lang" => app()->getLocale()]) }}',
                         load: '{{ route("localized.cv.load", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         save: '{{ route("localized.cv.save", ["lang" => app()->getLocale()]) }}',
+                        login: '{{ route("localized.login", ["lang" => app()->getLocale()]) }}',
                         importUpload: '{{ route("localized.cv.import.upload", ["lang" => app()->getLocale()]) }}',
                         importExtract: '{{ route("localized.cv.import.extract", ["lang" => app()->getLocale(), "importId" => "IMPORT_ID"]) }}',
                         importParse: '{{ route("localized.cv.import.parse", ["lang" => app()->getLocale(), "importId" => "IMPORT_ID"]) }}',
@@ -569,6 +642,67 @@
                     csrfToken: '{{ csrf_token() }}'
                 });
             }
+
+            const hasValue = (el) => {
+                if (!el) return false;
+                if (el.tagName === 'TEXTAREA') return (el.value || '').trim().length > 0;
+                return (el.value || '').length > 0;
+            };
+
+            const wireFloatingPlaceholder = (el, hint) => {
+                const resolvedHint = (hint || '').trim();
+                if (!resolvedHint) return;
+
+                // Keep placeholder blank-space so :placeholder-shown works.
+                if (!hasValue(el)) el.setAttribute('placeholder', ' ');
+
+                el.addEventListener('focus', () => {
+                    el.setAttribute('placeholder', resolvedHint);
+                });
+
+                el.addEventListener('blur', () => {
+                    if (!hasValue(el)) el.setAttribute('placeholder', ' ');
+                });
+            };
+
+            const applyFloatingUx = (root = document) => {
+                // CV personal/contact fields (explicit data-placeholder)
+                root.querySelectorAll('.cv-field__input[data-placeholder]').forEach((el) => {
+                    wireFloatingPlaceholder(el, el.getAttribute('data-placeholder'));
+                });
+
+                // Dynamic section editor fields (.entry-container .form-group)
+                root.querySelectorAll('.entry-container .form-group').forEach((group) => {
+                    const input = group.querySelector('input:not([type="hidden"]), textarea');
+                    const label = group.querySelector('label');
+                    if (!input || !label) return;
+
+                    const hint = input.getAttribute('data-placeholder')
+                        || input.getAttribute('placeholder')
+                        || label.textContent
+                        || '';
+
+                    // Ensure :placeholder-shown works and label can sit "inside"
+                    if (!input.hasAttribute('data-placeholder')) {
+                        input.setAttribute('data-placeholder', (hint || '').trim());
+                    }
+
+                    wireFloatingPlaceholder(input, hint);
+                });
+            };
+
+            applyFloatingUx(document);
+
+            // Sections are added dynamically; keep applying on new nodes.
+            const observer = new MutationObserver((mutations) => {
+                for (const m of mutations) {
+                    for (const node of m.addedNodes || []) {
+                        if (!(node instanceof HTMLElement)) continue;
+                        applyFloatingUx(node);
+                    }
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
         });
     </script>
 @endsection

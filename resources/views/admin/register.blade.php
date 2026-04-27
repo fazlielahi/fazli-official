@@ -267,6 +267,10 @@
 
             <form id="registerForm" class="auth-form" method="POST" action="{{ route('localized.register', ['lang' => app()->getlocale()]) }}" enctype="multipart/form-data">
                 @csrf
+                @php($resolvedNext = old('next') ?: ($next ?? null))
+                @if(!empty($resolvedNext))
+                    <input type="hidden" name="next" value="{{ $resolvedNext }}" />
+                @endif
 
                 <div class="auth-field auth-field--float @error('name') is-error @enderror">
                     <div class="auth-input-wrap">
@@ -338,7 +342,7 @@
 
                 <div class="auth-foot">
                     {{ __('lang.Already have an account?') }}
-                    <a href="{{ route('localized.login', ['lang' => app()->getlocale()]) }}">{{ __('lang.Login here.') }}</a>
+                    <a href="{{ route('localized.login', ['lang' => app()->getlocale()]) }}{{ !empty($resolvedNext) ? ('?next=' . urlencode($resolvedNext)) : '' }}">{{ __('lang.Login here.') }}</a>
                 </div>
             </form>
         </main>

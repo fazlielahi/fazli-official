@@ -1,10 +1,11 @@
 /* Side menu (CV templates page) */
 .cv-side-menu {
-    position: absolute;
-    left: 14px;
-    top: 0;
+    position: relative;
+    left: auto;
+    top: auto;
     transform: none;
     width: 92px;
+    height: 100%;
     padding: 10px 8px;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.85);
@@ -44,7 +45,8 @@
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(26, 32, 44, 0.08);
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
-    color: #7c3aed;
+    /* brand accent */
+    color: #0F3A6D;
 }
 
 .cv-side-menu__icon i {
@@ -58,8 +60,8 @@
 }
 
 .cv-side-menu__item.is-active .cv-side-menu__icon {
-    background: rgba(124, 58, 237, 0.14);
-    border-color: rgba(124, 58, 237, 0.24);
+    background: rgba(244, 163, 44, 0.18);
+    border-color: rgba(244, 163, 44, 0.38);
 }
 
 .cv-side-menu__item.is-active .cv-side-menu__label {

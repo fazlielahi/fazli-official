@@ -9,6 +9,7 @@
     // CV Builder Configuration (will be passed from Blade template)
     let cvBuilderConfig = {
         templateSlug: '',
+        isAuthenticated: false,
         routes: {
             saved: '',
             load: '',
@@ -23,7 +24,7 @@
 
     // Initialize CV Builder
     function initCVBuilder(config) {
-        cvBuilderConfig = config;
+        cvBuilderConfig = Object.assign({}, cvBuilderConfig, config || {});
 
         const $form = $('#cv-form');
         const $preview = $('#cv-preview');
@@ -1294,6 +1295,298 @@
         }
 
         // Handle form changes with debouncing
+        // Draft autosave (local) — Step 1 & 2
+        function getDraftStorageKey() {
+            // Key scheme: keep drafts separated per template (and later per cv_id if needed)
+            const slug = (cvBuilderConfig && cvBuilderConfig.templateSlug) ? String(cvBuilderConfig.templateSlug) : 'unknown';
+            return 'cvDraft:' + slug;
+        }
+
+        const POST_LOGIN_STORAGE_KEY = 'cvBuilder:afterLogin:v1';
+
+        function setPostLoginIntent(intent) {
+            try {
+                sessionStorage.setItem(POST_LOGIN_STORAGE_KEY, JSON.stringify({
+                    action: intent && intent.action ? String(intent.action) : 'resume',
+                    at: new Date().toISOString()
+                }));
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        function consumePostLoginIntent() {
+            try {
+                const raw = sessionStorage.getItem(POST_LOGIN_STORAGE_KEY);
+                if (!raw) return null;
+                sessionStorage.removeItem(POST_LOGIN_STORAGE_KEY);
+                return JSON.parse(raw);
+            } catch (e) {
+                try { sessionStorage.removeItem(POST_LOGIN_STORAGE_KEY); } catch (e2) {}
+                return null;
+            }
+        }
+
+        function buildLoginUrlWithNext(nextAbsUrl) {
+            const base = (cvBuilderConfig.routes && cvBuilderConfig.routes.login) ? String(cvBuilderConfig.routes.login) : '';
+            if (!base) return null;
+            const next = String(nextAbsUrl || '');
+            if (!next) return base;
+            const joiner = base.indexOf('?') >= 0 ? '&' : '?';
+            return base + joiner + 'next=' + encodeURIComponent(next);
+        }
+
+        function persistLocalDraftNow() {
+            try {
+                const fresh = collectFormData();
+                scheduleDraftSave(fresh);
+                const payload = {
+                    updatedAt: new Date().toISOString(),
+                    templateSlug: (cvBuilderConfig && cvBuilderConfig.templateSlug) ? String(cvBuilderConfig.templateSlug) : '',
+                    title: String($('#cv-title').val() || 'My CV'),
+                    cv_data: fresh
+                };
+                localStorage.setItem(getDraftStorageKey(), JSON.stringify(payload));
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        function goToLoginWithDraft(postLoginIntent, nextAbsUrl) {
+            persistLocalDraftNow();
+            window.__cvBuilderDirty = false;
+            if (postLoginIntent) setPostLoginIntent(postLoginIntent);
+
+            const loginUrl = buildLoginUrlWithNext(nextAbsUrl || window.location.href);
+            if (loginUrl) window.location.href = loginUrl;
+        }
+
+        let draftSaveTimer = null;
+        function scheduleDraftSave(data) {
+            if (!data || typeof data !== 'object') return;
+            if (draftSaveTimer) clearTimeout(draftSaveTimer);
+
+            // Lightweight debounce: don't write localStorage on every keystroke
+            draftSaveTimer = setTimeout(function() {
+                try {
+                    const payload = {
+                        updatedAt: new Date().toISOString(),
+                        templateSlug: (cvBuilderConfig && cvBuilderConfig.templateSlug) ? String(cvBuilderConfig.templateSlug) : '',
+                        title: String($('#cv-title').val() || 'My CV'),
+                        cv_data: data
+                    };
+                    localStorage.setItem(getDraftStorageKey(), JSON.stringify(payload));
+                } catch (e) {
+                    // ignore (quota / private mode)
+                }
+            }, 450);
+        }
+
+        // Authenticated autosave-to-account (so new resumes appear in dropdown)
+        let accountAutoSaveTimer = null;
+        let accountAutoSaveInFlight = false;
+
+        function hasMeaningfulCvData(data) {
+            if (!data || typeof data !== 'object') return false;
+            const keys = Object.keys(data);
+            for (let i = 0; i < keys.length; i++) {
+                const k = keys[i];
+                const v = data[k];
+                if (v == null) continue;
+                if (typeof v === 'string' && v.trim() !== '') return true;
+                if (typeof v === 'number' && !Number.isNaN(v)) return true;
+                if (typeof v === 'boolean' && v) return true;
+                if (Array.isArray(v) && v.length) {
+                    // if any array item has content
+                    for (let j = 0; j < v.length; j++) {
+                        const item = v[j];
+                        if (item == null) continue;
+                        if (typeof item === 'string' && item.trim() !== '') return true;
+                        if (typeof item === 'object') {
+                            for (const kk in item) {
+                                const vv = item[kk];
+                                if (typeof vv === 'string' && vv.trim() !== '') return true;
+                                if (typeof vv === 'number' && !Number.isNaN(vv)) return true;
+                            }
+                        }
+                    }
+                }
+                if (typeof v === 'object' && !Array.isArray(v)) {
+                    for (const kk in v) {
+                        const vv = v[kk];
+                        if (typeof vv === 'string' && vv.trim() !== '') return true;
+                        if (typeof vv === 'number' && !Number.isNaN(vv)) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function scheduleAccountAutoSave(data) {
+            if (!cvBuilderConfig || !cvBuilderConfig.isAuthenticated) return;
+            if (!window.__cvBuilderDirty) return;
+            if (window.__cvBuilderHydrating) return;
+            if (!hasMeaningfulCvData(data)) return;
+            if (accountAutoSaveTimer) clearTimeout(accountAutoSaveTimer);
+
+            accountAutoSaveTimer = setTimeout(function() {
+                if (accountAutoSaveInFlight) return;
+                accountAutoSaveInFlight = true;
+                saveCurrentCv({
+                    silentToast: true,
+                    onSuccess: function() {
+                        // Refresh dropdown list so the newly created CV appears
+                        if (typeof loadSavedCVsList === 'function') loadSavedCVsList();
+                    },
+                    onError: function() {
+                        // ignore; user can still save via download
+                    }
+                }).always(function() {
+                    accountAutoSaveInFlight = false;
+                });
+            }, 1800);
+        }
+
+        const SKIP_DRAFT_RESTORE_SESSION_KEY = 'cvBuilder:skipDraftRestore:v1';
+
+        function shouldSkipDraftRestoreOnce() {
+            try {
+                const raw = sessionStorage.getItem(SKIP_DRAFT_RESTORE_SESSION_KEY);
+                if (!raw) return false;
+                sessionStorage.removeItem(SKIP_DRAFT_RESTORE_SESSION_KEY);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function setSkipDraftRestoreOnce() {
+            try { sessionStorage.setItem(SKIP_DRAFT_RESTORE_SESSION_KEY, '1'); } catch (e) {}
+        }
+
+        function getDraftPayload() {
+            // If user is loading a saved CV via query param, don't override with a draft.
+            try {
+                const qCvId = new URLSearchParams(window.location.search).get('cv_id');
+                if (qCvId) return null;
+            } catch (e) { /* ignore */ }
+
+            let raw = null;
+            try { raw = localStorage.getItem(getDraftStorageKey()); } catch (e) { raw = null; }
+            if (!raw) return null;
+
+            let payload = null;
+            try { payload = JSON.parse(raw); } catch (e) { payload = null; }
+            if (!payload || typeof payload !== 'object') return null;
+            if (payload.templateSlug && String(payload.templateSlug) !== String(cvBuilderConfig.templateSlug || '')) return null;
+            if (!payload.cv_data || typeof payload.cv_data !== 'object') return null;
+            return payload;
+        }
+
+        function restoreDraftFromPayload(payload, opts) {
+            const options = opts || {};
+            if (!payload || typeof payload !== 'object') return false;
+
+            try { $('#cv-title').val(payload.title || 'My CV'); } catch (e) {}
+            loadCVData(payload.cv_data);
+            window.__cvBuilderDirty = true;
+            if (!options.silentToast) {
+                showToast('info', 'Draft restored');
+            }
+            return true;
+        }
+
+        function removeLocalDraft() {
+            try { localStorage.removeItem(getDraftStorageKey()); } catch (e) {}
+        }
+
+        function formatRelativeTime(iso) {
+            if (!iso) return '';
+            const t = Date.parse(String(iso));
+            if (!Number.isFinite(t)) return '';
+            const diff = Date.now() - t;
+            const s = Math.max(0, Math.floor(diff / 1000));
+            if (s < 60) return 'just now';
+            const m = Math.floor(s / 60);
+            if (m < 60) return m + ' min ago';
+            const h = Math.floor(m / 60);
+            if (h < 24) return h + ' hr ago';
+            const d = Math.floor(h / 24);
+            return d + ' day' + (d === 1 ? '' : 's') + ' ago';
+        }
+
+        function promptOrRestoreDraftOnLoad() {
+            if (shouldSkipDraftRestoreOnce()) return;
+
+            const payload = getDraftPayload();
+            if (!payload) return;
+
+            const authed = !!(cvBuilderConfig && cvBuilderConfig.isAuthenticated);
+            if (authed) {
+                // Logged-in: restore, save to account, then clear local draft.
+                restoreDraftFromPayload(payload, { silentToast: true });
+                saveCurrentCv({
+                    silentToast: true,
+                    onSuccess: function() {
+                        showToast('success', 'Draft saved to your account');
+                    }
+                });
+                return;
+            }
+
+            // Guest: show "Draft found" prompt (do not auto-restore)
+            const $modal = $('#cv-draft-found-modal');
+            const $backdrop = $('#cv-draft-found-backdrop');
+            const $desc = $('#cv-draft-found-desc');
+            const $continue = $('#cv-draft-found-continue');
+            const $startNew = $('#cv-draft-found-startnew');
+            const $loginSave = $('#cv-draft-found-login-save');
+            const $discard = $('#cv-draft-found-discard');
+
+            if (!$modal.length) return;
+
+            const close = () => $modal.removeClass('is-open').attr('aria-hidden', 'true');
+            const open = () => $modal.addClass('is-open').attr('aria-hidden', 'false');
+
+            if (!$modal.data('wired')) {
+                $modal.data('wired', true);
+                $backdrop.on('click', close);
+                $(document).on('keydown', function(e) {
+                    if ($modal.attr('aria-hidden') === 'false' && (e.key === 'Escape' || e.key === 'Esc')) close();
+                });
+            }
+
+            if ($desc.length) {
+                const when = formatRelativeTime(payload.updatedAt);
+                $desc.text(when
+                    ? ('We found an unsaved draft from ' + when + '. What would you like to do?')
+                    : 'We found an unsaved draft. What would you like to do?'
+                );
+            }
+
+            // Rebind click handlers to latest payload (avoid stale closure if reopened)
+            $continue.off('click').on('click', function() {
+                close();
+                restoreDraftFromPayload(payload, {});
+            });
+            $startNew.off('click').on('click', function() {
+                close();
+                setSkipDraftRestoreOnce();
+                showToast('info', 'Started new (draft kept)');
+            });
+            $loginSave.off('click').on('click', function() {
+                close();
+                goToLoginWithDraft({ action: 'save_draft' }, window.location.href);
+            });
+            $discard.off('click').on('click', function() {
+                removeLocalDraft();
+                close();
+                showToast('success', 'Draft discarded');
+            });
+
+            open();
+        }
+
         function handleFormChange() {
             if (updateTimer) {
                 clearTimeout(updateTimer);
@@ -1303,11 +1596,18 @@
                 try {
                     formData = collectFormData();
                     updatePreview(formData);
+                    scheduleDraftSave(formData);
+                    scheduleAccountAutoSave(formData);
                 } catch (error) {
                     // Silent error handling
                 }
             }, DEBOUNCE_DELAY);
         }
+
+        // Draft on load (after functions are defined)
+        setTimeout(function() {
+            try { promptOrRestoreDraftOnLoad(); } catch (e) {}
+        }, 0);
 
         // Experience / Education list view: keep list synced on input
         $form.on('input change', 'input[name^="experience["]', function() {
@@ -2203,20 +2503,168 @@
         const $unsavedSave = $('#cv-unsaved-save');
         const $unsavedDiscard = $('#cv-unsaved-discard');
         const $unsavedCancel = $('#cv-unsaved-cancel');
+        const $unsavedDesc = $('#cv-unsaved-desc');
+
+        const $authModal = $('#cv-auth-required-modal');
+        const $authCancel = $('#cv-auth-required-cancel');
+        const $authLogin = $('#cv-auth-required-login');
+        const $authBackdrop = $('#cv-auth-required-backdrop');
+        const $authTitle = $('#cv-auth-required-title');
+        const $authDesc = $('#cv-auth-required-desc');
+
+        let authModalReason = 'save';
+
+        // Saved CV titles cache (used to generate unique auto-titles)
+        let savedCvTitlesLower = new Set();
+
+        function refreshSavedTitlesCacheFromResponse(response) {
+            try {
+                const s = new Set();
+                const cvs = response && response.cvs ? response.cvs : [];
+                (Array.isArray(cvs) ? cvs : []).forEach(function(cv) {
+                    const t = (cv && cv.title) ? String(cv.title).trim() : '';
+                    if (t) s.add(t.toLowerCase());
+                });
+                savedCvTitlesLower = s;
+            } catch (e) {
+                savedCvTitlesLower = new Set();
+            }
+        }
+
+        function refreshSavedTitlesCacheFromDom() {
+            try {
+                const s = new Set();
+                $resumeList.find('.cv-resume-item').each(function() {
+                    const t = String($(this).attr('data-cv-title') || '').trim();
+                    if (t) s.add(t.toLowerCase());
+                });
+                savedCvTitlesLower = s;
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        function slugifyTitlePart(input) {
+            const raw = String(input || '').trim().toLowerCase();
+            if (!raw) return '';
+            // keep unicode letters/numbers where possible; normalize whitespace/punctuation to hyphens
+            const normalized = raw
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036f]/g, '') // remove diacritics
+                .replace(/[^a-z0-9]+/g, '-')     // non-alnum → hyphen
+                .replace(/^-+|-+$/g, '')         // trim hyphens
+                .replace(/-+/g, '-');            // collapse
+            return normalized;
+        }
+
+        function pad2(n) {
+            const v = Number(n) || 0;
+            return String(v).padStart(2, '0');
+        }
+
+        function computeUniqueAutoTitle(cvData) {
+            // Ensure we have a titles cache; if not, attempt DOM-derived titles.
+            if (!savedCvTitlesLower || typeof savedCvTitlesLower.has !== 'function') {
+                savedCvTitlesLower = new Set();
+            }
+            if (savedCvTitlesLower.size === 0) {
+                refreshSavedTitlesCacheFromDom();
+            }
+
+            const year = String(new Date().getFullYear());
+            const personName = cvData && cvData.name ? String(cvData.name).trim() : '';
+            const nameSlug = slugifyTitlePart(personName);
+
+            // If name exists: muhammad-resume-2026, then muhammad02-resume-2026
+            if (nameSlug) {
+                const base = nameSlug + '-resume-' + year;
+                if (!savedCvTitlesLower.has(base.toLowerCase())) return base;
+                for (let i = 2; i < 100; i++) {
+                    const candidate = nameSlug + pad2(i) + '-resume-' + year;
+                    if (!savedCvTitlesLower.has(candidate.toLowerCase())) return candidate;
+                }
+                return base;
+            }
+
+            // No name: 02-resume-2026, 03-resume-2026, ...
+            for (let i = 2; i < 100; i++) {
+                const candidate = pad2(i) + '-resume-' + year;
+                if (!savedCvTitlesLower.has(candidate.toLowerCase())) return candidate;
+            }
+            return '02-resume-' + year;
+        }
 
         function setResumeTriggerLabel(text) {
             $resumeTriggerText.text(text || 'Resume');
         }
 
+        function syncUnsavedModalUi() {
+            const authed = !!(cvBuilderConfig && cvBuilderConfig.isAuthenticated);
+            if ($unsavedDesc.length) {
+                $unsavedDesc.text(authed
+                    ? 'You have unsaved changes. Save to your account before continuing?'
+                    : 'You have changes that are only stored in this browser. Sign in to keep them in your account, discard them, or stay here.'
+                );
+            }
+            if ($unsavedSave.length) {
+                $unsavedSave.text(authed ? 'Save to account' : 'Login & save');
+            }
+        }
+
+        syncUnsavedModalUi();
+
         function openUnsavedModal(action) {
             pendingAction = typeof action === 'function' ? action : null;
+            syncUnsavedModalUi();
             $unsavedModal.addClass('is-open').attr('aria-hidden', 'false');
         }
 
         function closeUnsavedModal() {
             pendingAction = null;
             $unsavedModal.removeClass('is-open').attr('aria-hidden', 'true');
-            $unsavedSave.prop('disabled', false).text('Save');
+            $unsavedSave.prop('disabled', false);
+            syncUnsavedModalUi();
+        }
+
+        function closeAuthRequiredModal() {
+            if (!$authModal.length) return;
+            $authModal.removeClass('is-open').attr('aria-hidden', 'true');
+        }
+
+        function openAuthRequiredModal(reason) {
+            if (!$authModal.length) return;
+            authModalReason = reason || 'save';
+
+            if ($authTitle.length && $authDesc.length) {
+                if (authModalReason === 'download') {
+                    $authTitle.text('Login required');
+                    $authDesc.text('Sign in to download your PDF and save this CV to your account.');
+                } else {
+                    $authTitle.text('Login required');
+                    $authDesc.text('Sign in to save this CV to your account.');
+                }
+            }
+
+            $authModal.addClass('is-open').attr('aria-hidden', 'false');
+        }
+
+        function wireAuthRequiredModalOnce() {
+            if (!$authModal.length || $authModal.data('wired')) return;
+            $authModal.data('wired', true);
+
+            $authBackdrop.on('click', closeAuthRequiredModal);
+            $authCancel.on('click', closeAuthRequiredModal);
+            $authLogin.on('click', function() {
+                const intent = authModalReason === 'download' ? { action: 'download' } : { action: 'resume' };
+                closeAuthRequiredModal();
+                goToLoginWithDraft(intent, window.location.href);
+            });
+
+            $(document).on('keydown', function(e) {
+                if ($authModal.attr('aria-hidden') === 'false' && (e.key === 'Escape' || e.key === 'Esc')) {
+                    closeAuthRequiredModal();
+                }
+            });
         }
 
         function proceedPendingAction() {
@@ -2227,9 +2675,15 @@
 
         function saveCurrentCv(opts) {
             const options = opts || {};
-            const cvTitle = $('#cv-title').val() || 'My CV';
             const cvData = collectFormData();
             const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
+            let cvTitle = String($('#cv-title').val() || '').trim();
+
+            // Auto-title for any "new CV" save (title input is hidden, so this avoids duplicates)
+            if (!selectedCvId) {
+                cvTitle = computeUniqueAutoTitle(cvData);
+                try { $('#cv-title').val(cvTitle); } catch (e) {}
+            }
 
             return $.ajax({
                 url: cvBuilderConfig.routes.save,
@@ -2245,143 +2699,209 @@
             }).done(function(resp) {
                 if (resp && resp.success) {
                     window.__cvBuilderDirty = false;
-                    if (resp.cv_id) selectedCvId = String(resp.cv_id);
+                    if (resp.cv_id) {
+                        selectedCvId = String(resp.cv_id);
+                        // Persist current CV in URL so reload reopens the same CV
+                        if (typeof history.replaceState === 'function') {
+                            try {
+                                const u = new URL(window.location.href);
+                                u.searchParams.set('cv_id', String(selectedCvId));
+                                const qs = u.searchParams.toString();
+                                history.replaceState({}, '', u.pathname + (qs ? '?' + qs : '') + u.hash);
+                            } catch (e) { /* ignore */ }
+                        }
+                    }
+                    // Clear local draft after successful authenticated save
+                    try { localStorage.removeItem(getDraftStorageKey()); } catch (e) {}
                     if (typeof loadSavedCVsList === 'function') loadSavedCVsList();
-                    showToast('success', 'Saved');
+                    // Update cached titles so the next auto-title increments correctly
+                    try {
+                        if (cvTitle) savedCvTitlesLower.add(String(cvTitle).toLowerCase());
+                    } catch (e) {}
+                    if (!options.silentToast) {
+                        showToast('success', 'Saved');
+                    }
                     if (typeof options.onSuccess === 'function') options.onSuccess(resp);
                 } else {
                     showToast('error', (resp && resp.message) || 'Unable to save');
                     if (typeof options.onError === 'function') options.onError(resp);
                 }
             }).fail(function(xhr) {
+                if (xhr && xhr.status === 401) {
+                    wireAuthRequiredModalOnce();
+                    openAuthRequiredModal('save');
+                    if (typeof options.onError === 'function') options.onError(xhr);
+                    return;
+                }
+
                 const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Unable to save';
                 showToast('error', msg);
                 if (typeof options.onError === 'function') options.onError(xhr);
             });
         }
 
-        // Save Resume popover (replaces "Get Tips" button)
-        const $saveResumeTrigger = $('#cv-personal-save-resume');
-        const $saveResumePopover = $('#cv-save-resume-popover');
-        const $saveResumeTitleField = $('#cv-save-resume-title-field');
-        const $saveResumeTitleInput = $('#cv-save-resume-title');
-        const $saveResumeCancel = $('#cv-save-resume-cancel');
-        const $saveResumeConfirm = $('#cv-save-resume-confirm');
-
-        function isAlreadySavedResume() {
-            return !!selectedCvId;
+        function resetExportPdfButton($btn) {
+            if (!$btn || !$btn.length) return;
+            $btn.prop('disabled', false).html(
+                '<span class="cv-builder-toolbar__download-text">Download</span>' +
+                '<i class="fas fa-file-arrow-down cv-builder-toolbar__download-icon" aria-hidden="true"></i>'
+            );
         }
 
-        function closeSaveResumePopover() {
-            if (!$saveResumePopover.length) return;
-            $saveResumePopover.prop('hidden', true).attr('aria-hidden', 'true');
-            $saveResumeTrigger.attr('aria-expanded', 'false');
-            $saveResumeConfirm.prop('disabled', false).text('Save');
+        function parseFilenameFromContentDisposition(headerValue) {
+            if (!headerValue) return null;
+            const m = /filename\*?=(?:UTF-8''|)([^;]+)/i.exec(headerValue);
+            if (!m || !m[1]) return null;
+            let raw = String(m[1]).trim().replace(/^"|"$/g, '');
+            try { raw = decodeURIComponent(raw); } catch (e) { /* ignore */ }
+            return raw || null;
         }
 
-        function openSaveResumePopover() {
-            if (!$saveResumePopover.length) return;
+        function exportPdfBlob(cvData) {
+            const exportUrl = cvBuilderConfig.routes && cvBuilderConfig.routes.exportPDF ? String(cvBuilderConfig.routes.exportPDF) : '';
+            if (!exportUrl) return Promise.reject(new Error('Missing export URL'));
 
-            const saved = isAlreadySavedResume();
-            const currentTitle = String($('#cv-title').val() || '').trim();
+            const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
+            const body = new FormData();
+            body.append('_token', String(csrfToken || ''));
+            body.append('cv_data', JSON.stringify(cvData || {}));
 
-            if (saved) {
-                $saveResumeTitleField.prop('hidden', true).attr('aria-hidden', 'true');
-                $saveResumeConfirm.text('Save');
-            } else {
-                $saveResumeTitleField.prop('hidden', false).attr('aria-hidden', 'false');
-                $saveResumeConfirm.text('Save');
-                $saveResumeTitleInput.val(currentTitle);
-            }
-
-            $saveResumePopover.prop('hidden', false).attr('aria-hidden', 'false');
-            $saveResumeTrigger.attr('aria-expanded', 'true');
-
-            setTimeout(function() {
-                if (!saved) {
-                    $saveResumeTitleInput.trigger('focus');
-                } else {
-                    $saveResumeConfirm.trigger('focus');
+            return fetch(exportUrl, {
+                method: 'POST',
+                body: body,
+                credentials: 'same-origin',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/pdf'
                 }
-            }, 0);
-        }
-
-        function toggleSaveResumePopover() {
-            if (!$saveResumePopover.length) return;
-            if ($saveResumePopover.prop('hidden')) openSaveResumePopover();
-            else closeSaveResumePopover();
-        }
-
-        $saveResumeTrigger.on('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            // If already saved, clicking should just save/update (no popover)
-            if (isAlreadySavedResume()) {
-                closeSaveResumePopover();
-                const $btn = $(this);
-                const originalHtml = $btn.html();
-                $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>Saving...</span>');
-                saveCurrentCv({
-                    onSuccess: function(resp) {
-                        if (resp && resp.cv && resp.cv.title) {
-                            $('#cv-title').val(resp.cv.title || '');
-                            setResumeTriggerLabel(resp.cv.title);
-                        }
-                        $btn.prop('disabled', false).html(originalHtml);
-                    },
-                    onError: function() {
-                        $btn.prop('disabled', false).html(originalHtml);
+            }).then(async function(res) {
+                const ct = (res.headers.get('content-type') || '').toLowerCase();
+                if (!res.ok) {
+                    if (ct.indexOf('application/json') >= 0) {
+                        const j = await res.json().catch(() => ({}));
+                        const msg = (j && (j.message || j.error)) ? String(j.message || j.error) : ('HTTP ' + res.status);
+                        throw new Error(msg);
                     }
-                });
+                    const t = await res.text().catch(() => '');
+                    if (res.status === 401 || res.status === 403) {
+                        throw new Error('AUTH_REQUIRED');
+                    }
+                    throw new Error(t ? 'Unable to generate PDF.' : ('HTTP ' + res.status));
+                }
+
+                const blob = await res.blob();
+                const filename =
+                    parseFilenameFromContentDisposition(res.headers.get('Content-Disposition')) ||
+                    ('CV_' + (new Date().toISOString().slice(0, 10)) + '.pdf');
+
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(function() { try { URL.revokeObjectURL(url); } catch (e) {} }, 0);
+                return true;
+            });
+        }
+
+        function performAuthenticatedDownloadFlow($btn, $message) {
+            $btn.prop('disabled', true).html(
+                '<span class="cv-builder-toolbar__download-text">Saving...</span>' +
+                '<i class="fas fa-spinner fa-spin cv-builder-toolbar__download-icon" aria-hidden="true"></i>'
+            );
+            if ($message && $message.length) $message.hide().removeClass('success error');
+
+            saveCurrentCv({
+                silentToast: true,
+                onSuccess: function() {
+                    $btn.prop('disabled', true).html(
+                        '<span class="cv-builder-toolbar__download-text">Generating PDF...</span>' +
+                        '<i class="fas fa-spinner fa-spin cv-builder-toolbar__download-icon" aria-hidden="true"></i>'
+                    );
+
+                    const cvData = collectFormData();
+                    exportPdfBlob(cvData).then(function() {
+                        // Don't show a success banner under the button; only surface errors.
+                        if ($message && $message.length) {
+                            $message.hide().removeClass('success error').text('');
+                        }
+                        resetExportPdfButton($btn);
+                    }).catch(function(err) {
+                        const msg = (err && err.message) ? String(err.message) : 'Unable to generate PDF.';
+                        if (msg === 'AUTH_REQUIRED') {
+                            wireAuthRequiredModalOnce();
+                            openAuthRequiredModal('download');
+                        } else if ($message && $message.length) {
+                            $message.removeClass('success').addClass('error').text(msg).fadeIn();
+                            showToast('error', msg);
+                        } else {
+                            showToast('error', msg);
+                        }
+                        resetExportPdfButton($btn);
+                    });
+                },
+                onError: function() {
+                    if ($message && $message.length) {
+                        $message.removeClass('success').addClass('error').text('Unable to save before download').fadeIn();
+                    }
+                    resetExportPdfButton($btn);
+                }
+            });
+        }
+
+        function maybeRunPostLoginIntent() {
+            if (!cvBuilderConfig || !cvBuilderConfig.isAuthenticated) return;
+            const intent = consumePostLoginIntent();
+            if (!intent || !intent.action) return;
+
+            if (String(intent.action) === 'download') {
+                const $btn = $('#btn-export-pdf');
+                const $message = $('#export-message');
+                if ($btn.length) {
+                    setTimeout(function() {
+                        performAuthenticatedDownloadFlow($btn, $message);
+                    }, 250);
+                }
+            } else if (String(intent.action) === 'save_draft') {
+                setTimeout(function() {
+                    saveCurrentCv({
+                        silentToast: true,
+                        onSuccess: function() {
+                            showToast('success', 'Draft saved to your account');
+                        }
+                    });
+                }, 250);
+            } else {
+                setTimeout(function() {
+                    saveCurrentCv({ silentToast: true });
+                }, 250);
+            }
+        }
+
+        // Export PDF (requires auth on server): guests see modal; authed users save then download
+        $('#btn-export-pdf').on('click', function() {
+            const $btn = $(this);
+            const $message = $('#export-message');
+
+            if (!cvBuilderConfig || !cvBuilderConfig.isAuthenticated) {
+                wireAuthRequiredModalOnce();
+                openAuthRequiredModal('download');
                 return;
             }
 
-            toggleSaveResumePopover();
+            performAuthenticatedDownloadFlow($btn, $message);
         });
 
-        $saveResumePopover.on('click', function(e) {
-            e.stopPropagation();
-        });
-
-        $saveResumeCancel.on('click', function(e) {
+        // Guest toolbar "Save resume" button: reuse the same login-required modal as Download.
+        $('#cv-guest-save-trigger').on('click', function(e) {
             e.preventDefault();
-            e.stopPropagation();
-            closeSaveResumePopover();
+            wireAuthRequiredModalOnce();
+            openAuthRequiredModal('save');
         });
 
-        $saveResumeConfirm.on('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Only apply title for new resumes; existing ones keep their title unless edited in the list
-            if (!isAlreadySavedResume()) {
-                $('#cv-title').val(String($saveResumeTitleInput.val() || '').trim());
-            }
-
-            $saveResumeConfirm.prop('disabled', true).text('Saving...');
-            saveCurrentCv({
-                onSuccess: function(resp) {
-                    if (resp && resp.cv && resp.cv.title) {
-                        $('#cv-title').val(resp.cv.title || '');
-                        setResumeTriggerLabel(resp.cv.title);
-                    }
-                    closeSaveResumePopover();
-                },
-                onError: function() {
-                    $saveResumeConfirm.prop('disabled', false).text('Save');
-                }
-            });
-        });
-
-        $(document).on('keydown', function(e) {
-            if (e.key === 'Escape') closeSaveResumePopover();
-        });
-
-        $(document).on('click', function(e) {
-            if (!$saveResumePopover.length) return;
-            if ($(e.target).closest('#cv-personal-save-wrap').length) return;
-            closeSaveResumePopover();
-        });
+        // Manual save popover removed (draft autosave + save on download/login flow)
 
         // Unsaved modal buttons
         $unsavedCancel.on('click', function(e) {
@@ -2398,15 +2918,22 @@
         $unsavedSave.on('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            $unsavedSave.prop('disabled', true).text('Saving...');
-            saveCurrentCv({
-                onSuccess: function() {
-                    proceedPendingAction();
-                },
-                onError: function() {
-                    $unsavedSave.prop('disabled', false).text('Save');
-                }
-            });
+            if (cvBuilderConfig && cvBuilderConfig.isAuthenticated) {
+                $unsavedSave.prop('disabled', true).text('Saving...');
+                saveCurrentCv({
+                    onSuccess: function() {
+                        proceedPendingAction();
+                    },
+                    onError: function() {
+                        $unsavedSave.prop('disabled', false);
+                        syncUnsavedModalUi();
+                    }
+                });
+                return;
+            }
+
+            closeUnsavedModal();
+            goToLoginWithDraft({ action: 'resume' }, window.location.href);
         });
         $unsavedModal.on('click', function(e) {
             if ($(e.target).hasClass('cv-unsaved-modal__backdrop')) {
@@ -2414,12 +2941,6 @@
             }
         });
 
-        // Leaving the page: use native prompt (browser-controlled)
-        window.addEventListener('beforeunload', function(e) {
-            if (!window.__cvBuilderDirty) return;
-            e.preventDefault();
-            e.returnValue = '';
-        });
 
         // Intercept leave-page links if dirty (templates tab)
         $(document).on('click', '.cv-builder-toolbar__tab--link', function(e) {
@@ -2797,7 +3318,7 @@
                                                             syncUrlCvId: true
                                                         });
                                                     } else if (wasSelected) {
-                                                        selectedCvId = null;
+                                                        resetBuilderToBlank();
                                                     }
                                                 });
                                             } else {
@@ -2928,6 +3449,7 @@
                 url: cvBuilderConfig.routes.saved,
                 method: 'GET',
                 success: function(response) {
+                    refreshSavedTitlesCacheFromResponse(response);
                     if (response.success && response.cvs && response.cvs.length > 0) {
                         $loadSelect.empty().append('<option value="">-- My CVs/Resumes --</option>');
                         response.cvs.forEach(function(cv) {
@@ -3183,6 +3705,22 @@
             }, 500);
         }
 
+        function resetBuilderToBlank() {
+            window.__cvBuilderHydrating = true;
+            selectedCvId = null;
+            try { $('#cv-title').val(''); } catch (e) {}
+            try { setResumeTriggerLabel('Resume'); } catch (e) {}
+            try { stripCvIdFromUrl(); } catch (e) {}
+            try { loadCVData({}); } catch (e) {}
+            try { closeResumeDropdown(); } catch (e) {}
+            try { closeCreatePopover(); } catch (e) {}
+            try { window.__cvBuilderDirty = false; } catch (e) {}
+            setTimeout(function() {
+                window.__cvBuilderHydrating = false;
+                window.__cvBuilderDirty = false;
+            }, 0);
+        }
+
         // Custom dropdown open/close
         $resumeTrigger.on('click', function(e) {
             e.preventDefault();
@@ -3359,9 +3897,12 @@
             loadCvIntoBuilderInPlace(String(cvId), {});
         });
 
-        loadSavedCVsList(function(response) {
-            maybeLoadCvFromQuery(response);
-        });
+        if (cvBuilderConfig && cvBuilderConfig.isAuthenticated) {
+            loadSavedCVsList(function(response) {
+                maybeLoadCvFromQuery(response);
+                maybeRunPostLoginIntent();
+            });
+        }
 
         // Modal functions
         function populateModal() {
@@ -4718,47 +5259,6 @@
                     $btn.prop('disabled', false).text('💾 Save CV');
                 }
             });
-        });
-
-        // Export PDF functionality
-        $('#btn-export-pdf').on('click', function() {
-            const $btn = $(this);
-            const $message = $('#export-message');
-            
-            $btn.prop('disabled', true).html('<span class="cv-builder-toolbar__download-text">Generating PDF...</span><i class="fas fa-spinner fa-spin cv-builder-toolbar__download-icon" aria-hidden="true"></i>');
-            $message.hide().removeClass('success error');
-
-            const cvData = collectFormData();
-            
-            // Get CSRF token from meta tag (fresh token) or use config token
-            const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
-
-            // Create a form and submit it to download PDF
-            const form = $('<form>', {
-                'method': 'POST',
-                'action': cvBuilderConfig.routes.exportPDF
-            });
-
-            form.append($('<input>', {
-                'type': 'hidden',
-                'name': '_token',
-                'value': csrfToken
-            }));
-
-            form.append($('<input>', {
-                'type': 'hidden',
-                'name': 'cv_data',
-                'value': JSON.stringify(cvData)
-            }));
-
-            $('body').append(form);
-            form.submit();
-            form.remove();
-
-            // Re-enable button after a delay (in case of error)
-            setTimeout(function() {
-                $btn.prop('disabled', false).html('<span class="cv-builder-toolbar__download-text">Download</span><i class="fas fa-file-arrow-down cv-builder-toolbar__download-icon" aria-hidden="true"></i>');
-            }, 3000);
         });
     }
 

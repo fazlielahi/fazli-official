@@ -1,3 +1,232 @@
+/* Brand palette (keep UI consistent with login/register) */
+body.page-cv-builder {
+    --cv-primary: #0F3A6D;
+    --cv-primary-dark: #0a2a50;
+    --cv-accent: #F4A32C;
+    --cv-accent-soft: rgba(244, 163, 44, 0.18);
+    --cv-focus: rgba(15, 58, 109, 0.16);
+    --cv-cta-shadow: 0 14px 32px rgba(15, 58, 109, 0.18);
+    --cv-cta-shadow-hover: 0 18px 38px rgba(15, 58, 109, 0.24);
+
+    /* Match login/register input/button geometry */
+    --cv-lr-line: rgba(26, 32, 44, 0.14);
+    --cv-lr-surface: #ffffff;
+    --cv-lr-input-radius: 8px;
+    --cv-lr-focus: rgba(15, 58, 109, 0.18);
+
+    /* Scrollbar (match login/register feel) */
+    --cv-scroll-track: rgba(15, 23, 42, .08);
+    --cv-scroll-thumb: rgba(15, 58, 109, .55);
+    --cv-scroll-thumb-hover: rgba(15, 58, 109, .75);
+}
+
+/* Hide manual save UI (we autosave drafts locally + save on download/login flow) */
+body.page-cv-builder .cv-personal-save-wrap,
+body.page-cv-builder #cv-personal-save-resume,
+body.page-cv-builder #cv-save-resume-popover{
+    display: none !important;
+}
+
+/* Builder internal scrollbars */
+body.page-cv-builder .builder-form-panel{
+    scrollbar-width: thin;
+    scrollbar-color: var(--cv-scroll-thumb) var(--cv-scroll-track);
+}
+body.page-cv-builder .builder-form-panel::-webkit-scrollbar{
+    width: 10px;
+}
+body.page-cv-builder .builder-form-panel::-webkit-scrollbar-track{
+    background: var(--cv-scroll-track);
+    border-radius: 999px;
+}
+body.page-cv-builder .builder-form-panel::-webkit-scrollbar-thumb{
+    background: var(--cv-scroll-thumb);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+body.page-cv-builder .builder-form-panel::-webkit-scrollbar-thumb:hover{
+    background: var(--cv-scroll-thumb-hover);
+    background-clip: content-box;
+}
+
+/* Make builder inputs/buttons feel like login/register */
+body.page-cv-builder .cv-field__input,
+body.page-cv-builder .entry-container .form-control{
+    min-height: 40px;
+    border: 1px solid var(--cv-lr-line);
+    border-radius: var(--cv-lr-input-radius);
+    background: var(--cv-lr-surface);
+    box-shadow: none;
+    transition: border-color .18s ease, box-shadow .18s ease, background .15s ease;
+}
+
+body.page-cv-builder .cv-field__input::placeholder,
+body.page-cv-builder .entry-container .form-control::placeholder{
+    color: #9ca3af;
+    opacity: 0;
+    transition: opacity .18s ease;
+}
+
+/* When label floats up, show placeholder */
+body.page-cv-builder .cv-field:has(> .cv-field__input:focus) > .cv-field__input::placeholder,
+body.page-cv-builder .cv-field--row:has(.cv-field__input:focus) .cv-field__input::placeholder{
+    opacity: 1;
+}
+
+body.page-cv-builder .cv-field__input:focus,
+body.page-cv-builder .entry-container .form-control:focus{
+    border-color: var(--cv-primary);
+    box-shadow: 0 0 0 3px var(--cv-lr-focus);
+    background: var(--cv-lr-surface);
+}
+
+body.page-cv-builder .cv-field__control{
+    background: var(--cv-lr-surface);
+    border: 1px solid var(--cv-lr-line);
+    border-radius: var(--cv-lr-input-radius);
+}
+
+body.page-cv-builder .cv-field__control:focus-within{
+    box-shadow: 0 0 0 3px var(--cv-lr-focus);
+    border-color: var(--cv-primary);
+}
+
+body.page-cv-builder .cv-field--row .cv-field__input{
+    background: transparent;
+    border: 0;
+    border-radius: calc(var(--cv-lr-input-radius) - 1px);
+}
+
+/* Primary pill buttons like login/register */
+body.page-cv-builder .btn-save-cv,
+body.page-cv-builder .cv-personal-card__done--cta,
+body.page-cv-builder #btn-add-sections.btn-add-entry,
+body.page-cv-builder .cv-save-resume-popover__btn--primary{
+    height: 44px;
+    border-radius: 9999px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .14) inset;
+}
+
+body.page-cv-builder .btn-save-cv,
+body.page-cv-builder .cv-personal-card__done--cta,
+body.page-cv-builder #btn-add-sections.btn-add-entry{
+    background: linear-gradient(180deg, var(--cv-primary) 0%, var(--cv-primary-dark) 100%);
+}
+
+body.page-cv-builder .btn-save-cv:hover:not(:disabled),
+body.page-cv-builder .cv-personal-card__done--cta:hover,
+body.page-cv-builder #btn-add-sections.btn-add-entry:hover{
+    background: var(--cv-accent);
+    color: var(--cv-primary);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .35) inset;
+}
+
+body.page-cv-builder .cv-save-resume-popover__btn--primary:hover:not(:disabled){
+    background: var(--cv-accent);
+    color: var(--cv-primary);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .35) inset;
+}
+
+/* Floating labels for dynamic section fields (experience/education/projects/contact etc.) */
+body.page-cv-builder .entry-container .form-group {
+    position: relative;
+    margin: 0;
+    display: grid;
+    gap: 4px;
+}
+
+body.page-cv-builder .entry-container .form-group > label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    pointer-events: none;
+    max-width: calc(100% - 24px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: top .18s ease, transform .18s ease, font-size .18s ease, color .18s ease, background .18s ease, padding .18s ease;
+}
+
+/* Richtext editor fields: keep the label above (no floating) */
+body.page-cv-builder .entry-container .form-group:has(.cv-richtext) {
+    gap: 6px;
+    padding-top: 0;
+}
+
+body.page-cv-builder .entry-container .form-group:has(.cv-richtext) > label {
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    padding: 0;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 800;
+    color: #111827;
+    max-width: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+/* Float up on focus OR when the field has value (label can be before or after input) */
+body.page-cv-builder .entry-container .form-group:has(> input:not([type="hidden"]):focus) > label,
+body.page-cv-builder .entry-container .form-group:has(> textarea:focus) > label,
+body.page-cv-builder .entry-container .form-group:has(> input:not([type="hidden"]):not(:placeholder-shown)) > label,
+body.page-cv-builder .entry-container .form-group:has(> textarea:not(:placeholder-shown)) > label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--cv-primary);
+    background: var(--cv-lr-surface);
+    padding: 0 4px;
+    left: 10px;
+}
+
+body.page-cv-builder .entry-container .form-group > input:not([type="hidden"]),
+body.page-cv-builder .entry-container .form-group > textarea {
+    min-height: 40px;
+    padding: 14px 12px 8px;
+    border: 1px solid var(--cv-lr-line);
+    border-radius: var(--cv-lr-input-radius);
+    background: var(--cv-lr-surface);
+    font-size: 12px;
+    transition: border-color .18s ease, box-shadow .18s ease, background .15s ease;
+}
+
+body.page-cv-builder .entry-container .form-group > textarea {
+    min-height: 88px;
+    padding-top: 18px;
+}
+
+body.page-cv-builder .entry-container .form-group > input:not([type="hidden"]):focus,
+body.page-cv-builder .entry-container .form-group > textarea:focus {
+    border-color: var(--cv-primary);
+    box-shadow: 0 0 0 3px var(--cv-lr-focus);
+    outline: none;
+}
+
+body.page-cv-builder .entry-container .form-group > input:not([type="hidden"])::placeholder,
+body.page-cv-builder .entry-container .form-group > textarea::placeholder {
+    color: #9ca3af;
+    opacity: 0;
+    transition: opacity .18s ease;
+}
+
+body.page-cv-builder .entry-container .form-group > input:not([type="hidden"]):focus::placeholder,
+body.page-cv-builder .entry-container .form-group > textarea:focus::placeholder {
+    opacity: 1;
+}
+
 /* CV Builder Styles */
 /* Page shell: lock viewport scroll; only the two columns scroll when needed */
 html:has(body.page-cv-builder) {
@@ -119,7 +348,7 @@ body.page-cv-builder .cv-builder > .cv-builder__main {
 }
 
 .cv-builder-breadcrumb__link:hover {
-    color: #ad1457;
+    color: var(--cv-accent);
     text-decoration: underline;
 }
 
@@ -175,9 +404,9 @@ body.page-cv-builder .cv-builder > .cv-builder__main {
 }
 
 .cv-builder-toolbar__tab.is-active {
-    background: #fce4ec;
-    color: #ad1457;
-    border-color: rgba(173, 20, 87, 0.2);
+    background: var(--cv-accent-soft);
+    color: var(--cv-primary);
+    border-color: rgba(244, 163, 44, 0.28);
 }
 
 .cv-builder-toolbar__tab--static {
@@ -354,16 +583,16 @@ body.page-cv-builder .cv-template-modal .template-card--clickable .template-card
 }
 
 body.page-cv-builder .cv-template-modal .template-card--clickable .template-card__link:hover .template-info__title {
-    color: #ad1457;
+    color: var(--cv-primary);
 }
 
 body.page-cv-builder .cv-template-modal .template-card--clickable .template-card__link:focus-visible {
-    outline: 2px solid #ad1457;
+    outline: 2px solid var(--cv-accent);
     outline-offset: 3px;
 }
 
 body.page-cv-builder .cv-template-modal .template-card--current .template-preview__frame {
-    outline: 2px solid rgba(173, 20, 87, 0.45);
+    outline: 2px solid rgba(244, 163, 44, 0.55);
     outline-offset: 2px;
     border-radius: 14px;
 }
@@ -496,7 +725,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     gap: 8px;
     min-width: 168px;
     max-width: min(240px, 48vw);
-    padding: 12px 12px;
+    padding: 11px 12px;
     font-size: 0.86rem;
     font-weight: 600;
     line-height: 1.25;
@@ -529,6 +758,14 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .cv-resume-dropdown__trigger-icon {
     font-size: 0.85rem;
     opacity: 0.85;
+}
+
+/* Guest "Save resume" button: icon should sit near text (not pushed to far right) */
+#cv-guest-save-trigger.cv-resume-dropdown__trigger {
+    justify-content: flex-start;
+    min-width: 0;
+    max-width: none;
+    width: auto;
 }
 
 .cv-resume-dropdown__panel {
@@ -595,14 +832,14 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .cv-resume-dropdown__header-create:focus-visible {
-    outline: 2px solid #ad1457;
+    outline: 2px solid var(--cv-accent);
     outline-offset: 2px;
 }
 
 .cv-resume-dropdown__header-create[aria-expanded="true"] {
     background: #ede7f3;
-    border-color: rgba(173, 20, 87, 0.35);
-    color: #ad1457;
+    border-color: rgba(244, 163, 44, 0.55);
+    color: var(--cv-primary);
 }
 
 .cv-resume-dropdown__feedback {
@@ -674,7 +911,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .cv-resume-create-popover__item:focus-visible {
-    outline: 2px solid #ad1457;
+    outline: 2px solid var(--cv-accent);
     outline-offset: 0;
 }
 
@@ -706,8 +943,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #ad1457;
-    background: rgba(173, 20, 87, 0.08);
+    color: var(--cv-primary);
+    background: var(--cv-accent-soft);
     padding: 2px 7px;
     border-radius: 999px;
 }
@@ -743,11 +980,11 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .cv-resume-item.is-selected {
-    background: #fce4ec;
+    background: var(--cv-accent-soft);
 }
 
 .cv-resume-item.is-selected .cv-resume-item__name {
-    color: #ad1457;
+    color: var(--cv-primary);
 }
 
 .cv-resume-item__name {
@@ -1323,6 +1560,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     border-radius: 8px;
     background: #1e293b;
     color: #f1f5f9;
+    border: 1px solid rgba(244, 163, 44, 0.32);
     font-size: 11px;
     line-height: 1.35;
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
@@ -1370,7 +1608,9 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     height: 10px;
     background: #1e293b;
     transform: rotate(45deg);
-    box-shadow: -1px -1px 0 rgba(15, 23, 42, 0.08);
+    box-shadow:
+        -1px -1px 0 rgba(244, 163, 44, 0.22),
+        -1px -1px 0 rgba(15, 23, 42, 0.08);
 }
 
 .cv-personal-view-card__unhide {
@@ -1380,22 +1620,24 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     padding: 6px 8px;
     border: none;
     border-radius: 6px;
-    background: #334155;
+    background: rgba(15, 58, 109, 0.18);
+    border: 1px solid rgba(15, 58, 109, 0.35);
     font-size: 11px;
     font-weight: 600;
     font-family: inherit;
-    color: #fda4d0;
+    color: #F4A32C;
     cursor: pointer;
-    transition: background 0.12s ease, color 0.12s ease;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
 }
 
 .cv-personal-view-card__unhide:hover {
-    background: #475569;
-    color: #fff;
+    background: #F4A32C;
+    border-color: #F4A32C;
+    color: #0F3A6D;
 }
 
 .cv-personal-view-card__unhide:focus-visible {
-    outline: 2px solid rgba(253, 164, 208, 0.85);
+    outline: 2px solid rgba(244, 163, 44, 0.65);
     outline-offset: 1px;
 }
 
@@ -1430,18 +1672,19 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     height: 38px;
     border-radius: 9999px;
     border: none;
-    background: linear-gradient(90deg, #ff2aa1 0%, #ff5b6e 100%);
+    background: var(--cv-primary);
     color: #fff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 12px 26px rgba(255, 42, 161, 0.26);
-    transition: filter 0.12s ease, transform 0.12s ease;
+    box-shadow: 0 12px 26px rgba(15, 58, 109, 0.20);
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
 }
 
 .cv-personal-view-card__edit:hover {
-    filter: brightness(0.98);
+    background: var(--cv-primary-dark);
+    box-shadow: 0 14px 28px rgba(15, 58, 109, 0.24), 0 0 0 3px rgba(244, 163, 44, 0.22);
 }
 
 .cv-personal-view-card__edit:active {
@@ -1449,7 +1692,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .cv-personal-view-card__edit:focus-visible {
-    outline: 3px solid rgba(255, 42, 161, 0.35);
+    outline: 3px solid rgba(244, 163, 44, 0.55);
     outline-offset: 3px;
 }
 
@@ -1483,22 +1726,25 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     width: min(520px, 100%);
     justify-content: center;
     gap: 10px;
-    padding: 14px 18px;
+    padding: 0 22px;
     border: 0;
-    border-radius: 18px;
-    background: linear-gradient(90deg, #ff2aa1 0%, #ff5b6e 100%);
+    border-radius: 9999px;
+    height: 50px;
+    background: linear-gradient(180deg, var(--cv-primary) 0%, var(--cv-primary-dark) 100%);
     color: #fff;
-    font-size: 16px;
-    font-weight: 900;
-    box-shadow: 0 14px 32px rgba(255, 42, 161, 0.22);
-    transition: filter 0.12s ease, transform 0.12s ease;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    box-shadow: 0 1px 0 rgba(255,255,255,.14) inset;
+    transition: transform .06s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
     display: inline-flex;
     align-items: center;
 }
 
 .cv-personal-card__done--cta:hover {
-    background: linear-gradient(90deg, #ff1797 0%, #ff4f63 100%);
-    filter: saturate(1.05);
+    background: var(--cv-accent);
+    color: var(--cv-primary);
+    box-shadow: 0 1px 0 rgba(255,255,255,.35) inset;
 }
 
 .cv-personal-card__done--cta:active {
@@ -1628,8 +1874,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .cv-save-resume-popover__input:focus {
-    border-color: rgba(173, 20, 87, 0.35);
-    box-shadow: 0 0 0 3px rgba(173, 20, 87, 0.12);
+    border-color: rgba(15, 58, 109, 0.45);
+    box-shadow: 0 0 0 3px rgba(15, 58, 109, 0.16);
 }
 
 .cv-save-resume-popover__hint {
@@ -1660,12 +1906,13 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .cv-save-resume-popover__btn--primary {
     border-color: transparent;
-    background: linear-gradient(90deg, #ff2aa1 0%, #ff5b6e 100%);
+    background: var(--cv-primary);
     color: #fff;
 }
 
 .cv-save-resume-popover__btn--primary:hover:not(:disabled) {
-    filter: brightness(0.98);
+    background: var(--cv-primary-dark);
+    box-shadow: 0 0 0 3px rgba(244, 163, 44, 0.18);
 }
 
 .cv-save-resume-popover__btn--primary:disabled {
@@ -1809,8 +2056,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .cv-field__label {
     display: block;
     font-size: 12px;
-    font-weight: 800;
-    color: #0f172a;
+    font-weight: 600;
+    color: #6b7280;
     letter-spacing: 0.01em;
 }
 
@@ -1818,17 +2065,56 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     margin-bottom: 0;
 }
 
+/* Floating labels (match login/register feel) */
+body.page-cv-builder .cv-field:has(.cv-field__input) {
+    position: relative;
+    margin-top: 2px;
+}
+
+body.page-cv-builder .cv-field:has(.cv-field__input) > .cv-field__label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+    transition:
+        top .18s ease,
+        transform .18s ease,
+        font-size .18s ease,
+        color .18s ease,
+        background .18s ease,
+        padding .18s ease;
+    max-width: calc(100% - 24px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+body.page-cv-builder .cv-field:has(.cv-field__input:focus) > .cv-field__label,
+body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .cv-field__label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--cv-primary);
+    background: var(--cv-lr-surface);
+    padding: 0 4px;
+    left: 10px;
+}
+
 .cv-field__input {
     width: 100%;
-    padding: 10px 12px;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
+    padding: 14px 12px 8px;
+    border: 1px solid var(--cv-lr-line);
+    border-radius: var(--cv-lr-input-radius);
+    font-size: 12px;
     font-family: inherit;
     line-height: 1.35;
     color: #1a202c;
-    background: #f3f4f6;
-    transition: background 0.15s ease, box-shadow 0.15s ease;
+    background: var(--cv-lr-surface);
+    transition: border-color .18s ease, box-shadow .18s ease, background .15s ease;
     box-sizing: border-box;
 }
 
@@ -1837,19 +2123,20 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .cv-field__input:hover {
-    background: #eceff2;
+    background: var(--cv-lr-surface);
 }
 
 .cv-field__input:focus {
     outline: none;
-    background: #eef0f3;
-    box-shadow: 0 0 0 2px rgba(173, 20, 87, 0.2);
+    background: var(--cv-lr-surface);
+    border-color: var(--cv-primary);
+    box-shadow: 0 0 0 3px var(--cv-lr-focus);
 }
 
 .cv-field__input--textarea {
     min-height: 88px;
     resize: vertical;
-    padding-top: 10px;
+    padding-top: 18px;
     padding-bottom: 10px;
 }
 
@@ -1866,21 +2153,25 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     display: flex;
     align-items: stretch;
     gap: 0;
-    border-radius: 10px;
-    background: #f3f4f6;
+    border-radius: var(--cv-lr-input-radius);
+    background: var(--cv-lr-surface);
+    border: 1px solid var(--cv-lr-line);
     overflow: hidden;
-    transition: box-shadow 0.15s ease;
+    transition: border-color .18s ease, box-shadow .18s ease;
 }
 
 .cv-field__control:focus-within {
-    box-shadow: 0 0 0 2px rgba(173, 20, 87, 0.2);
+    border-color: var(--cv-primary);
+    box-shadow: 0 0 0 3px var(--cv-lr-focus);
 }
 
 .cv-field--row .cv-field__input {
     flex: 1 1 auto;
     min-width: 0;
-    border-radius: 8px;
     background: transparent;
+    border: 0;
+    border-radius: calc(var(--cv-lr-input-radius) - 1px);
+    padding: 14px 12px 8px;
 }
 
 .cv-field--row .cv-field__input:focus {
@@ -1898,24 +2189,23 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     justify-content: center;
     flex: 0 0 40px;
     min-width: 40px;
-    margin: 4px 4px 4px 0;
+    margin: 0;
     padding: 0;
     border: none;
-    border-radius: 999px;
-    background: #e5e7eb;
+    border-radius: 0;
+    background: transparent;
     color: #475569;
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
 .cv-field__resume-visibility-toggle:hover {
-    background: #d8dce2;
-    color: #1e293b;
+    background: transparent;
+    color: var(--cv-primary);
 }
 
 .cv-field__resume-visibility-toggle:focus-visible {
-    outline: 2px solid rgba(173, 20, 87, 0.45);
-    outline-offset: 2px;
+    outline: none;
 }
 
 .cv-field__resume-visibility-toggle[aria-pressed="false"] {
@@ -1970,7 +2260,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .cv-photo-upload__circle:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(173, 20, 87, 0.25);
+    box-shadow: 0 0 0 3px var(--cv-focus);
 }
 
 .cv-photo-upload__circle:focus:not(:focus-visible) {
@@ -2080,27 +2370,9 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     z-index: 0;
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-}
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-.form-group textarea {
-    min-height: 80px;
-    resize: vertical;
-}
+/* Legacy generic .form-group styles removed for builder consistency.
+   (Builder sections use `.entry-container .form-group` styling below.) */
+.form-group { margin-bottom: 20px; }
 .cv-preview-container {
     background: #e9ecef;
     padding: 12px;
@@ -2318,8 +2590,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     margin-top: 30px;
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #2563eb;
-    color: #2563eb;
+    border-bottom: 2px solid #0F3A6D;
+    color: #0F3A6D;
 }
 .entry-container {
     margin-bottom: 18px;
@@ -2398,7 +2670,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .entry-container .form-control:focus {
     outline: none;
     background: #eef0f3;
-    box-shadow: 0 0 0 2px rgba(173, 20, 87, 0.2);
+    box-shadow: 0 0 0 2px var(--cv-focus);
 }
 
 .entry-container textarea.form-control {
@@ -2548,7 +2820,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .btn-add-entry {
     width: 100%;
     padding: 10px;
-    background: #28a745;
+    background: var(--cv-primary);
     color: white;
     border: none;
     border-radius: 5px;
@@ -2558,7 +2830,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     transition: background 0.3s;
 }
 .btn-add-entry:hover {
-    background: #218838;
+    background: var(--cv-primary-dark);
 }
 
 /* Large "Add Content" CTA (builder main button) */
@@ -2570,12 +2842,12 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     width: auto;
     padding: 10px 18px;
     border-radius: 9999px;
-    background: linear-gradient(90deg, #ff2aa1 0%, #ff5b6e 100%);
-    box-shadow: 0 14px 32px rgba(255, 42, 161, 0.26);
+    background: var(--cv-primary);
+    box-shadow: var(--cv-cta-shadow);
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.2px;
-    transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease;
+    transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
 }
 
 /* Center the Add Content button in form panel */
@@ -2586,9 +2858,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 #btn-add-sections.btn-add-entry:hover {
-    background: linear-gradient(90deg, #ff1797 0%, #ff4f63 100%);
-    box-shadow: 0 18px 38px rgba(255, 42, 161, 0.32);
-    filter: saturate(1.05);
+    background: var(--cv-primary-dark);
+    box-shadow: var(--cv-cta-shadow-hover), 0 0 0 3px rgba(244, 163, 44, 0.20);
 }
 
 #btn-add-sections.btn-add-entry:active {
@@ -2596,7 +2867,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 #btn-add-sections.btn-add-entry:focus-visible {
-    outline: 3px solid rgba(255, 42, 161, 0.35);
+    outline: 3px solid rgba(244, 163, 44, 0.55);
     outline-offset: 3px;
 }
 
@@ -2645,7 +2916,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .btn-save-cv {
     width: 100%;
     padding: 12px;
-    background: #2563eb;
+    background: #0F3A6D;
     color: white;
     border: none;
     border-radius: 5px;
@@ -2655,7 +2926,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     transition: background 0.3s;
 }
 .btn-save-cv:hover {
-    background: #1e40af;
+    background: #0a2a50;
 }
 .btn-save-cv:disabled {
     background: #6c757d;
@@ -2860,6 +3131,114 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     opacity: 0.75;
     cursor: wait;
 }
+
+/* Draft found modal (guest) — richer layout with icons */
+.cv-draft-found-modal .cv-unsaved-modal__dialog {
+    padding: 16px 16px 14px;
+}
+
+.cv-draft-found-modal__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.cv-draft-found-modal__badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: var(--cv-accent-soft);
+    color: var(--cv-accent);
+    flex: 0 0 auto;
+}
+
+.cv-draft-found-modal__heading {
+    min-width: 0;
+}
+
+.cv-draft-found-modal__grid {
+    display: grid;
+    gap: 10px;
+}
+
+.cv-draft-found-modal__action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(26, 32, 44, 0.14);
+    background: #fff;
+    color: #111827;
+    font-weight: 800;
+    font-size: 0.86rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    text-align: left;
+}
+
+.cv-draft-found-modal__action:hover {
+    background: #f8fafc;
+    border-color: rgba(244, 163, 44, 0.55);
+}
+
+.cv-draft-found-modal__action:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(244, 163, 44, 0.22);
+    border-color: rgba(244, 163, 44, 0.70);
+}
+
+.cv-draft-found-modal__icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(244, 163, 44, 0.12);
+    color: rgba(15, 58, 109, 0.95);
+    flex: 0 0 auto;
+}
+
+.cv-draft-found-modal__action--primary {
+    border-color: transparent;
+    background: linear-gradient(180deg, var(--cv-primary) 0%, var(--cv-primary-dark) 100%);
+    color: #fff;
+    box-shadow: 0 10px 26px rgba(15, 58, 109, 0.22);
+}
+
+.cv-draft-found-modal__action--primary:hover {
+    background: linear-gradient(180deg, var(--cv-primary) 0%, #082646 100%);
+}
+
+.cv-draft-found-modal__action--primary .cv-draft-found-modal__icon {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+}
+
+.cv-draft-found-modal__discard {
+    margin-top: 12px;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(185, 28, 28, 0.25);
+    background: rgba(185, 28, 28, 0.06);
+    color: #b91c1c;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.cv-draft-found-modal__discard:hover {
+    background: rgba(185, 28, 28, 0.10);
+    border-color: rgba(185, 28, 28, 0.35);
+}
 .add-sections-modal {
     position: relative;
     width: min(920px, 100%);
@@ -2921,7 +3300,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .add-sections-modal__close:focus-visible {
-    outline: 2px solid #ad1457;
+    outline: 2px solid var(--cv-accent);
     outline-offset: 2px;
 }
 
@@ -2961,8 +3340,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #ad1457;
-    background: rgba(173, 20, 87, 0.10);
+    color: var(--cv-primary);
+    background: var(--cv-accent-soft);
     padding: 2px 8px;
     border-radius: 999px;
 }
@@ -3015,7 +3394,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     min-height: 66px;
 }
 .section-option:hover {
-    border-color: rgba(173, 20, 87, 0.20);
+    border-color: rgba(244, 163, 44, 0.55);
     background: #fff;
     box-shadow: 0 12px 30px rgba(15, 23, 42, 0.10);
     transform: translateY(-1px);
@@ -3351,20 +3730,19 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     gap: 10px;
     padding: 14px 18px;
     border: 0;
-    border-radius: 18px;
-    background: linear-gradient(90deg, #ff2aa1 0%, #ff5b6e 100%);
+    background: var(--cv-primary);
     color: #fff;
     font-size: 16px;
     font-weight: 900;
-    box-shadow: 0 14px 32px rgba(255, 42, 161, 0.22);
-    transition: filter 0.12s ease, transform 0.12s ease;
+    box-shadow: var(--cv-cta-shadow);
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
     display: inline-flex;
     align-items: center;
 }
 
 .cv-section-editor-view__done--cta:hover {
-    background: linear-gradient(90deg, #ff1797 0%, #ff4f63 100%);
-    filter: saturate(1.05);
+    background: var(--cv-primary-dark);
+    box-shadow: var(--cv-cta-shadow-hover), 0 0 0 3px rgba(244, 163, 44, 0.20);
 }
 
 .cv-section-editor-view__done--cta:active {
@@ -3380,8 +3758,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #ad1457;
-    background: rgba(173, 20, 87, 0.10);
+    color: var(--cv-primary);
+    background: var(--cv-accent-soft);
     padding: 2px 8px;
     border-radius: 999px;
 }
