@@ -64,3 +64,11 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Resume Trash auto-delete (scheduler)
+
+- **Retention setting**: Admin → **Trash retention** (`{lang}/admin/cv-trash-settings`)
+- **Purge command**: `php artisan cv:purge-expired-trash` (use `--dry-run` to preview)
+- **Scheduler**: requires the server to run Laravel scheduling.
+  - Linux cron example: `* * * * * cd /path/to/project && php artisan schedule:run >> /dev/null 2>&1`
+  - Windows Task Scheduler: run `php.exe <project>\\artisan schedule:run` every 1 minute

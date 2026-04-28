@@ -49,8 +49,9 @@
     color: #0F3A6D;
 }
 
-.cv-side-menu__icon i {
-    font-size: 1.05rem;
+.cv-side-menu__icon .cv-svg-icon {
+    width: 1.05rem;
+    height: 1.05rem;
 }
 
 .cv-side-menu__label {

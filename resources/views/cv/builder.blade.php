@@ -2,7 +2,7 @@
 
 @section('body_class', 'page-cv-builder')
 
-@section('title', 'CV Builder - ' . ($config['name'] ?? 'Template'))
+@section('title', 'Resume builder - ' . ($config['name'] ?? 'Template'))
 
 @section('meta')
     <meta charset="UTF-8" />
@@ -52,7 +52,7 @@
 
 @section('content')
     <div class="cv-builder">
-        <header class="cv-builder-toolbar" aria-label="CV builder tools">
+        <header class="cv-builder-toolbar" aria-label="Resume builder tools">
             <div class="cv-builder-toolbar__inner">
                 <nav class="cv-builder-toolbar__breadcrumb" aria-label="{{ __('lang.CV breadcrumb nav label') }}">
                     <ol class="cv-builder-breadcrumb">
@@ -99,7 +99,7 @@
                                 </button>
 
                                 <select id="load-cv-select" class="cv-builder-toolbar__select cv-resume-dropdown__native" aria-hidden="true" tabindex="-1">
-                                    <option value="">-- MY CVs/RESUMES --</option>
+                                    <option value="">-- MY RESUMES --</option>
                                 </select>
 
                                 <div class="cv-resume-dropdown__panel" id="cv-resume-panel" role="dialog" aria-label="My Resumes">
@@ -126,10 +126,14 @@
                                     <div class="cv-resume-dropdown__list" id="cv-resume-list">
                                         <div class="cv-resume-dropdown__empty">No resumes yet</div>
                                     </div>
-                                    <div class="cv-resume-dropdown__footer" id="cv-resume-loadall-footer" hidden>
+                                    <div class="cv-resume-dropdown__footer cv-resume-dropdown__footer--split" id="cv-resume-loadall-footer" hidden>
                                         <a class="cv-resume-dropdown__add" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
                                             <i class="fas fa-folder-open cv-resume-dropdown__add-icon" aria-hidden="true"></i>
                                             <span>Load All</span>
+                                        </a>
+                                        <a class="cv-resume-dropdown__add cv-resume-dropdown__add--sub" href="{{ route('localized.cv.trash', ['lang' => app()->getLocale()]) }}">
+                                            <i class="far fa-trash-can cv-resume-dropdown__add-icon" aria-hidden="true"></i>
+                                            <span>Trash</span>
                                         </a>
                                     </div>
                                 </div>
@@ -191,24 +195,24 @@
                                     <i class="far fa-envelope" aria-hidden="true"></i>
                                     <span id="cv-personal-view-email" class="cv-personal-view-card__meta-text"></span>
                                     <div class="cv-personal-view-card__hidden-tooltip" role="tooltip" aria-hidden="true">
-                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the CV.</p>
-                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-email-unhide" aria-label="Unhide email in CV and open editor">Unhide</button>
+                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the resume.</p>
+                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-email-unhide" aria-label="Unhide email in resume and open editor">Unhide</button>
                                     </div>
                                 </div>
                                 <div class="cv-personal-view-card__meta-item" id="cv-personal-view-phone-wrap" hidden>
                                     <i class="fas fa-phone" aria-hidden="true"></i>
                                     <span id="cv-personal-view-phone" class="cv-personal-view-card__meta-text"></span>
                                     <div class="cv-personal-view-card__hidden-tooltip" role="tooltip" aria-hidden="true">
-                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the CV.</p>
-                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-phone-unhide" aria-label="Unhide phone in CV and open editor">Unhide</button>
+                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the resume.</p>
+                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-phone-unhide" aria-label="Unhide phone in resume and open editor">Unhide</button>
                                     </div>
                                 </div>
                                 <div class="cv-personal-view-card__meta-item" id="cv-personal-view-location-wrap" hidden>
                                     <i class="fas fa-location-dot" aria-hidden="true"></i>
                                     <span id="cv-personal-view-location" class="cv-personal-view-card__meta-text"></span>
                                     <div class="cv-personal-view-card__hidden-tooltip" role="tooltip" aria-hidden="true">
-                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the CV.</p>
-                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-location-unhide" aria-label="Unhide location in CV and open editor">Unhide</button>
+                                        <p class="cv-personal-view-card__hidden-tooltip__msg">This field is hidden and won&rsquo;t be shown in the resume.</p>
+                                        <button type="button" class="cv-personal-view-card__unhide" id="cv-personal-view-location-unhide" aria-label="Unhide location in resume and open editor">Unhide</button>
                                     </div>
                                 </div>
                             </div>
@@ -368,8 +372,8 @@
             <div class="add-sections-modal">
                 <div class="add-sections-modal__header">
                     <div class="add-sections-modal__heading">
-                        <h3>Add More Sections to Your CV</h3>
-                        <p class="add-sections-modal__subtitle">Select the sections you want to add to your CV:</p>
+                        <h3>Add More Sections to Your Resume</h3>
+                        <p class="add-sections-modal__subtitle">Select the sections you want to add to your resume:</p>
                     </div>
                     <button type="button" class="add-sections-modal__close" id="add-sections-modal-close" aria-label="Close">
                         <i class="fas fa-xmark" aria-hidden="true"></i>
@@ -525,7 +529,7 @@
             <div class="cv-unsaved-modal__backdrop" id="cv-auth-required-backdrop"></div>
             <div class="cv-unsaved-modal__dialog" role="dialog" aria-modal="true" aria-label="Login required">
                 <div class="cv-unsaved-modal__title" id="cv-auth-required-title">Login required</div>
-                <div class="cv-unsaved-modal__desc" id="cv-auth-required-desc">Sign in to download your PDF and save this CV to your account.</div>
+                <div class="cv-unsaved-modal__desc" id="cv-auth-required-desc">Sign in to download your PDF and save this resume to your account.</div>
                 <div class="cv-unsaved-modal__actions">
                     <button type="button" class="cv-unsaved-modal__btn cv-unsaved-modal__btn--ghost" id="cv-auth-required-cancel">Cancel</button>
                     <button type="button" class="cv-unsaved-modal__btn cv-unsaved-modal__btn--primary" id="cv-auth-required-login">Login</button>

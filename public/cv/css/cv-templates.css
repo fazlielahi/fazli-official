@@ -5,6 +5,14 @@
     background-color: #eef2f7;
     overflow: hidden;
 }
+
+/* Base sizing for inline SVG icons used across CV pages */
+.cv-svg-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: -0.18em;
+}
 .cv-gallery::before {
     content: "";
     position: absolute;
@@ -405,7 +413,7 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 }
 
 .template-card:hover {
-    transform: translateY(-4px);
+    transform: none;
 }
 
 /* "New resume" dashed card — same flex row as other template cards */
@@ -416,7 +424,7 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 }
 
 .template-card--new:hover {
-    transform: translateY(-4px);
+    transform: none;
 }
 
 .template-card--new:focus-visible {

@@ -2,7 +2,7 @@
 
 @section('body_class', 'page-cv-templates')
 
-@section('title', 'CV Templates - ' . __('lang.DEFAULT_TITLE'))
+@section('title', 'Resume templates - ' . __('lang.DEFAULT_TITLE'))
 
 @section('meta')
     <meta charset="UTF-8" />
@@ -12,9 +12,6 @@
 @section('head')
     <!-- Bootstrap CSS (Required for header) -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
-    
-    <!-- Font Awesome (Required for header icons) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     
     <!-- Main styles -->
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" />
@@ -43,59 +40,60 @@
             <div class="cv-gallery__layout">
                 <aside class="cv-side-menu" aria-label="Quick menu">
                     <a class="cv-side-menu__item is-active" href="#" aria-current="page">
-                        <span class="cv-side-menu__icon"><i class="fas fa-plus" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'plus'])</span>
                         <span class="cv-side-menu__label">Create</span>
                     </a>
                     <a class="cv-side-menu__item" href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon"><i class="fas fa-house" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'home'])</span>
                         <span class="cv-side-menu__label">Home</span>
                     </a>
                     <a class="cv-side-menu__item" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon"><i class="far fa-folder" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'folder'])</span>
                         <span class="cv-side-menu__label">Projects</span>
                     </a>
                     <a class="cv-side-menu__item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon"><i class="fas fa-layer-group" aria-hidden="true"></i></span>
+                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'layers'])</span>
                         <span class="cv-side-menu__label">Templates</span>
                     </a>
-                  
-                    <a class="cv-side-menu__item" href="#" tabindex="-1" aria-disabled="true">
-                        <span class="cv-side-menu__icon"><i class="fas fa-ellipsis" aria-hidden="true"></i></span>
-                        <span class="cv-side-menu__label">More</span>
+                    @auth
+                    <a class="cv-side-menu__item" href="{{ route('localized.cv.trash', ['lang' => app()->getLocale()]) }}">
+                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'trash'])</span>
+                        <span class="cv-side-menu__label">Trash</span>
                     </a>
+                    @endauth
                 </aside>
                 
                 <div class="templates-showcase">
                 <div class="cv-template-tabs-wrap{{ $cvBreadcrumbRtl ? ' cv-template-tabs-wrap--rtl' : '' }}">
                     <button type="button" class="cv-template-tabs__nav cv-template-tabs__nav--prev cv-template-tabs__nav--concealed" id="cv-template-tabs-prev" aria-controls="cv-template-tabs-scroll" aria-label="{{ __('lang.CV tabs scroll prev') }}" aria-hidden="true" disabled>
-                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                        @include('cv.partials.svg-icon', ['name' => 'chevron-left'])
                     </button>
                     <div class="cv-template-tabs-scroll" id="cv-template-tabs-scroll" dir="ltr">
                         <div class="cv-template-tabs{{ $cvBreadcrumbRtl ? ' cv-template-tabs--rtl' : '' }}" role="tablist" aria-label="{{ __('lang.CV Templates') }}">
                             <button type="button" class="cv-template-tabs__btn is-active" role="tab" aria-selected="true" data-tab="all" id="cv-tab-all">
-                                <i class="fas fa-table-cells" aria-hidden="true"></i>
+                                @include('cv.partials.svg-icon', ['name' => 'grid'])
                                 <span>{{ __('lang.All') }}</span>
                             </button>
                             <button type="button" class="cv-template-tabs__btn" role="tab" aria-selected="false" data-tab="popular" id="cv-tab-popular">
-                                <i class="far fa-star" aria-hidden="true"></i>
+                                @include('cv.partials.svg-icon', ['name' => 'star'])
                                 <span>{{ __('lang.CV filter Popular') }}</span>
                             </button>
                             <button type="button" class="cv-template-tabs__btn" role="tab" aria-selected="false" data-tab="simple" id="cv-tab-simple">
-                                <i class="fas fa-briefcase" aria-hidden="true"></i>
+                                @include('cv.partials.svg-icon', ['name' => 'briefcase'])
                                 <span>{{ __('lang.CV filter Simple') }}</span>
                             </button>
                             <button type="button" class="cv-template-tabs__btn" role="tab" aria-selected="false" data-tab="modern" id="cv-tab-modern">
-                                <i class="fas fa-cube" aria-hidden="true"></i>
+                                @include('cv.partials.svg-icon', ['name' => 'cube'])
                                 <span>{{ __('lang.CV filter Modern') }}</span>
                             </button>
                             <button type="button" class="cv-template-tabs__btn" role="tab" aria-selected="false" data-tab="creative" id="cv-tab-creative">
-                                <i class="fas fa-palette" aria-hidden="true"></i>
+                                @include('cv.partials.svg-icon', ['name' => 'palette'])
                                 <span>{{ __('lang.CV filter Creative') }}</span>
                             </button>
                         </div>
                     </div>
                     <button type="button" class="cv-template-tabs__nav cv-template-tabs__nav--next" id="cv-template-tabs-next" aria-controls="cv-template-tabs-scroll" aria-label="{{ __('lang.CV tabs scroll next') }}" disabled>
-                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        @include('cv.partials.svg-icon', ['name' => 'chevron-right'])
                     </button>
                 </div>
             <div class="templates-grid" id="cv-templates-grid" role="tabpanel" aria-labelledby="cv-tab-all">
@@ -112,6 +110,7 @@
                                 <div class="template-preview__actions-overlay">
                                     <div class="template-actions">
                                         <a href="{{ route('localized.cv.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]) }}" class="btn-use-template">
+                                            @include('cv.partials.svg-icon', ['name' => 'check', 'class' => 'cv-svg-icon me-2'])
                                             {{ __('lang.Use Template') }}
                                         </a>
                                         @if(!empty($template['preview_path']))
@@ -122,6 +121,7 @@
                                                     data-preview-image="{{ $template['preview_path'] }}"
                                                     data-template-name="{{ $template['name'] }}"
                                                     data-template-slug="{{ $template['slug'] }}">
+                                                @include('cv.partials.svg-icon', ['name' => 'magnifying-glass', 'class' => 'cv-svg-icon me-2'])
                                                 {{ __('lang.Preview') }}
                                             </button>
                                         @else
@@ -168,7 +168,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <a id="previewModalUseBtn" href="#" class="btn btn-use-from-modal">
-                        <i class="fas fa-check me-2"></i>Use This Template
+                        @include('cv.partials.svg-icon', ['name' => 'check', 'class' => 'cv-svg-icon me-2']) Use This Template
                     </a>
                 </div>
             </div>

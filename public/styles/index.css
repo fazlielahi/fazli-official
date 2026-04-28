@@ -4,31 +4,41 @@
   font-family: heading;
 }
 
-/* Chrome, Edge, Safari */
-::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #4e54c8, #8f94fb);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #3a3fc8, #6b70fb);
+/* Scrollbars (match login/register look) */
+:root{
+  --app-scroll-track: rgba(15, 23, 42, .08);
+  --app-scroll-thumb: rgba(15, 58, 109, .55);
+  --app-scroll-thumb-hover: rgba(15, 58, 109, .75);
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #4e54c8 #f1f1f1;
+  scrollbar-color: var(--app-scroll-thumb) var(--app-scroll-track);
   margin: 0;
   padding: 0;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--app-scroll-track);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--app-scroll-thumb);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--app-scroll-thumb-hover);
+  background-clip: content-box;
 }
 
 

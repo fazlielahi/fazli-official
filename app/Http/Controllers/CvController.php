@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Models\CvTemplate;
+use App\Models\SiteSetting;
 use App\Models\UserCV;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
@@ -86,7 +87,7 @@ class CvController extends Controller
             $templateFolders[] = [
                 'slug' => $dbTemplate->slug,
                 'name' => $dbTemplate->name,
-                'description' => $dbTemplate->description ?? 'Professional CV template',
+                'description' => $dbTemplate->description ?? 'Professional resume template',
                 'preview_path' => $previewPath,
                 'folder_exists' => File::exists($templateFolder),
                 'tab' => $this->resolveCvTemplateTab($dbTemplate->slug, $dbTemplate->config),
@@ -159,7 +160,7 @@ class CvController extends Controller
             $config = [
                 'name' => $template->name,
                 'slug' => $template->slug,
-                'description' => $template->description ?? 'CV Template',
+                'description' => $template->description ?? 'Resume template',
                 'sections' => [
                     'required' => ['header'],
                     'optional' => ['summary', 'experience', 'education', 'skills']
@@ -211,20 +212,25 @@ class CvController extends Controller
         ]);
         
         try {
-            $title = $request->input('title') ?? 'My CV';
+            $title = $request->input('title') ?? 'My resume';
             $cvData = $this->sanitizeCvData($request->input('cv_data'));
 
             // If cv_id is provided, update that CV (must belong to user). Otherwise create a new CV.
             if ($request->filled('cv_id')) {
-                $cv = UserCV::where('id', $request->input('cv_id'))
+                $cv = UserCV::withTrashed()
+                    ->where('id', $request->input('cv_id'))
                     ->where('user_id', $userId)
                     ->first();
 
                 if (!$cv) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'CV not found'
+                        'message' => 'Resume not found'
                     ], 404);
+                }
+
+                if ($cv->trashed()) {
+                    $cv->restore();
                 }
 
                 $cv->template_slug = $request->input('template_slug');
@@ -244,7 +250,7 @@ class CvController extends Controller
             
             return response()->json([
                 'success' => true,
-                'message' => 'CV saved successfully!',
+                'message' => 'Resume saved successfully!',
                 'cv_id' => $cv->id,
                 'cv' => [
                     'id' => $cv->id,
@@ -257,7 +263,7 @@ class CvController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error saving CV: ' . $e->getMessage()
+                'message' => 'Error saving resume: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -912,9 +918,9 @@ PROMPT;
     }
     
     /**
-     * Get user's saved CVs
-     * 
-     * Now using Laravel Auth - middleware ensures user is authenticated
+     * Get user's saved CVs (soft-deleted excluded via UserCV global scope).
+     *
+     * Laravel Auth — middleware ensures user is authenticated.
      */
     public function getSavedCVs(Request $request)
     {
@@ -934,14 +940,14 @@ PROMPT;
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error loading CVs: ' . $e->getMessage(),
+                'message' => 'Error loading resumes: ' . $e->getMessage(),
                 'cvs' => []
             ], 500);
         }
     }
 
     /**
-     * Projects page (saved resumes grouped as projects).
+     * Projects page (saved resumes; soft-deleted excluded via UserCV global scope).
      * Auth middleware protects this route.
      */
     public function projects(Request $request)
@@ -954,13 +960,107 @@ PROMPT;
 
         return view('cv.projects', [
             'cvs' => $cvs,
+            'trashRetentionDays' => SiteSetting::getCvTrashRetentionDays(),
         ]);
     }
-    
+
     /**
-     * Load a specific saved CV
-     * 
-     * Now using Laravel Auth - middleware ensures user is authenticated
+     * Trash page: soft-deleted CVs for the authenticated user (onlyTrashed).
+     * Auth middleware protects this route.
+     */
+    public function trash(Request $request)
+    {
+        $userId = Auth::id();
+
+        $cvs = UserCV::onlyTrashed()
+            ->where('user_id', $userId)
+            ->orderByDesc('deleted_at')
+            ->get(['id', 'title', 'template_slug', 'created_at', 'updated_at', 'deleted_at']);
+
+        return view('cv.trash', [
+            'cvs' => $cvs,
+            'trashRetentionDays' => SiteSetting::getCvTrashRetentionDays(),
+        ]);
+    }
+
+    /**
+     * Restore a soft-deleted CV from Trash (authenticated, owner-only).
+     */
+    public function restoreTrashedCv(Request $request, $lang, $id)
+    {
+        $userId = Auth::id();
+
+        try {
+            $cv = UserCV::onlyTrashed()
+                ->where('id', $id)
+                ->where('user_id', $userId)
+                ->first();
+
+            if (!$cv) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resume not found',
+                ], 404);
+            }
+
+            $cv->restore();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Resume restored',
+                'cv' => [
+                    'id' => $cv->id,
+                    'title' => $cv->title,
+                    'template_slug' => $cv->template_slug,
+                    'updated_at' => $cv->updated_at,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error restoring resume: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Permanently delete a CV from Trash (authenticated, owner-only).
+     */
+    public function forceDeleteTrashedCv(Request $request, $lang, $id)
+    {
+        $userId = Auth::id();
+
+        try {
+            $cv = UserCV::onlyTrashed()
+                ->where('id', $id)
+                ->where('user_id', $userId)
+                ->first();
+
+            if (!$cv) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resume not found',
+                ], 404);
+            }
+
+            $cv->forceDelete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Resume permanently deleted',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting resume: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Load a specific saved CV (includes trashed so the builder can open items from Trash).
+     *
+     * Laravel Auth — middleware ensures user is authenticated.
      */
     public function loadCV(Request $request, $lang, $id)
     {
@@ -971,23 +1071,30 @@ PROMPT;
             $cv = UserCV::where('id', $id)
                 ->where('user_id', $userId)
                 ->first();
-            
+
             if (!$cv) {
-                // Check if CV exists but belongs to different user
+                $cv = UserCV::onlyTrashed()
+                    ->where('id', $id)
+                    ->where('user_id', $userId)
+                    ->first();
+            }
+
+            if (!$cv) {
+                // Non-trashed row with this id for another user → 403. Trashed → excluded here → 404.
                 $cvExists = UserCV::where('id', $id)->exists();
                 if ($cvExists) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'You do not have permission to access this CV'
+                        'message' => 'You do not have permission to access this resume'
                     ], 403);
                 }
-                
+
                 return response()->json([
                     'success' => false,
-                    'message' => 'CV not found'
+                    'message' => 'Resume not found'
                 ], 404);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'cv' => [
@@ -1001,7 +1108,7 @@ PROMPT;
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error loading CV: ' . $e->getMessage()
+                'message' => 'Error loading resume: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -1018,11 +1125,14 @@ PROMPT;
         ]);
 
         try {
-            $cv = UserCV::where('id', $id)->where('user_id', $userId)->first();
+            $cv = UserCV::withTrashed()
+                ->where('id', $id)
+                ->where('user_id', $userId)
+                ->first();
             if (!$cv) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'CV not found'
+                    'message' => 'Resume not found'
                 ], 404);
             }
 
@@ -1046,7 +1156,7 @@ PROMPT;
     }
 
     /**
-     * Delete a saved CV (authenticated).
+     * Soft-delete a saved CV for the authenticated user (sets deleted_at; UserCV uses SoftDeletes).
      */
     public function deleteSaved(Request $request, $lang, $id)
     {
@@ -1057,7 +1167,7 @@ PROMPT;
             if (!$cv) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'CV not found'
+                    'message' => 'Resume not found'
                 ], 404);
             }
 
@@ -1065,12 +1175,42 @@ PROMPT;
 
             return response()->json([
                 'success' => true,
-                'message' => 'CV deleted'
+                'message' => 'Resume deleted'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error deleting CV: ' . $e->getMessage()
+                'message' => 'Error deleting resume: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Permanently delete an active saved CV (not in Trash). Used from Projects modal.
+     */
+    public function permanentDeleteSaved(Request $request, $lang, $id)
+    {
+        $userId = Auth::id();
+
+        try {
+            $cv = UserCV::where('id', $id)->where('user_id', $userId)->first();
+            if (!$cv) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resume not found',
+                ], 404);
+            }
+
+            $cv->forceDelete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Resume permanently deleted',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting resume: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -1087,11 +1227,11 @@ PROMPT;
             if (!$source) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'CV not found',
+                    'message' => 'Resume not found',
                 ], 404);
             }
 
-            $title = $this->nextDuplicateCvTitleForUser((string) ($source->title ?? 'My CV'), (int) $userId);
+            $title = $this->nextDuplicateCvTitleForUser((string) ($source->title ?? 'My resume'), (int) $userId);
 
             $copy = UserCV::create([
                 'user_id' => $userId,
@@ -1103,7 +1243,7 @@ PROMPT;
 
             return response()->json([
                 'success' => true,
-                'message' => 'CV duplicated',
+                'message' => 'Resume duplicated',
                 'cv' => [
                     'id' => $copy->id,
                     'title' => $copy->title,
@@ -1115,7 +1255,7 @@ PROMPT;
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error duplicating CV: ' . $e->getMessage(),
+                'message' => 'Error duplicating resume: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -1128,7 +1268,7 @@ PROMPT;
         $base = preg_replace('/-copy\d+$/i', '', $sourceTitle);
         $base = trim($base);
         if ($base === '') {
-            $base = 'My CV';
+            $base = 'My resume';
         }
 
         $pattern = '/^' . preg_quote($base, '/') . '-copy(\d+)$/i';
@@ -1147,9 +1287,9 @@ PROMPT;
     }
     
     /**
-     * Export CV as PDF
-     * 
-     * Now using Laravel Auth - middleware ensures user is authenticated
+     * Export CV as PDF (active or trashed copy owned by the user).
+     *
+     * Laravel Auth — middleware ensures user is authenticated.
      */
     public function exportPDF(Request $request, $lang, $id)
     {
@@ -1157,13 +1297,10 @@ PROMPT;
         $userId = Auth::id();
         
         try {
-            // Load CV from database
-            $cv = UserCV::where('id', $id)
-                ->where('user_id', $userId)
-                ->first();
-            
+            $cv = $this->userCvActiveOrOwnedTrashed((int) $userId, $id);
+
             if (!$cv) {
-                abort(404, 'CV not found or you do not have permission to access it');
+                abort(404, 'Resume not found or you do not have permission to access it');
             }
             
             // Get template
@@ -1213,7 +1350,7 @@ PROMPT;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - ' . htmlspecialchars($cv->title ?? 'My CV') . '</title>
+    <title>Resume - ' . htmlspecialchars($cv->title ?? 'My resume') . '</title>
     <!-- Font Awesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     ' . $fonts . '
@@ -1353,7 +1490,7 @@ PROMPT;
                 ->pdf();
             
             // Generate filename
-            $filename = str_replace(' ', '_', $cv->title ?? 'My_CV') . '_' . date('Y-m-d') . '.pdf';
+            $filename = str_replace(' ', '_', $cv->title ?? 'My_resume') . '_' . date('Y-m-d') . '.pdf';
             $filename = preg_replace('/[^A-Za-z0-9_.-]/', '', $filename);
             
             // Return PDF as download
@@ -1371,11 +1508,107 @@ PROMPT;
             
             // Return a more user-friendly error message
             if (strpos($e->getMessage(), 'Timeout') !== false) {
-                abort(500, 'PDF generation timed out. Your CV may be too large. Please try reducing the content or contact support.');
+                abort(500, 'PDF generation timed out. Your resume may be too large. Please try reducing the content or contact support.');
             }
             
             abort(500, 'Error generating PDF: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Live HTML preview for a saved CV (Projects / Trash). Includes trashed rows for the owner.
+     *
+     * Auth middleware ensures user is authenticated.
+     */
+    public function previewSaved(Request $request, $lang, $id)
+    {
+        $userId = Auth::id();
+
+        $cv = $this->userCvActiveOrOwnedTrashed((int) $userId, $id);
+
+        if (!$cv) {
+            abort(404, 'Resume not found');
+        }
+
+        $templateSlug = (string) ($cv->template_slug ?? '');
+        $template = CvTemplate::where('slug', $templateSlug)->where('is_active', true)->first();
+        if (!$template) {
+            abort(404, 'Template not found');
+        }
+
+        $templatePath = resource_path('views/cv/templates/' . $templateSlug);
+        $templateBladePath = $templatePath . '/template.blade.php';
+        if (!File::exists($templateBladePath)) {
+            abort(404, 'Template file not found');
+        }
+
+        $data = $this->sanitizeCvData($cv->cv_data ?? []);
+        $html = view('cv.templates.' . $templateSlug . '.template', ['data' => $data])->render();
+
+        $cssPath = $templatePath . '/style.css';
+        $cssContent = '';
+        if (File::exists($cssPath)) {
+            $cssContent = File::get($cssPath);
+        }
+
+        $fonts = '';
+        if ($cssContent && preg_match_all('/@import\s+url\([^)]+\);/', $cssContent, $fontMatches)) {
+            $fonts = '<style>' . implode("\n", $fontMatches[0]) . '</style>';
+            $cssContent = preg_replace('/@import\s+url\([^)]+\);\s*/', '', $cssContent);
+        }
+        $css = '<style>' . $cssContent . '</style>';
+
+        // Scale is used to fit an A4 canvas into a small iframe without scrollbars.
+        $scale = (float) $request->query('scale', 0.35);
+        if ($scale < 0.12) $scale = 0.12;
+        if ($scale > 1.0) $scale = 1.0;
+        $a4w = 794;  // px at 96dpi
+        $a4h = 1123; // px at 96dpi
+        $scaledW = (int) round($a4w * $scale);
+        $scaledHFull = (int) round($a4h * $scale);
+        $crop = (float) $request->query('crop', 1.0);
+        if ($crop < 0.2) $crop = 0.2;
+        if ($crop > 1.0) $crop = 1.0;
+        $scaledH = (int) max(1, round($scaledHFull * $crop));
+
+        $full = '<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Preview</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  ' . $fonts . '
+  ' . $css . '
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      overflow: hidden;
+      width: ' . $scaledW . 'px;
+      height: ' . $scaledH . 'px;
+    }
+    .preview-viewport {
+      width: ' . $scaledW . 'px;
+      height: ' . $scaledH . 'px;
+      overflow: hidden;
+    }
+    /* A4 canvas scaled down to match the iframe size */
+    .preview-stage {
+      width: ' . $a4w . 'px;
+      height: ' . $a4h . 'px;
+      transform: scale(' . $scale . ');
+      transform-origin: top left;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-viewport"><div class="preview-stage">' . $html . '</div></div>
+</body>
+</html>';
+
+        return response($full, 200)->header('Content-Type', 'text/html; charset=UTF-8');
     }
     
     /**
@@ -1393,7 +1626,7 @@ PROMPT;
                 if (json_last_error() !== JSON_ERROR_NONE) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Invalid CV data format'
+                        'message' => 'Invalid resume data format'
                     ], 400);
                 }
             } else {
@@ -1406,7 +1639,7 @@ PROMPT;
             if (empty($data) || !is_array($data)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'CV data is required and must be valid'
+                    'message' => 'Resume data is required and must be valid'
                 ], 400);
             }
             
@@ -1454,7 +1687,7 @@ PROMPT;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - ' . htmlspecialchars($data['name'] ?? 'My CV') . '</title>
+    <title>Resume - ' . htmlspecialchars($data['name'] ?? 'My resume') . '</title>
     <!-- Font Awesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     ' . $fonts . '
@@ -1594,7 +1827,7 @@ PROMPT;
                 ->pdf();
             
             // Generate filename
-            $name = $data['name'] ?? 'My_CV';
+            $name = $data['name'] ?? 'My_resume';
             $filename = str_replace(' ', '_', $name) . '_' . date('Y-m-d') . '.pdf';
             $filename = preg_replace('/[^A-Za-z0-9_.-]/', '', $filename);
             
@@ -1613,7 +1846,7 @@ PROMPT;
             // Return a more user-friendly error message
             $errorMessage = 'Error generating PDF: ' . $e->getMessage();
             if (strpos($e->getMessage(), 'Timeout') !== false) {
-                $errorMessage = 'PDF generation timed out. Your CV may be too large. Please try reducing the content or contact support.';
+                $errorMessage = 'PDF generation timed out. Your resume may be too large. Please try reducing the content or contact support.';
             }
             
             return response()->json([
@@ -1622,4 +1855,17 @@ PROMPT;
             ], 500);
         }
     }
-} 
+
+    /**
+     * Active CV for the user, or the same row if soft-deleted (preview / PDF from Trash).
+     */
+    private function userCvActiveOrOwnedTrashed(int $userId, $id): ?UserCV
+    {
+        $cv = UserCV::where('id', $id)->where('user_id', $userId)->first();
+        if ($cv) {
+            return $cv;
+        }
+
+        return UserCV::onlyTrashed()->where('id', $id)->where('user_id', $userId)->first();
+    }
+}

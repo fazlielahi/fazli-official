@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CKEditorController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CvTrashSettingsController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\Auth\GoogleAuthController;
@@ -51,6 +52,9 @@ Route::group([
     // CV routes that require authentication
     Route::middleware('auth')->group(function () {
     Route::get('/cv/projects', [\App\Http\Controllers\CvController::class, 'projects'])->name('cv.projects');
+    Route::get('/cv/trash', [\App\Http\Controllers\CvController::class, 'trash'])->name('cv.trash');
+    Route::post('/cv/trash/{id}/restore', [\App\Http\Controllers\CvController::class, 'restoreTrashedCv'])->name('cv.trash.restore');
+    Route::delete('/cv/trash/{id}', [\App\Http\Controllers\CvController::class, 'forceDeleteTrashedCv'])->name('cv.trash.force');
     Route::post('/cv/save', [\App\Http\Controllers\CvController::class, 'save'])->name('cv.save');
     Route::get('/cv/saved', [\App\Http\Controllers\CvController::class, 'getSavedCVs'])->name('cv.saved');
     Route::get('/cv/load/{id}', [\App\Http\Controllers\CvController::class, 'loadCV'])->name('cv.load');
@@ -59,7 +63,9 @@ Route::group([
     Route::post('/cv/import/{importId}/parse', [\App\Http\Controllers\CvController::class, 'importParse'])->name('cv.import.parse');
     Route::post('/cv/{id}/title', [\App\Http\Controllers\CvController::class, 'updateTitle'])->name('cv.updateTitle');
     Route::post('/cv/{id}/duplicate', [\App\Http\Controllers\CvController::class, 'duplicateSaved'])->name('cv.duplicate');
+    Route::delete('/cv/{id}/permanent', [\App\Http\Controllers\CvController::class, 'permanentDeleteSaved'])->name('cv.permanent');
     Route::delete('/cv/{id}', [\App\Http\Controllers\CvController::class, 'deleteSaved'])->name('cv.delete');
+    Route::get('/cv/preview/{id}', [\App\Http\Controllers\CvController::class, 'previewSaved'])->name('cv.preview');
     Route::get('/cv/export/{id}/pdf', [\App\Http\Controllers\CvController::class, 'exportPDF'])->name('cv.export.pdf');
     Route::post('/cv/export/{slug}/pdf', [\App\Http\Controllers\CvController::class, 'exportCurrentPDF'])->name('cv.export.current.pdf');
     });
@@ -161,6 +167,9 @@ Route::group([
         Route::put('/cv-templates/{cvTemplate}', [\App\Http\Controllers\Admin\CVTemplateController::class, 'update'])->name('cv-templates.update');
         Route::delete('/cv-templates/{cvTemplate}', [\App\Http\Controllers\Admin\CVTemplateController::class, 'destroy'])->name('cv-templates.destroy');
         Route::post('/cv-templates/{cvTemplate}/toggle', [\App\Http\Controllers\Admin\CVTemplateController::class, 'toggleActive'])->name('cv-templates.toggle');
+
+        Route::get('/cv-trash-settings', [CvTrashSettingsController::class, 'edit'])->name('cv-trash-settings.edit');
+        Route::put('/cv-trash-settings', [CvTrashSettingsController::class, 'update'])->name('cv-trash-settings.update');
 
         // Founder section routes
         Route::prefix('founder')->name('founder.')->group(function () {

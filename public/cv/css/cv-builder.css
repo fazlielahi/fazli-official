@@ -1242,6 +1242,23 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     justify-content: center;
 }
 
+.cv-resume-dropdown__footer--split {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cv-resume-dropdown__add--sub {
+    background: transparent;
+    border: 1px solid rgba(26, 32, 44, 0.18);
+    color: rgba(26, 32, 44, 0.78);
+}
+
+.cv-resume-dropdown__add--sub:hover {
+    background: rgba(26, 32, 44, 0.06);
+    color: rgba(26, 32, 44, 0.92);
+}
+
 .cv-resume-dropdown__footer[hidden] {
     display: none !important;
 }

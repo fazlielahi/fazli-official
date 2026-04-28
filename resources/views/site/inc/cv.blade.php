@@ -7,12 +7,12 @@
         <span onclick="closeModal()" style="float:right; font-size:24px; font-weight:bold; cursor:pointer;">&times;</span>
          <!-- Download Button -->
          <a href="{{ asset('images/cv/fazlielahi-cv.zip') }}" download style="display: inline-block; margin-bottom: 15px; padding: 8px 15px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">
-            Download CV
+            Download resume
         </a>
-        <!-- CV Image Pages -->
-        <img src="{{ asset('images/cv/fazlielahi-cv-p1.jpg') }}" alt="CV Page 1" style="width: 100%; margin-bottom: 20px;" />
-        <img src="{{ asset('images/cv/fazlielahi-cv-p2.jpg') }}" alt="CV Page 2" style="width: 100%;" />
-        <img src="{{ asset('images/cv/fazlielahi-cover-letter.jpg') }}" alt="CV Page 2" style="width: 100%;" />
+        <!-- Resume image pages -->
+        <img src="{{ asset('images/cv/fazlielahi-cv-p1.jpg') }}" alt="Resume page 1" style="width: 100%; margin-bottom: 20px;" />
+        <img src="{{ asset('images/cv/fazlielahi-cv-p2.jpg') }}" alt="Resume page 2" style="width: 100%;" />
+        <img src="{{ asset('images/cv/fazlielahi-cover-letter.jpg') }}" alt="Cover letter" style="width: 100%;" />
          <!-- Scroll to Top Arrow -->
         <div id="scrollTopBtn" onclick="scrollToTop()" 
              style="display: none; position: absolute; bottom: 20px; right: 20px; background: #4e54c8; color: white; padding: 10px 15px; border-radius: 50%; cursor: pointer; font-size: 18px;">

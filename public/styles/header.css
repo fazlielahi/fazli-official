@@ -50,6 +50,20 @@
     transition: all 0.3s ease;
 }
 
+/* Inline SVG icons in main header */
+.header-svg-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: -0.18em;
+}
+
+.navbar-toggler .header-svg-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
 .dropdown-item.active{
     background-color: #dcdee0 !important;
     color: #111 !important;

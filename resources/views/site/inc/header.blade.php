@@ -8,67 +8,67 @@
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <!-- fallback icon if the above is invisible -->
-        <i class="fas fa-bars header-bars"></i>
+        @include('cv.partials.svg-icon', ['name' => 'bars-3', 'class' => 'header-svg-icon header-bars'])
         </button>
         <div class="collapse navbar-collapse" id="navbarNav" aria-label="breadcrumb">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.home') ? 'active' : '' }}">
-                        <i class="fas fa-home me-2"></i>{{ __('lang.Home') }}
+                        @include('cv.partials.svg-icon', ['name' => 'home', 'class' => 'header-svg-icon me-2']){{ __('lang.Home') }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('localized.services', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.services') ? 'active' : '' }}">
-                        <i class="fas fa-user me-2"></i>{{ __('lang.Services') }}
+                        @include('cv.partials.svg-icon', ['name' => 'user', 'class' => 'header-svg-icon me-2']){{ __('lang.Services') }}
                     </a>
                 </li>
                 <li class="nav-item dropdown">
                     <a href="#" style="background-color: #ffffff00 !important;" class="nav-link dropdown-toggle {{ request()->routeIs('localized.blogs') || request()->routeIs('localized.books') ? 'active' : '' }}" id="blogsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-blog me-2"></i>{{ __('lang.Blogs') }}
+                        @include('cv.partials.svg-icon', ['name' => 'rss', 'class' => 'header-svg-icon me-2']){{ __('lang.Blogs') }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="blogsDropdown">
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('localized.blogs') ? 'active' : '' }}" href="{{ route('localized.blogs', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-blog me-2"></i>{{ __('lang.Blogs') }}
+                                @include('cv.partials.svg-icon', ['name' => 'rss', 'class' => 'header-svg-icon me-2']){{ __('lang.Blogs') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('localized.books') ? 'active' : '' }}" href="{{ route('localized.books', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-book me-2"></i>{{ __('lang.Books') }}
+                                @include('cv.partials.svg-icon', ['name' => 'book-open', 'class' => 'header-svg-icon me-2']){{ __('lang.Books') }}
                             </a>
                         </li>      
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a href="#" style="background-color: #ffffff00 !important; " class="nav-link dropdown-toggle {{ request()->routeIs('localized.jobs') || request()->routeIs('localized.cv.gallery') ? 'active' : '' }}" id="jobsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-briefcase me-2"></i>{{ __('lang.Jobs') }}
+                        @include('cv.partials.svg-icon', ['name' => 'briefcase', 'class' => 'header-svg-icon me-2']){{ __('lang.Jobs') }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="jobsDropdown">
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('localized.jobs') ? 'active' : '' }}" href="{{ route('localized.jobs', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-search me-2"></i>{{ __('lang.Explore Jobs') }}
+                                @include('cv.partials.svg-icon', ['name' => 'magnifying-glass', 'class' => 'header-svg-icon me-2']){{ __('lang.Explore Jobs') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item {{ request()->routeIs('localized.cv.gallery') ? 'active' : '' }}" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-file-alt me-2"></i>{{ __('lang.CV Create') }}
+                                @include('cv.partials.svg-icon', ['name' => 'document', 'class' => 'header-svg-icon me-2']){{ __('lang.CV Create') }}
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('localized.founder-profile', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.founder-profile') ? 'active' : '' }}">
-                        <i class="fas fa-user-tie me-2"></i>{{ __('lang.Founder') }}
+                        @include('cv.partials.svg-icon', ['name' => 'user-circle', 'class' => 'header-svg-icon me-2']){{ __('lang.Founder') }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('localized.contact', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.contact') ? 'active' : '' }}">
-                        <i class="fas fa-envelope me-2"></i>{{ __('lang.Contact') }}
+                        @include('cv.partials.svg-icon', ['name' => 'envelope', 'class' => 'header-svg-icon me-2']){{ __('lang.Contact') }}
                     </a>
                 </li>
                 <li class="nav-item dropdown">
                     <a href="#" style="background-color: #ffffff00 !important;" class="nav-link dropdown-toggle language-icon" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-globe"></i>
+                        @include('cv.partials.svg-icon', ['name' => 'globe', 'class' => 'header-svg-icon me-1'])
                         @if($locale === 'en')
                             {{ __('lang.English') }}
                         @elseif($locale === 'ar')
@@ -102,8 +102,8 @@
             <div class="theme-toggle-container">
                 <span class="theme-toggle-label d-none d-md-inline">{{ __('lang.Theme') }}</span>
                 <div class="theme-toggle" data-theme="light">
-                    <i class="fas fa-sun icon sun-icon"></i>
-                    <i class="fas fa-moon icon moon-icon"></i>
+                    @include('cv.partials.svg-icon', ['name' => 'sun', 'class' => 'header-svg-icon icon sun-icon'])
+                    @include('cv.partials.svg-icon', ['name' => 'moon', 'class' => 'header-svg-icon icon moon-icon'])
                 </div>
             </div>
             
@@ -143,33 +143,33 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="min-width: 200px;">
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.profile', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-user-circle me-2"></i>{{ __('lang.My Profile') }}
+                                @include('cv.partials.svg-icon', ['name' => 'user-circle', 'class' => 'header-svg-icon me-2']){{ __('lang.My Profile') }}
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-file-lines me-2"></i>Create Resume
+                                @include('cv.partials.svg-icon', ['name' => 'document', 'class' => 'header-svg-icon me-2'])Create Resume
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.blog-create', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-plus-circle me-2"></i>{{ __('lang.Create Blog') }}
+                                @include('cv.partials.svg-icon', ['name' => 'plus-circle', 'class' => 'header-svg-icon me-2']){{ __('lang.Create Blog') }}
                             </a>
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.logout', ['lang' => app()->getLocale()]) }}">
-                                <i class="fas fa-sign-out-alt me-2"></i>{{ __('lang.Logout') }}
+                                @include('cv.partials.svg-icon', ['name' => 'arrow-right-on-rectangle', 'class' => 'header-svg-icon me-2']){{ __('lang.Logout') }}
                             </a>
                         </li>
                     </ul>
                 </div>
             @else
                 <a href="{{ route('localized.register', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 register-btn">
-                    <i class="fas fa-user-plus mx-1"></i>{{ __('lang.Sign Up') }}
+                    @include('cv.partials.svg-icon', ['name' => 'user-plus', 'class' => 'header-svg-icon mx-1']){{ __('lang.Sign Up') }}
                 </a>
                 <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="btn btn-sm bg-red-2 login-btn">
-                    <i class="fas fa-sign-in-alt mx-1"></i>{{ __('lang.Login') }}
+                    @include('cv.partials.svg-icon', ['name' => 'arrow-right', 'class' => 'header-svg-icon mx-1']){{ __('lang.Login') }}
                 </a>
             @endif
         </div>

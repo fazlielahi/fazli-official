@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Edit CV Template')
+@section('title', 'Edit resume template')
 
 @section('content')
 
@@ -9,10 +9,10 @@
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <h2>Edit CV Template</h2>
+                    <h2>Edit resume template</h2>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('localized.admin.dashboard', ['lang' => app()->getLocale()]) }}"><i class="fa fa-dashboard"></i></a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('localized.admin.cv-templates.index', ['lang' => app()->getLocale()]) }}">CV Templates</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('localized.admin.cv-templates.index', ['lang' => app()->getLocale()]) }}">Resume templates</a></li>
                         <li class="breadcrumb-item active">Edit</li>
                     </ul>
                 </div>

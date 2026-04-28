@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'CV Templates')
+@section('title', 'Resume templates')
 
 @section('content')
 
@@ -9,10 +9,10 @@
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <h2>CV Templates</h2>
+                    <h2>Resume templates</h2>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('localized.admin.dashboard', ['lang' => app()->getLocale()]) }}"><i class="fa fa-dashboard"></i></a></li>                            
-                        <li class="breadcrumb-item active">CV Templates</li>
+                        <li class="breadcrumb-item active">Resume templates</li>
                     </ul>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -38,7 +38,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="header">
-                        <h2>All CV Templates</h2>
+                        <h2>All resume templates</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">

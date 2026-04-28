@@ -1343,7 +1343,7 @@
                 const payload = {
                     updatedAt: new Date().toISOString(),
                     templateSlug: (cvBuilderConfig && cvBuilderConfig.templateSlug) ? String(cvBuilderConfig.templateSlug) : '',
-                    title: String($('#cv-title').val() || 'My CV'),
+                    title: String($('#cv-title').val() || 'My resume'),
                     cv_data: fresh
                 };
                 localStorage.setItem(getDraftStorageKey(), JSON.stringify(payload));
@@ -1372,7 +1372,7 @@
                     const payload = {
                         updatedAt: new Date().toISOString(),
                         templateSlug: (cvBuilderConfig && cvBuilderConfig.templateSlug) ? String(cvBuilderConfig.templateSlug) : '',
-                        title: String($('#cv-title').val() || 'My CV'),
+                        title: String($('#cv-title').val() || 'My resume'),
                         cv_data: data
                     };
                     localStorage.setItem(getDraftStorageKey(), JSON.stringify(payload));
@@ -1487,7 +1487,7 @@
             const options = opts || {};
             if (!payload || typeof payload !== 'object') return false;
 
-            try { $('#cv-title').val(payload.title || 'My CV'); } catch (e) {}
+            try { $('#cv-title').val(payload.title || 'My resume'); } catch (e) {}
             loadCVData(payload.cv_data);
             window.__cvBuilderDirty = true;
             if (!options.silentToast) {
@@ -2638,10 +2638,10 @@
             if ($authTitle.length && $authDesc.length) {
                 if (authModalReason === 'download') {
                     $authTitle.text('Login required');
-                    $authDesc.text('Sign in to download your PDF and save this CV to your account.');
+                    $authDesc.text('Sign in to download your PDF and save this resume to your account.');
                 } else {
                     $authTitle.text('Login required');
-                    $authDesc.text('Sign in to save this CV to your account.');
+                    $authDesc.text('Sign in to save this resume to your account.');
                 }
             }
 
@@ -2792,7 +2792,7 @@
                 const blob = await res.blob();
                 const filename =
                     parseFilenameFromContentDisposition(res.headers.get('Content-Disposition')) ||
-                    ('CV_' + (new Date().toISOString().slice(0, 10)) + '.pdf');
+                    ('resume_' + (new Date().toISOString().slice(0, 10)) + '.pdf');
 
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -3143,7 +3143,7 @@
             const visible = sorted.slice(0, RESUME_DROPDOWN_VISIBLE_MAX);
 
             visible.forEach(function(cv) {
-                const name = cv.title || 'Untitled CV';
+                const name = cv.title || 'Untitled resume';
                 const dateStr = cv.updated_at ? new Date(cv.updated_at).toLocaleDateString() : '';
                 const $menu = $('<div class="cv-resume-item__menu" aria-hidden="true">')
                     .append(
@@ -3180,7 +3180,7 @@
                                 setTimeout(function() { $input.trigger('focus').select(); }, 0);
 
                                 function applyTitle(newTitleRaw) {
-                                    const newTitle = (newTitleRaw || '').trim() || 'Untitled CV';
+                                    const newTitle = (newTitleRaw || '').trim() || 'Untitled resume';
                                     const cvId = $row.attr('data-cv-id');
                                     if (!cvId || !cvBuilderConfig.routes.updateTitle) return;
 
@@ -3259,7 +3259,7 @@
                                 const $popover = $('<div class="cv-resume-delete-popover" role="dialog" aria-label="Delete resume">');
                                 $popover.on('click', function(ev) { ev.stopPropagation(); });
                                 $popover.append('<div class="cv-resume-delete-popover__title">Delete resume</div>');
-                                $popover.append('<div class="cv-resume-delete-popover__desc">Are you sure? This can\\\'t be undone.</div>');
+                                $popover.append('<div class="cv-resume-delete-popover__desc">It will be moved to Trash. You can restore it later from Trash.</div>');
 
                                 const $btnRow = $('<div class="cv-resume-delete-popover__actions">');
                                 const $cancel = $('<button type="button" class="cv-resume-delete-popover__btn cv-resume-delete-popover__btn--cancel">Cancel</button>');
@@ -3302,7 +3302,7 @@
 
                                                 loadSavedCVsList(function(response) {
                                                     if (!response || !response.success) return;
-                                                    showResumeDropdownFeedback('Resume deleted', 'success');
+                                                    showResumeDropdownFeedback('Moved to Trash', 'success');
                                                     if (wasSelected && response.cvs && response.cvs.length > 0) {
                                                         selectedCvId = String(response.cvs[0].id);
                                                         renderResumeList(response.cvs);
@@ -3451,10 +3451,10 @@
                 success: function(response) {
                     refreshSavedTitlesCacheFromResponse(response);
                     if (response.success && response.cvs && response.cvs.length > 0) {
-                        $loadSelect.empty().append('<option value="">-- My CVs/Resumes --</option>');
+                        $loadSelect.empty().append('<option value="">-- My resumes --</option>');
                         response.cvs.forEach(function(cv) {
                             const date = new Date(cv.updated_at).toLocaleDateString();
-                            const optionText = (cv.title || 'Untitled CV') + ' (' + date + ')';
+                            const optionText = (cv.title || 'Untitled resume') + ' (' + date + ')';
                             $loadSelect.append('<option value="' + cv.id + '">' + optionText + '</option>');
                         });
                         renderResumeList(response.cvs);
@@ -3463,9 +3463,9 @@
                             const $selOpt = $loadSelect.find('option[value="' + selectedCvId + '"]');
                             if ($selOpt.length) $loadSelect.val(String(selectedCvId));
                         }
-                        setResumeTriggerLabel(selectedCvId ? ($resumeList.find('.cv-resume-item[data-cv-id="' + selectedCvId + '"]').attr('data-cv-title') || 'Resume') : '-- My CVs/Resumes --');
+                        setResumeTriggerLabel(selectedCvId ? ($resumeList.find('.cv-resume-item[data-cv-id="' + selectedCvId + '"]').attr('data-cv-title') || 'Resume') : '-- My resumes --');
                     } else {
-                        $loadSelect.empty().append('<option value="">' + (response.message || 'No saved CVs found') + '</option>');
+                        $loadSelect.empty().append('<option value="">' + (response.message || 'No saved resumes found') + '</option>');
                         renderResumeList([]);
                         setResumeTriggerLabel('Resume');
                     }
@@ -3476,11 +3476,11 @@
                 error: function(xhr) {
                     // Handle errors gracefully
                     if (xhr.status === 401) {
-                        $loadSelect.empty().append('<option value="">Please login to load saved CVs</option>');
+                        $loadSelect.empty().append('<option value="">Please login to load saved resumes</option>');
                         renderResumeList([]);
                         setResumeTriggerLabel('Resume');
                     } else {
-                        $loadSelect.empty().append('<option value="">Unable to load saved CVs</option>');
+                        $loadSelect.empty().append('<option value="">Unable to load saved resumes</option>');
                         renderResumeList([]);
                         setResumeTriggerLabel('Resume');
                     }
@@ -3506,7 +3506,7 @@
                         return;
                     }
                     const newId = String(resp.cv.id);
-                    const dupTitle = String((resp.cv.title || 'Untitled CV')).trim();
+                    const dupTitle = String((resp.cv.title || 'Untitled resume')).trim();
                     selectedCvId = newId;
                     loadSavedCVsList(function(response) {
                         if (!response || !response.success) return;
@@ -3849,23 +3849,23 @@
                             const payload = normalizeCvDataPayload(response.cv.cv_data);
                             loadCVData(payload);
                             if (!opts.skipGlobalLoadedToast) {
-                                showToast('success', 'CV loaded successfully!');
+                                showToast('success', 'Resume loaded successfully!');
                             }
                         } catch (error) {
-                            showToast('error', 'Error loading CV data: ' + error.message);
+                            showToast('error', 'Error loading resume data: ' + error.message);
                         }
                         setTimeout(function() {
                             window.__cvBuilderHydrating = false;
                             window.__cvBuilderDirty = false;
                         }, 0);
                     } else {
-                        showToast('error', response.message || 'Error loading CV');
+                        showToast('error', response.message || 'Error loading resume');
                     }
                 },
                 error: function(xhr) {
                     if (requestId !== loadCvRequestId) return;
                     if (xhr && (xhr.status === 0 || xhr.statusText === 'abort')) return;
-                    let errorMessage = 'Error loading CV. Please try again.';
+                    let errorMessage = 'Error loading resume. Please try again.';
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMessage = xhr.responseJSON.message;
                     }
@@ -5252,11 +5252,11 @@
                     if ($message.length) {
                         $message.addClass('success').text((resp && resp.message) || 'Saved').fadeIn();
                     }
-                    setTimeout(function() { $btn.prop('disabled', false).text('💾 Save CV'); }, 700);
+                    setTimeout(function() { $btn.prop('disabled', false).text('💾 Save resume'); }, 700);
                 },
                 onError: function() {
                     if ($message.length) $message.addClass('error').text('Unable to save').fadeIn();
-                    $btn.prop('disabled', false).text('💾 Save CV');
+                    $btn.prop('disabled', false).text('💾 Save resume');
                 }
             });
         });

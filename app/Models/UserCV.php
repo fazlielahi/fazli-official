@@ -3,9 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Saved CV for a user. SoftDeletes: normal queries omit rows with deleted_at set.
+ * Trash UI should use onlyTrashed() / withTrashed() explicitly where needed.
+ */
 class UserCV extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'user_cvs';
 
     protected $fillable = [
