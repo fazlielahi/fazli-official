@@ -432,6 +432,10 @@ body[data-theme="light"] div {
   color: var(--light-text-primary);
 }
 
+body[data-theme="light"] .header-button a{
+  color: #000 !important;
+}
+
 body[data-theme="light"] .text-muted {
   color: var(--light-text-muted) !important;
 }

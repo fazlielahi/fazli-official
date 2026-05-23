@@ -87,6 +87,10 @@
     margin: 0 30px;
 }
 
+.header-button a{
+    color: #fff !important;
+}
+
 /* Create CV Button - Simple Style */
 .btn-create-cv {
     background: #1da370;

@@ -85,6 +85,7 @@ body.page-cv-builder .cv-field__control{
     background: var(--cv-lr-surface);
     border: 1px solid var(--cv-lr-line);
     border-radius: var(--cv-lr-input-radius);
+    margin-top: 15px;
 }
 
 body.page-cv-builder .cv-field__control:focus-within{
@@ -2002,7 +2003,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 }
 
 .cv-personal-card__extra-panel {
-    padding-top: 14px;
+    padding-top: 8px;
 }
 
 .cv-personal-card__extra-panel[hidden] {
@@ -2052,7 +2053,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 .cv-personal-card__col--fields {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
     min-width: 0;
 }
 
@@ -2619,7 +2620,7 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
     box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px 12px;
+    gap: 15px 12px;
 }
 .entry-header {
     display: flex;
