@@ -57,8 +57,8 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('localized.founder-profile', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.founder-profile') ? 'active' : '' }}">
-                        @include('cv.partials.svg-icon', ['name' => 'user-circle', 'class' => 'header-svg-icon me-2']){{ __('lang.Founder') }}
+                    <a href="{{ route('localized.about-tfc', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.about-tfc') ? 'active' : '' }}">
+                        @include('cv.partials.svg-icon', ['name' => 'user-circle', 'class' => 'header-svg-icon me-2']){{ __('lang.About TFC') }}
                     </a>
                 </li>
                 <li class="nav-item">

@@ -3,6 +3,7 @@
 return [
     'Home' => 'ہوم',
     'About' => 'ہمارے بارے میں',
+    'About TFC' => 'TFC کے بارے میں',
     'Founder' => 'بانی',
     'Contact' => 'رابطہ',
     'Contact Me' => 'مجھ سے رابطہ کریں',

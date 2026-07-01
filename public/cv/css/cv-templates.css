@@ -348,7 +348,7 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 }
 
 .cv-templates-empty-banner img {
-    width: min(820px, 100%);
+    width: min(520px, 100%);
     max-width: 100%;
     height: auto;
     border-radius: 14px;

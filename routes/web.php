@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\CvTrashSettingsController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\AboutController;
 
 // 1) Root — redirect "/" to the current locale's home
 Route::get('/', [HomeController::class, 'index'])->name('root.redirect');
@@ -37,9 +38,7 @@ Route::group([
 ], function () {
     // Home
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/tfc', function () {
-        return view('site.the-fazli-community');
-    })->name('tfc');
+    Route::get('/about-tfc', [AboutController::class, 'aboutTfc'])->name('about-tfc');
     
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::get('/founder-profile', [FounderProfileController::class, 'index'])->name('founder-profile');

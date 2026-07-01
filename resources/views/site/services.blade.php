@@ -1,4 +1,5 @@
 @extends('site.layout')
+@section('body_class', 'page-services')
 @section('title', 'Web Development & Digital Services | TFC - The Fazli Community')
 
 @section('meta')
@@ -45,8 +46,6 @@
     <meta name="description" content="fistudy HTML 5 Template " />
 
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" />
-    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/contact.css') }}">
 
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,37 +54,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/animate.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/custom-animate.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/swiper.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-all.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/jarallax.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/jquery.magnific-popup.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/odometer.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/flaticon.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/owl.theme.default.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/nice-select.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/aos.css') }}" />
 
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/slider.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/footer.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/sliding-text.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/category.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/about.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/courses.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/why-choose.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/live-class.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/video-one.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/blog.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/counter.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/team.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/newsletter.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/testimonial.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/contact.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/process.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/page-header.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/services.css') }}" />
 
     <!-- template styles -->
@@ -106,38 +77,7 @@
 
 @section('content')
 
-    <!--Page Header Start-->
-    <section class="page-header">
-    <div class="breadcrumb-wrapper bg-cover">
-                <div class="container">
-                    <div class="page-heading">
-                        <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('lang.One Place,') }}
-                        <span class="solution">{{ __('lang.Many Solutions.') }}    </h1>
-                        <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
-                            <li>
-                                <a href="{{ route('localized.home', ['lang' => app()->getLocale()])}}">
-                                    {{ __('lang.Home')}}
-                                </a>
-                            </li>
-                            <li>
-                                @if(app()->getLocale() === 'ar')
-                                    <i class="fas fa-chevron-left"></i>
-                                @else
-                                    <i class="fas fa-chevron-right"></i>
-                                @endif
-                            </li>
-                            <li>
-                                {{ __('lang.Services')}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="blog-image-container services-main-image">
-                        <img src="{{ asset('images/contact-image.png') }}" width="100%" alt="TFC - The Fazli Community logo in Contact Page"/>
-                    </div>
-                </div>
-            </div>
-    </section>
-    <!--Page Header End-->
+ 
 
                 <!-- Services One Start -->
                 <section class="blogs-one" >

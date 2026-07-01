@@ -237,18 +237,7 @@
                             @continue
                         @endif
                         <div class="project-item">
-                            <div class="item-title-row">
-                                <h3 class="item-title">{{ $project['name'] ?? 'Project' }}</h3>
-                                @if(isset($project['period']) && !empty($project['period']))
-                                <span class="item-period">{{ $project['period'] }}</span>
-                                @endif
-                            </div>
-                            @if(isset($project['technologies']) && !empty($project['technologies']))
-                            <div class="item-technologies">{{ $project['technologies'] }}</div>
-                            @endif
-                            @if(isset($project['link']) && !empty($project['link']))
-                            <a class="project-link" href="{{ $project['link'] }}" target="_blank" rel="noopener noreferrer">{{ $project['link'] }}</a>
-                            @endif
+                            <h3 class="item-title">{{ $project['name'] ?? 'Project' }}</h3>
                             @if(isset($project['description']) && !empty($project['description']))
                             <div class="item-description">{!! $project['description'] !!}</div>
                             @endif

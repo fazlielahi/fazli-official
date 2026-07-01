@@ -1,0 +1,29 @@
+{
+  "name": "Professional",
+  "slug": "professional",
+  "description": "A compact two-column professional resume template with a clean executive style.",
+  "tab": "popular",
+  "sections": {
+    "required": ["header"],
+    "optional": [
+      "summary",
+      "experience",
+      "projects",
+      "awards",
+      "skills",
+      "education",
+      "certifications",
+      "languages"
+    ]
+  },
+  "layout": {
+    "type": "two-column",
+    "sidebar": "right"
+  },
+  "styling": {
+    "primary_color": "#1767b1",
+    "secondary_color": "#1f2933",
+    "font_family": "Arial, Helvetica, sans-serif",
+    "heading_font_family": "Arial, Helvetica, sans-serif"
+  }
+}

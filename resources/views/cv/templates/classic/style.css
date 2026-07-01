@@ -1,355 +1,432 @@
-/* Classic CV Template Styles */
-/* Traditional, professional, and timeless design */
+/* Classic CV Template Styles - formal black and white resume */
 
 .cv-template.classic {
-    max-width: 210mm;
-    min-height: 297mm;
-    margin: 0 auto;
-    padding: 0;
-    font-family: 'Times New Roman', Times, serif;
-    color: #000000;
-    background: #ffffff;
-    line-height: 1.6;
+    margin: 0;
+    background: #eeeeee;
+    display: flex;
+    justify-content: center;
+    font-family: var(--cv-font-family, "Times New Roman", Times, serif);
+    color: #111111;
 }
 
-/* Header Section */
-.cv-template.classic .cv-header {
-    border-bottom: 3px solid #000000;
-    padding: 40px 50px;
-    text-align: center;
-    background: #ffffff;
+.cv-template.classic * {
+    box-sizing: border-box;
 }
 
-.cv-template.classic .header-content {
+.cv-template.classic .cv-page {
+    width: 210mm;
     max-width: 100%;
+    min-height: 297mm;
+    margin: 20px;
+    padding: 17mm 22mm 18mm;
+    background: #ffffff;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+    overflow: visible;
 }
 
-.cv-template.classic .cv-header .name {
-    font-size: 36px;
-    font-weight: bold;
-    margin: 0 0 15px 0;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #000000;
+.cv-template.classic .cv-header {
+    text-align: center;
+    margin-bottom: 8mm;
+}
+
+.cv-template.classic .name {
+    margin: 0 0 2mm;
+    font-family: var(--cv-heading-font-family, "Times New Roman", Times, serif);
+    font-size: 15pt;
+    line-height: 1.15;
+    font-weight: 700;
+    color: #111111;
+}
+
+.cv-template.classic .subtitle {
+    margin: 0 0 1.5mm;
+    font-size: 8pt;
+    line-height: 1.25;
+    font-weight: 700;
+    color: #222222;
 }
 
 .cv-template.classic .contact-info {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
-    font-size: 14px;
-    color: #333333;
+    gap: 0;
+    margin: 0;
+    font-size: 7.4pt;
+    line-height: 1.35;
+    color: #222222;
 }
 
 .cv-template.classic .contact-item {
-    color: #333333;
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
 }
 
-.cv-template.classic .contact-separator {
-    color: #666666;
-    margin: 0 5px;
+.cv-template.classic .contact-item:not(:last-child)::after {
+    content: "|";
+    margin: 0 1.6mm;
+    color: #777777;
 }
 
-/* Body Section */
+.cv-template.classic .contact-icon {
+    display: none;
+}
+
+.cv-template.classic .contact-text {
+    overflow-wrap: anywhere;
+}
+
 .cv-template.classic .cv-body {
-    padding: 40px 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Section Styles */
 .cv-template.classic section {
-    margin-bottom: 30px;
+    margin: 0 0 6.2mm;
     page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.cv-template.classic section:last-child {
+    margin-bottom: 0;
 }
 
 .cv-template.classic .section-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #000000;
-    margin: 0 0 15px 0;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #000000;
+    margin: 0 0 2mm;
+    padding: 0 0 1.1mm;
+    border-bottom: 0.2mm solid #9a9a9a;
+    font-size: 7.8pt;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    color: #111111;
+}
+
+.cv-template.classic .section-title::after {
+    content: none;
 }
 
 .cv-template.classic .section-content {
-    padding-left: 0;
+    font-size: 7.8pt;
+    line-height: 1.45;
 }
 
-/* Summary Section */
-.cv-template.classic .summary {
-    padding: 0;
+.cv-template.classic .summary .section-content {
+    display: block;
+}
+
+.cv-template.classic .summary .section-content::before {
+    content: none;
 }
 
 .cv-template.classic .summary p {
     margin: 0;
-    font-size: 14px;
-    line-height: 1.8;
-    color: #333333;
     text-align: justify;
 }
 
-/* Experience & Education Items */
-.cv-template.classic .experience-item,
-.cv-template.classic .education-item,
-.cv-template.classic .certification-item,
-.cv-template.classic .project-item,
-.cv-template.classic .award-item {
-    margin-bottom: 20px;
-    padding: 0;
+.cv-template.classic .timeline-item {
+    display: block;
+    margin: 0 0 3.8mm;
+    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
-.cv-template.classic .item-header {
-    margin-bottom: 8px;
+.cv-template.classic .timeline-item:last-child {
+    margin-bottom: 0;
 }
 
-.cv-template.classic .item-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 5px;
-    flex-wrap: wrap;
-    gap: 10px;
+.cv-template.classic .experience-item:not(.timeline-item),
+.cv-template.classic .education-item:not(.timeline-item),
+.cv-template.classic .award-item:not(.timeline-item),
+.cv-template.classic .project-item:not(.timeline-item),
+.cv-template.classic .certification-item:not(.timeline-item) {
+    display: block;
+    margin: 0 0 3.8mm;
+    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
-.cv-template.classic .item-title {
-    font-size: 16px;
-    font-weight: bold;
-    color: #000000;
-    margin: 0;
+.cv-template.classic .experience-item:not(.timeline-item):last-child,
+.cv-template.classic .education-item:not(.timeline-item):last-child,
+.cv-template.classic .award-item:not(.timeline-item):last-child,
+.cv-template.classic .project-item:not(.timeline-item):last-child,
+.cv-template.classic .certification-item:not(.timeline-item):last-child {
+    margin-bottom: 0;
+}
+
+.cv-template.classic .experience-item:not(.timeline-item) .item-header,
+.cv-template.classic .education-item:not(.timeline-item) .item-header,
+.cv-template.classic .award-item:not(.timeline-item) .item-header,
+.cv-template.classic .project-item:not(.timeline-item) .item-header,
+.cv-template.classic .certification-item:not(.timeline-item) .item-header,
+.cv-template.classic .experience-item:not(.timeline-item) .item-title-row,
+.cv-template.classic .education-item:not(.timeline-item) .item-title-row,
+.cv-template.classic .award-item:not(.timeline-item) .item-title-row,
+.cv-template.classic .project-item:not(.timeline-item) .item-title-row,
+.cv-template.classic .certification-item:not(.timeline-item) .item-title-row {
+    display: block;
+}
+
+.cv-template.classic .experience-item:not(.timeline-item) .item-title,
+.cv-template.classic .education-item:not(.timeline-item) .item-title,
+.cv-template.classic .award-item:not(.timeline-item) .item-title,
+.cv-template.classic .project-item:not(.timeline-item) .item-title,
+.cv-template.classic .certification-item:not(.timeline-item) .item-title {
+    grid-column: auto;
+    grid-row: auto;
+}
+
+.cv-template.classic .experience-item:not(.timeline-item) .item-meta,
+.cv-template.classic .education-item:not(.timeline-item) .item-meta {
+    grid-column: auto;
+    grid-row: auto;
+}
+
+.cv-template.classic .experience-item:not(.timeline-item) .item-meta,
+.cv-template.classic .education-item:not(.timeline-item) .item-meta {
+    display: block;
+    font-size: 6.9pt;
+    line-height: 1.35;
+    color: #333333;
+}
+
+.cv-template.classic .experience-item:not(.timeline-item) .item-meta span,
+.cv-template.classic .education-item:not(.timeline-item) .item-meta span {
+    display: block;
+}
+
+.cv-template.classic .award-item:not(.timeline-item) .item-period,
+.cv-template.classic .certification-item:not(.timeline-item) .item-period {
+    grid-column: auto;
+    grid-row: auto;
+}
+
+.cv-template.classic .experience-item:not(.timeline-item) .item-company,
+.cv-template.classic .education-item:not(.timeline-item) .item-institution,
+.cv-template.classic .award-item:not(.timeline-item) .item-organization,
+.cv-template.classic .project-item:not(.timeline-item) .item-technologies,
+.cv-template.classic .certification-item:not(.timeline-item) .item-issuer,
+.cv-template.classic .certification-item:not(.timeline-item) .item-credential {
+    grid-column: auto;
+}
+
+.cv-template.classic .experience-item:not(.timeline-item) .item-description,
+.cv-template.classic .award-item:not(.timeline-item) .item-description,
+.cv-template.classic .project-item:not(.timeline-item) .item-description {
+    grid-column: auto;
+}
+
+.cv-template.classic .project-item:not(.timeline-item) .project-link {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: auto;
 }
 
 .cv-template.classic .item-period {
-    font-size: 13px;
+    font-size: 6.9pt;
+    line-height: 1.35;
     color: #333333;
-    font-weight: normal;
-    font-style: italic;
-    white-space: nowrap;
+    white-space: normal;
 }
 
-.cv-template.classic .item-company,
-.cv-template.classic .item-institution,
-.cv-template.classic .item-issuer,
-.cv-template.classic .item-organization {
-    font-size: 14px;
-    color: #333333;
-    font-weight: normal;
-    margin: 3px 0;
-    font-style: italic;
+.cv-template.classic .item-main {
+    min-width: 0;
 }
 
-.cv-template.classic .item-technologies {
-    font-size: 13px;
-    color: #555555;
-    font-style: italic;
-    margin-top: 5px;
-}
-
-.cv-template.classic .item-credential {
-    font-size: 12px;
-    color: #666666;
-    margin-top: 3px;
-    font-family: 'Courier New', monospace;
-}
-
-.cv-template.classic .item-description {
-    margin-top: 10px;
-    color: #333333;
-    line-height: 1.7;
-    padding-left: 15px;
-    border-left: 2px solid #e0e0e0;
-}
-
-.cv-template.classic .item-description p {
-    margin: 0;
-    font-size: 13px;
-}
-
-/* Skills Section */
-.cv-template.classic .skills-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    padding: 0;
-}
-
-.cv-template.classic .skill-item {
-    font-size: 13px;
-    color: #333333;
-    padding: 5px 0;
-}
-
-.cv-template.classic .skill-level {
-    font-size: 12px;
-    color: #666666;
-    font-style: italic;
-}
-
-/* Languages Section */
-.cv-template.classic .languages-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.cv-template.classic .language-item {
-    font-size: 13px;
-    color: #333333;
-    padding: 3px 0;
-}
-
-.cv-template.classic .language-name {
-    font-weight: bold;
-    color: #000000;
-}
-
-.cv-template.classic .language-proficiency {
-    font-size: 12px;
-    color: #666666;
-    font-style: italic;
-}
-
-/* Projects Section */
-.cv-template.classic .project-link {
-    color: #000000;
-    text-decoration: underline;
-    font-size: 12px;
-    font-weight: normal;
-}
-
-.cv-template.classic .project-link:hover {
-    color: #333333;
-}
-
-/* References Section */
-.cv-template.classic .references-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.cv-template.classic .reference-item {
-    padding: 0;
-    border: none;
-}
-
-.cv-template.classic .ref-name {
-    font-size: 14px;
-    font-weight: bold;
-    color: #000000;
-    margin: 0 0 3px 0;
-}
-
-.cv-template.classic .ref-position {
-    font-size: 13px;
-    color: #333333;
-    margin: 2px 0;
-    font-style: italic;
-}
-
-.cv-template.classic .ref-company {
-    font-size: 13px;
-    color: #333333;
-    margin: 2px 0;
-}
-
-.cv-template.classic .ref-email,
-.cv-template.classic .ref-phone {
-    font-size: 12px;
-    color: #666666;
-    margin: 2px 0;
-}
-
-/* Print Styles */
-@media print {
-    .cv-template.classic {
-        padding: 0;
-        max-width: 100%;
-        box-shadow: none;
-    }
-    
-    .cv-template.classic .cv-header {
-        padding: 30px 20px;
-    }
-    
-    .cv-template.classic .cv-body {
-        padding: 20px;
-    }
-    
-    .cv-template.classic section {
-        page-break-inside: avoid;
-        margin-bottom: 20px;
-    }
-    
-    .cv-template.classic .experience-item,
-    .cv-template.classic .education-item,
-    .cv-template.classic .certification-item,
-    .cv-template.classic .project-item,
-    .cv-template.classic .award-item {
-        page-break-inside: avoid;
-    }
-    
-    .cv-template.classic .item-description {
-        border-left: 1px solid #e0e0e0;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .cv-template.classic {
-        padding: 0;
-    }
-    
-    .cv-template.classic .cv-header {
-        padding: 30px 20px;
-    }
-    
-    .cv-template.classic .cv-header .name {
-        font-size: 28px;
-    }
-    
-    .cv-template.classic .cv-body {
-        padding: 25px 20px;
-    }
-    
-    .cv-template.classic .section-title {
-        font-size: 16px;
-    }
-    
-    .cv-template.classic .item-title-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .cv-template.classic .item-period {
-        white-space: normal;
-    }
-}
-
-/* Classic Typography Enhancements */
-.cv-template.classic h1,
-.cv-template.classic h2,
-.cv-template.classic h3 {
-    font-family: 'Times New Roman', Times, serif;
-}
-
-.cv-template.classic .section-title {
-    font-weight: 700;
+.cv-template.classic .item-title-row {
+    display: block;
 }
 
 .cv-template.classic .item-title {
-    font-weight: 600;
+    margin: 0;
+    font-size: 8.6pt;
+    line-height: 1.28;
+    font-weight: 700;
+    color: #111111;
 }
 
-/* Subtle dividers for better readability */
-.cv-template.classic .experience-item:not(:last-child),
-.cv-template.classic .education-item:not(:last-child),
-.cv-template.classic .certification-item:not(:last-child),
-.cv-template.classic .project-item:not(:last-child),
-.cv-template.classic .award-item:not(:last-child) {
-    padding-bottom: 15px;
-    border-bottom: 1px solid #f0f0f0;
+.cv-template.classic .item-location,
+.cv-template.classic .project-link {
+    font-size: 6.9pt;
+    line-height: 1.35;
+    color: #222222;
+    text-align: left;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    text-decoration: none;
 }
 
+.cv-template.classic .item-institution,
+.cv-template.classic .item-company,
+.cv-template.classic .item-organization,
+.cv-template.classic .item-technologies,
+.cv-template.classic .item-issuer {
+    margin: 0.8mm 0 1.3mm;
+    font-size: 7.4pt;
+    line-height: 1.35;
+    font-style: italic;
+    color: #222222;
+}
+
+.cv-template.classic .item-description {
+    margin: 0;
+    font-size: 7.4pt;
+    line-height: 1.45;
+    color: #111111;
+    text-align: justify;
+}
+
+.cv-template.classic .item-description p {
+    margin: 0 0 1.1mm;
+}
+
+.cv-template.classic .item-description p:last-child {
+    margin-bottom: 0;
+}
+
+.cv-template.classic .item-description ul,
+.cv-template.classic .item-description ol {
+    margin: 1.2mm 0 0 3.8mm;
+    padding: 0;
+}
+
+.cv-template.classic .item-description li {
+    margin: 0 0 0.6mm;
+}
+
+.cv-template.classic .skills-list,
+.cv-template.classic .languages-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.8mm 5mm;
+    padding-left: 0;
+}
+
+.cv-template.classic .skill-item,
+.cv-template.classic .language-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 3mm;
+    font-size: 7.4pt;
+    line-height: 1.35;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.cv-template.classic .skill-name-row,
+.cv-template.classic .language-name-row {
+    display: contents;
+}
+
+.cv-template.classic .skill-name,
+.cv-template.classic .language-name {
+    min-width: 0;
+    color: #111111;
+}
+
+.cv-template.classic .skill-level-badge,
+.cv-template.classic .language-proficiency-badge {
+    color: #333333;
+    font-size: 6.9pt;
+    white-space: nowrap;
+}
+
+.cv-template.classic .skill-progress-container,
+.cv-template.classic .skill-progress-bar {
+    display: none;
+}
+
+.cv-template.classic .references-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3mm 5mm;
+    padding-left: 0;
+}
+
+.cv-template.classic .reference-item {
+    font-size: 7.4pt;
+    line-height: 1.4;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.cv-template.classic .ref-name {
+    font-weight: 700;
+}
+
+.cv-template.classic .ref-position,
+.cv-template.classic .ref-company,
+.cv-template.classic .ref-email,
+.cv-template.classic .ref-phone,
+.cv-template.classic .item-credential {
+    color: #333333;
+    font-size: 7.1pt;
+}
+
+.cv-template.classic .certification-item .item-credential {
+    margin: 0.7mm 0 0;
+    font-family: "Courier New", monospace;
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 0;
+        margin-top: 10mm;
+    }
+
+    @page :first {
+        margin-top: 0;
+    }
+
+    .cv-template.classic {
+        background: #ffffff !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .cv-template.classic .cv-page {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        margin: 20px !important;
+        box-shadow: none !important;
+    }
+
+    .cv-template.classic section.experience,
+    .cv-template.classic section.education {
+        page-break-inside: auto;
+        break-inside: auto;
+    }
+}
+
+@media (max-width: 900px) {
+    .cv-template.classic .cv-page {
+        width: 100%;
+        margin: 0;
+        padding: 22px;
+    }
+
+    .cv-template.classic .section-title,
+    .cv-template.classic .summary .section-content,
+    .cv-template.classic .timeline-item {
+        grid-template-columns: 1fr;
+        row-gap: 4px;
+    }
+
+    .cv-template.classic .summary .section-content::before {
+        display: none;
+    }
+
+    .cv-template.classic .skills-list,
+    .cv-template.classic .languages-list,
+    .cv-template.classic .references-list {
+        grid-template-columns: 1fr;
+        padding-left: 0;
+    }
+}

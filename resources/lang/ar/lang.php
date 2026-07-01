@@ -3,6 +3,7 @@
 return [
     'Home' => 'الرئيسية',
     'About' => 'حول',
+    'About TFC' => 'حول TFC',
     'Founder' => 'المؤسس',
     'Contact' => 'اتصل بنا', // More natural than just "اتصل"
     'I_AM' => 'أنا',

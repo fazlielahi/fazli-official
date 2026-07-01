@@ -65,7 +65,50 @@
         const $photoPreview = $('#photo-preview');
         const $photoPreviewContainer = $('#photo-preview-container');
         const $removePhoto = $('#remove-photo');
+        const $fontFamilySelect = $('#cv-font-family-select');
         let photoData = null;
+
+        const fontFamilyOptions = {
+            classic: {
+                css: '"Times New Roman", Times, serif',
+                heading: '"Times New Roman", Times, serif'
+            },
+            georgia: {
+                css: 'Georgia, "Times New Roman", serif',
+                heading: 'Georgia, "Times New Roman", serif'
+            },
+            arial: {
+                css: 'Arial, Helvetica, sans-serif',
+                heading: 'Arial, Helvetica, sans-serif'
+            },
+            inter: {
+                css: 'Inter, Arial, Helvetica, sans-serif',
+                heading: 'Inter, Arial, Helvetica, sans-serif'
+            },
+            poppins: {
+                css: 'Poppins, Arial, Helvetica, sans-serif',
+                heading: 'Poppins, Arial, Helvetica, sans-serif'
+            },
+            roboto: {
+                css: 'Roboto, Arial, Helvetica, sans-serif',
+                heading: 'Roboto, Arial, Helvetica, sans-serif'
+            }
+        };
+
+        function normalizeFontFamily(value) {
+            value = String(value || 'classic');
+            return fontFamilyOptions[value] ? value : 'classic';
+        }
+
+        function applyFontFamilyToPreview($template, fontKey) {
+            if (!$template || !$template.length) return;
+            const option = fontFamilyOptions[normalizeFontFamily(fontKey)] || fontFamilyOptions.classic;
+            $template.css({
+                '--cv-font-family': option.css,
+                '--cv-heading-font-family': option.heading,
+                'font-family': option.css
+            });
+        }
 
         // Personal details view/edit toggle
         const $personalView = $('#cv-personal-view');
@@ -156,9 +199,61 @@
 
         // Track which sections are already added
         const addedSections = new Set();
+        const defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references'];
         
         // Track entry counts for each section (how many entries per section)
         const sectionEntryCounts = {};
+
+        function sectionOrderingEnabled() {
+            const $template = getPrimaryPreviewTemplate();
+            return $template.find('.cv-body').length > 0 && $template.find('.left-green, .right-content').length === 0;
+        }
+
+        function getCurrentSectionOrder() {
+            if (!sectionOrderingEnabled()) return [];
+            const order = [];
+            $form.find('.added-section[data-section-key]').each(function() {
+                const key = String($(this).attr('data-section-key') || '');
+                if (key && availableSections[key] && !order.includes(key)) {
+                    order.push(key);
+                }
+            });
+            defaultSectionOrder.forEach(function(key) {
+                if (addedSections.has(key) && !order.includes(key)) {
+                    order.push(key);
+                }
+            });
+            return order;
+        }
+
+        function normalizeSectionOrder(order) {
+            const raw = Array.isArray(order) ? order : [];
+            const normalized = [];
+            raw.forEach(function(key) {
+                key = String(key || '');
+                if (availableSections[key] && !normalized.includes(key)) {
+                    normalized.push(key);
+                }
+            });
+            defaultSectionOrder.forEach(function(key) {
+                if (addedSections.has(key) && !normalized.includes(key)) {
+                    normalized.push(key);
+                }
+            });
+            return normalized;
+        }
+
+        function refreshSectionOrderControls() {
+            const $sections = $form.find('.added-section[data-section-key]');
+            const enabled = sectionOrderingEnabled();
+            $sections.find('.btn-section-order').prop('hidden', !enabled).attr('aria-hidden', enabled ? 'false' : 'true');
+            if (!enabled) return;
+            $sections.each(function(index) {
+                const $section = $(this);
+                $section.find('.btn-section-order--up').prop('disabled', index === 0).attr('aria-disabled', index === 0 ? 'true' : 'false');
+                $section.find('.btn-section-order--down').prop('disabled', index === $sections.length - 1).attr('aria-disabled', index === $sections.length - 1 ? 'true' : 'false');
+            });
+        }
 
         // Available sections configuration
         const availableSections = {
@@ -227,13 +322,11 @@
             },
             'projects': {
                 name: 'Projects',
-                description: 'Add projects with links and impact.',
+                description: 'Add projects and a short description.',
                 iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 11a5 5 0 0 1 0 7l-1 1a5 5 0 0 1-7-7l1-1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
                 fields: [
                     { name: 'name', label: 'Project Name', type: 'text', placeholder: 'e.g., E-commerce Platform' },
-                    { name: 'description', label: 'Description', type: 'textarea', placeholder: 'Brief description of the project' },
-                    { name: 'technologies', label: 'Technologies Used', type: 'text', placeholder: 'e.g., PHP, Laravel, MySQL' },
-                    { name: 'link', label: 'Project Link (Optional)', type: 'text', placeholder: 'https://example.com' }
+                    { name: 'description', label: 'Description', type: 'textarea', placeholder: 'Brief description of the project' }
                 ]
             },
             'skills': {
@@ -440,9 +533,11 @@
                     country: countryVal,
                     summary: $summaryInput.val() || '',
                     photo: photoData || '',
+                    font_family: normalizeFontFamily($fontFamilySelect.val()),
                     resume_show_email: readResumeShowHidden($('#cv-resume-show-email')),
                     resume_show_phone: readResumeShowHidden($('#cv-resume-show-phone')),
-                    resume_show_location: readResumeShowHidden($('#cv-resume-show-location'))
+                    resume_show_location: readResumeShowHidden($('#cv-resume-show-location')),
+                    section_order: getCurrentSectionOrder()
                 };
 
                 addedSections.forEach(function(sectionKey) {
@@ -650,9 +745,7 @@
                     '<div class="item-header">' +
                     '<div class="item-title-row">' +
                     '<h3 class="item-title">' + escapeHtml(item.name || 'Project') + '</h3>' +
-                    (item.link ? '<a href="' + escapeHtml(item.link) + '" target="_blank" class="project-link">View Project</a>' : '') +
                     '</div>' +
-                    (item.technologies ? '<p class="item-technologies">' + escapeHtml(item.technologies) + '</p>' : '') +
                     '</div>' +
                     (item.description ? '<div class="item-description">' + sanitizeHtml(item.description) + '</div>' : '') +
                     '</div>';
@@ -696,6 +789,22 @@
             return $(html);
         }
 
+        function applySectionOrderToPreview($template, data) {
+            if (!$template || !$template.length) return;
+            const $body = $template.find('.cv-body').first();
+            if (!$body.length) return;
+
+            const order = normalizeSectionOrder(data && data.section_order);
+            if (!order.length) return;
+
+            order.forEach(function(sectionKey) {
+                const $section = $body.children('section.' + sectionKey).first();
+                if ($section.length) {
+                    $body.append($section);
+                }
+            });
+        }
+
         // Update preview - Template-agnostic approach
         function updatePreview(data) {
             if (isUpdating) return;
@@ -714,6 +823,7 @@
                 }
 
                 isUpdating = true;
+                applyFontFamilyToPreview($template, data.font_family);
 
                 // Update header information
                 $template.find('.cv-header .name').text(data.name || 'Your Name');
@@ -1096,6 +1206,8 @@
                     });
                 });
 
+                applySectionOrderToPreview($template, data);
+
                 // Update or create dynamically added sections
                 addedSections.forEach(function(sectionKey) {
                     // Skip experience and education as they're handled above (they can also be added via modal)
@@ -1257,6 +1369,8 @@
                         $section.remove();
                     }
                 });
+
+                applySectionOrderToPreview($template, data);
 
                 isUpdating = false;
                 
@@ -1664,6 +1778,13 @@
             }
         });
 
+        $fontFamilySelect.on('change', function() {
+            handleFormChange();
+            if (!window.__cvBuilderHydrating) {
+                window.__cvBuilderDirty = true;
+            }
+        });
+
         $form.on('click', '.added-section__toggle', function(e) {
             e.preventDefault();
             const $btn = $(this);
@@ -1671,6 +1792,32 @@
             const expanded = $btn.attr('aria-expanded') === 'true';
             $btn.attr('aria-expanded', expanded ? 'false' : 'true');
             $section.toggleClass('is-collapsed', expanded);
+        });
+
+        $form.on('click', '.added-section__title', function(e) {
+            e.preventDefault();
+            $(this).closest('.section-header').find('.added-section__toggle').trigger('click');
+        });
+
+        $form.on('click', '.btn-section-order--up, .btn-section-order--down', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!sectionOrderingEnabled()) return;
+            const $btn = $(this);
+            if ($btn.prop('disabled')) return;
+            const $section = $btn.closest('.added-section');
+            if (!$section.length) return;
+
+            if ($btn.hasClass('btn-section-order--up')) {
+                const $prev = $section.prevAll('.added-section').first();
+                if ($prev.length) $section.insertBefore($prev);
+            } else {
+                const $next = $section.nextAll('.added-section').first();
+                if ($next.length) $section.insertAfter($next);
+            }
+
+            refreshSectionOrderControls();
+            handleFormChange();
         });
 
         // Handle photo upload
@@ -1929,7 +2076,7 @@
                 });
             });
             // Clear per-entry visibility from a previous pagination pass (sections alone are not enough)
-            $content.find('.experience-item, .education-item').css({
+            $content.find('.experience-item, .education-item, .project-item').css({
                 'display': '',
                 'visibility': ''
             });
@@ -1995,8 +2142,14 @@
             // Content overflows - find which section causes overflow
             // Use offsetTop which is relative to offsetParent (more reliable)
             let firstOverflowSectionIndex = -1;
-            let overflowExperienceItemIndex = -1;
-            let overflowSectionIsExperience = false;
+            let overflowItemIndex = -1;
+            let overflowItemSectionKey = null;
+
+            function splitItemSelector(sectionKey) {
+                if (sectionKey === 'experience') return '.experience-item';
+                if (sectionKey === 'projects') return '.project-item';
+                return '';
+            }
             
             $allSections.each(function(index) {
                 if (firstOverflowSectionIndex >= 0) return false; // break - already found
@@ -2063,13 +2216,17 @@
                 'height': '297mm'
             });
 
-            // If the overflow section is Experience, split by items instead of moving whole section
+            // If the overflow section is a list, split by items instead of moving whole section.
             if (firstOverflowSectionIndex >= 0) {
                 const $overflowSection = $allSections.eq(firstOverflowSectionIndex);
-                if ($overflowSection.length && $overflowSection.hasClass('experience')) {
-                    const $items = $overflowSection.find('.experience-item');
+                const splitSectionKeys = ['experience', 'projects'];
+                const splitSectionKey = splitSectionKeys.find(function(key) {
+                    return $overflowSection.length && $overflowSection.hasClass(key);
+                });
+                if (splitSectionKey) {
+                    const $items = $overflowSection.find(splitItemSelector(splitSectionKey));
                     if ($items.length > 0) {
-                        overflowSectionIsExperience = true;
+                        overflowItemSectionKey = splitSectionKey;
                         const pageRect = $firstPage[0].getBoundingClientRect();
                         const pageBottom = pageRect.bottom;
 
@@ -2080,7 +2237,7 @@
                             el.offsetHeight; // force layout
                             const r = el.getBoundingClientRect();
                             if (r.bottom > pageBottom + 0.5) {
-                                overflowExperienceItemIndex = i;
+                                overflowItemIndex = i;
                                 return false;
                             }
                         });
@@ -2104,14 +2261,14 @@
                     }
 
                     // index === firstOverflowSectionIndex
-                    if (overflowSectionIsExperience && overflowExperienceItemIndex >= 0) {
+                    if (overflowItemSectionKey && overflowItemIndex >= 0) {
                         // Keep section header; move only overflowing items
                         $sec.css({ 'display': '', 'visibility': 'visible' });
-                        const $items = $sec.find('.experience-item');
+                        const $items = $sec.find(splitItemSelector(overflowItemSectionKey));
                         $items.each(function(i) {
                             $(this).css({
-                                'display': i >= overflowExperienceItemIndex ? 'none' : '',
-                                'visibility': i >= overflowExperienceItemIndex ? 'hidden' : 'visible'
+                                'display': i >= overflowItemIndex ? 'none' : '',
+                                'visibility': i >= overflowItemIndex ? 'hidden' : 'visible'
                             });
                         });
                     } else {
@@ -2180,7 +2337,7 @@
                 // Clone the content
                 const $contentClone = $content.clone(true);
                 // Cloned nodes copy inline display/visibility from the live DOM; clear before applying page-2 rules
-                $contentClone.find('.experience-item, .education-item').css({
+                $contentClone.find('.experience-item, .education-item, .project-item').css({
                     display: '',
                     visibility: ''
                 });
@@ -2202,13 +2359,13 @@
                     }
 
                     // index === firstOverflowSectionIndex
-                    if (overflowSectionIsExperience && overflowExperienceItemIndex >= 0) {
+                    if (overflowItemSectionKey && overflowItemIndex >= 0) {
                         $sec.css({ 'display': '', 'visibility': 'visible' });
-                        const $items = $sec.find('.experience-item');
+                        const $items = $sec.find(splitItemSelector(overflowItemSectionKey));
                         $items.each(function(i) {
                             $(this).css({
-                                'display': i >= overflowExperienceItemIndex ? 'none' : '',
-                                'visibility': i >= overflowExperienceItemIndex ? 'hidden' : 'visible'
+                                'display': i >= overflowItemIndex ? 'none' : '',
+                                'visibility': i >= overflowItemIndex ? 'hidden' : 'visible'
                             });
                         });
                     } else {
@@ -2234,14 +2391,14 @@
                     }
 
                     // index === firstOverflowSectionIndex
-                    if (overflowSectionIsExperience && $sec.hasClass('experience')) {
+                    if (overflowItemSectionKey && $sec.hasClass(overflowItemSectionKey)) {
                         $sec.css({ 'display': 'block', 'visibility': 'visible' });
-                        const $items = $sec.find('.experience-item');
-                        if (overflowExperienceItemIndex >= 0) {
+                        const $items = $sec.find(splitItemSelector(overflowItemSectionKey));
+                        if (overflowItemIndex >= 0) {
                             $items.each(function(i) {
                                 $(this).css({
-                                    'display': i < overflowExperienceItemIndex ? 'none' : 'block',
-                                    'visibility': i < overflowExperienceItemIndex ? 'hidden' : 'visible'
+                                    'display': i < overflowItemIndex ? 'none' : 'block',
+                                    'visibility': i < overflowItemIndex ? 'hidden' : 'visible'
                                 });
                             });
                         } else {
@@ -2262,7 +2419,7 @@
                         $sec.remove();
                     }
                 });
-                $contentClone.find('.experience-item, .education-item').each(function() {
+                $contentClone.find('.experience-item, .education-item, .project-item').each(function() {
                     const $item = $(this);
                     if ($item.css('display') === 'none' || $item.css('visibility') === 'hidden') {
                         $item.remove();
@@ -2275,8 +2432,8 @@
                 }
 
                 // Continuation page: don't repeat "JOB EXPERIENCE" if it already appeared on page 1
-                if (overflowSectionIsExperience && overflowExperienceItemIndex >= 0) {
-                    $contentClone.find('section.experience > .section-title').css({
+                if (overflowItemSectionKey && overflowItemIndex >= 0) {
+                    $contentClone.find('section.' + overflowItemSectionKey + ' > .section-title').css({
                         display: 'none',
                         visibility: 'hidden'
                     });
@@ -3601,6 +3758,7 @@
                 locationStr = c && co ? (c + ', ' + co) : (c || co);
             }
             $cityInput.val(locationStr).trigger('input');
+            $fontFamilySelect.val(normalizeFontFamily(cvData.font_family));
             setResumeVisibilityFromData(cvData);
             $summaryInput.val(cvData.summary != null ? String(cvData.summary) : '').trigger('input');
             if (cvData.photo) {
@@ -3623,7 +3781,14 @@
                 handleFormChange();
             }, 100);
 
-            Object.keys(availableSections).forEach(function(sectionKey) {
+            const loadSectionOrder = sectionOrderingEnabled() ? normalizeSectionOrder(cvData.section_order) : [];
+            defaultSectionOrder.forEach(function(sectionKey) {
+                if (cvData[sectionKey] && cvData[sectionKey].length > 0 && !loadSectionOrder.includes(sectionKey)) {
+                    loadSectionOrder.push(sectionKey);
+                }
+            });
+
+            loadSectionOrder.forEach(function(sectionKey) {
                 if (cvData[sectionKey] && cvData[sectionKey].length > 0) {
                     const sectionConfig = availableSections[sectionKey];
                     
@@ -3697,6 +3862,7 @@
                 }
             });
 
+            refreshSectionOrderControls();
             collapseAllAddedSections();
 
             setTimeout(function() {
@@ -4162,6 +4328,7 @@
             const $sectionFields = generateSectionFields(sectionKey, sectionConfig);
             $('#btn-add-sections').before($sectionFields);
             addedSections.add(sectionKey);
+            refreshSectionOrderControls();
 
             const debouncedHandler = debounce(handleFormChange, 300);
             $sectionFields.find('input, textarea').on('input change', debouncedHandler);
@@ -4565,6 +4732,14 @@
                 )
                 .append(
                     $('<div class="section-header__actions">')
+                        .append(
+                            $('<button type="button" class="btn-section-order btn-section-order--up" aria-label="Move section up">')
+                                .html('<i class="fas fa-arrow-up" aria-hidden="true"></i>')
+                        )
+                        .append(
+                            $('<button type="button" class="btn-section-order btn-section-order--down" aria-label="Move section down">')
+                                .html('<i class="fas fa-arrow-down" aria-hidden="true"></i>')
+                        )
                         .append(
                             $('<button type="button" class="btn-section-tips cv-soon" aria-disabled="true" tabindex="-1" data-tooltip="Coming soon">')
                                 .append('<i class="fas fa-lightbulb" aria-hidden="true"></i>')
@@ -5183,6 +5358,12 @@
                     addedSections.delete(sectionKey);
                     // Clear entry count for this section
                     delete sectionEntryCounts[sectionKey];
+                    const $template = getPrimaryPreviewTemplate();
+                    if ($template.length) {
+                        $template.find('section.' + sectionKey).remove();
+                    }
+                    refreshSectionOrderControls();
+                    window.__cvBuilderDirty = true;
                     handleFormChange();
                 });
             }

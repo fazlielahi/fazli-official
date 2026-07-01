@@ -3,6 +3,7 @@
 return [
     'Home' => 'Home',
     'About' => 'About',
+    'About TFC' => 'About TFC',
     'Founder' => 'Founder',
     'Contact' => 'Contact',
     'Contact Me' => 'Contact Me',

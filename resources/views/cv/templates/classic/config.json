@@ -1,0 +1,30 @@
+{
+  "name": "Classic",
+  "slug": "classic",
+  "description": "A traditional two-column resume template with serif headings and a clean print layout.",
+  "tab": "popular",
+  "sections": {
+    "required": ["header"],
+    "optional": [
+      "summary",
+      "experience",
+      "education",
+      "skills",
+      "languages",
+      "projects",
+      "awards",
+      "certifications",
+      "references"
+    ]
+  },
+  "layout": {
+    "type": "two-column",
+    "sidebar": "left"
+  },
+  "styling": {
+    "primary_color": "#b8893c",
+    "secondary_color": "#2f3437",
+    "font_family": "Inter, Arial, sans-serif",
+    "heading_font_family": "Libre Baskerville, Georgia, serif"
+  }
+}

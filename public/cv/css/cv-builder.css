@@ -441,6 +441,35 @@ body.page-cv-builder .cv-builder > .cv-builder__main {
     margin-left: 2px;
 }
 
+.cv-font-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(26, 32, 44, 0.12);
+    background: rgba(255, 255, 255, 0.7);
+    color: #1a202c;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.cv-font-picker__select {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    outline: none;
+    cursor: pointer;
+    padding: 0 2px;
+}
+
+.cv-font-picker__label {
+    line-height: 1;
+}
+
 /* Preview: experience location line */
 .item-meta {
     display: inline-flex;
@@ -3511,6 +3540,31 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
     gap: 10px;
     flex-shrink: 0;
 }
+.btn-section-order {
+    width: 28px;
+    height: 28px;
+    border: 1px solid rgba(26, 32, 44, 0.12);
+    border-radius: 8px;
+    background: #ffffff;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+.btn-section-order:hover:not(:disabled) {
+    background: #f8fafc;
+    color: #0f172a;
+}
+.btn-section-order:disabled,
+.btn-section-order[aria-disabled="true"] {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+.btn-section-order i {
+    font-size: 12px;
+}
 .added-section__title {
     margin: 0;
     font-size: 16px;
@@ -3520,6 +3574,8 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .added-section__icon {

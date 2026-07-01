@@ -70,7 +70,6 @@
 .blogs-one__content {
     position: relative;
     display: block;
-    margin-top: 15px;
 }
 
 .blogs-one__tag-and-meta {
@@ -117,11 +116,10 @@
 .services-container{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
 }
 
 .services-card{
-    width: 400px;
+    width: 310px;
     margin-top: 25px;
 }
 
@@ -3052,4 +3050,147 @@
     .services-main-image{
       display: none;
     }
+}
+
+/* Services page palette and compact card overrides */
+body.page-services {
+    --svc-primary: #0F3A6D;
+    --svc-primary-dark: #0a2a50;
+    --svc-accent: #F4A32C;
+    --svc-bg: #e9eef5;
+    --svc-surface: #ffffff;
+    --svc-text: #0f172a;
+    --svc-muted: #6b7280;
+    --svc-line: #e5e7eb;
+    --svc-shadow: 0 16px 40px rgba(15, 23, 42, .10), 0 4px 12px rgba(15, 23, 42, .05);
+    background: var(--svc-bg) !important;
+    color: var(--svc-text);
+}
+
+body.page-services[data-theme="dark"] {
+    --svc-bg: #0c0f14;
+    --svc-surface: #1a1f27;
+    --svc-text: #e8eaed;
+    --svc-muted: #9aa0a8;
+    --svc-line: #3a424d;
+    --svc-shadow: 0 16px 40px rgba(0, 0, 0, .38), 0 4px 12px rgba(0, 0, 0, .22);
+}
+
+body.page-services .blogs-one {
+    background: var(--svc-bg) !important;
+    padding: 28px 0 !important;
+}
+
+body.page-services .section-title {
+    margin-bottom: 22px !important;
+}
+
+body.page-services .section-title__title {
+    font-size: clamp(28px, 4vw, 44px) !important;
+    line-height: 1.08 !important;
+}
+
+body.page-services .services-container {
+    gap: 14px !important;
+    row-gap: 24px !important;
+}
+
+body.page-services .section-title__tagline {
+    color: var(--svc-accent) !important;
+}
+
+body.page-services .section-title__tagline-shape {
+    background: var(--svc-accent) !important;
+}
+
+body.page-services .section-title__title,
+body.page-services .section-title__title span,
+body.page-services .blogs-one__title a {
+    color: var(--svc-text) !important;
+}
+
+body.page-services .solution {
+    color: var(--svc-accent) !important;
+}
+
+body.page-services .blogs-one__single,
+body.page-services .service-card-home {
+    background: var(--svc-surface) !important;
+    border: 1px solid var(--svc-line) !important;
+    box-shadow: var(--svc-shadow) !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
+    overflow: hidden !important;
+}
+
+body.page-services .blogs-one__img-box,
+body.page-services .blogs-one__img {
+    height: 130px !important;
+}
+
+body.page-services .blogs-one__img img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+body.page-services .blogs-one__content {
+    background: var(--svc-surface) !important;
+    padding-top: 5px !important;
+}
+
+body.page-services .blogs-one__title {
+    margin-bottom: 8px !important;
+}
+
+body.page-services .blogs-one__title a {
+    font-size: 16px !important;
+    line-height: 1.25 !important;
+}
+
+body.page-services .blogs-one__ratting-and-heart-box {
+    margin-bottom: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+body.page-services .blogs-one__ratting li span {
+    font-size: 13px !important;
+}
+
+body.page-services .blogs-one__heart a {
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+}
+
+body.page-services .blogs-one__ratting-text {
+    color: var(--svc-muted) !important;
+}
+
+body.page-services .blogs-one__ratting li span,
+body.page-services .blogs-one__heart a {
+    color: var(--svc-accent) !important;
+}
+
+body.page-services .blogs-one__heart a {
+    background: rgba(244, 163, 44, .14) !important;
+}
+
+body.page-services .blogs-one__btn,
+body.page-services .thm-btn {
+    background: linear-gradient(180deg, var(--svc-primary) 0%, var(--svc-primary-dark) 100%) !important;
+    color: #ffffff !important;
+    min-height: 36px !important;
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+}
+
+body.page-services .blogs-one__btn:hover,
+body.page-services .thm-btn:hover {
+    background: var(--svc-accent) !important;
+    color: var(--svc-primary) !important;
+}
+
+body.page-services .blogs-one__btn span {
+    color: inherit !important;
 }

@@ -79,10 +79,18 @@
                         <i class="fas fa-file-lines" aria-hidden="true"></i>
                         <span>Content</span>
                     </span>
-                    <span class="cv-builder-toolbar__tab cv-builder-toolbar__tab--static cv-soon" tabindex="-1" data-tooltip="Coming soon">
-                        <i class="fas fa-palette" aria-hidden="true"></i>
-                        <span>Customize</span>
-                    </span>
+                    <label class="cv-font-picker" for="cv-font-family-select">
+                        <i class="fas fa-font" aria-hidden="true"></i>
+                        <span class="cv-font-picker__label">Font</span>
+                        <select id="cv-font-family-select" class="cv-font-picker__select">
+                            <option value="classic">Classic</option>
+                            <option value="georgia">Georgia</option>
+                            <option value="arial">Arial</option>
+                            <option value="inter">Inter</option>
+                            <option value="poppins">Poppins</option>
+                            <option value="roboto">Roboto</option>
+                        </select>
+                    </label>
                     <span class="cv-builder-toolbar__tab cv-builder-toolbar__tab--static cv-soon" tabindex="-1" data-tooltip="Coming soon">
                         <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
                         <span>AI Tools</span>
