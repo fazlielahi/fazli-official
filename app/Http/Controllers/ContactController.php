@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -16,22 +18,28 @@ class ContactController extends Controller
     public function sendEmail(Request $request)
     {
         $validated = $request->validate([
+            'name' => 'required|string|max:120',
             'email' => 'required|email',
-            'phone' => 'required',
-            'subject' => 'required',
-            'message' => 'required',
+            'subject' => 'required|string|max:180',
+            'message' => 'required|string|max:5000',
         ]);
 
-        Mail::send([], [], function ($message) use ($validated) {
-            $message->to('fazlielahi03060155124@gmail.com')
-                ->subject($validated['subject'])
-                ->setBody("
-                    Email: {$validated['email']}<br>
-                    Phone: {$validated['phone']}<br>
-                    Message: {$validated['message']}
-                ", 'text/html');
-        });
+        $recipient = config('mail.contact_to') ?: config('mail.from.address');
 
-        return back()->with('success', 'Message sent successfully!');
+        try {
+            Mail::send('emails.contact-message', ['contact' => $validated], function ($message) use ($validated, $recipient) {
+                $message->to($recipient)
+                    ->replyTo($validated['email'], $validated['name'])
+                    ->subject('Contact form: ' . $validated['subject']);
+            });
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return back()
+                ->withInput()
+                ->with('error', __('lang.Contact message could not be sent'));
+        }
+
+        return back()->with('success', __('lang.Contact message sent successfully'));
     }
 }

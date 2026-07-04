@@ -76,6 +76,11 @@
     align-items: start;
 }
 
+.cv-template.professional .primary-column,
+.cv-template.professional .secondary-column {
+    min-width: 0;
+}
+
 .cv-template.professional section {
     margin: 0 0 4.2mm;
     page-break-inside: auto;
@@ -111,7 +116,8 @@
 .cv-template.professional .project-item,
 .cv-template.professional .award-item,
 .cv-template.professional .education-item,
-.cv-template.professional .certification-item {
+.cv-template.professional .certification-item,
+.cv-template.professional .reference-item {
     margin: 0 0 3mm;
     padding: 0 0 2.6mm;
     border-bottom: 0.2mm dotted #c9d1d9;
@@ -123,7 +129,8 @@
 .cv-template.professional .project-item:last-child,
 .cv-template.professional .award-item:last-child,
 .cv-template.professional .education-item:last-child,
-.cv-template.professional .certification-item:last-child {
+.cv-template.professional .certification-item:last-child,
+.cv-template.professional .reference-item:last-child {
     margin-bottom: 0;
     padding-bottom: 0;
     border-bottom: 0;
@@ -185,12 +192,24 @@
 .cv-template.professional .item-organization,
 .cv-template.professional .item-institution,
 .cv-template.professional .item-issuer,
-.cv-template.professional .item-period {
+.cv-template.professional .item-period,
+.cv-template.professional .ref-position,
+.cv-template.professional .ref-company,
+.cv-template.professional .ref-email,
+.cv-template.professional .ref-phone {
     margin: 0 0 0.7mm;
     color: var(--professional-blue);
     font-size: 6.1pt;
     line-height: 1.24;
     font-weight: 700;
+}
+
+.cv-template.professional .ref-name {
+    margin: 0 0 0.9mm;
+    color: var(--professional-text);
+    font-size: 7.2pt;
+    line-height: 1.18;
+    font-weight: 800;
 }
 
 .cv-template.professional .skills-list,

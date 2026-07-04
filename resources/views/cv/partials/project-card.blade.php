@@ -53,9 +53,13 @@
                         <span class="cv-project-card__menu-label">Move</span>
                         <span class="cv-project-card__soon">Coming soon</span>
                     </button>
-                    <button type="button" class="cv-project-card__menu-item" data-action="download" role="menuitem">
+                    <button type="button" class="cv-project-card__menu-item" data-action="download-pdf" role="menuitem">
                         @include('cv.partials.svg-icon', ['name' => 'arrow-down-tray'])
-                        <span class="cv-project-card__menu-label">Download</span>
+                        <span class="cv-project-card__menu-label">{{ __('lang.CV download as PDF') }}</span>
+                    </button>
+                    <button type="button" class="cv-project-card__menu-item" data-action="download-png" role="menuitem" title="{{ __('lang.CV download PNG hint') }}">
+                        @include('cv.partials.svg-icon', ['name' => 'document'])
+                        <span class="cv-project-card__menu-label">{{ __('lang.CV download as PNG zip') }}</span>
                     </button>
                     <button type="button" class="cv-project-card__menu-item" data-action="share" role="menuitem" disabled>
                         @include('cv.partials.svg-icon', ['name' => 'share'])

@@ -1,5 +1,6 @@
 @extends('site.layout')
-@section('title', 'Contact')
+@section('body_class', 'page-contact')
+@section('title', __('lang.Contact'))
 
 
 @section('meta')
@@ -49,7 +50,6 @@
 
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" />
     <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/contact.css') }}">
 
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,6 +93,7 @@
     <!-- template styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" />
+    <link rel="stylesheet" href="{{ asset('styles/contact.css') }}">
 
     <style>
         .blog-image-container{
@@ -107,38 +108,6 @@
 @endsection
 
 @section('content')
-
-    <!--Page Header Start-->
-    <section class="page-header">
-    <div class="breadcrumb-wrapper bg-cover">
-                <div class="container">
-                    <div class="page-heading">
-                        <h1 class="wow fadeInUp" data-wow-delay=".3s">{{ __('lang.We’d Love to Hear From You') }}</h1>
-                        <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".5s">
-                            <li>
-                                <a href="{{ route('localized.home', ['lang' => app()->getLocale()])}}">
-                                    {{ __('lang.Home')}}
-                                </a>
-                            </li>
-                            <li>
-                                @if(app()->getLocale() === 'ar')
-                                    <i class="fas fa-chevron-left"></i>
-                                @else
-                                    <i class="fas fa-chevron-right"></i>
-                                @endif
-                            </li>
-                            <li>
-                                {{ __('lang.Contact')}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="blog-image-container contact-image">
-                        <img src="{{ asset('images/contact-image.png') }}" width="100%" alt="TFC - The Fazli Community logo in Contact Page"/>
-                    </div>
-                </div>
-            </div>
-    </section>
-    <!--Page Header End-->
 
     <!--Contact Two Start-->
     <section class="contact-two">
@@ -169,8 +138,8 @@
                             <img src="{{ asset('assets/images/icon/contact-two-icon-3.png') }}" alt="" role="presentation" aria-hidden="true">
                         </div>
                         <h3 class="contact-two__title">{{ __('lang.Email Address') }}</h3>
-                        <p> <a href="info@domain.com">fazli@tamakan.com.sa</a></p>
-                        <p> <a href="mailto:fazlielahi03060155124@gmail.com">fazlielahi03060155124@gmail.com</a></p>
+                        <p> <a href="info@thefazli.com">info@thefazli.com</a></p>
+                        <p> <a href="mailto:fazlielahi01@gmail.com">fazlielahi01@gmail.com</a></p>
                     </div>
                 </li>
                 <li class="col-xl-3 col-lg-6 col-md-6 wow fadeInRight" data-wow-delay="400ms">
@@ -205,34 +174,65 @@
                             <div class="section-title-two__tagline-box">
                                 <span class="section-title-two__tagline">{{ __('lang.Get in Touch') }}</span>
                             </div>
-                            <h2 class="section-title-two__title">{{ __('lang.I am Here to Help and Ready to Hear from You') }}</h2>
+                            <h2 class="section-title-two__title">{{ __('lang.We are Here to Help and Ready to Hear from You') }}</h2>
                         </div>
-                        <form class="contact-form-validated contact-three__form" action="{{ asset('assets/inc/sendemail.php') }}"
-                            method="post" novalidate="novalidate">
+                        @if (session('success'))
+                            <div class="contact-form-alert contact-form-alert--success" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if (session('error'))
+                            <div class="contact-form-alert contact-form-alert--error" role="alert">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        @if ($errors->any())
+                            <div class="contact-form-alert contact-form-alert--error" role="alert">
+                                {{ __('lang.Please check the form and try again') }}
+                            </div>
+                        @endif
+
+                        <form class="contact-three__form" action="{{ route('localized.contact.send', ['lang' => app()->getLocale()]) }}"
+                            method="post">
+                            @csrf
                             <div class="row">
                                 <div class="col-xl-6 col-lg-6">
                                     <h4 class="contact-three__input-title">{{ __('lang.Full Name') }}</h4>
                                     <div class="contact-three__input-box">
-                                        <input type="text" name="name" placeholder="{{ __('lang.Jhon Doe Placeholder') }}" required="">
+                                        <input type="text" name="name" value="{{ old('name') }}" placeholder="{{ __('lang.Jhon Doe Placeholder') }}" required>
                                     </div>
+                                    @error('name')
+                                        <p class="contact-form-error">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="col-xl-6 col-lg-6">
                                     <h4 class="contact-three__input-title">{{ __('lang.Email Address') }} *</h4>
                                     <div class="contact-three__input-box">
-                                        <input type="email" name="email" placeholder="{{ __('lang.Email Placeholder') }}" required="">
+                                        <input type="email" name="email" value="{{ old('email') }}" placeholder="{{ __('lang.Email Placeholder') }}" required>
                                     </div>
+                                    @error('email')
+                                        <p class="contact-form-error">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="col-xl-12">
                                     <h4 class="contact-three__input-title">{{ __('lang.Subject') }} *</h4>
                                     <div class="contact-three__input-box">
-                                        <input type="text" name="Phone" placeholder="{{ __('lang.Write about your enquiry') }}" required="">
+                                        <input type="text" name="subject" value="{{ old('subject') }}" placeholder="{{ __('lang.Write about your enquiry') }}" required>
                                     </div>
+                                    @error('subject')
+                                        <p class="contact-form-error">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="col-xl-12">
                                     <h4 class="contact-three__input-title">{{ __('lang.Message') }} *</h4>
                                     <div class="contact-three__input-box text-message-box">
-                                        <textarea name="message" placeholder="{{ __('lang.Write Your Message') }}"></textarea>
+                                        <textarea name="message" placeholder="{{ __('lang.Write Your Message') }}" required>{{ old('message') }}</textarea>
                                     </div>
+                                    @error('message')
+                                        <p class="contact-form-error">{{ $message }}</p>
+                                    @enderror
                                     <div class="contact-three__btn-box">
                                         <button type="submit" class="thm-btn-two contact-three__btn"><span>{{ __('lang.Send') }} {{ __('lang.Message') }}</span><i class="icon-angles-right"></i></button>
                                     </div>

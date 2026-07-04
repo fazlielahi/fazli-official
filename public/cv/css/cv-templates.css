@@ -114,13 +114,64 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 }
 
 @media (max-width: 991px) {
+    html:has(body.page-cv-templates) {
+        height: auto;
+        overflow: auto;
+    }
+
+    body.page-cv-templates {
+        height: auto;
+        min-height: 100vh;
+        max-height: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    body.page-cv-templates .cv-gallery {
+        height: auto;
+        min-height: calc(100dvh - 52px);
+        max-height: none;
+        overflow: visible;
+        padding: 12px 0 calc(92px + env(safe-area-inset-bottom, 0px));
+    }
+
     body.page-cv-templates .cv-gallery > .container {
-        padding-left: 14px;
+        height: auto;
+        min-height: 0;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     body.page-cv-templates .cv-gallery__layout {
-        display: block;
+        display: flex;
+        flex-direction: column;
         height: auto;
+        gap: 12px;
+    }
+
+    body.page-cv-templates .templates-showcase {
+        min-height: 0;
+        max-height: none;
+        overflow: visible;
+        border-radius: 14px;
+    }
+
+    body.page-cv-templates .templates-grid {
+        height: auto;
+        overflow: visible;
+        justify-content: center;
+    }
+
+    body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
+        margin: 8px 8px 0;
+        padding: 6px 8px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 991px) {
+    .templates-grid .template-card {
+        flex: 1 1 calc(50% - 14px);
+        max-width: none;
     }
 }
 
@@ -405,10 +456,62 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 }
 
 @media (max-width: 599px) {
+    .templates-grid {
+        justify-content: center;
+        gap: 16px;
+    }
+
     .templates-grid .template-card {
         flex: 1 1 100%;
-        max-width: 340px;
+        max-width: min(340px, 100%);
         min-width: 0;
+        width: 100%;
+    }
+
+    .template-preview__frame {
+        max-width: min(280px, 100%);
+    }
+
+    .template-preview__actions-overlay {
+        padding: 8px 6px 10px;
+    }
+
+    .template-preview__actions-overlay .template-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .template-preview__actions-overlay .btn-use-template,
+    .template-preview__actions-overlay .btn-preview {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cv-template-tabs__btn {
+        padding: 5px 12px;
+        font-size: 0.75rem;
+    }
+
+    .preview-modal .modal-dialog {
+        max-width: calc(100% - 16px);
+        margin: 0.75rem auto;
+    }
+
+    .preview-modal .modal-header,
+    .preview-modal .modal-body,
+    .preview-modal .modal-footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .preview-modal .modal-footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .preview-modal .modal-footer .btn {
+        width: 100%;
+        margin: 0;
     }
 }
 

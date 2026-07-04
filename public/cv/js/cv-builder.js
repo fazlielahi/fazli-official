@@ -66,6 +66,11 @@
         const $photoPreviewContainer = $('#photo-preview-container');
         const $removePhoto = $('#remove-photo');
         const $fontFamilySelect = $('#cv-font-family-select');
+        const $sectionLayoutTrigger = $('#cv-section-layout-trigger');
+        const $sectionLayoutModal = $('#cv-section-layout-modal');
+        const $sectionLayoutBody = $('#cv-section-layout-body');
+        const $sectionLayoutApply = $('#cv-section-layout-apply');
+        const $sectionLayoutReset = $('#cv-section-layout-reset');
         let photoData = null;
 
         const fontFamilyOptions = {
@@ -199,18 +204,117 @@
 
         // Track which sections are already added
         const addedSections = new Set();
-        const defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references'];
+        const defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
+        const layoutSectionOrder = ['summary', 'experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
+        const defaultSingleColumnLayout = ['summary', 'experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
+        const defaultTwoColumnLayout = {
+            left: ['summary', 'experience', 'projects'],
+            right: ['awards', 'skills', 'education', 'certifications', 'languages', 'references', 'custom']
+        };
+        const defaultModernLayout = {
+            left: ['education', 'references', 'languages'],
+            right: ['summary', 'experience', 'awards', 'projects', 'skills', 'certifications', 'custom']
+        };
+        let currentSectionLayout = null;
         
         // Track entry counts for each section (how many entries per section)
         const sectionEntryCounts = {};
 
-        function sectionOrderingEnabled() {
+        function getSectionLayoutMode() {
             const $template = getPrimaryPreviewTemplate();
-            return $template.find('.cv-body').length > 0 && $template.find('.left-green, .right-content').length === 0;
+            if ($template.hasClass('professional') || $template.find('.professional-columns').length > 0) return 'two-column';
+            if ($template.find('.cv-body').length > 0 && $template.find('.left-green, .right-content').length === 0) return 'single-column';
+            return null;
+        }
+
+        function sectionOrderingEnabled() {
+            return !!getSectionLayoutMode();
+        }
+
+        function getSectionLabel(sectionKey) {
+            if (sectionKey === 'summary') return 'Summary';
+            return availableSections[sectionKey] ? availableSections[sectionKey].name : sectionKey;
+        }
+
+        function getActiveLayoutSectionKeys() {
+            const active = [];
+            if (($summaryInput.val() || '').trim()) active.push('summary');
+            defaultSectionOrder.forEach(function(key) {
+                if (addedSections.has(key) && !active.includes(key)) {
+                    active.push(key);
+                }
+            });
+            return active;
+        }
+
+        function uniqueValidLayoutKeys(keys, activeKeys) {
+            const activeSet = new Set(activeKeys || []);
+            const normalized = [];
+            (Array.isArray(keys) ? keys : []).forEach(function(key) {
+                key = String(key || '');
+                if (activeSet.has(key) && layoutSectionOrder.includes(key) && !normalized.includes(key)) {
+                    normalized.push(key);
+                }
+            });
+            return normalized;
+        }
+
+        function getDefaultTwoColumnLayout() {
+            const $template = getPrimaryPreviewTemplate();
+            const isModern = $template.hasClass('modern') || cvBuilderConfig.templateSlug === 'modern';
+            return isModern ? defaultModernLayout : defaultTwoColumnLayout;
+        }
+
+        function normalizeSectionLayout(layout, activeKeys, mode, fallbackOrder) {
+            mode = mode || getSectionLayoutMode() || 'single-column';
+            activeKeys = Array.isArray(activeKeys) ? activeKeys : getActiveLayoutSectionKeys();
+
+            if (mode === 'two-column') {
+                const defaultLayout = getDefaultTwoColumnLayout();
+                const left = uniqueValidLayoutKeys(layout && layout.left, activeKeys);
+                const right = uniqueValidLayoutKeys(layout && layout.right, activeKeys);
+                const assigned = new Set(left.concat(right));
+
+                activeKeys.forEach(function(key) {
+                    if (assigned.has(key)) return;
+                    const target = defaultLayout.right.includes(key) ? right : left;
+                    target.push(key);
+                    assigned.add(key);
+                });
+
+                return { left: left, right: right };
+            }
+
+            let main = [];
+            if (layout && Array.isArray(layout.main)) {
+                main = uniqueValidLayoutKeys(layout.main, activeKeys);
+            } else if (layout && Array.isArray(layout.left)) {
+                main = uniqueValidLayoutKeys([].concat(layout.left || [], layout.right || []), activeKeys);
+            } else if (Array.isArray(fallbackOrder)) {
+                main = uniqueValidLayoutKeys(fallbackOrder, activeKeys);
+            }
+
+            activeKeys.forEach(function(key) {
+                if (!main.includes(key)) main.push(key);
+            });
+
+            return { main: main };
+        }
+
+        function flattenSectionLayout(layout) {
+            if (!layout || typeof layout !== 'object') return [];
+            if (Array.isArray(layout.main)) return layout.main.slice();
+            return [].concat(layout.left || [], layout.right || []);
         }
 
         function getCurrentSectionOrder() {
             if (!sectionOrderingEnabled()) return [];
+            return flattenSectionLayout(getCurrentSectionLayout()).filter(function(key) {
+                return key !== 'summary';
+            });
+        }
+
+        function getFormSectionOrder() {
             const order = [];
             $form.find('.added-section[data-section-key]').each(function() {
                 const key = String($(this).attr('data-section-key') || '');
@@ -224,6 +328,13 @@
                 }
             });
             return order;
+        }
+
+        function getCurrentSectionLayout() {
+            const mode = getSectionLayoutMode();
+            if (!mode) return null;
+            currentSectionLayout = normalizeSectionLayout(currentSectionLayout, getActiveLayoutSectionKeys(), mode, getFormSectionOrder());
+            return currentSectionLayout;
         }
 
         function normalizeSectionOrder(order) {
@@ -246,13 +357,128 @@
         function refreshSectionOrderControls() {
             const $sections = $form.find('.added-section[data-section-key]');
             const enabled = sectionOrderingEnabled();
-            $sections.find('.btn-section-order').prop('hidden', !enabled).attr('aria-hidden', enabled ? 'false' : 'true');
+            $sections.find('.btn-section-order').prop('hidden', true).attr('aria-hidden', 'true');
+            $sectionLayoutTrigger.prop('hidden', !enabled).attr('aria-hidden', enabled ? 'false' : 'true');
             if (!enabled) return;
             $sections.each(function(index) {
                 const $section = $(this);
                 $section.find('.btn-section-order--up').prop('disabled', index === 0).attr('aria-disabled', index === 0 ? 'true' : 'false');
                 $section.find('.btn-section-order--down').prop('disabled', index === $sections.length - 1).attr('aria-disabled', index === $sections.length - 1 ? 'true' : 'false');
             });
+        }
+
+        function getDefaultLayoutForMode(mode, activeKeys) {
+            if (mode === 'two-column') {
+                const defaultLayout = getDefaultTwoColumnLayout();
+                return normalizeSectionLayout({ left: defaultLayout.left, right: defaultLayout.right }, activeKeys, mode);
+            }
+            return normalizeSectionLayout({ main: defaultSingleColumnLayout }, activeKeys, mode);
+        }
+
+        function renderSectionLayoutModal() {
+            if (!$sectionLayoutBody.length) return;
+            const mode = getSectionLayoutMode();
+            const activeKeys = getActiveLayoutSectionKeys();
+
+            if (!mode || activeKeys.length === 0) {
+                $sectionLayoutBody.html('<div class="cv-section-layout-empty">Add at least one section before changing order.</div>');
+                return;
+            }
+
+            currentSectionLayout = normalizeSectionLayout(currentSectionLayout, activeKeys, mode, getFormSectionOrder());
+            const columns = mode === 'two-column'
+                ? [{ key: 'left', title: 'Left column' }, { key: 'right', title: 'Right column' }]
+                : [{ key: 'main', title: 'Sections' }];
+
+            const $grid = $('<div>')
+                .addClass('cv-section-layout-grid')
+                .toggleClass('cv-section-layout-grid--single', mode !== 'two-column')
+                .attr('data-layout-mode', mode);
+
+            columns.forEach(function(column) {
+                const $column = $('<div>')
+                    .addClass('cv-section-layout-column')
+                    .attr('data-layout-column', column.key)
+                    .append($('<h4 class="cv-section-layout-column__title">').text(column.title));
+
+                const $list = $('<div class="cv-section-layout-list">')
+                    .attr('data-layout-list', column.key);
+
+                (currentSectionLayout[column.key] || []).forEach(function(sectionKey, index) {
+                    const $item = $('<div class="cv-section-layout-item" draggable="true">')
+                        .attr('data-section-key', sectionKey)
+                        .append('<span class="cv-section-layout-item__handle" aria-hidden="true"><i class="fas fa-grip-vertical"></i></span>')
+                        .append($('<span class="cv-section-layout-item__label">').text(getSectionLabel(sectionKey)))
+                        .append(
+                            $('<span class="cv-section-layout-item__actions">')
+                                .append('<button type="button" class="cv-section-layout-item__btn" data-layout-action="up" aria-label="Move up"><i class="fas fa-arrow-up"></i></button>')
+                                .append('<button type="button" class="cv-section-layout-item__btn" data-layout-action="down" aria-label="Move down"><i class="fas fa-arrow-down"></i></button>')
+                                .append(mode === 'two-column'
+                                    ? '<button type="button" class="cv-section-layout-item__btn" data-layout-action="switch" aria-label="Move to other column"><i class="fas fa-right-left"></i></button>'
+                                    : '')
+                        );
+                    $list.append($item);
+                });
+
+                $column.append($list);
+                $grid.append($column);
+            });
+
+            $sectionLayoutBody.empty().append($grid);
+            refreshSectionLayoutModalButtons();
+        }
+
+        function refreshSectionLayoutModalButtons() {
+            $sectionLayoutBody.find('.cv-section-layout-list').each(function() {
+                const $items = $(this).children('.cv-section-layout-item');
+                $items.each(function(index) {
+                    const $item = $(this);
+                    $item.find('[data-layout-action="up"]').prop('disabled', index === 0);
+                    $item.find('[data-layout-action="down"]').prop('disabled', index === $items.length - 1);
+                });
+            });
+        }
+
+        function readSectionLayoutFromModal() {
+            const mode = getSectionLayoutMode();
+            const layout = mode === 'two-column' ? { left: [], right: [] } : { main: [] };
+            $sectionLayoutBody.find('[data-layout-list]').each(function() {
+                const column = String($(this).attr('data-layout-list') || '');
+                if (!Object.prototype.hasOwnProperty.call(layout, column)) return;
+                $(this).children('.cv-section-layout-item').each(function() {
+                    const key = String($(this).attr('data-section-key') || '');
+                    if (key && !layout[column].includes(key)) {
+                        layout[column].push(key);
+                    }
+                });
+            });
+            return normalizeSectionLayout(layout, getActiveLayoutSectionKeys(), mode, getFormSectionOrder());
+        }
+
+        function applySectionLayoutFromModal() {
+            currentSectionLayout = readSectionLayoutFromModal();
+            if (currentSectionLayout && currentSectionLayout.main) {
+                currentSectionLayout.main.forEach(function(key) {
+                    if (key === 'summary') return;
+                    const $section = $('#section-' + key);
+                    if ($section.length) $('#btn-add-sections').before($section);
+                });
+            }
+            closeSectionLayoutModal();
+            handleFormChange();
+        }
+
+        function openSectionLayoutModal() {
+            renderSectionLayoutModal();
+            $sectionLayoutModal.attr('aria-hidden', 'false');
+            $sectionLayoutTrigger.attr('aria-expanded', 'true');
+            $('body').addClass('cv-modal-open');
+        }
+
+        function closeSectionLayoutModal() {
+            $sectionLayoutModal.attr('aria-hidden', 'true');
+            $sectionLayoutTrigger.attr('aria-expanded', 'false');
+            $('body').removeClass('cv-modal-open');
         }
 
         // Available sections configuration
@@ -355,6 +581,15 @@
                     { name: 'email', label: 'Email', type: 'email', placeholder: 'email@example.com' },
                     { name: 'phone', label: 'Phone (Optional)', type: 'text', placeholder: '+1234567890' }
                 ]
+            },
+            'custom': {
+                name: 'Custom Section',
+                description: 'Add your own section title and content (e.g. Publications, Volunteering).',
+                iconSvg: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+                fields: [
+                    { name: 'title', label: 'Entry Title (Optional)', type: 'text', placeholder: 'e.g., Item or activity name' },
+                    { name: 'content', label: 'Content', type: 'textarea', placeholder: 'Write your content here...' }
+                ]
             }
         };
 
@@ -368,6 +603,7 @@
             'projects',
             'languages',
             'references',
+            'custom',
         ]);
 
         // Which fields to show in list view per section
@@ -377,6 +613,7 @@
             projects: { primary: 'name', secondary: 'technologies' },
             languages: { primary: 'language', secondary: 'proficiency' },
             references: { primary: 'name', secondary: 'company' },
+            custom: { primary: 'title', secondary: '' },
         };
 
         function readResumeShowHidden($el) {
@@ -537,7 +774,8 @@
                     resume_show_email: readResumeShowHidden($('#cv-resume-show-email')),
                     resume_show_phone: readResumeShowHidden($('#cv-resume-show-phone')),
                     resume_show_location: readResumeShowHidden($('#cv-resume-show-location')),
-                    section_order: getCurrentSectionOrder()
+                    section_order: getCurrentSectionOrder(),
+                    section_layout: getCurrentSectionLayout()
                 };
 
                 addedSections.forEach(function(sectionKey) {
@@ -560,6 +798,10 @@
                         }
                     });
                 });
+
+                if (addedSections.has('custom')) {
+                    data.custom_heading = String($('#custom-section-heading').val() || '').trim();
+                }
 
                 // Compatibility mapping for preview/templates
                 // Experience preview currently renders `item.period`, so derive it from new fields when present.
@@ -784,6 +1026,11 @@
                     (item.email ? '<p class="ref-email">' + escapeHtml(item.email) + '</p>' : '') +
                     (item.phone ? '<p class="ref-phone">' + escapeHtml(item.phone) + '</p>' : '') +
                     '</div>';
+            } else if (sectionKey === 'custom') {
+                html = '<div class="custom-item">' +
+                    (item.title ? '<h3 class="item-title">' + escapeHtml(item.title) + '</h3>' : '') +
+                    (item.content ? '<div class="item-description">' + sanitizeHtml(item.content) + '</div>' : '') +
+                    '</div>';
             }
             
             return $(html);
@@ -803,6 +1050,184 @@
                     $body.append($section);
                 }
             });
+        }
+
+        function sectionKeyFromElement($section) {
+            let found = null;
+            layoutSectionOrder.some(function(key) {
+                if ($section.hasClass(key)) {
+                    found = key;
+                    return true;
+                }
+                return false;
+            });
+            return found;
+        }
+
+        function applySectionLayoutToPreview($template, data) {
+            if (!$template || !$template.length) return;
+
+            const activeKeys = [];
+            $template.find('section').each(function() {
+                const key = sectionKeyFromElement($(this));
+                if (key && !activeKeys.includes(key)) activeKeys.push(key);
+            });
+
+            if ($template.hasClass('professional')) {
+                const $left = $template.find('.primary-column').first();
+                const $right = $template.find('.secondary-column').first();
+                if (!$left.length || !$right.length) return;
+
+                const layout = normalizeSectionLayout(
+                    data && data.section_layout,
+                    activeKeys,
+                    'two-column',
+                    data && data.section_order
+                );
+                currentSectionLayout = layout;
+
+                ['left', 'right'].forEach(function(column) {
+                    (layout[column] || []).forEach(function(sectionKey, index) {
+                        const $section = $template.find('section.' + sectionKey).first();
+                        if (!$section.length) return;
+                        $section
+                            .attr('data-layout-column', column)
+                            .css({
+                                'order': index + 1
+                            });
+                        (column === 'left' ? $left : $right).append($section);
+                    });
+                });
+                return;
+            }
+
+            const $body = $template.find('.cv-body').first();
+            if (!$body.length) return;
+
+            const layout = normalizeSectionLayout(
+                data && data.section_layout,
+                activeKeys,
+                'single-column',
+                data && data.section_order
+            );
+            currentSectionLayout = layout;
+            (layout.main || []).forEach(function(sectionKey, index) {
+                const $section = $body.children('section.' + sectionKey).first();
+                if ($section.length) {
+                    $section.css('order', index + 1);
+                    $body.append($section);
+                }
+            });
+        }
+
+        function getProfessionalSectionContainer($template, sectionKey) {
+            if (!$template || !$template.hasClass('professional')) return $();
+            const layout = normalizeSectionLayout(currentSectionLayout, getActiveLayoutSectionKeys(), 'two-column', getFormSectionOrder());
+            const column = layout.right.includes(sectionKey) ? 'right' : 'left';
+            return $template.find(column === 'right' ? '.secondary-column' : '.primary-column').first();
+        }
+
+        function placeProfessionalSection($template, sectionKey, $section) {
+            const $container = getProfessionalSectionContainer($template, sectionKey);
+            if (!$container.length || !$section || !$section.length) return false;
+            $container.append($section);
+            return true;
+        }
+
+        function getSidebarDarkSectionContainer($template, sectionKey) {
+            if (!$template || !$template.hasClass('sidebar-dark')) return $();
+            const sidebarSections = ['skills', 'languages', 'references'];
+            if (sidebarSections.includes(sectionKey)) {
+                return $template.find('.sidebar-content').first();
+            }
+            return $template.find('.right-content').first();
+        }
+
+        function placeSidebarDarkSection($template, sectionKey, $section) {
+            const $container = getSidebarDarkSectionContainer($template, sectionKey);
+            if (!$container.length || !$section || !$section.length) return false;
+            const order = ['contact', 'skills', 'languages', 'references', 'summary', 'experience', 'education', 'projects', 'awards', 'certifications', 'custom'];
+            const sectionIndex = order.indexOf(sectionKey);
+            let placed = false;
+
+            $container.children('section').each(function() {
+                const $existing = $(this);
+                const existingKey = order.find(function(key) {
+                    return $existing.hasClass(key);
+                });
+                if (existingKey && order.indexOf(existingKey) > sectionIndex) {
+                    $existing.before($section);
+                    placed = true;
+                    return false;
+                }
+            });
+
+            if (!placed) $container.append($section);
+            return true;
+        }
+
+        function getProfessionalSectionTitle(sectionKey, fallback) {
+            const titles = {
+                summary: 'SUMMARY',
+                experience: 'EXPERIENCE',
+                projects: 'PROJECTS',
+                awards: 'KEY ACHIEVEMENTS',
+                skills: 'SKILLS',
+                education: 'EDUCATION',
+                certifications: 'TRAINING / COURSES',
+                languages: 'LANGUAGES',
+                custom: 'CUSTOM',
+            };
+
+            return titles[sectionKey] || fallback;
+        }
+
+        function getCustomSectionDisplayTitle(data, sectionConfig, $template) {
+            const customHeading = String((data && data.custom_heading) || '').trim() || (sectionConfig && sectionConfig.name) || 'Custom';
+            if ($template.hasClass('professional') || $template.hasClass('modern')) {
+                return customHeading.toUpperCase();
+            }
+            return customHeading;
+        }
+
+        function isModernPreviewTemplate($template) {
+            return !!($template && $template.length && ($template.hasClass('modern') || cvBuilderConfig.templateSlug === 'modern'));
+        }
+
+        function placeModernCustomSection($template, $section) {
+            const $right = $template.find('.right-content').first();
+            if (!$right.length || !$section || !$section.length) return false;
+            $right.append($section);
+            return true;
+        }
+
+        function rebuildProfessionalContactInfo($template, data) {
+            if (!$template || !$template.hasClass('professional')) return false;
+
+            const $contactInfo = $template.find('.cv-header .contact-info').first();
+            if (!$contactInfo.length) return true;
+
+            const city = (data.city || '').trim();
+            const country = (data.country || '').trim();
+            const address = (data.address || '').trim();
+            const location = address || [city, country].filter(Boolean).join(', ');
+
+            $contactInfo.empty();
+
+            if (data.phone && data.phone.trim()) {
+                $contactInfo.append($('<span class="contact-item"><i class="fas fa-phone"></i></span>').append(' ' + data.phone.trim()));
+            }
+            if (data.email && data.email.trim()) {
+                $contactInfo.append($('<span class="contact-item"><i class="fas fa-envelope"></i></span>').append(' ' + data.email.trim()));
+            }
+            if (location) {
+                $contactInfo.append($('<span class="contact-item"><i class="fas fa-map-marker-alt"></i></span>').append(' ' + location));
+            }
+            if (data.linkedin && data.linkedin.trim()) {
+                $contactInfo.append($('<span class="contact-item"><i class="fab fa-linkedin"></i></span>').append(' ' + data.linkedin.trim()));
+            }
+
+            return true;
         }
 
         // Update preview - Template-agnostic approach
@@ -897,10 +1322,11 @@
                 const $contactInfo = $template.find('.contact-info');
                 const isModernTemplate = $template.hasClass('modern') || $template.find('.left-green, .right-content').length > 0;
                 const hasContactIcons = $template.find('.contact-icon').length > 0;
+                const professionalContactHandled = rebuildProfessionalContactInfo($template, data);
                 
                 // If this is the modern template but contact lines were previously created using the classic structure
                 // (plain spans, missing .contact-icon), rebuild them so icons and sizing are correct.
-                if ($contactInfo.length > 0 && isModernTemplate) {
+                if (!professionalContactHandled && $contactInfo.length > 0 && isModernTemplate) {
                     const hasBrokenClassicItems = $contactInfo.children('.contact-item').filter(function() {
                         return $(this).is('span') || $(this).find('.contact-icon').length === 0;
                     }).length > 0;
@@ -941,7 +1367,7 @@
                     }
                 }
 
-                if ($contactInfo.length > 0 && hasContactIcons) {
+                if (!professionalContactHandled && $contactInfo.length > 0 && hasContactIcons) {
                     // Modern template: update text content while preserving icons and structure
                     // Only update if structure is intact (has icon and text wrapper)
                     $contactInfo.find('.contact-item').each(function() {
@@ -1013,7 +1439,7 @@
                     // Safety: the classic template uses a "|" separator between plain contact spans.
                     // If it ever got injected into the modern template, remove it so we don't show a stray bar.
                     $contactInfo.children('.contact-separator').remove();
-                } else if ($contactInfo.length > 0) {
+                } else if (!professionalContactHandled && $contactInfo.length > 0) {
                     // Classic template or other: use old update logic
                     // Update email
                     let $emailItem = $contactInfo.find('.contact-item').first();
@@ -1084,11 +1510,15 @@
                     if ($summarySection.length === 0) {
                         // Create summary section if it doesn't exist.
                         // Modern template doesn't have .cv-body; it uses .right-content.
+                        const $professionalContainer = getProfessionalSectionContainer($template, 'summary');
+                        const $sidebarDarkContainer = getSidebarDarkSectionContainer($template, 'summary');
                         const $rightContent = $template.find('.right-content');
                         const $cvBody = $template.find('.cv-body');
 
                         const isModern = $template.hasClass('modern') || $template.find('.left-green, .right-content').length > 0;
-                        const summaryTitle = isModern ? 'ABOUT ME' : 'Professional Summary';
+                        const summaryTitle = $template.hasClass('sidebar-dark')
+                            ? 'PROFILE'
+                            : ($template.hasClass('professional') ? 'SUMMARY' : (isModern ? 'ABOUT ME' : 'Professional Summary'));
 
                         const $summaryEl = $(
                             '<section class="summary">' +
@@ -1097,7 +1527,11 @@
                             '</section>'
                         );
 
-                        if ($rightContent.length > 0) {
+                        if ($professionalContainer.length > 0) {
+                            placeProfessionalSection($template, 'summary', $summaryEl);
+                        } else if ($sidebarDarkContainer.length > 0) {
+                            placeSidebarDarkSection($template, 'summary', $summaryEl);
+                        } else if ($rightContent.length > 0) {
                             // Ensure summary stays at top of right content, before experience if present
                             const $exp = $rightContent.find('section.experience').first();
                             if ($exp.length) $exp.before($summaryEl);
@@ -1109,7 +1543,13 @@
                             $template.prepend($summaryEl);
                         }
                     }
-                    $template.find('.summary .section-content p').text(data.summary);
+                    const $summary = $template.find('.summary').first();
+                    if ($template.hasClass('professional')) {
+                        placeProfessionalSection($template, 'summary', $summary);
+                    } else if ($template.hasClass('sidebar-dark')) {
+                        placeSidebarDarkSection($template, 'summary', $summary);
+                    }
+                    $summary.find('.section-content p').text(data.summary);
                 } else {
                     $summarySection.remove();
                 }
@@ -1142,8 +1582,15 @@
                     }
 
                     const $section = $template.find('section.' + sectionKey);
-                    // Check for new modern template structure (left-green/right-content) or old structure (cv-body)
-                    let $targetContainer = $template.find('.right-content');
+                    // Check for new modern template structure (left-green/right-content),
+                    // professional columns, or old structure (cv-body).
+                    let $targetContainer = getProfessionalSectionContainer($template, sectionKey);
+                    if ($targetContainer.length === 0) {
+                        $targetContainer = getSidebarDarkSectionContainer($template, sectionKey);
+                    }
+                    if ($targetContainer.length === 0) {
+                        $targetContainer = $template.find('.right-content');
+                    }
                     if ($targetContainer.length === 0) {
                         $targetContainer = $template.find('.cv-body');
                     }
@@ -1163,7 +1610,11 @@
                     
                     if ($section.length === 0) {
                         // Create new section if it doesn't exist
-                        const sectionTitle = sectionKey === 'experience' ? 'JOB EXPERIENCE' : 'EDUCATION';
+                        const sectionTitle = $template.hasClass('sidebar-dark')
+                            ? (sectionKey === 'experience' ? 'WORK EXPERIENCE' : 'EDUCATION')
+                            : ($template.hasClass('professional')
+                            ? (sectionKey === 'experience' ? 'EXPERIENCE' : 'EDUCATION')
+                            : (sectionKey === 'experience' ? 'JOB EXPERIENCE' : 'EDUCATION'));
                         const $newSection = $('<section class="' + sectionKey + '"></section>');
                         $newSection.append('<h2 class="section-title">' + sectionTitle + '</h2>');
                         $sectionContent = $('<div class="section-content"></div>');
@@ -1179,6 +1630,10 @@
                                 } else {
                                     $targetContainer.prepend($newSection);
                                 }
+                            } else if ($template.hasClass('professional')) {
+                                placeProfessionalSection($template, sectionKey, $newSection);
+                            } else if ($template.hasClass('sidebar-dark')) {
+                                placeSidebarDarkSection($template, sectionKey, $newSection);
                             } else {
                                 // For right-content, append after summary if exists
                                 const $summary = $targetContainer.find('.summary');
@@ -1195,6 +1650,11 @@
                             $sectionContent = $('<div class="section-content"></div>');
                             $section.append($sectionContent);
                         }
+                        if ($template.hasClass('professional')) {
+                            placeProfessionalSection($template, sectionKey, $section);
+                        } else if ($template.hasClass('sidebar-dark')) {
+                            placeSidebarDarkSection($template, sectionKey, $section);
+                        }
                         // Clear existing items
                         $sectionContent.empty();
                     }
@@ -1206,7 +1666,7 @@
                     });
                 });
 
-                applySectionOrderToPreview($template, data);
+                applySectionLayoutToPreview($template, data);
 
                 // Update or create dynamically added sections
                 addedSections.forEach(function(sectionKey) {
@@ -1227,6 +1687,8 @@
                     const $section = $template.find('section.' + sectionKey);
                     const $cvBody = $template.find('.cv-body');
                     const $rightContent = $template.find('.right-content');
+                    const $professionalContainer = getProfessionalSectionContainer($template, sectionKey);
+                    const $sidebarDarkContainer = getSidebarDarkSectionContainer($template, sectionKey);
 
                     if (validItems.length > 0) {
                         // Section exists or needs to be created
@@ -1235,7 +1697,13 @@
                         if ($section.length === 0) {
                             // Create new section - use standard structure that works with any template
                             const $newSection = $('<section class="' + sectionKey + '"></section>');
-                            $newSection.append('<h2 class="section-title">' + sectionConfig.name + '</h2>');
+                            let sectionTitle = $template.hasClass('professional')
+                                ? getProfessionalSectionTitle(sectionKey, sectionConfig.name)
+                                : sectionConfig.name;
+                            if (sectionKey === 'custom') {
+                                sectionTitle = getCustomSectionDisplayTitle(data, sectionConfig, $template);
+                            }
+                            $newSection.append('<h2 class="section-title">' + escapeHtml(sectionTitle) + '</h2>');
                             const $newSectionContent = $('<div class="section-content"></div>');
                             
                             // Add list wrapper for skills, languages, references
@@ -1244,16 +1712,24 @@
                                                 sectionKey === 'languages' ? 'languages-list' : 'references-list';
                                 $newSectionContent.append('<div class="' + listClass + '"></div>');
                                 $sectionContent = $newSectionContent.find('.' + listClass);
+                            } else if (sectionKey === 'custom') {
+                                const $customItems = $('<div class="custom-items"></div>');
+                                $newSectionContent.append($customItems);
+                                $sectionContent = $customItems;
                             } else {
                                 $sectionContent = $newSectionContent;
                             }
                             
                             $newSection.append($newSectionContent);
                             
-                            // Determine target container (right-content for modern template, cv-body for others)
-                            const $targetContainer = $rightContent.length > 0 ? $rightContent : $cvBody;
+                            // Determine target container (professional columns, right-content for modern, cv-body for classic)
+                            const $targetContainer = $professionalContainer.length > 0 ? $professionalContainer : ($sidebarDarkContainer.length > 0 ? $sidebarDarkContainer : ($rightContent.length > 0 ? $rightContent : $cvBody));
                             
-                            if (sectionKey === 'skills') {
+                            if ($template.hasClass('professional')) {
+                                placeProfessionalSection($template, sectionKey, $newSection);
+                            } else if ($template.hasClass('sidebar-dark')) {
+                                placeSidebarDarkSection($template, sectionKey, $newSection);
+                            } else if (sectionKey === 'skills') {
                                 // Place skills section after experience section
                                 const $experience = $targetContainer.find('section.experience');
                                 if ($experience.length > 0) {
@@ -1308,6 +1784,8 @@
                                 } else {
                                     $targetContainer.append($newSection);
                                 }
+                            } else if (sectionKey === 'custom' && isModernPreviewTemplate($template)) {
+                                placeModernCustomSection($template, $newSection);
                             } else {
                             // Append to body (after summary if exists, otherwise at start)
                             const $summary = $targetContainer.find('section.summary');
@@ -1330,11 +1808,23 @@
                             }
                             if (sectionKey === 'awards' || sectionKey === 'projects') {
                                 // Keep awards/projects directly under experience
-                                const $targetContainer = $rightContent.length > 0 ? $rightContent : $cvBody;
-                                const $experience = $targetContainer.find('section.experience').first();
-                                if ($experience.length) {
-                                    $experience.after($section);
+                                const $targetContainer = $professionalContainer.length > 0 ? $professionalContainer : ($sidebarDarkContainer.length > 0 ? $sidebarDarkContainer : ($rightContent.length > 0 ? $rightContent : $cvBody));
+                                if ($template.hasClass('professional')) {
+                                    placeProfessionalSection($template, sectionKey, $section);
+                                } else if ($template.hasClass('sidebar-dark')) {
+                                    placeSidebarDarkSection($template, sectionKey, $section);
+                                } else {
+                                    const $experience = $targetContainer.find('section.experience').first();
+                                    if ($experience.length) {
+                                        $experience.after($section);
+                                    }
                                 }
+                            } else if ($template.hasClass('professional')) {
+                                placeProfessionalSection($template, sectionKey, $section);
+                            } else if ($template.hasClass('sidebar-dark')) {
+                                placeSidebarDarkSection($template, sectionKey, $section);
+                            } else if (sectionKey === 'custom' && isModernPreviewTemplate($template)) {
+                                placeModernCustomSection($template, $section);
                             }
                             
                             $sectionContent = $section.find('.section-content');
@@ -1353,10 +1843,26 @@
                                     $sectionContent.append($listWrapper);
                                 }
                                 $sectionContent = $listWrapper;
+                            } else if (sectionKey === 'custom') {
+                                let $customItems = $sectionContent.find('.custom-items');
+                                if ($customItems.length === 0) {
+                                    $customItems = $('<div class="custom-items"></div>');
+                                    $sectionContent.append($customItems);
+                                }
+                                $sectionContent = $customItems;
                             }
                             
                             // Clear existing items for dynamically added sections
                             $sectionContent.empty();
+                        }
+
+                        if (sectionKey === 'custom') {
+                            $section.find('.section-title').first().text(
+                                getCustomSectionDisplayTitle(data, sectionConfig, $template)
+                            );
+                            if (isModernPreviewTemplate($template)) {
+                                placeModernCustomSection($template, $section);
+                            }
                         }
 
                         // Generate items using standard structure
@@ -1370,7 +1876,7 @@
                     }
                 });
 
-                applySectionOrderToPreview($template, data);
+                applySectionLayoutToPreview($template, data);
 
                 isUpdating = false;
                 
@@ -1752,6 +2258,14 @@
             const $section = $('#section-languages');
             if ($section.length) renderGenericList('languages', $section);
         });
+        $form.on('input change', 'input[name="custom_heading"], input[name^="custom["], textarea[name^="custom["]', function() {
+            const $section = $('#section-custom');
+            if ($section.length && $(this).attr('name') !== 'custom_heading') {
+                renderGenericList('custom', $section);
+            }
+            handleFormChange();
+        });
+
         $form.on('input change', 'input[name^="references["], select[name^="references["]', function() {
             const $section = $('#section-references');
             if ($section.length) renderGenericList('references', $section);
@@ -1764,7 +2278,7 @@
             const sectionId = String($section.attr('id') || '');
             if (sectionId === 'section-education') closeEducationEntryEditor($section);
             else if (sectionId === 'section-skills') closeSkillsEntryEditor($section);
-            else if (sectionId === 'section-certifications' || sectionId === 'section-awards' || sectionId === 'section-projects' || sectionId === 'section-languages' || sectionId === 'section-references') {
+            else if (sectionId === 'section-certifications' || sectionId === 'section-awards' || sectionId === 'section-projects' || sectionId === 'section-languages' || sectionId === 'section-references' || sectionId === 'section-custom') {
                 closeGenericEntryEditor(sectionId.replace(/^section-/, ''), $section);
             }
             else closeExperienceEntryEditor($section);
@@ -1797,6 +2311,116 @@
         $form.on('click', '.added-section__title', function(e) {
             e.preventDefault();
             $(this).closest('.section-header').find('.added-section__toggle').trigger('click');
+        });
+
+        $sectionLayoutTrigger.on('click', function(e) {
+            e.preventDefault();
+            if (!sectionOrderingEnabled()) return;
+            openSectionLayoutModal();
+        });
+
+        $sectionLayoutModal.on('click', '[data-section-layout-close], #cv-section-layout-close', function(e) {
+            e.preventDefault();
+            closeSectionLayoutModal();
+        });
+
+        $sectionLayoutApply.on('click', function(e) {
+            e.preventDefault();
+            applySectionLayoutFromModal();
+        });
+
+        $sectionLayoutReset.on('click', function(e) {
+            e.preventDefault();
+            currentSectionLayout = getDefaultLayoutForMode(getSectionLayoutMode(), getActiveLayoutSectionKeys());
+            renderSectionLayoutModal();
+        });
+
+        $sectionLayoutBody.on('click', '[data-layout-action]', function(e) {
+            e.preventDefault();
+            const $btn = $(this);
+            if ($btn.prop('disabled')) return;
+
+            const action = String($btn.attr('data-layout-action') || '');
+            const $item = $btn.closest('.cv-section-layout-item');
+            const $list = $item.closest('.cv-section-layout-list');
+
+            if (action === 'up') {
+                const $prev = $item.prev('.cv-section-layout-item');
+                if ($prev.length) $item.insertBefore($prev);
+            } else if (action === 'down') {
+                const $next = $item.next('.cv-section-layout-item');
+                if ($next.length) $item.insertAfter($next);
+            } else if (action === 'switch') {
+                const currentColumn = String($list.attr('data-layout-list') || '');
+                const targetColumn = currentColumn === 'left' ? 'right' : 'left';
+                const $target = $sectionLayoutBody.find('[data-layout-list="' + targetColumn + '"]');
+                if ($target.length) $target.append($item);
+            }
+
+            refreshSectionLayoutModalButtons();
+        });
+
+        let layoutDragKey = null;
+        $sectionLayoutBody.on('dragstart', '.cv-section-layout-item', function(e) {
+            layoutDragKey = String($(this).attr('data-section-key') || '');
+            $(this).addClass('is-dragging');
+            if (e.originalEvent && e.originalEvent.dataTransfer) {
+                e.originalEvent.dataTransfer.effectAllowed = 'move';
+                e.originalEvent.dataTransfer.setData('text/plain', layoutDragKey);
+            }
+        });
+
+        $sectionLayoutBody.on('dragend', '.cv-section-layout-item', function() {
+            $sectionLayoutBody.find('.cv-section-layout-item').removeClass('is-dragging is-drop-before is-drop-after');
+            $sectionLayoutBody.find('.cv-section-layout-list').removeClass('is-drop-target');
+            $sectionLayoutBody.find('.cv-section-layout-column').removeClass('is-drop-column');
+            layoutDragKey = null;
+            refreshSectionLayoutModalButtons();
+        });
+
+        $sectionLayoutBody.on('dragover', '.cv-section-layout-list, .cv-section-layout-item', function(e) {
+            e.preventDefault();
+            if (e.originalEvent && e.originalEvent.dataTransfer) {
+                e.originalEvent.dataTransfer.dropEffect = 'move';
+            }
+
+            const key = layoutDragKey || (e.originalEvent && e.originalEvent.dataTransfer ? e.originalEvent.dataTransfer.getData('text/plain') : '');
+            const $dragged = key ? $sectionLayoutBody.find('.cv-section-layout-item[data-section-key="' + key + '"]') : $();
+            if (!$dragged.length) return;
+
+            const $target = $(this);
+            $sectionLayoutBody.find('.cv-section-layout-item').removeClass('is-drop-before is-drop-after');
+            $sectionLayoutBody.find('.cv-section-layout-list').removeClass('is-drop-target');
+            $sectionLayoutBody.find('.cv-section-layout-column').removeClass('is-drop-column');
+
+            if ($target.hasClass('cv-section-layout-item')) {
+                if ($target.is($dragged)) return;
+                $target.closest('.cv-section-layout-column').addClass('is-drop-column');
+                const rect = $target[0].getBoundingClientRect();
+                const placeAfter = e.originalEvent.clientY > rect.top + (rect.height / 2);
+                if (placeAfter) {
+                    $target.after($dragged);
+                    $target.addClass('is-drop-after');
+                } else {
+                    $target.before($dragged);
+                    $target.addClass('is-drop-before');
+                }
+            } else {
+                $target.addClass('is-drop-target');
+                $target.closest('.cv-section-layout-column').addClass('is-drop-column');
+                if ($target.children('.cv-section-layout-item').length === 0 || !$.contains($target[0], $dragged[0])) {
+                    $target.append($dragged);
+                }
+            }
+            refreshSectionLayoutModalButtons();
+        });
+
+        $sectionLayoutBody.on('drop', '.cv-section-layout-list, .cv-section-layout-item', function(e) {
+            e.preventDefault();
+            $sectionLayoutBody.find('.cv-section-layout-item').removeClass('is-drop-before is-drop-after');
+            $sectionLayoutBody.find('.cv-section-layout-list').removeClass('is-drop-target');
+            $sectionLayoutBody.find('.cv-section-layout-column').removeClass('is-drop-column');
+            refreshSectionLayoutModalButtons();
         });
 
         $form.on('click', '.btn-section-order--up, .btn-section-order--down', function(e) {
@@ -2111,9 +2735,19 @@
             
             // Measure total content height WITH ALL SECTIONS VISIBLE (original state)
             const totalContentHeight = $content[0].scrollHeight || $content.outerHeight();
+            const pageRectForSplit = $firstPage[0].getBoundingClientRect();
+            const intendedPageBottom = pageRectForSplit.top + (PAGE_HEIGHT_MM * 3.779527559);
+            let allRenderedSectionsFit = true;
+            $allSections.each(function() {
+                const sectionRect = this.getBoundingClientRect();
+                if (sectionRect.bottom > intendedPageBottom + 0.5) {
+                    allRenderedSectionsFit = false;
+                    return false;
+                }
+            });
             
             // If content fits on one page, no need for page 2
-            if (totalContentHeight <= maxPageHeight) {
+            if (totalContentHeight <= maxPageHeight || allRenderedSectionsFit) {
                 // Restore original display states
                 $allSections.each(function(index) {
                     $(this).css({
@@ -2148,7 +2782,19 @@
             function splitItemSelector(sectionKey) {
                 if (sectionKey === 'experience') return '.experience-item';
                 if (sectionKey === 'projects') return '.project-item';
+                if (sectionKey === 'education') return '.education-item';
                 return '';
+            }
+
+            const isTwoColumnPreviewTemplate = $content.hasClass('professional') || $content.hasClass('modern') || $content.find('.left-green, .right-content, .professional-columns').length > 0;
+
+            function previewColumnForSection($section) {
+                if (!isTwoColumnPreviewTemplate || !$section || !$section.length) return null;
+                const attrColumn = String($section.attr('data-layout-column') || '');
+                if (attrColumn === 'left' || attrColumn === 'right') return attrColumn;
+                if ($section.closest('.primary-column, .left-green').length) return 'left';
+                if ($section.closest('.secondary-column, .right-content').length) return 'right';
+                return null;
             }
             
             $allSections.each(function(index) {
@@ -2161,12 +2807,12 @@
                 sectionEl.offsetHeight;
                 
                 // Get section's offsetTop relative to content container
+                const sectionRect = sectionEl.getBoundingClientRect();
                 const sectionTop = sectionEl.offsetTop;
-                const sectionHeight = sectionEl.offsetHeight || sectionEl.scrollHeight;
-                const sectionBottom = sectionTop + sectionHeight;
+                const sectionBottom = sectionRect.bottom;
                 // Check if this section exceeds the page boundary
                 // Sections start after header, so we check if bottom exceeds maxPageHeight
-                if (sectionTop >= headerHeight && sectionBottom > maxPageHeight) {
+                if (sectionTop >= headerHeight && sectionBottom > intendedPageBottom + 0.5) {
                     firstOverflowSectionIndex = index;
                     return false; // break
                 }
@@ -2219,7 +2865,7 @@
             // If the overflow section is a list, split by items instead of moving whole section.
             if (firstOverflowSectionIndex >= 0) {
                 const $overflowSection = $allSections.eq(firstOverflowSectionIndex);
-                const splitSectionKeys = ['experience', 'projects'];
+                const splitSectionKeys = ['experience', 'projects', 'education'];
                 const splitSectionKey = splitSectionKeys.find(function(key) {
                     return $overflowSection.length && $overflowSection.hasClass(key);
                 });
@@ -2244,6 +2890,18 @@
                     }
                 }
             }
+
+            const overflowPreviewColumn = firstOverflowSectionIndex >= 0
+                ? previewColumnForSection($allSections.eq(firstOverflowSectionIndex))
+                : null;
+
+            function oppositeColumnSectionStaysOnFirstPage($section) {
+                const sectionColumn = previewColumnForSection($section);
+                return isTwoColumnPreviewTemplate
+                    && overflowPreviewColumn
+                    && sectionColumn
+                    && sectionColumn !== overflowPreviewColumn;
+            }
             
             // Now hide sections on first page that overflow (we already have all sections visible from measurement)
             if (firstOverflowSectionIndex >= 0) {
@@ -2255,6 +2913,10 @@
                     }
 
                     if (index > firstOverflowSectionIndex) {
+                        if (oppositeColumnSectionStaysOnFirstPage($sec)) {
+                            $sec.css({ 'display': '', 'visibility': 'visible' });
+                            return;
+                        }
                         // Move all following sections to next page
                         $sec.css({ 'display': 'none', 'visibility': 'hidden' });
                         return;
@@ -2354,6 +3016,10 @@
                     }
 
                     if (index > firstOverflowSectionIndex) {
+                        if (oppositeColumnSectionStaysOnFirstPage($sec)) {
+                            $sec.css({ 'display': '', 'visibility': 'visible' });
+                            return;
+                        }
                         $sec.css({ 'display': 'none', 'visibility': 'hidden' });
                         return;
                     }
@@ -2380,6 +3046,11 @@
                 const $cloneSections = $contentClone.find('section');
                 $cloneSections.each(function(index) {
                     const $sec = $(this);
+                    if (oppositeColumnSectionStaysOnFirstPage($sec)) {
+                        $sec.css({ 'display': 'none', 'visibility': 'hidden' });
+                        return;
+                    }
+
                     if (index < firstOverflowSectionIndex) {
                         $sec.css({ 'display': 'none', 'visibility': 'hidden' });
                         return;
@@ -2793,9 +3464,9 @@
             authModalReason = reason || 'save';
 
             if ($authTitle.length && $authDesc.length) {
-                if (authModalReason === 'download') {
+                if (authModalReason === 'download' || authModalReason === 'download_png') {
                     $authTitle.text('Login required');
-                    $authDesc.text('Sign in to download your PDF and save this resume to your account.');
+                    $authDesc.text('Sign in to download your resume and save it to your account.');
                 } else {
                     $authTitle.text('Login required');
                     $authDesc.text('Sign in to save this resume to your account.');
@@ -2812,7 +3483,12 @@
             $authBackdrop.on('click', closeAuthRequiredModal);
             $authCancel.on('click', closeAuthRequiredModal);
             $authLogin.on('click', function() {
-                const intent = authModalReason === 'download' ? { action: 'download' } : { action: 'resume' };
+                let intent = { action: 'resume' };
+                if (authModalReason === 'download_png') {
+                    intent = { action: 'download_png' };
+                } else if (authModalReason === 'download') {
+                    intent = { action: 'download' };
+                }
                 closeAuthRequiredModal();
                 goToLoginWithDraft(intent, window.location.href);
             });
@@ -2897,12 +3573,42 @@
             });
         }
 
-        function resetExportPdfButton($btn) {
+        function resetExportDownloadTrigger($btn) {
             if (!$btn || !$btn.length) return;
             $btn.prop('disabled', false).html(
-                '<span class="cv-builder-toolbar__download-text">Download</span>' +
-                '<i class="fas fa-file-arrow-down cv-builder-toolbar__download-icon" aria-hidden="true"></i>'
+                '<span class="cv-builder-toolbar__download-text">' + escapeHtml(String((window.cvBuilderConfig && cvBuilderConfig.i18n && cvBuilderConfig.i18n.downloadLabel) || 'Download')) + '</span>' +
+                '<i class="fas fa-chevron-down cv-builder-toolbar__download-chevron" aria-hidden="true"></i>'
             );
+        }
+
+        function resetExportPdfButton($btn) {
+            resetExportDownloadTrigger($btn && $btn.length ? $btn : $('#btn-export-download-trigger'));
+        }
+
+        function closeDownloadMenu() {
+            const $panel = $('#cv-download-menu-panel');
+            const $trigger = $('#btn-export-download-trigger');
+            if (!$panel.length) return;
+            $panel.prop('hidden', true).attr('aria-hidden', 'true');
+            $trigger.attr('aria-expanded', 'false');
+        }
+
+        function openDownloadMenu() {
+            const $panel = $('#cv-download-menu-panel');
+            const $trigger = $('#btn-export-download-trigger');
+            if (!$panel.length) return;
+            $panel.prop('hidden', false).attr('aria-hidden', 'false');
+            $trigger.attr('aria-expanded', 'true');
+        }
+
+        function toggleDownloadMenu() {
+            const $panel = $('#cv-download-menu-panel');
+            if (!$panel.length) return;
+            if ($panel.prop('hidden')) {
+                openDownloadMenu();
+            } else {
+                closeDownloadMenu();
+            }
         }
 
         function parseFilenameFromContentDisposition(headerValue) {
@@ -2929,7 +3635,7 @@
                 credentials: 'same-origin',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/pdf'
+                    'Accept': 'application/pdf, application/json'
                 }
             }).then(async function(res) {
                 const ct = (res.headers.get('content-type') || '').toLowerCase();
@@ -2951,45 +3657,99 @@
                     parseFilenameFromContentDisposition(res.headers.get('Content-Disposition')) ||
                     ('resume_' + (new Date().toISOString().slice(0, 10)) + '.pdf');
 
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                setTimeout(function() { try { URL.revokeObjectURL(url); } catch (e) {} }, 0);
+                triggerBlobDownload(blob, filename);
                 return true;
             });
         }
 
-        function performAuthenticatedDownloadFlow($btn, $message) {
+        function exportPngBlob(cvData) {
+            const exportUrl = cvBuilderConfig.routes && cvBuilderConfig.routes.exportPNG ? String(cvBuilderConfig.routes.exportPNG) : '';
+            if (!exportUrl) return Promise.reject(new Error('Missing export URL'));
+
+            const csrfToken = $('meta[name="csrf-token"]').attr('content') || cvBuilderConfig.csrfToken;
+            const body = new FormData();
+            body.append('_token', String(csrfToken || ''));
+            body.append('cv_data', JSON.stringify(cvData || {}));
+
+            return fetch(exportUrl, {
+                method: 'POST',
+                body: body,
+                credentials: 'same-origin',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'image/png, application/zip, application/json'
+                }
+            }).then(async function(res) {
+                const ct = (res.headers.get('content-type') || '').toLowerCase();
+                if (!res.ok) {
+                    if (ct.indexOf('application/json') >= 0) {
+                        const j = await res.json().catch(() => ({}));
+                        const msg = (j && (j.message || j.error)) ? String(j.message || j.error) : ('HTTP ' + res.status);
+                        throw new Error(msg);
+                    }
+                    const t = await res.text().catch(() => '');
+                    if (res.status === 401 || res.status === 403) {
+                        throw new Error('AUTH_REQUIRED');
+                    }
+                    throw new Error(t ? 'Unable to generate PNG.' : ('HTTP ' + res.status));
+                }
+
+                const blob = await res.blob();
+                const defaultExt = ct.indexOf('application/zip') >= 0 ? '.zip' : '.png';
+                const filename =
+                    parseFilenameFromContentDisposition(res.headers.get('Content-Disposition')) ||
+                    ('resume_' + (new Date().toISOString().slice(0, 10)) + defaultExt);
+
+                triggerBlobDownload(blob, filename);
+                return true;
+            });
+        }
+
+        function triggerBlobDownload(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(function() { try { URL.revokeObjectURL(url); } catch (e) {} }, 0);
+        }
+
+        function performAuthenticatedDownloadFlow($btn, $message, format) {
+            const exportFormat = String(format || 'pdf').toLowerCase();
+            closeDownloadMenu();
             $btn.prop('disabled', true).html(
-                '<span class="cv-builder-toolbar__download-text">Saving...</span>' +
-                '<i class="fas fa-spinner fa-spin cv-builder-toolbar__download-icon" aria-hidden="true"></i>'
+                '<span class="cv-builder-toolbar__download-text">' + escapeHtml(String((window.cvBuilderConfig && cvBuilderConfig.i18n && cvBuilderConfig.i18n.downloadSaving) || 'Saving...')) + '</span>' +
+                '<i class="fas fa-spinner fa-spin cv-builder-toolbar__download-chevron" aria-hidden="true"></i>'
             );
             if ($message && $message.length) $message.hide().removeClass('success error');
 
             saveCurrentCv({
                 silentToast: true,
                 onSuccess: function() {
+                    const generatingLabel = exportFormat === 'png'
+                        ? ((window.cvBuilderConfig && cvBuilderConfig.i18n && cvBuilderConfig.i18n.downloadGeneratingPng) || 'Generating PNG...')
+                        : ((window.cvBuilderConfig && cvBuilderConfig.i18n && cvBuilderConfig.i18n.downloadGeneratingPdf) || 'Generating PDF...');
                     $btn.prop('disabled', true).html(
-                        '<span class="cv-builder-toolbar__download-text">Generating PDF...</span>' +
-                        '<i class="fas fa-spinner fa-spin cv-builder-toolbar__download-icon" aria-hidden="true"></i>'
+                        '<span class="cv-builder-toolbar__download-text">' + escapeHtml(String(generatingLabel)) + '</span>' +
+                        '<i class="fas fa-spinner fa-spin cv-builder-toolbar__download-chevron" aria-hidden="true"></i>'
                     );
 
                     const cvData = collectFormData();
-                    exportPdfBlob(cvData).then(function() {
+                    const exportPromise = exportFormat === 'png' ? exportPngBlob(cvData) : exportPdfBlob(cvData);
+                    exportPromise.then(function() {
                         // Don't show a success banner under the button; only surface errors.
                         if ($message && $message.length) {
                             $message.hide().removeClass('success error').text('');
                         }
                         resetExportPdfButton($btn);
                     }).catch(function(err) {
-                        const msg = (err && err.message) ? String(err.message) : 'Unable to generate PDF.';
+                        const defaultMsg = exportFormat === 'png' ? 'Unable to generate PNG.' : 'Unable to generate PDF.';
+                        const msg = (err && err.message) ? String(err.message) : defaultMsg;
                         if (msg === 'AUTH_REQUIRED') {
                             wireAuthRequiredModalOnce();
-                            openAuthRequiredModal('download');
+                            openAuthRequiredModal(exportFormat === 'png' ? 'download_png' : 'download');
                         } else if ($message && $message.length) {
                             $message.removeClass('success').addClass('error').text(msg).fadeIn();
                             showToast('error', msg);
@@ -3013,12 +3773,20 @@
             const intent = consumePostLoginIntent();
             if (!intent || !intent.action) return;
 
-            if (String(intent.action) === 'download') {
-                const $btn = $('#btn-export-pdf');
+            if (String(intent.action) === 'download_png') {
+                const $btn = $('#btn-export-download-trigger');
                 const $message = $('#export-message');
                 if ($btn.length) {
                     setTimeout(function() {
-                        performAuthenticatedDownloadFlow($btn, $message);
+                        performAuthenticatedDownloadFlow($btn, $message, 'png');
+                    }, 250);
+                }
+            } else if (String(intent.action) === 'download') {
+                const $btn = $('#btn-export-download-trigger');
+                const $message = $('#export-message');
+                if ($btn.length) {
+                    setTimeout(function() {
+                        performAuthenticatedDownloadFlow($btn, $message, 'pdf');
                     }, 250);
                 }
             } else if (String(intent.action) === 'save_draft') {
@@ -3038,17 +3806,48 @@
         }
 
         // Export PDF (requires auth on server): guests see modal; authed users save then download
-        $('#btn-export-pdf').on('click', function() {
-            const $btn = $(this);
+        $('#btn-export-download-trigger').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if ($(this).prop('disabled')) return;
+            toggleDownloadMenu();
+        });
+
+        $('#btn-export-pdf').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const $btn = $('#btn-export-download-trigger');
             const $message = $('#export-message');
 
             if (!cvBuilderConfig || !cvBuilderConfig.isAuthenticated) {
+                closeDownloadMenu();
                 wireAuthRequiredModalOnce();
                 openAuthRequiredModal('download');
                 return;
             }
 
-            performAuthenticatedDownloadFlow($btn, $message);
+            performAuthenticatedDownloadFlow($btn, $message, 'pdf');
+        });
+
+        $('#btn-export-png').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const $btn = $('#btn-export-download-trigger');
+            const $message = $('#export-message');
+
+            if (!cvBuilderConfig || !cvBuilderConfig.isAuthenticated) {
+                closeDownloadMenu();
+                wireAuthRequiredModalOnce();
+                openAuthRequiredModal('download_png');
+                return;
+            }
+
+            performAuthenticatedDownloadFlow($btn, $message, 'png');
+        });
+
+        $(document).on('click', function(e) {
+            if ($(e.target).closest('#cv-download-menu').length) return;
+            closeDownloadMenu();
         });
 
         // Guest toolbar "Save resume" button: reuse the same login-required modal as Download.
@@ -3719,6 +4518,7 @@
         function resetBuilderSectionsForCvLoad() {
             $form.find('.added-section').remove();
             addedSections.clear();
+            currentSectionLayout = null;
             Object.keys(availableSections).forEach(function(sectionKey) {
                 delete sectionEntryCounts[sectionKey];
             });
@@ -3781,11 +4581,21 @@
                 handleFormChange();
             }, 100);
 
-            const loadSectionOrder = sectionOrderingEnabled() ? normalizeSectionOrder(cvData.section_order) : [];
+            const activeLoadKeys = [];
             defaultSectionOrder.forEach(function(sectionKey) {
-                if (cvData[sectionKey] && cvData[sectionKey].length > 0 && !loadSectionOrder.includes(sectionKey)) {
-                    loadSectionOrder.push(sectionKey);
+                if (cvData[sectionKey] && cvData[sectionKey].length > 0) {
+                    activeLoadKeys.push(sectionKey);
                 }
+            });
+            const summaryActive = cvData.summary && String(cvData.summary).trim() ? ['summary'] : [];
+            currentSectionLayout = normalizeSectionLayout(
+                cvData.section_layout,
+                summaryActive.concat(activeLoadKeys),
+                getSectionLayoutMode() || 'single-column',
+                cvData.section_order
+            );
+            const loadSectionOrder = flattenSectionLayout(currentSectionLayout).filter(function(key) {
+                return key !== 'summary';
             });
 
             loadSectionOrder.forEach(function(sectionKey) {
@@ -3844,12 +4654,16 @@
 
                     // Update entry count
                     sectionEntryCounts[sectionKey] = cvData[sectionKey].length;
+
+                    if (sectionKey === 'custom' && cvData.custom_heading) {
+                        $section.find('#custom-section-heading').val(cvData.custom_heading);
+                    }
                     
                     // Experience/Education/Skills use list view; refresh it after loading data
                     if (sectionKey === 'experience') renderExperienceList($section);
                     if (sectionKey === 'education') renderEducationList($section);
                     if (sectionKey === 'skills') renderSkillsList($section);
-                    if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
+                    if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') {
                         renderGenericList(sectionKey, $section);
                     }
 
@@ -4340,7 +5154,7 @@
             if (sectionKey === 'experience') openExperienceEntryEditor($sectionFields, 0);
             if (sectionKey === 'education') openEducationEntryEditor($sectionFields, 0);
             if (sectionKey === 'skills') openSkillsEntryEditor($sectionFields, 0);
-            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
+            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') {
                 openGenericEntryEditor(sectionKey, $sectionFields, 0);
             }
 
@@ -4483,7 +5297,7 @@
                         .addClass('form-control');
 
                     // Rich text editor for description field (Quill -> sync HTML into textarea)
-                    if (field.name === 'description') {
+                    if (field.name === 'description' || field.name === 'content') {
                         const editorId = 'cv-rt-' + sectionKey + '-' + entryIndex + '-' + field.name + '-' + Date.now();
                         const $wrap = $('<div class="cv-richtext">');
 
@@ -4763,6 +5577,16 @@
 
             $sectionContainer.append($sectionHeader);
 
+            if (sectionKey === 'custom') {
+                const $headingWrap = $('<div class="form-group cv-custom-heading-field">')
+                    .append($('<label for="custom-section-heading">').text('Section title (shown on resume)'))
+                    .append(
+                        $('<input type="text" class="form-control" id="custom-section-heading" name="custom_heading">')
+                            .attr('placeholder', 'e.g., Publications, Volunteering, Hobbies')
+                    );
+                $sectionContainer.append($headingWrap);
+            }
+
             const $entriesContainer = $('<div>')
                 .addClass('entries-container')
                 .attr('data-section-key', sectionKey);
@@ -4807,7 +5631,7 @@
                     const newIndex = (sectionEntryCounts[sectionKey] || 1) - 1;
                     if (sectionKey === 'education') openEducationEntryEditor($sectionContainer, newIndex);
                     else if (sectionKey === 'skills') openSkillsEntryEditor($sectionContainer, newIndex);
-                    else if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') openGenericEntryEditor(sectionKey, $sectionContainer, newIndex);
+                    else if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') openGenericEntryEditor(sectionKey, $sectionContainer, newIndex);
                     else openExperienceEntryEditor($sectionContainer, newIndex);
                 });
             } else {
@@ -4836,7 +5660,7 @@
             if (sectionKey === 'experience') renderExperienceList($sectionContainer);
             if (sectionKey === 'education') renderEducationList($sectionContainer);
             if (sectionKey === 'skills') renderSkillsList($sectionContainer);
-            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
+            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') {
                 renderGenericList(sectionKey, $sectionContainer);
             }
 
@@ -5189,7 +6013,7 @@
 
         // Drag & drop reorder for generic list sections
         const __genericDragFromIdx = {};
-        $form.on('dragstart', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row', function(e) {
+        $form.on('dragstart', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, #section-custom .cv-section-list__row', function(e) {
             const $row = $(this);
             const $section = $row.closest('.added-section');
             const sectionId = String($section.attr('id') || '');
@@ -5198,14 +6022,14 @@
             try { e.originalEvent.dataTransfer.effectAllowed = 'move'; } catch (_) {}
             $row.addClass('is-dragging');
         });
-        $form.on('dragend', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row', function() {
+        $form.on('dragend', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, #section-custom .cv-section-list__row', function() {
             $(this).removeClass('is-dragging');
         });
-        $form.on('dragover', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row', function(e) {
+        $form.on('dragover', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, #section-custom .cv-section-list__row', function(e) {
             e.preventDefault();
             try { e.originalEvent.dataTransfer.dropEffect = 'move'; } catch (_) {}
         });
-        $form.on('drop', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row', function(e) {
+        $form.on('drop', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, #section-custom .cv-section-list__row', function(e) {
             e.preventDefault();
             const $targetRow = $(this);
             const $section = $targetRow.closest('.added-section');
@@ -5280,7 +6104,7 @@
                 const $section = $('#section-' + sectionKey);
                 renderSkillsList($section);
             }
-            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
+            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') {
                 const $section = $('#section-' + sectionKey);
                 renderGenericList(sectionKey, $section);
             }

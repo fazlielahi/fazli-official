@@ -12,7 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Spatie\Browsershot\Browsershot;
+use App\Support\CvExportRenderer;
 
 class CvController extends Controller
 {
@@ -39,7 +39,7 @@ class CvController extends Controller
             if (is_array($v)) {
                 $data[$k] = $this->sanitizeCvData($v);
             } else {
-                if ($k === 'description') {
+                if ($k === 'description' || $k === 'content') {
                     $data[$k] = $this->sanitizeRichText(is_string($v) ? $v : '');
                 }
             }
@@ -1293,224 +1293,40 @@ PROMPT;
      */
     public function exportPDF(Request $request, $lang, $id)
     {
-        // Get authenticated user ID using Laravel Auth
         $userId = Auth::id();
-        
+
         try {
             $cv = $this->userCvActiveOrOwnedTrashed((int) $userId, $id);
 
             if (!$cv) {
                 abort(404, 'Resume not found or you do not have permission to access it');
             }
-            
-            // Get template
+
             $template = CvTemplate::where('slug', $cv->template_slug)->where('is_active', true)->first();
-            
+
             if (!$template) {
                 abort(404, 'Template not found');
             }
-            
-            // Check if template blade file exists
-            $templatePath = resource_path('views/cv/templates/' . $cv->template_slug);
-            $templateBladePath = $templatePath . '/template.blade.php';
-            
-            if (!File::exists($templateBladePath)) {
-                abort(404, 'Template file not found');
-            }
-            
-            // Prepare data for template
+
             $data = $this->sanitizeCvData($cv->cv_data ?? []);
-            
-            // Render the template to HTML
-            $html = view('cv.templates.' . $cv->template_slug . '.template', [
-                'data' => $data
-            ])->render();
-            
-            // Get template CSS
-            $cssPath = $templatePath . '/style.css';
-            $cssContent = '';
-            if (File::exists($cssPath)) {
-                $cssContent = File::get($cssPath);
-            }
-            
-            // Extract font imports from CSS and wrap in style tag
-            $fonts = '';
-            if (preg_match_all('/@import\s+url\([^)]+\);/', $cssContent, $fontMatches)) {
-                $fonts = '<style>' . implode("\n    ", $fontMatches[0]) . '</style>';
-                // Remove @import statements from CSS to avoid duplication
-                $cssContent = preg_replace('/@import\s+url\([^)]+\);\s*/', '', $cssContent);
-            }
-            
-            // Wrap remaining CSS in style tag
-            $css = '<style>' . $cssContent . '</style>';
-            
-            // Combine HTML and CSS
-            $fullHtml = '<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume - ' . htmlspecialchars($cv->title ?? 'My resume') . '</title>
-    <!-- Font Awesome for icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    ' . $fonts . '
-    ' . $css . '
-    <style>
-        /* PDF-specific fixes - Force proper rendering */
-        * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            color-adjust: exact !important;
-            box-sizing: border-box !important;
-        }
-        @page {
-            margin: 0 !important;
-            margin-top: 10mm !important;
-        }
-        @page :first {
-            margin-top: 0 !important;
-        }
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 210mm !important;
-            background: white !important;
-            overflow: visible !important;
-        }
-        /* Force grid layout for modern template in PDF */
-        .cv-template.modern .cv-page {
-            display: grid !important;
-            grid-template-rows: auto 1fr !important;
-            grid-template-areas: 
-                "top-bar"
-                "main" !important;
-        }
-        .cv-template.modern .top-green {
-            display: grid !important;
-            grid-template-columns: 57.2mm 0.3mm 1fr !important;
-            grid-template-areas: "photo-container gap top-content-area" !important;
-        }
-        .cv-template.modern .main-content {
-            display: grid !important;
-            grid-template-columns: 57.2mm 6.3mm 1fr !important;
-            grid-template-areas: "left-green gap right-content" !important;
-        }
-        /* Page breaks (modern): keep entries intact, but allow long lists to continue across pages */
-        .cv-template.modern section {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-        .cv-template.modern .section-content {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
+            $fullHtml = CvExportRenderer::renderHtml($cv->template_slug, $data, $cv->title ?? 'My resume');
+            $pdf = CvExportRenderer::generatePdfBytes($fullHtml);
+            $filename = CvExportRenderer::sanitizeExportFilename($cv->title ?? 'My_resume', 'pdf');
 
-        .cv-template.modern section.experience,
-        .cv-template.modern section.education {
-            page-break-inside: auto !important;
-            break-inside: auto !important;
-        }
-
-        .cv-template.modern section.experience .section-content,
-        .cv-template.modern section.education .section-content {
-            page-break-inside: auto !important;
-            break-inside: auto !important;
-        }
-        .cv-template.modern .experience-item,
-        .cv-template.modern .education-item,
-        .cv-template.modern .certification-item,
-        .cv-template.modern .skill-item,
-        .cv-template.modern .language-item,
-        .cv-template.modern .reference-item {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-        /* Remove spacing between name and subtitle in PDF */
-        .cv-template.modern .name {
-            margin: 0 !important;
-            margin-bottom: 0 !important;
-            line-height: 1.1 !important;
-        }
-        .cv-template.modern .subtitle {
-            margin: 0 !important;
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-        /* Fix images */
-        img {
-            max-width: 100% !important;
-            height: auto !important;
-        }
-        /* Remove page container styling for PDF export - page containers are editor-only */
-        .cv-pages-wrapper,
-        .cv-page-container {
-            display: block !important;
-            width: 100% !important;
-            min-height: auto !important;
-            max-height: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            background: transparent !important;
-            overflow: visible !important;
-            page-break-after: auto !important;
-            break-after: auto !important;
-        }
-        .cv-page-container .cv-template {
-            width: 100% !important;
-            height: auto !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-    </style>
-</head>
-<body style="margin: 0; padding: 0; background: white; overflow: visible;">
-    <div style="width: 210mm; margin: 0 auto; position: relative;">
-    ' . $html . '
-    </div>
-</body>
-</html>';
-            
-            // Generate PDF using Browsershot
-            $pdf = Browsershot::html($fullHtml)
-                ->format('A4')
-                ->margins(0, 0, 0, 0, 'mm')
-                ->showBackground()
-                ->waitUntilNetworkIdle(false) // Don't wait for network idle (faster, handles large content better)
-                ->timeout(120) // Increase timeout to 120 seconds for large CVs
-                ->delay(3000) // Wait 3 seconds for fonts and images to load
-                ->setOption('viewport', [
-                    'width' => 794,  // A4 width in pixels at 96 DPI
-                    'height' => 1123  // A4 height in pixels at 96 DPI
-                ])
-                ->setOption('preferCSSPageSize', false)
-                ->setOption('printBackground', true)
-                ->setOption('waitForSelector', null) // Don't wait for specific selectors
-                ->pdf();
-            
-            // Generate filename
-            $filename = str_replace(' ', '_', $cv->title ?? 'My_resume') . '_' . date('Y-m-d') . '.pdf';
-            $filename = preg_replace('/[^A-Za-z0-9_.-]/', '', $filename);
-            
-            // Return PDF as download
             return response($pdf, 200)
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
-            
         } catch (\Exception $e) {
-            // Log the error for debugging
             \Log::error('PDF Generation Error: ' . $e->getMessage(), [
                 'user_id' => Auth::id(),
                 'cv_id' => $id,
-                'template' => $cv->template_slug ?? 'unknown'
+                'template' => $cv->template_slug ?? 'unknown',
             ]);
-            
-            // Return a more user-friendly error message
+
             if (strpos($e->getMessage(), 'Timeout') !== false) {
                 abort(500, 'PDF generation timed out. Your resume may be too large. Please try reducing the content or contact support.');
             }
-            
+
             abort(500, 'Error generating PDF: ' . $e->getMessage());
         }
     }
@@ -1617,243 +1433,150 @@ PROMPT;
     public function exportCurrentPDF(Request $request, $lang, $slug)
     {
         try {
-            // Get cv_data - it might be a JSON string or an array
-            $cvDataInput = $request->input('cv_data');
-            
-            // If it's a string (JSON), decode it
-            if (is_string($cvDataInput)) {
-                $data = json_decode($cvDataInput, true);
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Invalid resume data format'
-                    ], 400);
-                }
-            } else {
-                $data = $cvDataInput;
-            }
-
-            $data = $this->sanitizeCvData($data);
-            
-            // Validate that we have data
-            if (empty($data) || !is_array($data)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Resume data is required and must be valid'
-                ], 400);
-            }
-            
-            // Get template
+            $data = $this->parseCvDataFromExportRequest($request);
             $template = CvTemplate::where('slug', $slug)->where('is_active', true)->first();
-            
+
             if (!$template) {
                 abort(404, 'Template not found');
             }
-            
-            // Check if template blade file exists
-            $templatePath = resource_path('views/cv/templates/' . $slug);
-            $templateBladePath = $templatePath . '/template.blade.php';
-            
-            if (!File::exists($templateBladePath)) {
-                abort(404, 'Template file not found');
-            }
-            
-            // Render the template to HTML
-            $html = view('cv.templates.' . $slug . '.template', [
-                'data' => $data
-            ])->render();
-            
-            // Get template CSS
-            $cssPath = $templatePath . '/style.css';
-            $cssContent = '';
-            if (File::exists($cssPath)) {
-                $cssContent = File::get($cssPath);
-            }
-            
-            // Extract font imports from CSS and wrap in style tag
-            $fonts = '';
-            if (preg_match_all('/@import\s+url\([^)]+\);/', $cssContent, $fontMatches)) {
-                $fonts = '<style>' . implode("\n    ", $fontMatches[0]) . '</style>';
-                // Remove @import statements from CSS to avoid duplication
-                $cssContent = preg_replace('/@import\s+url\([^)]+\);\s*/', '', $cssContent);
-            }
-            
-            // Wrap remaining CSS in style tag
-            $css = '<style>' . $cssContent . '</style>';
-            
-            // Combine HTML and CSS
-            $fullHtml = '<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume - ' . htmlspecialchars($data['name'] ?? 'My resume') . '</title>
-    <!-- Font Awesome for icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    ' . $fonts . '
-    ' . $css . '
-    <style>
-        /* PDF-specific fixes - Force proper rendering */
-        * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            color-adjust: exact !important;
-            box-sizing: border-box !important;
-        }
-        @page {
-            margin: 0 !important;
-            margin-top: 10mm !important;
-        }
-        @page :first {
-            margin-top: 0 !important;
-        }
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 210mm !important;
-            background: white !important;
-            overflow: visible !important;
-        }
-        /* Force grid layout for modern template in PDF */
-        .cv-template.modern .cv-page {
-            display: grid !important;
-            grid-template-rows: auto 1fr !important;
-            grid-template-areas: 
-                "top-bar"
-                "main" !important;
-        }
-        .cv-template.modern .top-green {
-            display: grid !important;
-            grid-template-columns: 57.2mm 0.3mm 1fr !important;
-            grid-template-areas: "photo-container gap top-content-area" !important;
-        }
-        .cv-template.modern .main-content {
-            display: grid !important;
-            grid-template-columns: 57.2mm 6.3mm 1fr !important;
-            grid-template-areas: "left-green gap right-content" !important;
-        }
-        /* Page breaks (modern): keep entries intact, but allow long lists to continue across pages */
-        .cv-template.modern section {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-        .cv-template.modern .section-content {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
 
-        .cv-template.modern section.experience,
-        .cv-template.modern section.education {
-            page-break-inside: auto !important;
-            break-inside: auto !important;
-        }
+            $fullHtml = CvExportRenderer::renderHtml($slug, $data, $data['name'] ?? 'My resume');
+            $pdf = CvExportRenderer::generatePdfBytes($fullHtml);
+            $filename = CvExportRenderer::sanitizeExportFilename($data['name'] ?? 'My_resume', 'pdf');
 
-        .cv-template.modern section.experience .section-content,
-        .cv-template.modern section.education .section-content {
-            page-break-inside: auto !important;
-            break-inside: auto !important;
-        }
-        .cv-template.modern .experience-item,
-        .cv-template.modern .education-item,
-        .cv-template.modern .certification-item,
-        .cv-template.modern .skill-item,
-        .cv-template.modern .language-item,
-        .cv-template.modern .reference-item {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-        }
-        /* Remove spacing between name and subtitle in PDF */
-        .cv-template.modern .name {
-            margin: 0 !important;
-            margin-bottom: 0 !important;
-            line-height: 1.1 !important;
-        }
-        .cv-template.modern .subtitle {
-            margin: 0 !important;
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
-        /* Fix images */
-        img {
-            max-width: 100% !important;
-            height: auto !important;
-        }
-        /* Remove page container styling for PDF export - page containers are editor-only */
-        .cv-pages-wrapper,
-        .cv-page-container {
-            display: block !important;
-            width: 100% !important;
-            min-height: auto !important;
-            max-height: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-            background: transparent !important;
-            overflow: visible !important;
-            page-break-after: auto !important;
-            break-after: auto !important;
-        }
-        .cv-page-container .cv-template {
-            width: 100% !important;
-            height: auto !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-    </style>
-</head>
-<body style="margin: 0; padding: 0; background: white; overflow: visible;">
-    <div style="width: 210mm; margin: 0 auto; position: relative;">
-    ' . $html . '
-    </div>
-</body>
-</html>';
-            
-            // Generate PDF using Browsershot
-            $pdf = Browsershot::html($fullHtml)
-                ->format('A4')
-                ->margins(0, 0, 0, 0, 'mm')
-                ->showBackground()
-                ->waitUntilNetworkIdle(false) // Don't wait for network idle (faster, handles large content better)
-                ->timeout(120) // Increase timeout to 120 seconds for large CVs
-                ->delay(3000) // Wait 3 seconds for fonts and images to load
-                ->setOption('viewport', [
-                    'width' => 794,  // A4 width in pixels at 96 DPI
-                    'height' => 1123  // A4 height in pixels at 96 DPI
-                ])
-                ->setOption('preferCSSPageSize', false)
-                ->setOption('printBackground', true)
-                ->setOption('waitForSelector', null) // Don't wait for specific selectors
-                ->pdf();
-            
-            // Generate filename
-            $name = $data['name'] ?? 'My_resume';
-            $filename = str_replace(' ', '_', $name) . '_' . date('Y-m-d') . '.pdf';
-            $filename = preg_replace('/[^A-Za-z0-9_.-]/', '', $filename);
-            
-            // Return PDF as download
             return response($pdf, 200)
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
-            
+        } catch (\InvalidArgumentException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
         } catch (\Exception $e) {
-            // Log the error for debugging
             \Log::error('PDF Generation Error (Current): ' . $e->getMessage(), [
                 'user_id' => Auth::id(),
-                'template' => $slug
+                'template' => $slug,
             ]);
-            
-            // Return a more user-friendly error message
+
             $errorMessage = 'Error generating PDF: ' . $e->getMessage();
             if (strpos($e->getMessage(), 'Timeout') !== false) {
                 $errorMessage = 'PDF generation timed out. Your resume may be too large. Please try reducing the content or contact support.';
             }
-            
+
             return response()->json([
                 'success' => false,
-                'message' => $errorMessage
+                'message' => $errorMessage,
             ], 500);
         }
+    }
+
+    /**
+     * Export saved CV as PNG (single page) or ZIP of numbered PNGs (multi-page).
+     */
+    public function exportPNG(Request $request, $lang, $id)
+    {
+        $userId = Auth::id();
+
+        try {
+            $cv = $this->userCvActiveOrOwnedTrashed((int) $userId, $id);
+
+            if (!$cv) {
+                abort(404, 'Resume not found or you do not have permission to access it');
+            }
+
+            $template = CvTemplate::where('slug', $cv->template_slug)->where('is_active', true)->first();
+
+            if (!$template) {
+                abort(404, 'Template not found');
+            }
+
+            $data = $this->sanitizeCvData($cv->cv_data ?? []);
+            $fullHtml = CvExportRenderer::renderHtml($cv->template_slug, $data, $cv->title ?? 'My resume');
+            [$body, $contentType, $filename] = CvExportRenderer::buildPngDownload($fullHtml, $cv->title ?? 'My_resume');
+
+            return response($body, 200)
+                ->header('Content-Type', $contentType)
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        } catch (\Exception $e) {
+            \Log::error('PNG Generation Error: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'cv_id' => $id,
+                'template' => $cv->template_slug ?? 'unknown',
+            ]);
+
+            if (strpos($e->getMessage(), 'Timeout') !== false) {
+                abort(500, 'PNG generation timed out. Your resume may be too large. Please try reducing the content or contact support.');
+            }
+
+            abort(500, 'Error generating PNG: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Export current unsaved CV preview as PNG or ZIP (without saving).
+     */
+    public function exportCurrentPNG(Request $request, $lang, $slug)
+    {
+        try {
+            $data = $this->parseCvDataFromExportRequest($request);
+            $template = CvTemplate::where('slug', $slug)->where('is_active', true)->first();
+
+            if (!$template) {
+                abort(404, 'Template not found');
+            }
+
+            $fullHtml = CvExportRenderer::renderHtml($slug, $data, $data['name'] ?? 'My resume');
+            [$body, $contentType, $filename] = CvExportRenderer::buildPngDownload($fullHtml, $data['name'] ?? 'My_resume');
+
+            return response($body, 200)
+                ->header('Content-Type', $contentType)
+                ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        } catch (\InvalidArgumentException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        } catch (\Exception $e) {
+            \Log::error('PNG Generation Error (Current): ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'template' => $slug,
+            ]);
+
+            $errorMessage = 'Error generating PNG: ' . $e->getMessage();
+            if (strpos($e->getMessage(), 'Timeout') !== false) {
+                $errorMessage = 'PNG generation timed out. Your resume may be too large. Please try reducing the content or contact support.';
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => $errorMessage,
+            ], 500);
+        }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function parseCvDataFromExportRequest(Request $request): array
+    {
+        $cvDataInput = $request->input('cv_data');
+
+        if (is_string($cvDataInput)) {
+            $data = json_decode($cvDataInput, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \InvalidArgumentException('Invalid resume data format');
+            }
+        } else {
+            $data = $cvDataInput;
+        }
+
+        $data = $this->sanitizeCvData($data);
+
+        if (empty($data) || !is_array($data)) {
+            throw new \InvalidArgumentException('Resume data is required and must be valid');
+        }
+
+        return $data;
     }
 
     /**

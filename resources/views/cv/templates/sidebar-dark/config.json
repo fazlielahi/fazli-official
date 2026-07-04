@@ -1,0 +1,30 @@
+{
+  "name": "Sidebar Dark",
+  "slug": "sidebar-dark",
+  "description": "A clean resume template with a dark left sidebar, profile photo, and spacious right content area.",
+  "tab": "modern",
+  "sections": {
+    "required": ["header"],
+    "optional": [
+      "summary",
+      "experience",
+      "education",
+      "skills",
+      "languages",
+      "projects",
+      "awards",
+      "certifications",
+      "references"
+    ]
+  },
+  "layout": {
+    "type": "two-column",
+    "sidebar": "left"
+  },
+  "styling": {
+    "primary_color": "#5fa8dc",
+    "secondary_color": "#202a33",
+    "font_family": "Arial, Helvetica, sans-serif",
+    "heading_font_family": "Arial, Helvetica, sans-serif"
+  }
+}

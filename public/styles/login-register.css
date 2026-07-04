@@ -551,6 +551,19 @@ body.page-register .auth-main::-webkit-scrollbar-thumb:hover{
   padding: 8px 10px;
   font-size: 11px;
 }
+.auth-info{
+  border: 1px solid rgba(244, 163, 44, .35);
+  background: rgba(244, 163, 44, .08);
+  color: var(--lr-primary);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+body.page-login[data-theme="dark"] .auth-info,
+body.page-register[data-theme="dark"] .auth-info{
+  color: var(--lr-accent);
+}
 
 @media (max-width: 920px){
   .auth-card{ grid-template-columns: 1fr; }

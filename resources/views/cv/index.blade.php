@@ -38,30 +38,7 @@
         <div class="container">
             @php $cvBreadcrumbRtl = app()->getLocale() === 'ar'; @endphp
             <div class="cv-gallery__layout">
-                <aside class="cv-side-menu" aria-label="Quick menu">
-                    <a class="cv-side-menu__item is-active" href="#" aria-current="page">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'plus'])</span>
-                        <span class="cv-side-menu__label">Create</span>
-                    </a>
-                    <a class="cv-side-menu__item" href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'home'])</span>
-                        <span class="cv-side-menu__label">Home</span>
-                    </a>
-                    <a class="cv-side-menu__item" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'folder'])</span>
-                        <span class="cv-side-menu__label">Projects</span>
-                    </a>
-                    <a class="cv-side-menu__item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'layers'])</span>
-                        <span class="cv-side-menu__label">Templates</span>
-                    </a>
-                    @auth
-                    <a class="cv-side-menu__item" href="{{ route('localized.cv.trash', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'trash'])</span>
-                        <span class="cv-side-menu__label">Trash</span>
-                    </a>
-                    @endauth
-                </aside>
+                @include('cv.partials.side-menu', ['activeMenu' => 'create'])
                 
                 <div class="templates-showcase">
                 <div class="cv-template-tabs-wrap{{ $cvBreadcrumbRtl ? ' cv-template-tabs-wrap--rtl' : '' }}">
@@ -192,6 +169,9 @@
     <script src="{{ asset('assets/js/gsap/SplitText.js') }}"></script>
     
     {{-- Menu script --}}
+    <script>
+        var menu = document.getElementById('navbarNav');
+    </script>
     <script src="{{ asset('js/menu.js') }}"></script>
     
     <script src="{{ asset('assets/js/script.js') }}"></script>

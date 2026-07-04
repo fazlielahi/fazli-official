@@ -29,28 +29,7 @@
     <div class="cv-gallery">
         <div class="container">
             <div class="cv-gallery__layout">
-                <aside class="cv-side-menu" aria-label="Quick menu">
-                    <a class="cv-side-menu__item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'plus'])</span>
-                        <span class="cv-side-menu__label">Create</span>
-                    </a>
-                    <a class="cv-side-menu__item" href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'home'])</span>
-                        <span class="cv-side-menu__label">Home</span>
-                    </a>
-                    <a class="cv-side-menu__item is-active" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}" aria-current="page">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'folder'])</span>
-                        <span class="cv-side-menu__label">Projects</span>
-                    </a>
-                    <a class="cv-side-menu__item" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'layers'])</span>
-                        <span class="cv-side-menu__label">Templates</span>
-                    </a>
-                    <a class="cv-side-menu__item" href="{{ route('localized.cv.trash', ['lang' => app()->getLocale()]) }}">
-                        <span class="cv-side-menu__icon">@include('cv.partials.svg-icon', ['name' => 'trash'])</span>
-                        <span class="cv-side-menu__label">Trash</span>
-                    </a>
-                </aside>
+                @include('cv.partials.side-menu', ['activeMenu' => 'projects'])
 
                 <div class="templates-showcase cv-projects-showcase">
                     <section class="cv-projects-panel" aria-label="Projects">
@@ -200,6 +179,7 @@
             const updateTitleUrlTpl = @json(route('localized.cv.updateTitle', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
             const previewUrlTpl = @json(route('localized.cv.preview', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
             const pdfUrlTpl = @json(route('localized.cv.export.pdf', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const pngUrlTpl = @json(route('localized.cv.export.png', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
             const permanentDeleteUrlTpl = @json(route('localized.cv.permanent', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
 
             const deleteChoiceModal = document.getElementById('cv-delete-choice-modal');
@@ -563,22 +543,27 @@
                 }, 2000);
             }
 
-            async function downloadCvPdf(cardEl) {
+            async function downloadCvExport(cardEl, kind) {
                 const id = cardEl?.getAttribute('data-cv-id');
                 if (!id) return false;
-                const url = String(pdfUrlTpl).replace('CV_ID', encodeURIComponent(String(id)));
+                const isPng = String(kind || 'pdf').toLowerCase() === 'png';
+                const urlTpl = isPng ? pngUrlTpl : pdfUrlTpl;
+                const url = String(urlTpl).replace('CV_ID', encodeURIComponent(String(id)));
                 const res = await fetch(url, {
                     method: 'GET',
                     credentials: 'same-origin',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/pdf',
+                        'Accept': isPng ? 'image/png, application/zip' : 'application/pdf',
                     },
                 }).catch(() => null);
                 if (!res || !res.ok) return false;
                 const blob = await res.blob();
                 if (!blob || blob.size === 0) return false;
-                let filename = 'resume.pdf';
+                const ct = (res.headers.get('content-type') || '').toLowerCase();
+                let filename = isPng
+                    ? (ct.indexOf('application/zip') >= 0 ? 'resume.zip' : 'resume.png')
+                    : 'resume.pdf';
                 const cd = res.headers.get('Content-Disposition');
                 if (cd) {
                     const m = cd.match(/filename\*=UTF-8''([^;]+)/i) || cd.match(/filename="([^"]+)"/) || cd.match(/filename=([^;]+)/i);
@@ -590,7 +575,12 @@
                         }
                     }
                 }
-                if (!/\.pdf$/i.test(filename)) {
+                if (isPng) {
+                    if (!/\.(png|zip)$/i.test(filename)) {
+                        const t = (cardEl.getAttribute('data-cv-title') || 'resume').replace(/[^\w\-. ]/g, '_').replace(/\s+/g, '_').slice(0, 80);
+                        filename = t + (ct.indexOf('application/zip') >= 0 ? '.zip' : '.png');
+                    }
+                } else if (!/\.pdf$/i.test(filename)) {
                     const t = (cardEl.getAttribute('data-cv-title') || 'resume').replace(/[^\w\-. ]/g, '_').replace(/\s+/g, '_').slice(0, 80);
                     filename = t + '.pdf';
                 }
@@ -604,6 +594,14 @@
                 a.remove();
                 setTimeout(() => URL.revokeObjectURL(objUrl), 5000);
                 return true;
+            }
+
+            async function downloadCvPdf(cardEl) {
+                return downloadCvExport(cardEl, 'pdf');
+            }
+
+            async function downloadCvPng(cardEl) {
+                return downloadCvExport(cardEl, 'png');
             }
 
             async function deleteCv(cardEl) {
@@ -860,12 +858,12 @@
                     return;
                 }
 
-                if (action === 'download') {
+                if (action === 'download-pdf' || action === 'download') {
                     const labelEl = item.querySelector('.cv-project-card__menu-label');
-                    const prevLabel = labelEl ? labelEl.textContent : 'Download';
+                    const prevLabel = labelEl ? labelEl.textContent : @json(__('lang.CV download as PDF'));
                     item.classList.add('cv-project-card__menu-item--loading');
                     item.setAttribute('aria-busy', 'true');
-                    if (labelEl) labelEl.textContent = 'Generating PDF…';
+                    if (labelEl) labelEl.textContent = @json(__('lang.CV download generating PDF'));
                     requestAnimationFrame(() => repositionOpenProjectMenu());
 
                     let ok = false;
@@ -877,7 +875,28 @@
                         if (labelEl) labelEl.textContent = prevLabel;
                         requestAnimationFrame(() => repositionOpenProjectMenu());
                     }
-                    if (!ok) showProjectTopToast('Could not download');
+                    if (!ok) showProjectTopToast(@json(__('lang.CV download failed')));
+                    return;
+                }
+
+                if (action === 'download-png') {
+                    const labelEl = item.querySelector('.cv-project-card__menu-label');
+                    const prevLabel = labelEl ? labelEl.textContent : @json(__('lang.CV download as PNG zip'));
+                    item.classList.add('cv-project-card__menu-item--loading');
+                    item.setAttribute('aria-busy', 'true');
+                    if (labelEl) labelEl.textContent = @json(__('lang.CV download generating PNG'));
+                    requestAnimationFrame(() => repositionOpenProjectMenu());
+
+                    let ok = false;
+                    try {
+                        ok = await downloadCvPng(card);
+                    } finally {
+                        item.classList.remove('cv-project-card__menu-item--loading');
+                        item.removeAttribute('aria-busy');
+                        if (labelEl) labelEl.textContent = prevLabel;
+                        requestAnimationFrame(() => repositionOpenProjectMenu());
+                    }
+                    if (!ok) showProjectTopToast(@json(__('lang.CV download failed')));
                     return;
                 }
 

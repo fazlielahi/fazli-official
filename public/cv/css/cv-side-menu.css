@@ -70,8 +70,115 @@
 }
 
 @media (max-width: 991px) {
+    body.page-cv-templates .navbar,
+    body.page-cv-projects .navbar,
+    body.page-cv-trash .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 400;
+    }
+
+    body.page-cv-templates .cv-gallery::before,
+    body.page-cv-projects .cv-gallery::before,
+    body.page-cv-trash .cv-gallery::before {
+        inset: 0;
+        transform: none;
+        filter: none;
+    }
+
+    body.page-cv-templates .cv-gallery > .container,
+    body.page-cv-projects .cv-gallery > .container,
+    body.page-cv-trash .cv-gallery > .container {
+        z-index: auto;
+    }
+
+    body.page-cv-projects .cv-gallery__layout > .templates-showcase,
+    body.page-cv-trash .cv-gallery__layout > .templates-showcase {
+        z-index: auto;
+    }
+
     .cv-side-menu {
-        display: none;
+        position: fixed;
+        left: 50%;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        transform: translateX(-50%);
+        width: min(calc(100vw - 24px), 440px);
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        gap: 2px;
+        padding: 8px 12px;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        border: 1px solid rgba(255, 255, 255, 0.68);
+        box-shadow:
+            0 14px 36px rgba(15, 23, 42, 0.16),
+            inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        z-index: 500;
+        overflow: visible;
+    }
+
+    .cv-side-menu__item {
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 76px;
+        gap: 3px;
+    }
+
+    .cv-side-menu__icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: transparent;
+        border: 1px solid transparent;
+        box-shadow: none;
+    }
+
+    .cv-side-menu__item.is-active .cv-side-menu__icon {
+        background: rgba(244, 163, 44, 0.22);
+        border-color: rgba(244, 163, 44, 0.38);
+        box-shadow: 0 4px 14px rgba(244, 163, 44, 0.18);
+    }
+
+    .cv-side-menu__label {
+        font-size: 0.58rem;
+        line-height: 1.1;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    body.page-cv-templates .cv-gallery,
+    body.page-cv-projects .cv-gallery,
+    body.page-cv-trash .cv-gallery {
+        padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+@media (max-width: 480px) {
+    .cv-side-menu {
+        width: min(calc(100vw - 16px), 400px);
+        padding: 7px 8px;
+        border-radius: 24px;
+        bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .cv-side-menu__item {
+        max-width: 68px;
+    }
+
+    .cv-side-menu__icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+    }
+
+    .cv-side-menu__label {
+        font-size: 0.54rem;
     }
 }
 

@@ -1,24 +1,18 @@
 <?php
 
-namespace Database\Seeders;
-
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class SiteSettingsSeeder extends Seeder
+return new class extends Migration
 {
-    /**
-     * Default site settings (insert only if missing — does not overwrite admin changes).
-     */
-    public function run(): void
+    public function up(): void
     {
         if (! Schema::hasTable('site_settings')) {
             return;
         }
 
         $defaults = [
-            'cv_trash_retention_days' => '30',
             'session_lifetime_minutes' => (string) max(5, min(10080, (int) env('SESSION_LIFETIME', 120))),
             'remember_me_days' => (string) max(1, min(365, (int) env('REMEMBER_ME_DAYS', 30))),
             'session_expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false) ? '1' : '0',
@@ -37,4 +31,17 @@ class SiteSettingsSeeder extends Seeder
             ]);
         }
     }
-}
+
+    public function down(): void
+    {
+        if (! Schema::hasTable('site_settings')) {
+            return;
+        }
+
+        DB::table('site_settings')->whereIn('key', [
+            'session_lifetime_minutes',
+            'remember_me_days',
+            'session_expire_on_close',
+        ])->delete();
+    }
+};

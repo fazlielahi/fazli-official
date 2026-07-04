@@ -120,6 +120,10 @@
                 <div class="auth-success">{{ session('status') }}</div>
             @endif
 
+            @if (session('auth_required'))
+                <div class="auth-info">{{ session('auth_required') }}</div>
+            @endif
+
             {{-- Rate limit: show countdown box (restored) --}}
             @if(session('throttle_seconds'))
                 <div id="rateLimitError" class="auth-errors">

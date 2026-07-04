@@ -39,7 +39,9 @@ return [
 
         'smtp' => [
             'transport' => 'smtp',
-            'scheme' => env('MAIL_SCHEME'),
+            // Symfony Mailer schemes: "smtp" (STARTTLS on 587) or "smtps" (SSL on 465).
+            // Do not pass "tls" here — that value belongs in MAIL_ENCRYPTION, not scheme.
+            'scheme' => env('MAIL_SCHEME') ?: (env('MAIL_ENCRYPTION') === 'ssl' ? 'smtps' : null),
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', '127.0.0.1'),
             'port' => env('MAIL_PORT', 2525),
@@ -112,5 +114,7 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
+
+    'contact_to' => env('CONTACT_MAIL_TO', env('MAIL_FROM_ADDRESS')),
 
 ];

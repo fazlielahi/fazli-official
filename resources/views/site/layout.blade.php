@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+@php
+    $locale = app()->getLocale();
+    $pageDir = in_array($locale, ['ar', 'ur'], true) ? 'rtl' : 'ltr';
+@endphp
+<html lang="{{ $locale }}" dir="{{ $pageDir }}">
 
 <head>
     <title>@yield('title', __('lang.DEFAULT_TITLE'))</title>
@@ -11,8 +15,6 @@
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/theme.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    @php $locale = app()->getLocale(); @endphp
     
     @if($locale == 'ar')
         <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
@@ -167,6 +169,27 @@
     <div id="comment-success-message" style="display:none; position:fixed; top:30px; left:50%; transform:translateX(-50%); z-index:9999; background:#1da370; color:#fff; padding:12px 32px; border-radius:8px; font-size:1.1rem; box-shadow:0 2px 8px #0002;">
         {{ __('lang.Comment added successfully!') }}
     </div>
+
+    @guest
+        <link rel="stylesheet" href="{{ asset('styles/auth-hint.css') }}">
+        <div id="auth-required-overlay" class="auth-required-overlay" hidden aria-hidden="true">
+            <div class="auth-required-overlay__backdrop" data-auth-dismiss aria-hidden="true"></div>
+            <div id="auth-required-toast" class="auth-required-toast" role="alertdialog" aria-modal="true" aria-labelledby="auth-required-title" aria-live="polite">
+                <h2 id="auth-required-title" class="auth-required-toast__title">{{ __('lang.AUTH_REQUIRED_TITLE') }}</h2>
+                <p class="auth-required-toast__text">{{ __('lang.AUTH_REQUIRED_FOR_FEATURE') }}</p>
+                <div class="auth-required-toast__actions">
+                    <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="auth-required-toast__login" data-auth-login>{{ __('lang.Login') }}</a>
+                    <button type="button" class="auth-required-toast__dismiss" data-auth-dismiss>{{ __('lang.Close') }}</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            window.TFC_AUTH_HINT = {
+                loginUrl: @json(route('localized.login', ['lang' => app()->getLocale()]))
+            };
+        </script>
+        <script src="{{ asset('js/auth-hint.js') }}"></script>
+    @endguest
 
     <script src="{{ asset('js/theme.js') }}"></script>
     <script src="{{ asset('js/like.js') }}"></script>

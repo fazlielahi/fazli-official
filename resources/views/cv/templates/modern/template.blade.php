@@ -303,6 +303,8 @@
                     </div>
                 </section>
                 @endif
+
+                @include('cv.templates.partials.custom-section', ['data' => $data])
             </div>
         </div>
     </div>

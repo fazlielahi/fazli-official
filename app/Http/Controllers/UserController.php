@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Hash; //For hashing password
 use Illuminate\Support\Facades\App; 
 use Illuminate\Support\Facades\Auth; //For Laravel authentication
 use Illuminate\Support\Facades\Password; //For password reset functionality
-use App\Models\User;                        //The user model
+use App\Models\User;
+use App\Models\SiteSetting;                        //The user model
 use App\Models\Blog;                        //The user model
 
 
@@ -140,6 +141,11 @@ class UserController extends Controller
         // Check if "remember me" is checked (Laravel uses boolean for remember)
         $remember = $request->has('remember');
 
+        $guard = Auth::guard('web');
+        if (method_exists($guard, 'setRememberDuration')) {
+            $guard->setRememberDuration(SiteSetting::getRememberMeDays() * 24 * 60);
+        }
+
         // Attempt to authenticate the user using Laravel's Auth system
         // Auth::attempt() automatically checks email and password, and creates the session
         if (Auth::attempt($credentials, $remember)) {
@@ -149,6 +155,10 @@ class UserController extends Controller
             $user = Auth::user();
 
             $next = $this->sanitizeInternalNextUrl($request->input('next'));
+            if (!$next) {
+                $intended = session()->pull('url.intended');
+                $next = $this->sanitizeInternalNextUrl(is_string($intended) ? $intended : null);
+            }
             if ($next) {
                 return redirect()->to($next);
             }

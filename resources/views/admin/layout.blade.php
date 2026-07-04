@@ -158,7 +158,7 @@
                                         <a href="{{ route('localized.admin.cv-templates.index', ['lang' => app()->getLocale()]) }}" ><i class="fas fa-file-alt"></i><span>Resume templates</span></a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('localized.admin.cv-trash-settings.edit', ['lang' => app()->getLocale()]) }}" ><i class="fas fa-trash"></i><span>Trash retention</span></a>
+                                        <a href="{{ route('localized.admin.settings.edit', ['lang' => app()->getLocale()]) }}" ><i class="icon-settings"></i><span>{{ __('lang.ADMIN_SITE_SETTINGS') }}</span></a>
                                     </li>
                                     <li class="mb-3">
                                         <a href="#Founder" class="has-arrow"><i class="fas fa-user-tie"></i><span>Founder</span></a>

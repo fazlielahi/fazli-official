@@ -91,6 +91,10 @@
                             <option value="roboto">Roboto</option>
                         </select>
                     </label>
+                    <button type="button" class="cv-builder-toolbar__tab cv-section-layout-trigger" id="cv-section-layout-trigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="cv-section-layout-modal">
+                        <i class="fas fa-table-columns" aria-hidden="true"></i>
+                        <span>Order</span>
+                    </button>
                     <span class="cv-builder-toolbar__tab cv-builder-toolbar__tab--static cv-soon" tabindex="-1" data-tooltip="Coming soon">
                         <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
                         <span>AI Tools</span>
@@ -160,10 +164,22 @@
                         </button>
                     </div>
                     <div class="cv-builder-toolbar__download-wrap">
-                        <button type="button" id="btn-export-pdf" class="cv-builder-toolbar__download">
-                            <span class="cv-builder-toolbar__download-text">Download</span>
-                            <i class="fas fa-file-arrow-down cv-builder-toolbar__download-icon" aria-hidden="true"></i>
-                        </button>
+                        <div class="cv-download-menu" id="cv-download-menu">
+                            <button type="button" id="btn-export-download-trigger" class="cv-builder-toolbar__download" aria-haspopup="menu" aria-expanded="false" aria-controls="cv-download-menu-panel">
+                                <span class="cv-builder-toolbar__download-text">{{ __('lang.CV download') }}</span>
+                                <i class="fas fa-chevron-down cv-builder-toolbar__download-chevron" aria-hidden="true"></i>
+                            </button>
+                            <div class="cv-download-menu__panel" id="cv-download-menu-panel" role="menu" hidden aria-hidden="true" aria-label="{{ __('lang.CV download') }}">
+                                <button type="button" id="btn-export-pdf" class="cv-download-menu__item" role="menuitem">
+                                    <i class="fas fa-file-pdf cv-download-menu__icon" aria-hidden="true"></i>
+                                    <span class="cv-download-menu__label">{{ __('lang.CV download as PDF') }}</span>
+                                </button>
+                                <button type="button" id="btn-export-png" class="cv-download-menu__item" role="menuitem" title="{{ __('lang.CV download PNG hint') }}">
+                                    <i class="fas fa-file-image cv-download-menu__icon" aria-hidden="true"></i>
+                                    <span class="cv-download-menu__label">{{ __('lang.CV download as PNG zip') }}</span>
+                                </button>
+                            </div>
+                        </div>
                         <div id="export-message" class="cv-builder-toolbar__export-msg" aria-live="polite"></div>
                     </div>
                     <button type="button" class="cv-builder-toolbar__more cv-builder-toolbar__more--static cv-soon" aria-label="More options" aria-disabled="true" tabindex="-1" data-tooltip="Coming soon">
@@ -612,6 +628,29 @@
                 </button>
             </div>
         </div>
+
+        <div id="cv-section-layout-modal" class="cv-section-layout-modal" aria-hidden="true">
+            <div class="cv-section-layout-modal__backdrop" data-section-layout-close></div>
+            <div class="cv-section-layout-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="cv-section-layout-title">
+                <div class="cv-section-layout-modal__header">
+                    <div>
+                        <h3 id="cv-section-layout-title">Order sections</h3>
+                        <p>Reorder sections, or move them between columns for two-column templates.</p>
+                    </div>
+                    <button type="button" class="cv-section-layout-modal__close" id="cv-section-layout-close" aria-label="Close section order modal">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="cv-section-layout-modal__body" id="cv-section-layout-body"></div>
+                <div class="cv-section-layout-modal__footer">
+                    <button type="button" class="cv-section-layout-modal__btn cv-section-layout-modal__btn--ghost" id="cv-section-layout-reset">Reset</button>
+                    <div class="cv-section-layout-modal__footer-actions">
+                        <button type="button" class="cv-section-layout-modal__btn cv-section-layout-modal__btn--ghost" data-section-layout-close>Cancel</button>
+                        <button type="button" class="cv-section-layout-modal__btn cv-section-layout-modal__btn--primary" id="cv-section-layout-apply">Apply changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -649,7 +688,14 @@
                         updateTitle: '{{ route("localized.cv.updateTitle", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         duplicateCV: '{{ route("localized.cv.duplicate", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
                         deleteCV: '{{ route("localized.cv.delete", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
-                        exportPDF: '{{ route("localized.cv.export.current.pdf", ["lang" => app()->getLocale(), "slug" => $templateSlug]) }}'
+                        exportPDF: '{{ route("localized.cv.export.current.pdf", ["lang" => app()->getLocale(), "slug" => $templateSlug]) }}',
+                        exportPNG: '{{ route("localized.cv.export.current.png", ["lang" => app()->getLocale(), "slug" => $templateSlug]) }}'
+                    },
+                    i18n: {
+                        downloadLabel: @json(__('lang.CV download')),
+                        downloadSaving: @json(__('lang.CV download saving')),
+                        downloadGeneratingPdf: @json(__('lang.CV download generating PDF')),
+                        downloadGeneratingPng: @json(__('lang.CV download generating PNG'))
                     },
                     csrfToken: '{{ csrf_token() }}'
                 });

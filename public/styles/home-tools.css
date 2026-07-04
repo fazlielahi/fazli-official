@@ -811,3 +811,44 @@ body.page-home-tools[data-theme="dark"] .home-tool-card:hover .home-tool-card__l
         width: 100%;
     }
 }
+
+/* RTL (Arabic / Urdu) */
+html[dir="rtl"] body.page-home-tools .home-tools {
+    direction: rtl;
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-home-tools .home-tools__intro {
+    justify-self: start;
+}
+
+html[dir="rtl"] body.page-home-tools .home-tools__intro .home-tools__btn--primary::after {
+    margin-left: 0;
+    margin-right: auto;
+    content: "‹";
+}
+
+html[dir="rtl"] body.page-home-tools .home-tools__intro-list li,
+html[dir="rtl"] body.page-home-tools .home-tools__highlight-feature,
+html[dir="rtl"] body.page-home-tools .home-tools__highlight-checks span,
+html[dir="rtl"] body.page-home-tools .home-tools__btn--secondary {
+    flex-direction: row-reverse;
+}
+
+html[dir="rtl"] body.page-home-tools .home-tools__highlight::before {
+    inset: auto auto -70px -58px;
+}
+
+html[dir="rtl"] body.page-home-tools .home-tools__highlight-badge--ribbon,
+html[dir="rtl"] body.page-home-tools .home-tool-card__badge--ribbon {
+    right: auto;
+    left: -38px;
+    transform: rotate(-45deg);
+}
+
+html[dir="rtl"] body.page-home-tools .home-tool-card__badge {
+    right: auto;
+    left: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 10px;
+}

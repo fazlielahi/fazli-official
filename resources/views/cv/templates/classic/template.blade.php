@@ -2,8 +2,11 @@
 @php
     $name = $data['name'] ?? 'Your Name';
     $location = trim(($data['city'] ?? '') . ((isset($data['city'], $data['country']) && $data['city'] !== '' && $data['country'] !== '') ? ', ' : '') . ($data['country'] ?? ''));
-    $defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references'];
-    $savedSectionOrder = isset($data['section_order']) && is_array($data['section_order']) ? $data['section_order'] : [];
+    $defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
+    $savedLayoutOrder = isset($data['section_layout']['main']) && is_array($data['section_layout']['main']) ? $data['section_layout']['main'] : [];
+    $savedSectionOrder = !empty($savedLayoutOrder)
+        ? $savedLayoutOrder
+        : (isset($data['section_order']) && is_array($data['section_order']) ? $data['section_order'] : []);
     $sectionOrder = array_values(array_unique(array_merge(
         array_values(array_filter($savedSectionOrder, fn ($key) => in_array($key, $defaultSectionOrder, true))),
         $defaultSectionOrder
@@ -226,6 +229,8 @@
                     </div>
                 </section>
             @endif
+
+            @include('cv.templates.partials.custom-section', ['data' => $data, 'sectionStyle' => $sectionStyle])
 
             @if(isset($data['references']) && count($data['references']) > 0)
                 <section class="references" style="{{ $sectionStyle('references') }}">

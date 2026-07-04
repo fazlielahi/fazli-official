@@ -1,7 +1,68 @@
 /* Projects page (saved resumes) — match CV templates layout */
-html:has(body.page-cv-projects) {
-    height: 100%;
-    overflow: hidden;
+@media (min-width: 992px) {
+    html:has(body.page-cv-projects) {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body.page-cv-projects {
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+    }
+
+    /* Lock page scroll: scroll only the projects panel (same as templates) */
+    body.page-cv-projects .cv-gallery { 
+        height: calc(100vh - var(--cv-site-header-height, 52px));
+        max-height: calc(100vh - var(--cv-site-header-height, 52px));
+        padding-bottom: 12px;
+        overflow: hidden;
+    }
+
+    body.page-cv-projects .cv-gallery > .container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        max-width: 100%;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    body.page-cv-projects .cv-gallery__layout {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    /*
+     * Side rail uses z-index: 120 (cv-side-menu.css). Without a higher layer on the
+     * main column, card menus paint underneath when they extend left past the gap.
+     */
+    body.page-cv-projects .cv-gallery__layout > .templates-showcase {
+        position: relative;
+        z-index: 200;
+    }
+
+    body.page-cv-projects .templates-showcase {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden; /* panel handles scroll */
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.52);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 10px 40px rgba(15, 23, 42, 0.10);
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 body.page-cv-projects {
@@ -9,9 +70,6 @@ body.page-cv-projects {
     --cv-primary-dark: #0a2a50;
     --cv-accent: #F4A32C;
     --cv-accent-soft: rgba(244, 163, 44, 0.18);
-    height: 100vh;
-    max-height: 100vh;
-    overflow: hidden;
 }
 
 body.page-cv-projects .footer {
@@ -22,47 +80,20 @@ body.page-cv-projects .scroll-to-top {
     display: none !important;
 }
 
-/* Lock page scroll: scroll only the projects panel (same as templates) */
-body.page-cv-projects .cv-gallery {
-    height: calc(100vh - 52px);
-    max-height: calc(100vh - 52px);
-    padding-bottom: 12px;
-    overflow: hidden;
-}
-
 body.page-cv-projects .cv-gallery > .container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
     max-width: 100%;
     padding-left: 14px;
     padding-right: 14px;
 }
 
 body.page-cv-projects .cv-gallery__layout {
-    flex: 1 1 auto;
-    min-height: 0;
-    height: 100%;
     display: flex;
     align-items: stretch;
     gap: 16px;
 }
 
-/*
- * Side rail uses z-index: 120 (cv-side-menu.css). Without a higher layer on the
- * main column, card menus paint underneath when they extend left past the gap.
- */
-body.page-cv-projects .cv-gallery__layout > .templates-showcase {
-    position: relative;
-    z-index: 200;
-}
-
 /* Match templates page "showcase" container so panel fills width */
 body.page-cv-projects .templates-showcase {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden; /* panel handles scroll */
     width: 100%;
     max-width: none;
     margin: 0;
@@ -614,30 +645,107 @@ a.cv-project-card__menu-item:hover {
 }
 
 @media (max-width: 991px) {
-    body.page-cv-projects .cv-gallery > .container {
-        padding-left: 14px;
+    html:has(body.page-cv-projects),
+    html:has(body.page-cv-trash) {
+        height: auto;
+        overflow: auto;
     }
-    body.page-cv-projects .cv-gallery__layout {
+
+    body.page-cv-projects,
+    body.page-cv-trash {
+        height: auto;
+        min-height: 100vh;
+        max-height: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    body.page-cv-projects .cv-gallery,
+    body.page-cv-trash .cv-gallery {
+        height: auto;
+        min-height: calc(100dvh - 52px);
+        max-height: none;
+        overflow: visible;
+        padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    }
+
+    body.page-cv-projects .cv-gallery > .container,
+    body.page-cv-trash .cv-gallery > .container {
+        height: auto;
+        min-height: 0;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    body.page-cv-projects .cv-gallery__layout,
+    body.page-cv-trash .cv-gallery__layout {
         display: block;
         height: auto;
     }
-    .cv-side-menu {
-        display: none;
+
+    body.page-cv-projects .templates-showcase,
+    body.page-cv-trash .templates-showcase {
+        min-height: 0;
+        max-height: none;
+        overflow: visible;
+        margin-bottom: 0;
     }
 }
 
 /* Trash page — match projects chrome */
-html:has(body.page-cv-trash) {
-    height: 100%;
-    overflow: hidden;
+@media (min-width: 992px) {
+    html:has(body.page-cv-trash) {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body.page-cv-trash {
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+    }
+
+    body.page-cv-trash .cv-gallery {
+        height: calc(100vh - var(--cv-site-header-height, 52px));
+        max-height: calc(100vh - var(--cv-site-header-height, 52px));
+        padding-bottom: 12px;
+        overflow: hidden;
+    }
+
+    body.page-cv-trash .cv-gallery > .container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        max-width: 100%;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    body.page-cv-trash .cv-gallery__layout {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    body.page-cv-trash .cv-gallery__layout > .templates-showcase {
+        position: relative;
+        z-index: 200;
+    }
+
+    body.page-cv-trash .templates-showcase {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+    }
 }
 
 body.page-cv-trash {
     --cv-primary: #0F3A6D;
     --cv-primary-dark: #0a2a50;
-    height: 100vh;
-    max-height: 100vh;
-    overflow: hidden;
 }
 
 body.page-cv-trash .footer {
@@ -648,41 +756,19 @@ body.page-cv-trash .scroll-to-top {
     display: none !important;
 }
 
-body.page-cv-trash .cv-gallery {
-    height: calc(100vh - 52px);
-    max-height: calc(100vh - 52px);
-    padding-bottom: 12px;
-    overflow: hidden;
-}
-
 body.page-cv-trash .cv-gallery > .container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
     max-width: 100%;
     padding-left: 14px;
     padding-right: 14px;
 }
 
 body.page-cv-trash .cv-gallery__layout {
-    flex: 1 1 auto;
-    min-height: 0;
-    height: 100%;
     display: flex;
     align-items: stretch;
     gap: 16px;
 }
 
-body.page-cv-trash .cv-gallery__layout > .templates-showcase {
-    position: relative;
-    z-index: 200;
-}
-
 body.page-cv-trash .templates-showcase {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
     width: 100%;
     max-width: none;
     margin: 0;
@@ -918,12 +1004,6 @@ body.page-cv-trash .templates-showcase {
     margin-bottom: 12px;
 }
 
-@media (max-width: 991px) {
-    body.page-cv-trash .cv-gallery__layout {
-        display: block;
-        height: auto;
-    }
-}
 
 /* Projects — delete choice modal (compact Trash vs permanent) */
 body.cv-delete-choice-modal-open {
@@ -1304,5 +1384,60 @@ body.cv-trash-purge-modal-open {
 .cv-trash-purge-modal__btn--danger:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+/* Mobile dock — must come after desktop projects/trash scroll-lock rules */
+@media (max-width: 991px) {
+    html:has(body.page-cv-projects),
+    html:has(body.page-cv-trash) {
+        height: auto;
+        overflow: auto;
+    }
+
+    body.page-cv-projects,
+    body.page-cv-trash {
+        height: auto;
+        min-height: 100vh;
+        max-height: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    body.page-cv-projects .cv-gallery,
+    body.page-cv-trash .cv-gallery {
+        height: auto;
+        min-height: calc(100dvh - 52px);
+        max-height: none;
+        overflow: visible;
+        padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    }
+
+    body.page-cv-projects .cv-gallery > .container,
+    body.page-cv-trash .cv-gallery > .container {
+        height: auto;
+        min-height: 0;
+    }
+
+    body.page-cv-projects .cv-gallery__layout,
+    body.page-cv-trash .cv-gallery__layout {
+        display: block;
+        height: auto;
+    }
+
+    body.page-cv-projects .cv-gallery__layout > .templates-showcase,
+    body.page-cv-trash .cv-gallery__layout > .templates-showcase {
+        z-index: auto;
+    }
+
+    body.page-cv-projects .templates-showcase,
+    body.page-cv-trash .templates-showcase {
+        overflow: visible;
+    }
+
+    body.page-cv-projects .cv-side-menu,
+    body.page-cv-trash .cv-side-menu {
+        display: flex;
+        z-index: 500;
+    }
 }
 

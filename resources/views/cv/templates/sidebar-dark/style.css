@@ -1,0 +1,274 @@
+/* Sidebar Dark CV Template */
+.cv-template.sidebar-dark {
+    --sidebar-bg: #202a33;
+    --sidebar-text: #f8fafc;
+    --sidebar-muted: #cbd5e1;
+    --accent: #6fb3e6;
+    --body-text: #101820;
+    margin: 0;
+    background: #eef2f6;
+    display: flex;
+    justify-content: center;
+    font-family: var(--cv-font-family, Arial, Helvetica, sans-serif);
+    color: var(--body-text);
+}
+
+.cv-template.sidebar-dark .cv-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 74mm 1fr;
+    box-shadow: 0 0 24px rgba(15, 23, 42, 0.16);
+    margin: 20px;
+    overflow: visible;
+}
+
+.cv-template.sidebar-dark .sidebar-panel {
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    padding: 13mm 10mm 12mm;
+    min-height: 297mm;
+    box-sizing: border-box;
+}
+
+.cv-template.sidebar-dark .photo-box {
+    width: 44mm;
+    height: 44mm;
+    margin: 0 auto 12mm;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1.4mm solid rgba(255, 255, 255, 0.9);
+    background: #e2e8f0;
+}
+
+.cv-template.sidebar-dark .profile-placeholder,
+.cv-template.sidebar-dark .profile-photo {
+    width: 100%;
+    height: 100%;
+}
+
+.cv-template.sidebar-dark .profile-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cv-template.sidebar-dark .profile-photo {
+    display: block;
+    object-fit: cover;
+}
+
+.cv-template.sidebar-dark .initials {
+    color: #1f2937;
+    font-size: 24pt;
+    font-weight: 800;
+}
+
+.cv-template.sidebar-dark .cv-header {
+    text-align: center;
+    margin: 0 0 12mm;
+}
+
+.cv-template.sidebar-dark .name {
+    margin: 0;
+    color: #fff;
+    font-size: 22pt;
+    line-height: 1.05;
+    font-weight: 800;
+}
+
+.cv-template.sidebar-dark .subtitle {
+    margin: 2mm 0 0;
+    color: var(--accent);
+    font-size: 11pt;
+    line-height: 1.25;
+    font-weight: 400;
+}
+
+.cv-template.sidebar-dark .sidebar-panel section {
+    margin: 0 0 11mm;
+}
+
+.cv-template.sidebar-dark .sidebar-panel .section-title {
+    color: #fff;
+    margin: 0 0 4mm;
+    font-size: 14pt;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 0.4pt;
+    text-transform: uppercase;
+}
+
+.cv-template.sidebar-dark .contact-info {
+    display: grid;
+    gap: 3mm;
+}
+
+.cv-template.sidebar-dark .contact-item {
+    display: grid;
+    grid-template-columns: 5mm minmax(0, 1fr);
+    gap: 3mm;
+    align-items: start;
+    color: var(--sidebar-muted);
+    font-size: 8.4pt;
+    line-height: 1.35;
+}
+
+.cv-template.sidebar-dark .contact-icon {
+    color: var(--accent);
+    text-align: center;
+}
+
+.cv-template.sidebar-dark .contact-text {
+    overflow-wrap: anywhere;
+}
+
+.cv-template.sidebar-dark .skills-list,
+.cv-template.sidebar-dark .languages-list {
+    margin: 0;
+    padding: 0 0 0 4mm;
+    color: var(--sidebar-muted);
+    font-size: 8.8pt;
+    line-height: 1.55;
+}
+
+.cv-template.sidebar-dark .language-item {
+    display: grid;
+    grid-template-columns: minmax(0, auto) 1fr;
+    gap: 3mm;
+}
+
+.cv-template.sidebar-dark .language-name {
+    color: #fff;
+    font-weight: 700;
+}
+
+.cv-template.sidebar-dark .language-proficiency,
+.cv-template.sidebar-dark .reference-item span {
+    color: var(--sidebar-muted);
+}
+
+.cv-template.sidebar-dark .reference-item {
+    display: grid;
+    gap: 1mm;
+    color: var(--sidebar-muted);
+    font-size: 8.2pt;
+    line-height: 1.35;
+    margin: 0 0 3mm;
+}
+
+.cv-template.sidebar-dark .right-content {
+    padding: 18mm 13mm 14mm;
+    box-sizing: border-box;
+}
+
+.cv-template.sidebar-dark .right-content section {
+    margin: 0 0 11mm;
+}
+
+.cv-template.sidebar-dark .right-content .section-title {
+    margin: 0 0 5mm;
+    color: #111827;
+    font-size: 15pt;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: 0.2pt;
+    text-transform: uppercase;
+}
+
+.cv-template.sidebar-dark .section-content,
+.cv-template.sidebar-dark .section-content p {
+    margin: 0;
+    color: var(--body-text);
+    font-size: 9.2pt;
+    line-height: 1.45;
+}
+
+.cv-template.sidebar-dark .summary .section-content p {
+    text-align: justify;
+}
+
+.cv-template.sidebar-dark .experience-item,
+.cv-template.sidebar-dark .education-item,
+.cv-template.sidebar-dark .project-item,
+.cv-template.sidebar-dark .award-item,
+.cv-template.sidebar-dark .certification-item {
+    margin: 0 0 9mm;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.cv-template.sidebar-dark .experience-item:last-child,
+.cv-template.sidebar-dark .education-item:last-child,
+.cv-template.sidebar-dark .project-item:last-child,
+.cv-template.sidebar-dark .award-item:last-child,
+.cv-template.sidebar-dark .certification-item:last-child {
+    margin-bottom: 0;
+}
+
+.cv-template.sidebar-dark .item-title-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6mm;
+    align-items: baseline;
+}
+
+.cv-template.sidebar-dark .item-title {
+    margin: 0 0 1.3mm;
+    color: #111827;
+    font-size: 10.5pt;
+    line-height: 1.25;
+    font-weight: 800;
+}
+
+.cv-template.sidebar-dark .item-period {
+    margin: 0;
+    color: #111827;
+    font-size: 8.4pt;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+.cv-template.sidebar-dark .item-company {
+    margin: 0 0 4mm;
+    color: #111827;
+    font-size: 8.8pt;
+    line-height: 1.35;
+    font-weight: 500;
+}
+
+.cv-template.sidebar-dark .item-description,
+.cv-template.sidebar-dark .item-description p,
+.cv-template.sidebar-dark .item-description li {
+    color: var(--body-text);
+    font-size: 9pt;
+    line-height: 1.45;
+}
+
+.cv-template.sidebar-dark .item-description ul,
+.cv-template.sidebar-dark .item-description ol {
+    margin: 0;
+    padding-left: 5mm;
+}
+
+.cv-template.sidebar-dark .item-description li {
+    margin: 0 0 1.2mm;
+}
+
+@media print {
+    .cv-template.sidebar-dark {
+        background: #fff;
+        display: block;
+    }
+
+    .cv-template.sidebar-dark .cv-page {
+        margin: 0;
+        box-shadow: none;
+    }
+}
+
+@page {
+    size: A4;
+    margin: 0;
+}

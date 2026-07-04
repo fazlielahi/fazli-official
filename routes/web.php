@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CKEditorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CvTrashSettingsController;
+use App\Http\Controllers\Admin\SiteSettingsController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\Auth\GoogleAuthController;
@@ -41,6 +42,7 @@ Route::group([
     Route::get('/about-tfc', [AboutController::class, 'aboutTfc'])->name('about-tfc');
     
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+    Route::post('/contact', [ContactController::class, 'sendEmail'])->name('contact.send');
     Route::get('/founder-profile', [FounderProfileController::class, 'index'])->name('founder-profile');
     Route::get('/jobs', [\App\Http\Controllers\JobsController::class, 'index'])->name('jobs');
 
@@ -67,6 +69,8 @@ Route::group([
     Route::get('/cv/preview/{id}', [\App\Http\Controllers\CvController::class, 'previewSaved'])->name('cv.preview');
     Route::get('/cv/export/{id}/pdf', [\App\Http\Controllers\CvController::class, 'exportPDF'])->name('cv.export.pdf');
     Route::post('/cv/export/{slug}/pdf', [\App\Http\Controllers\CvController::class, 'exportCurrentPDF'])->name('cv.export.current.pdf');
+    Route::get('/cv/export/{id}/png', [\App\Http\Controllers\CvController::class, 'exportPNG'])->name('cv.export.png');
+    Route::post('/cv/export/{slug}/png', [\App\Http\Controllers\CvController::class, 'exportCurrentPNG'])->name('cv.export.current.png');
     });
 
     //Blogs
@@ -166,6 +170,9 @@ Route::group([
         Route::put('/cv-templates/{cvTemplate}', [\App\Http\Controllers\Admin\CVTemplateController::class, 'update'])->name('cv-templates.update');
         Route::delete('/cv-templates/{cvTemplate}', [\App\Http\Controllers\Admin\CVTemplateController::class, 'destroy'])->name('cv-templates.destroy');
         Route::post('/cv-templates/{cvTemplate}/toggle', [\App\Http\Controllers\Admin\CVTemplateController::class, 'toggleActive'])->name('cv-templates.toggle');
+
+        Route::get('/settings', [SiteSettingsController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings', [SiteSettingsController::class, 'update'])->name('settings.update');
 
         Route::get('/cv-trash-settings', [CvTrashSettingsController::class, 'edit'])->name('cv-trash-settings.edit');
         Route::put('/cv-trash-settings', [CvTrashSettingsController::class, 'update'])->name('cv-trash-settings.update');

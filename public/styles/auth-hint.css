@@ -1,0 +1,117 @@
+.auth-required-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+
+.auth-required-overlay.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.auth-required-overlay[hidden] {
+  display: none !important;
+}
+
+.auth-required-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 15, 20, .58);
+  backdrop-filter: blur(2px);
+}
+
+.auth-required-toast {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  width: min(92vw, 420px);
+  padding: 28px 24px 22px;
+  background: #1a1f27;
+  color: #e8eaed;
+  border: 1px solid #3a424d;
+  border-top: 4px solid #F4A32C;
+  border-radius: 16px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, .35);
+  transform: translateY(12px) scale(.98);
+  transition: transform .2s ease;
+}
+
+.auth-required-overlay.is-visible .auth-required-toast {
+  transform: translateY(0) scale(1);
+}
+
+.auth-required-toast__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #fff;
+}
+
+.auth-required-toast__text {
+  margin: 0;
+  font-size: .95rem;
+  line-height: 1.55;
+  color: #c8cdd4;
+}
+
+.auth-required-toast__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.auth-required-toast__login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  min-width: 120px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: #0F3A6D;
+  color: #fff !important;
+  font-size: .9rem;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.auth-required-toast__login:hover {
+  background: #0a2a50;
+}
+
+.auth-required-toast__dismiss {
+  min-height: 40px;
+  min-width: 96px;
+  padding: 0 16px;
+  border: 1px solid #3a424d;
+  border-radius: 999px;
+  background: transparent;
+  color: #9aa0a8;
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+.auth-required-toast__dismiss:hover {
+  color: #e8eaed;
+  border-color: #5a6472;
+}
+
+body.auth-required-open {
+  overflow: hidden;
+}
