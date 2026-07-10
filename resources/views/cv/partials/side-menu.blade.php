@@ -1,10 +1,10 @@
 @php
     $activeMenu = $activeMenu ?? 'create';
     $locale = app()->getLocale();
-    $galleryUrl = route('localized.cv.gallery', ['lang' => $locale]);
+    $galleryUrl = route('localized.resume.gallery', ['lang' => $locale]);
     $homeUrl = route('localized.home', ['lang' => $locale]);
-    $projectsUrl = route('localized.cv.projects', ['lang' => $locale]);
-    $trashUrl = route('localized.cv.trash', ['lang' => $locale]);
+    $projectsUrl = route('localized.resume.projects', ['lang' => $locale]);
+    $trashUrl = route('localized.resume.trash', ['lang' => $locale]);
 @endphp
 
 <aside class="cv-side-menu" aria-label="Quick menu">

@@ -121,7 +121,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale(), 'service' => 'web-design-development']) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -161,7 +161,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale(), 'service' => 'corporate-identity']) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -201,7 +201,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale(), 'service' => 'digital-marketing']) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -241,7 +241,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale(), 'service' => 'ecommerce-development']) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -281,7 +281,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale(), 'service' => 'social-media-marketing']) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -321,7 +321,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale(), 'service' => 'wordpress-development']) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>
@@ -361,7 +361,7 @@
                                     </div>
                                     <div class="blogs-one__btn-and-doller-box">
                                         <div class="blogs-one__btn-box">
-                                            <a href="#" class="blogs-one__btn thm-btn">
+                                            <a href="{{ route('localized.contact', ['lang' => app()->getLocale(), 'service' => 'seo-training']) }}" class="blogs-one__btn thm-btn">
                                                 <span class="icon-angles-right"></span>{{ __('lang.Request a Quote') }}
                                             </a>
                                         </div>

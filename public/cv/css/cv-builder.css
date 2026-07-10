@@ -13,11 +13,6 @@ body.page-cv-builder {
     --cv-lr-surface: #ffffff;
     --cv-lr-input-radius: 8px;
     --cv-lr-focus: rgba(15, 58, 109, 0.18);
-
-    /* Scrollbar (match login/register feel) */
-    --cv-scroll-track: rgba(15, 23, 42, .08);
-    --cv-scroll-thumb: rgba(15, 58, 109, .55);
-    --cv-scroll-thumb-hover: rgba(15, 58, 109, .75);
 }
 
 /* Hide manual save UI (we autosave drafts locally + save on download/login flow) */
@@ -25,29 +20,6 @@ body.page-cv-builder .cv-personal-save-wrap,
 body.page-cv-builder #cv-personal-save-resume,
 body.page-cv-builder #cv-save-resume-popover{
     display: none !important;
-}
-
-/* Builder internal scrollbars */
-body.page-cv-builder .builder-form-panel{
-    scrollbar-width: thin;
-    scrollbar-color: var(--cv-scroll-thumb) var(--cv-scroll-track);
-}
-body.page-cv-builder .builder-form-panel::-webkit-scrollbar{
-    width: 10px;
-}
-body.page-cv-builder .builder-form-panel::-webkit-scrollbar-track{
-    background: var(--cv-scroll-track);
-    border-radius: 999px;
-}
-body.page-cv-builder .builder-form-panel::-webkit-scrollbar-thumb{
-    background: var(--cv-scroll-thumb);
-    border-radius: 999px;
-    border: 2px solid transparent;
-    background-clip: content-box;
-}
-body.page-cv-builder .builder-form-panel::-webkit-scrollbar-thumb:hover{
-    background: var(--cv-scroll-thumb-hover);
-    background-clip: content-box;
 }
 
 /* Make builder inputs/buttons feel like login/register */
@@ -408,6 +380,11 @@ body.page-cv-builder .cv-builder > .cv-builder__main {
     background: var(--cv-accent-soft);
     color: var(--cv-primary);
     border-color: rgba(244, 163, 44, 0.28);
+}
+
+button.cv-builder-toolbar__tab {
+    cursor: pointer;
+    font: inherit;
 }
 
 .cv-builder-toolbar__tab--static {
@@ -1836,7 +1813,8 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     box-sizing: border-box;
 }
 
-.builder-form-panel {
+.builder-form-panel,
+.builder-customize-panel {
     flex: 0 0 auto;
     width: min(520px, 100%);
     max-width: 560px;
@@ -1850,6 +1828,142 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     border-radius: 14px;
     border: none;
     box-shadow: none;
+}
+
+.builder-customize-panel[hidden] {
+    display: none !important;
+}
+
+.builder-form-panel[hidden] {
+    display: none !important;
+}
+
+.cv-customize-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 24px;
+    font-family: "Outfit", system-ui, sans-serif;
+}
+
+.cv-customize-block {
+    padding: 14px;
+    background: #fff;
+    border: 1px solid rgba(26, 32, 44, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.cv-customize-block__header {
+    margin-bottom: 12px;
+}
+
+.cv-customize-block__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 4px;
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.cv-customize-block__title i {
+    color: var(--cv-primary);
+    font-size: 0.92em;
+}
+
+.cv-customize-block__desc {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.cv-customize-block__current {
+    margin: 0 0 12px;
+    color: #475569;
+    font-size: 0.84rem;
+}
+
+.cv-customize-block__current-label {
+    margin-right: 4px;
+}
+
+.cv-customize-block__current strong {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.cv-customize-font-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cv-customize-font-field__label {
+    color: #475569;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.cv-customize-font-field__select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 10px;
+    background: #fff;
+    color: #0f172a;
+    font: inherit;
+    font-size: 0.88rem;
+}
+
+.cv-customize-block__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: inherit;
+}
+
+.cv-customize-block__btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cv-customize-block__btn--ghost {
+    background: #fff;
+    border-color: rgba(15, 23, 42, 0.12);
+    color: #475569;
+}
+
+.cv-customize-block__btn--ghost:hover {
+    background: #f8fafc;
+}
+
+.cv-customize-block__btn--primary {
+    background: var(--cv-primary);
+    color: #fff;
+}
+
+.cv-customize-block__btn--primary:hover {
+    filter: brightness(1.05);
+}
+
+.cv-section-layout-empty {
+    padding: 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 0.84rem;
+    text-align: center;
 }
 
 /* Personal details card (photo → summary) */
@@ -4425,7 +4539,8 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
         gap: 10px;
     }
 
-    .builder-form-panel {
+    .builder-form-panel,
+    .builder-customize-panel {
         width: 100%;
         max-width: none;
         align-self: stretch;

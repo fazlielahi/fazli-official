@@ -55,7 +55,21 @@ class CvExportRenderer
 
     public static function generatePdfBytes(string $fullHtml): string
     {
-        return self::makeBrowsershot($fullHtml)->pdf();
+        @set_time_limit(180);
+
+        $lastError = null;
+        for ($attempt = 1; $attempt <= 2; $attempt++) {
+            try {
+                return self::makeBrowsershot($fullHtml)->pdf();
+            } catch (\Throwable $e) {
+                $lastError = $e;
+                if ($attempt < 2) {
+                    usleep(750000);
+                }
+            }
+        }
+
+        throw $lastError;
     }
 
     /**
@@ -97,20 +111,83 @@ class CvExportRenderer
 
     private static function makeBrowsershot(string $fullHtml): Browsershot
     {
-        return Browsershot::html($fullHtml)
+        $shot = Browsershot::html($fullHtml)
             ->format('A4')
             ->margins(0, 0, 0, 0, 'mm')
             ->showBackground()
-            ->waitUntilNetworkIdle(false)
+            ->setOption('waitUntil', 'load')
             ->timeout(120)
-            ->delay(3000)
+            ->protocolTimeout(120)
+            ->delay(1500)
+            ->noSandbox()
+            ->setNodeModulePath(base_path())
+            ->addChromiumArguments([
+                'disable-dev-shm-usage',
+                'disable-gpu',
+                'no-first-run',
+            ])
             ->setOption('viewport', [
                 'width' => 794,
                 'height' => 1123,
             ])
             ->setOption('preferCSSPageSize', false)
-            ->setOption('printBackground', true)
-            ->setOption('waitForSelector', null);
+            ->setOption('printBackground', true);
+
+        $nodeBinary = self::resolveNodeBinary();
+        if ($nodeBinary !== null) {
+            $shot->setNodeBinary($nodeBinary);
+        }
+
+        $chromePath = self::resolveChromePath();
+        if ($chromePath !== null) {
+            $shot->setChromePath($chromePath);
+        }
+
+        return $shot;
+    }
+
+    private static function resolveNodeBinary(): ?string
+    {
+        $configured = env('BROWSERSHOT_NODE_BINARY');
+        if (is_string($configured) && $configured !== '' && is_file($configured)) {
+            return $configured;
+        }
+
+        if (PHP_OS_FAMILY === 'Windows') {
+            $candidates = [
+                'C:\\Program Files\\nodejs\\node.exe',
+                getenv('PROGRAMFILES') . '\\nodejs\\node.exe',
+            ];
+            foreach ($candidates as $path) {
+                if (is_string($path) && $path !== '' && is_file($path)) {
+                    return $path;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static function resolveChromePath(): ?string
+    {
+        $configured = env('BROWSERSHOT_CHROME_PATH');
+        if (is_string($configured) && $configured !== '' && is_file($configured)) {
+            return $configured;
+        }
+
+        if (PHP_OS_FAMILY === 'Windows') {
+            $candidates = [
+                'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+                'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+            ];
+            foreach ($candidates as $path) {
+                if (is_file($path)) {
+                    return $path;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -716,7 +716,7 @@
                                     </div>
                                 @endif
                                 <div class="cv-template-card__overlay">
-                                    <a href="{{ route('localized.cv.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]) }}" class="cv-template-card__btn">
+                                    <a href="{{ route('localized.resume.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]) }}" class="cv-template-card__btn">
                                         <span class="icon-angles-right"></span>{{ __('lang.Use Template') }}
                                     </a>
                                 </div>
@@ -730,7 +730,7 @@
                     </div>
                     
                     <div class="cv-templates-section__cta text-center">
-                        <a href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}" class="cv-templates-section__btn thm-btn">
+                        <a href="{{ route('localized.resume.gallery', ['lang' => app()->getLocale()]) }}" class="cv-templates-section__btn thm-btn">
                             <span class="icon-angles-right"></span>{{ __('lang.View All Templates') }}
                         </a>
                     </div>

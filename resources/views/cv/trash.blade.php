@@ -138,8 +138,8 @@
     <script>
         (function () {
             const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
-            const restoreTpl = @json(route('localized.cv.trash.restore', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
-            const purgeTpl = @json(route('localized.cv.trash.force', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const restoreTpl = @json(route('localized.resume.trash.restore', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const purgeTpl = @json(route('localized.resume.trash.force', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
 
             const tabs = document.querySelectorAll('.cv-trash-panel__tabs .cv-projects-tab');
             const panes = document.querySelectorAll('.cv-trash-panel .cv-projects-pane');

@@ -158,7 +158,7 @@
     <!--Contact Two End-->
 
     <!--Contact Three Start-->
-    <section class="contact-three">
+    <section class="contact-three" id="contact-form">
         <div class="container">
             <div class="row contact-form">
                 <div class="col-xl-6 col-lg-6">
@@ -219,7 +219,7 @@
                                 <div class="col-xl-12">
                                     <h4 class="contact-three__input-title">{{ __('lang.Subject') }} *</h4>
                                     <div class="contact-three__input-box">
-                                        <input type="text" name="subject" value="{{ old('subject') }}" placeholder="{{ __('lang.Write about your enquiry') }}" required>
+                                        <input type="text" name="subject" value="{{ old('subject', $quoteSubject ?? '') }}" placeholder="{{ __('lang.Write about your enquiry') }}" required>
                                     </div>
                                     @error('subject')
                                         <p class="contact-form-error">{{ $message }}</p>
@@ -228,7 +228,7 @@
                                 <div class="col-xl-12">
                                     <h4 class="contact-three__input-title">{{ __('lang.Message') }} *</h4>
                                     <div class="contact-three__input-box text-message-box">
-                                        <textarea name="message" placeholder="{{ __('lang.Write Your Message') }}" required>{{ old('message') }}</textarea>
+                                        <textarea name="message" placeholder="{{ __('lang.Write Your Message') }}" required>{{ old('message', $quoteMessage ?? '') }}</textarea>
                                     </div>
                                     @error('message')
                                         <p class="contact-form-error">{{ $message }}</p>
@@ -271,5 +271,15 @@
     <script src="{{ asset('assets/js/gsap/SplitText.js') }}"></script>
     <!-- template js -->
     <script src="{{ asset('assets/js/script.js') }}"></script>
+    @if ($selectedService)
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var form = document.getElementById('contact-form');
+                if (form) {
+                    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        </script>
+    @endif
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @endsection

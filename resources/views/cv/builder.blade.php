@@ -60,7 +60,7 @@
                             <a class="cv-builder-breadcrumb__link" href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}">{{ __('lang.Home') }}</a>
                         </li>
                         <li class="cv-builder-breadcrumb__item">
-                            <a class="cv-builder-breadcrumb__link" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">{{ __('lang.CV Templates') }}</a>
+                            <a class="cv-builder-breadcrumb__link" href="{{ route('localized.resume.gallery', ['lang' => app()->getLocale()]) }}">{{ __('lang.CV Templates') }}</a>
                         </li>
                         <li class="cv-builder-breadcrumb__item cv-builder-breadcrumb__item--current" aria-current="page">
                             <span class="cv-builder-breadcrumb__text">{{ $config['name'] ?? __('lang.CV breadcrumb builder') }}</span>
@@ -68,32 +68,13 @@
                     </ol>
                 </nav>
                 <nav class="cv-builder-toolbar__tabs" aria-label="Builder sections">
-                    <div class="cv-template-switcher" id="cv-template-switcher">
-                        <button type="button" class="cv-builder-toolbar__tab cv-template-switcher__trigger" id="cv-template-switcher-trigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="cv-template-modal">
-                            <i class="fas fa-layer-group" aria-hidden="true"></i>
-                            <span class="cv-template-switcher__label">{{ $config['name'] ?? 'Templates' }}</span>
-                            <i class="fas fa-chevron-down cv-template-switcher__chev" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <span class="cv-builder-toolbar__tab is-active" aria-current="page">
+                    <button type="button" class="cv-builder-toolbar__tab is-active" id="cv-sidebar-tab-content" data-sidebar-mode="content" aria-pressed="true">
                         <i class="fas fa-file-lines" aria-hidden="true"></i>
                         <span>Content</span>
-                    </span>
-                    <label class="cv-font-picker" for="cv-font-family-select">
-                        <i class="fas fa-font" aria-hidden="true"></i>
-                        <span class="cv-font-picker__label">Font</span>
-                        <select id="cv-font-family-select" class="cv-font-picker__select">
-                            <option value="classic">Classic</option>
-                            <option value="georgia">Georgia</option>
-                            <option value="arial">Arial</option>
-                            <option value="inter">Inter</option>
-                            <option value="poppins">Poppins</option>
-                            <option value="roboto">Roboto</option>
-                        </select>
-                    </label>
-                    <button type="button" class="cv-builder-toolbar__tab cv-section-layout-trigger" id="cv-section-layout-trigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="cv-section-layout-modal">
-                        <i class="fas fa-table-columns" aria-hidden="true"></i>
-                        <span>Order</span>
+                    </button>
+                    <button type="button" class="cv-builder-toolbar__tab" id="cv-sidebar-tab-customize" data-sidebar-mode="customize" aria-pressed="false">
+                        <i class="fas fa-sliders" aria-hidden="true"></i>
+                        <span>Customize</span>
                     </button>
                     <span class="cv-builder-toolbar__tab cv-builder-toolbar__tab--static cv-soon" tabindex="-1" data-tooltip="Coming soon">
                         <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
@@ -122,7 +103,7 @@
                                                 <i class="fas fa-plus" aria-hidden="true"></i>
                                             </button>
                                             <div class="cv-resume-create-popover" id="cv-resume-create-popover" role="menu" hidden aria-hidden="true">
-                                                <button type="button" role="menuitem" class="cv-resume-create-popover__item cv-resume-create-popover__item--resume" data-href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
+                                                <button type="button" role="menuitem" class="cv-resume-create-popover__item cv-resume-create-popover__item--resume" data-href="{{ route('localized.resume.gallery', ['lang' => app()->getLocale()]) }}">
                                                     <i class="fas fa-file-lines cv-resume-create-popover__icon" aria-hidden="true"></i>
                                                     <span class="cv-resume-create-popover__label">{{ __('lang.CV create option resume') }}</span>
                                                 </button>
@@ -139,11 +120,11 @@
                                         <div class="cv-resume-dropdown__empty">No resumes yet</div>
                                     </div>
                                     <div class="cv-resume-dropdown__footer cv-resume-dropdown__footer--split" id="cv-resume-loadall-footer" hidden>
-                                        <a class="cv-resume-dropdown__add" href="{{ route('localized.cv.projects', ['lang' => app()->getLocale()]) }}">
+                                        <a class="cv-resume-dropdown__add" href="{{ route('localized.resume.projects', ['lang' => app()->getLocale()]) }}">
                                             <i class="fas fa-folder-open cv-resume-dropdown__add-icon" aria-hidden="true"></i>
                                             <span>Load All</span>
                                         </a>
-                                        <a class="cv-resume-dropdown__add cv-resume-dropdown__add--sub" href="{{ route('localized.cv.trash', ['lang' => app()->getLocale()]) }}">
+                                        <a class="cv-resume-dropdown__add cv-resume-dropdown__add--sub" href="{{ route('localized.resume.trash', ['lang' => app()->getLocale()]) }}">
                                             <i class="far fa-trash-can cv-resume-dropdown__add-icon" aria-hidden="true"></i>
                                             <span>Trash</span>
                                         </a>
@@ -361,6 +342,64 @@
                 <div id="save-message" hidden aria-hidden="true"></div>
             </form>
         </div>
+
+        <!-- Left Panel: Customize (template, font, section order) -->
+        <aside class="builder-customize-panel" id="builder-customize-panel" hidden aria-hidden="true" aria-label="Customize resume">
+            <div class="cv-customize-panel">
+                <section class="cv-customize-block" aria-labelledby="cv-customize-template-title">
+                    <div class="cv-customize-block__header">
+                        <h2 class="cv-customize-block__title" id="cv-customize-template-title">
+                            <i class="fas fa-layer-group" aria-hidden="true"></i>
+                            {{ __('lang.CV apply design template') }}
+                        </h2>
+                        <p class="cv-customize-block__desc">Switch to another design. Your content stays the same.</p>
+                    </div>
+                    <p class="cv-customize-block__current">
+                        <span class="cv-customize-block__current-label">Current:</span>
+                        <strong id="cv-customize-current-template">{{ $config['name'] ?? 'Template' }}</strong>
+                    </p>
+                    <button type="button" class="cv-customize-block__btn cv-customize-block__btn--primary" id="cv-customize-open-template" aria-haspopup="dialog" aria-controls="cv-template-modal">
+                        <i class="fas fa-layer-group" aria-hidden="true"></i>
+                        Change template
+                    </button>
+                </section>
+
+                <section class="cv-customize-block" aria-labelledby="cv-customize-font-title">
+                    <div class="cv-customize-block__header">
+                        <h2 class="cv-customize-block__title" id="cv-customize-font-title">
+                            <i class="fas fa-font" aria-hidden="true"></i>
+                            Font
+                        </h2>
+                        <p class="cv-customize-block__desc">Choose a typeface for headings and body text.</p>
+                    </div>
+                    <label class="cv-customize-font-field" for="cv-font-family-select">
+                        <span class="cv-customize-font-field__label">Font family</span>
+                        <select id="cv-font-family-select" class="cv-customize-font-field__select">
+                            <option value="classic">Classic</option>
+                            <option value="georgia">Georgia</option>
+                            <option value="arial">Arial</option>
+                            <option value="inter">Inter</option>
+                            <option value="poppins">Poppins</option>
+                            <option value="roboto">Roboto</option>
+                        </select>
+                    </label>
+                </section>
+
+                <section class="cv-customize-block" id="cv-customize-order-block" aria-labelledby="cv-customize-order-title">
+                    <div class="cv-customize-block__header">
+                        <h2 class="cv-customize-block__title" id="cv-customize-order-title">
+                            <i class="fas fa-table-columns" aria-hidden="true"></i>
+                            Order sections
+                        </h2>
+                        <p class="cv-customize-block__desc">Reorder sections, or move them between columns for two-column templates.</p>
+                    </div>
+                    <button type="button" class="cv-customize-block__btn cv-customize-block__btn--primary" id="cv-customize-open-order" aria-haspopup="dialog" aria-controls="cv-section-layout-modal">
+                        <i class="fas fa-table-columns" aria-hidden="true"></i>
+                        Order sections
+                    </button>
+                </section>
+            </div>
+        </aside>
         
         <!-- Right Panel: Preview -->
         <div class="builder-preview-panel">
@@ -497,7 +536,7 @@
                             @forelse(($templateFolders ?? []) as $template)
                                 @php
                                     $isCurrent = ($template['slug'] ?? '') === ($templateSlug ?? '');
-                                    $builderHref = route('localized.cv.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]);
+                                    $builderHref = route('localized.resume.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]);
                                 @endphp
                                 <article class="template-card template-card--clickable{{ $isCurrent ? ' template-card--current' : '' }}" data-tab="{{ $template['tab'] }}">
                                     <a href="{{ $builderHref }}" class="cv-template-modal__pick template-card__link" aria-label="{{ __('lang.Use Template') }}: {{ $template['name'] }}">
@@ -651,6 +690,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 @endsection
 
@@ -678,18 +718,18 @@
                     templateSlug: '{{ $templateSlug }}',
                     isAuthenticated: @json(auth()->check()),
                     routes: {
-                        saved: '{{ route("localized.cv.saved", ["lang" => app()->getLocale()]) }}',
-                        load: '{{ route("localized.cv.load", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
-                        save: '{{ route("localized.cv.save", ["lang" => app()->getLocale()]) }}',
+                        saved: '{{ route("localized.resume.saved", ["lang" => app()->getLocale()]) }}',
+                        load: '{{ route("localized.resume.load", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
+                        save: '{{ route("localized.resume.save", ["lang" => app()->getLocale()]) }}',
                         login: '{{ route("localized.login", ["lang" => app()->getLocale()]) }}',
-                        importUpload: '{{ route("localized.cv.import.upload", ["lang" => app()->getLocale()]) }}',
-                        importExtract: '{{ route("localized.cv.import.extract", ["lang" => app()->getLocale(), "importId" => "IMPORT_ID"]) }}',
-                        importParse: '{{ route("localized.cv.import.parse", ["lang" => app()->getLocale(), "importId" => "IMPORT_ID"]) }}',
-                        updateTitle: '{{ route("localized.cv.updateTitle", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
-                        duplicateCV: '{{ route("localized.cv.duplicate", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
-                        deleteCV: '{{ route("localized.cv.delete", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
-                        exportPDF: '{{ route("localized.cv.export.current.pdf", ["lang" => app()->getLocale(), "slug" => $templateSlug]) }}',
-                        exportPNG: '{{ route("localized.cv.export.current.png", ["lang" => app()->getLocale(), "slug" => $templateSlug]) }}'
+                        importUpload: '{{ route("localized.resume.import.upload", ["lang" => app()->getLocale()]) }}',
+                        importExtract: '{{ route("localized.resume.import.extract", ["lang" => app()->getLocale(), "importId" => "IMPORT_ID"]) }}',
+                        importParse: '{{ route("localized.resume.import.parse", ["lang" => app()->getLocale(), "importId" => "IMPORT_ID"]) }}',
+                        updateTitle: '{{ route("localized.resume.updateTitle", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
+                        duplicateCV: '{{ route("localized.resume.duplicate", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
+                        deleteCV: '{{ route("localized.resume.delete", ["lang" => app()->getLocale(), "id" => "CV_ID"]) }}',
+                        exportPDF: '{{ route("localized.resume.export.current.pdf", ["lang" => app()->getLocale(), "slug" => $templateSlug]) }}',
+                        exportPNG: '{{ route("localized.resume.export.current.png", ["lang" => app()->getLocale(), "slug" => $templateSlug]) }}'
                     },
                     i18n: {
                         downloadLabel: @json(__('lang.CV download')),

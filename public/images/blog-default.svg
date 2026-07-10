@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Default blog image">
+  <defs>
+    <linearGradient id="blog-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F3A6D"/>
+      <stop offset="1" stop-color="#0a2a50"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#blog-bg)"/>
+  <rect x="220" y="72" width="200" height="216" rx="14" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+  <rect x="248" y="108" width="112" height="10" rx="5" fill="#F4A32C"/>
+  <rect x="248" y="132" width="144" height="8" rx="4" fill="rgba(255,255,255,0.72)"/>
+  <rect x="248" y="152" width="128" height="8" rx="4" fill="rgba(255,255,255,0.55)"/>
+  <rect x="248" y="172" width="136" height="8" rx="4" fill="rgba(255,255,255,0.55)"/>
+  <rect x="248" y="192" width="120" height="8" rx="4" fill="rgba(255,255,255,0.4)"/>
+  <rect x="248" y="212" width="132" height="8" rx="4" fill="rgba(255,255,255,0.4)"/>
+  <circle cx="320" cy="252" r="18" fill="#F4A32C"/>
+  <path d="M312 252h16M320 244v16" stroke="#0F3A6D" stroke-width="3" stroke-linecap="round"/>
+</svg>

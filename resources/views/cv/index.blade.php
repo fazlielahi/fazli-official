@@ -86,7 +86,7 @@
                             @endif
                                 <div class="template-preview__actions-overlay">
                                     <div class="template-actions">
-                                        <a href="{{ route('localized.cv.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]) }}" class="btn-use-template">
+                                        <a href="{{ route('localized.resume.builder', ['lang' => app()->getLocale(), 'slug' => $template['slug']]) }}" class="btn-use-template">
                                             @include('cv.partials.svg-icon', ['name' => 'check', 'class' => 'cv-svg-icon me-2'])
                                             {{ __('lang.Use Template') }}
                                         </a>
@@ -193,7 +193,7 @@
                 
                 // Update "Use This Template" button link
                 const useBtn = modal.find('#previewModalUseBtn');
-                const useUrl = '{{ route("localized.cv.builder", ["lang" => app()->getLocale(), "slug" => "TEMPLATE_SLUG"]) }}'.replace('TEMPLATE_SLUG', templateSlug);
+                const useUrl = '{{ route("localized.resume.builder", ["lang" => app()->getLocale(), "slug" => "TEMPLATE_SLUG"]) }}'.replace('TEMPLATE_SLUG', templateSlug);
                 useBtn.attr('href', useUrl);
             });
             

@@ -1,472 +1,208 @@
 @extends('site.profile')
 
-@section('title', __('lang.Edit Blog'))
+@section('title')
+    {{ __('lang.Edit Post') }} | TFC
+@endsection
+
+@section('body_class', 'page-blog-form')
+
+@section('page_title')
+    {{ __('lang.Edit Post') }}
+@endsection
 
 @section('head')
-    <!-- Preload critical CSS -->
-    <link rel="preload" href="{{ asset('assets/css/style.css') }}" as="style" />
-    <link rel="preload" href="{{ asset('assets/css/responsive.css') }}" as="style" />
-
-    <link rel="stylesheet" href="{{ asset('styles/header.css') }}" /> <!-- main heading css -->
-    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap" rel="stylesheet" />
-    <!-- Font Awesome CDN for version 6 -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Third-party CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/animate.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/custom-animate.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/swiper.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-all.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/jarallax.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/jquery.magnific-popup.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/odometer.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/flaticon.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/owl.theme.default.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/nice-select.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/aos.css') }}" />
-
-    <!-- Module CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/banner.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/slider.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/footer.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/sliding-text.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/category.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/about.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/services.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/why-choose.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/live-class.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/video-one.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/blog.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/counter.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/team.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/newsletter.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/testimonial.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/contact.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/process.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/page-header.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/become-a-teacher.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/shop.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/faq.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/error.css') }}" />
-
-    <!-- Template styles -->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
+    <link rel="stylesheet" href="{{ asset('styles/profile-blog-form.css') }}" />
 @endsection
 
 @section('content')
-    <style>
-        .menu-thumb {
-            display: inline-block !important;
-        }
-        .blog-boxes{
-            flex-direction: row !important;
-        }
+    @php
+        $thumbUrl = $blog->thumb && file_exists(public_path('storage/' . $blog->thumb))
+            ? asset('storage/' . $blog->thumb)
+            : null;
+        $imageUrl = $blog->image && file_exists(public_path('storage/' . $blog->image))
+            ? asset('storage/' . $blog->image)
+            : null;
+    @endphp
 
-        .form{
-            width: 100% !important;
-            background: #0c0c0c;
-            padding: 11px;
-            border-radius: 4px;
-            padding-top: 20px;
-            margin-top: 20px;
-            box-shadow: 0px 0px 5px 1px #3333331f;
-        }
+    <div class="profile-blog-form">
+        <div class="profile-edit profile-blog-form__wrap">
+            <div class="profile-edit__card">
+                @include('site.partials.profile-blog-form-close', ['returnUrl' => $returnUrl])
+                <p class="profile-edit__intro">{{ __('lang.Profile edit blog intro') }}</p>
 
-        .card{
-            background:rgba(12, 12, 12, 0) !important;
-        }
+                @if($errors->any())
+                    <ul class="profile-edit__errors">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
 
-        .nice-select{
-            background: #0c0c0c !important;
-            border: 1px solid;
-            line-height: 23px !important;
-            border-radius: 4px;
-        }
+                <form
+                    action="{{ route('localized.admin.blog.update', ['lang' => app()->getLocale(), 'id' => $blog->id]) }}"
+                    method="post"
+                    enctype="multipart/form-data"
+                    id="profileBlogEditForm"
+                    data-remove-thumb-msg="{{ __('lang.Profile image remove on save') }}"
+                    data-remove-image-msg="{{ __('lang.Profile image remove on save') }}"
+                >
+                    @csrf
+                    @method('PUT')
 
-        input, textarea{
-            background: #0c0c0c !important;
-            color: #eee !important;
-        }
+                    <div class="profile-blog-form__grid profile-blog-form__grid--2">
+                        <div class="profile-edit__field">
+                            <label class="profile-edit__label" for="title">{{ __('lang.Title') }}</label>
+                            <input
+                                type="text"
+                                name="title"
+                                id="title"
+                                value="{{ old('title', $blog->title) }}"
+                                class="profile-edit__input @error('title') is-invalid @enderror"
+                                placeholder="{{ __('lang.Enter Blog title') }}"
+                                required
+                            />
+                            @error('title')
+                                <p class="profile-edit__field-error">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        /* Image preview styles */
-        .photo-preview-container {
-            margin-top: 20px;
-        }
+                        <div class="profile-edit__field">
+                            <label class="profile-edit__label" for="category_id">{{ __('lang.Category') }}</label>
+                            <select
+                                name="category_id"
+                                id="category_id"
+                                class="profile-edit__input @error('category_id') is-invalid @enderror"
+                                required
+                            >
+                                <option value="">{{ __('lang.Select Category') }}</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ (int) old('category_id', $blog->category_id) === (int) $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <p class="profile-edit__field-error">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-        .preview-wrapper {
-            display: inline-block;
-            position: relative;
-            margin: 10px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            transition: transform 0.3s ease;
-            background: #2a2a2a;
-            border: 2px solid #3a3a3a;
-        }
-
-        .preview-wrapper:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-            border-color: #4a90e2;
-        }
-
-        .preview-image {
-            max-width: 200px;
-            max-height: 200px;
-            border-radius: 10px;
-            display: block;
-        }
-
-        .remove-preview {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .remove-preview:hover {
-            background: rgba(239, 68, 68, 1);
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-        }
-
-        .remove-btn {
-            position: absolute;
-            top: 0;
-            right: 5px;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            border-radius: 50%;
-            padding: 0 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .remove-btn:hover {
-            background: rgba(239, 68, 68, 1);
-            transform: scale(1.1);
-        }
-
-        .image-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-right: 10px;
-        }
-        
-        .category-dropdown{
-            display: none;
-        }
-
-        nice-select form-control{
-            margin-bottom: 20px;
-        }
-    </style>
-
-    <div class="col-12" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-end !important;">
-        <div class="form mb-4">
-            <h3>{{ __('lang.Edit Post') }}</h3>
-
-            <!-- display validation errors -->
-            <hr style="border-top: 1px dashed #424242; margin: 10px 0;">
-
-            @if($errors->any())
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li style="color:red; display: block !important"> {{ $error }} </li>
-                    @endforeach
-                </ul>
-            @endif
-
-            <!-- Registration form -->
-            <form action="{{ route('localized.admin.blog.update', ['lang' => app()->getLocale(), $blog->id]) }}" method="post" enctype="multipart/form-data">
-                @csrf 
-                @method('PUT')
-            
-                <div class="row clearfix">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="body">
-                                <div class="row">
-                                    <div class="form-group col-md-6 my-2">
-                                        <label for="title">{{ __('lang.Title') }}</label>
-                                        <input type="text" name="title" id="title" value="{{ old('title', $blog->title) }}" class="form-control" placeholder="{{ __('lang.Enter Blog title') }}" />
-                                        @error('title')
-                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                            <style>
-                                                #title { border-color: rgb(160, 40, 50) !important; }
-                                            </style>
-                                        @enderror
+                        <div class="profile-edit__field">
+                            <label class="profile-edit__label" for="thumb">{{ __('lang.Change Thumbnail') }}</label>
+                            <input
+                                type="file"
+                                name="thumb"
+                                id="thumb"
+                                class="profile-edit__input profile-blog-form__thumb-input @error('thumb') is-invalid @enderror"
+                                accept="image/*"
+                                data-invalid-msg="{{ __('lang.Please select a valid image file.') }}"
+                                data-size-msg="{{ __('lang.File size must be less than 5MB.') }}"
+                            />
+                            <small class="profile-edit__hint">{{ __('lang.Dimensions: 600x340') }}</small>
+                            @error('thumb')
+                                <p class="profile-edit__field-error">{{ $message }}</p>
+                            @enderror
+                            <div class="profile-edit__preview" id="thumb-preview-container">
+                                @if($thumbUrl)
+                                    <div class="profile-edit__preview-wrap" data-existing-preview="thumb">
+                                        <img src="{{ $thumbUrl }}" class="profile-edit__preview-img" alt="">
+                                        <button type="button" class="profile-edit__preview-remove profile-blog-form__remove-existing" data-target="thumb" aria-label="{{ __('lang.Delete') }}">
+                                            <i class="fa-solid fa-times" aria-hidden="true"></i>
+                                        </button>
                                     </div>
-                                    <div class="form-group col-md-6 my-2">
-                                        <label for="category_id">{{ __('lang.Category') }}</label>
-                                        <select name="category_id" id="category_id" class="form-control" required>
-                                            <option value="">{{ __('lang.Select Category') }}</option>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}" {{ (old('category_id', $blog->category_id) == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('category_id')
-                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-6 my-2">
-                                        <label>{{ __('lang.Change Thumbnail') }}</label>
-                                        <small id="fileHelp" class="form-text text-muted"> ({{ __('lang.Dimensions: 400x250') }})</small>
-                                        <input type="file" name="thumb" class="image-input-thumb form-control d-block" value="{{ old('image', $blog->thumb) }}" id="exampleInputFile" aria-describedby="fileHelp">
-                                        <div class="photo-preview-container" id="thumb-preview-container">
-                                            @if($blog->thumb)
-                                                <div class="preview-wrapper">
-                                                    <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->thumb)) ? asset('storage/' . $blog->thumb) : asset('images/blog-default.jpg') }}" class="preview-image">
-                                                    <button type="button" class="remove-preview" onclick="removeCurrentThumb()">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        @error('thumb')
-                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                            <style>
-                                                .image-input-thumb { border-color: rgb(160, 40, 50) !important; }
-                                            </style>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-6 my-2">
-                                        <label>{{ __('lang.Change Main Image') }}</label>
-                                        <small id="fileHelp" class="form-text text-muted"> ({{ __('lang.Dimensions: 400x250') }})</small>
-                                        <input type="file" name="image" class="image-input-main form-control d-block" value="{{ old('image', $blog->image) }}" id="exampleInputFile" aria-describedby="fileHelp">
-                                        <div class="photo-preview-container" id="image-preview-container">
-                                            @if($blog->image)
-                                                <div class="preview-wrapper">
-                                                    <img src="{{ $blog->thumb && file_exists(public_path('storage/' . $blog->image)) ? asset('storage/' . $blog->image) : asset('images/blog-default.jpg') }}" class="preview-image">
-                                                    <button type="button" class="remove-preview" onclick="removeCurrentImage()">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        @error('image')
-                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                            <style>
-                                                .image-input-main { border-color: rgb(160, 40, 50) !important; }
-                                            </style>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-6 my-2">
-                                        <label for="status">{{ __('lang.Status') }}</label>
-                                        @if($blog->status === 'draft')
-                                            <select name="status" id="status" class="form-control show-tick">
-                                                <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
-                                                <option value="request" @if($blog->status == 'request') selected @endif>{{ __('lang.Request for review') }}</option>
-                                            </select>
-                                        @elseif($blog->status === 'request')
-                                            <label class="mt-3 text-danger d-block">{{ __('lang.The blog has been requested for review!') }}</label>
-                                            <input type="hidden" name="status" value="request">
-                                        @elseif($blog->status === 'rejected')
-                                            <select name="status" id="status" class="form-control show-tick">
-                                                <option value="rejected" @if($blog->status == 'rejected') selected @endif>{{ __('lang.Keep as Rejected') }}</option>
-                                                <option value="request" @if($blog->status == 'request') selected @endif>Request for review</option>
-                                                <option value="draft" @if($blog->status == 'draft') selected @endif>{{__('lang.Draft')}}</option>
-                                            </select>
-                                        @elseif($blog->status === 'published')
-                                            <input type="hidden" name="status" value="published" selected />
-                                        @endif
-                                        @error('status')
-                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                            <style>
-                                                #status { border-color: rgb(160, 40, 50) !important; }
-                                            </style>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-12">
-                                        <label class="mt-3" for="content">{{ __('lang.Content') }}</label>
-                                        <textarea name="content" id="content" class="my-2">{{ old('content', $blog->content) }}</textarea>
-                                        @error('content')
-                                            <p style="color: rgb(160, 40, 50);">{{ $message }}</p>
-                                            <style>
-                                                #content { border-color: rgb(160, 40, 50) !important; }
-                                            </style>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn text-light btn-sm my-3" style="color: #222 !important; background: #21cf8c;">{{ __('lang.Update') }}</button>
+                                @endif
                             </div>
                         </div>
-                    </div>            
-                </div>
-            </form>
+
+                        <div class="profile-edit__field">
+                            <label class="profile-edit__label" for="image">{{ __('lang.Change Main Image') }}</label>
+                            <input
+                                type="file"
+                                name="image"
+                                id="image"
+                                class="profile-edit__input profile-blog-form__image-input @error('image') is-invalid @enderror"
+                                accept="image/*"
+                                data-invalid-msg="{{ __('lang.Please select a valid image file.') }}"
+                                data-size-msg="{{ __('lang.File size must be less than 5MB.') }}"
+                            />
+                            <small class="profile-edit__hint">{{ __('lang.Dimensions: 1920x500') }}</small>
+                            @error('image')
+                                <p class="profile-edit__field-error">{{ $message }}</p>
+                            @enderror
+                            <div class="profile-edit__preview" id="image-preview-container">
+                                @if($imageUrl)
+                                    <div class="profile-edit__preview-wrap" data-existing-preview="image">
+                                        <img src="{{ $imageUrl }}" class="profile-edit__preview-img" alt="">
+                                        <button type="button" class="profile-edit__preview-remove profile-blog-form__remove-existing" data-target="image" aria-label="{{ __('lang.Delete') }}">
+                                            <i class="fa-solid fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="profile-edit__field">
+                            <label class="profile-edit__label" for="status">{{ __('lang.Status') }}</label>
+                            @if($blog->status === 'draft')
+                                <select name="status" id="status" class="profile-edit__input @error('status') is-invalid @enderror">
+                                    <option value="draft" {{ old('status', $blog->status) === 'draft' ? 'selected' : '' }}>{{ __('lang.Draft') }}</option>
+                                    <option value="request" {{ old('status', $blog->status) === 'request' ? 'selected' : '' }}>{{ __('lang.Request for review') }}</option>
+                                </select>
+                            @elseif($blog->status === 'request')
+                                <p class="profile-blog-form__alert profile-blog-form__alert--info">{{ __('lang.The blog has been requested for review!') }}</p>
+                                <input type="hidden" name="status" value="request">
+                            @elseif($blog->status === 'rejected')
+                                <select name="status" id="status" class="profile-edit__input @error('status') is-invalid @enderror">
+                                    <option value="rejected" {{ old('status', $blog->status) === 'rejected' ? 'selected' : '' }}>{{ __('lang.Keep as Rejected') }}</option>
+                                    <option value="request" {{ old('status') === 'request' ? 'selected' : '' }}>{{ __('lang.Request for review') }}</option>
+                                    <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>{{ __('lang.Draft') }}</option>
+                                </select>
+                            @elseif($blog->status === 'published')
+                                <input type="hidden" name="status" value="published">
+                                <p class="profile-edit__hint">{{ __('lang.Published') }}</p>
+                            @endif
+                            @error('status')
+                                <p class="profile-edit__field-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="profile-edit__field profile-edit__field--full">
+                            <label class="profile-edit__label" for="content">{{ __('lang.Content') }}</label>
+                            <textarea name="content" id="content" class="profile-edit__input @error('content') is-invalid @enderror" rows="4">{{ old('content', $blog->content) }}</textarea>
+                            @error('content')
+                                <p class="profile-edit__field-error">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="profile-blog-form__actions">
+                        <a href="{{ $returnUrl }}" class="profile-blog-form__cancel">
+                            {{ __('lang.Cancel') }}
+                        </a>
+                        <button type="submit" class="profile-edit__submit">
+                            <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+                            {{ __('lang.Update') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-
-    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
-    @php $locale = app()->getLocale(); @endphp
-    <script>
-        CKEDITOR.replace('content', {
-            extraAllowedContent: 'img[width,height]{width,height}', // Allow width & height as attributes and styles
-            removeFormatAttributes: '',
-            image_prefillDimensions: true, 
-            allowedContent: true, 
-            filebrowserUploadUrl: "{{ route('localized.admin.ckeditor.upload', ['lang' => app()->getLocale()]) }}?_token={{ csrf_token() }}",
-            filebrowserUploadMethod: 'form',
-            filebrowserUploadMethod: 'xhr',
-            contentsLangDirection: '{{ $locale === 'ar' ? 'rtl' : 'ltr' }}', // Set direction based on locale
-        });
-    </script>
-
-    <script>
-        setupImagePreview('.image-input-thumb', 'thumb-preview-container');
-        setupImagePreview('.image-input-main', 'image-preview-container');
-
-        function setupImagePreview(inputSelector, previewContainerId) {
-            const input = document.querySelector(inputSelector);
-            const preview = document.getElementById(previewContainerId);
-
-            input.addEventListener('change', e => {
-                const file = e.target.files[0]; // Only one file
-                if (!file) return;
-
-                // Validate file type
-                if (!file.type.startsWith('image/')) {
-                    alert('Please select a valid image file.');
-                    input.value = '';
-                    return;
-                }
-
-                // Validate file size (5MB limit)
-                const maxSize = 5 * 1024 * 1024; // 5MB
-                if (file.size > maxSize) {
-                    alert('File size must be less than 5MB.');
-                    input.value = '';
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = ev => {
-                    // Clear previous preview
-                    preview.innerHTML = '';
-
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'preview-wrapper';
-
-                    wrapper.innerHTML = `
-                        <img src="${ev.target.result}" class="preview-image" style="max-width: 200px; max-height: 200px; border-radius: 10px;">
-                        <button type="button" class="remove-preview" onclick="removePreview('${inputSelector}', '${previewContainerId}')">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    `;
-
-                    preview.appendChild(wrapper);
-                };
-
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Make removePreview function globally accessible
-        window.removePreview = function(inputSelector, previewContainerId) {
-            const input = document.querySelector(inputSelector);
-            const preview = document.getElementById(previewContainerId);
-            input.value = ''; // Clear file input
-            preview.innerHTML = ''; // Clear preview
-        };
-
-        // Function to remove current thumbnail
-        window.removeCurrentThumb = function() {
-            // Add a hidden input to indicate thumbnail removal
-            const removeThumbInput = document.createElement('input');
-            removeThumbInput.type = 'hidden';
-            removeThumbInput.name = 'remove_thumb';
-            removeThumbInput.value = '1';
-            document.querySelector('.image-input-thumb').parentNode.appendChild(removeThumbInput);
-            
-            document.getElementById('thumb-preview-container').innerHTML = '';
-            alert('Current thumbnail will be removed on save.');
-        };
-
-        // Function to remove current main image
-        window.removeCurrentImage = function() {
-            // Add a hidden input to indicate main image removal
-            const removeImageInput = document.createElement('input');
-            removeImageInput.type = 'hidden';
-            removeImageInput.name = 'remove_image';
-            removeImageInput.value = '1';
-            document.querySelector('.image-input-main').parentNode.appendChild(removeImageInput);
-            
-            document.getElementById('image-preview-container').innerHTML = '';
-            alert('Current main image will be removed on save.');
-        };
-    </script>
 @endsection
 
 @section('script')
-    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jarallax.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.ajaxchimp.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.appear.min.js') }}"></script>
-    <script src="{{ asset('assets/js/swiper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('assets/js/odometer.min.js') }}"></script>
-    <script src="{{ asset('assets/js/wNumb.min.js') }}"></script>
-    <script src="{{ asset('assets/js/wow.js') }}"></script>
-    <script src="{{ asset('assets/js/isotope.js') }}"></script>
-    <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery-ui.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.nice-select.min.js') }}"></script>
-    <script src="{{ asset('assets/js/marquee.min.js') }}"></script>
-    <script src="{{ asset('assets/js/aos.js') }}"></script>
-    <script src="{{ asset('assets/js/gsap/gsap.js') }}"></script>
-    <script src="{{ asset('assets/js/gsap/ScrollTrigger.js') }}"></script>
-    <script src="{{ asset('assets/js/gsap/SplitText.js') }}"></script>
-    <!-- template js -->
-    <script src="{{ asset('assets/js/script.js') }}"></script>
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script src="{{ asset('js/profile-blog-form.js') }}"></script>
+    @php $locale = app()->getLocale(); @endphp
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.like-toggle').forEach(function(link) {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var icon = link.querySelector('i');
-                    if (icon.classList.contains('fa-regular')) {
-                        icon.classList.remove('fa-regular');
-                        icon.classList.add('fa-solid');
-                    } else {
-                        icon.classList.remove('fa-solid');
-                        icon.classList.add('fa-regular');
-                    }
-                });
-            });
+        CKEDITOR.replace('content', {
+            extraAllowedContent: 'img[width,height]{width,height}',
+            removeFormatAttributes: '',
+            image_prefillDimensions: true,
+            allowedContent: true,
+            filebrowserUploadUrl: "{{ route('localized.admin.ckeditor.upload', ['lang' => app()->getLocale()]) }}?_token={{ csrf_token() }}",
+            filebrowserUploadMethod: 'xhr',
+            contentsLangDirection: '{{ $locale === 'ar' ? 'rtl' : 'ltr' }}',
         });
     </script>
-    
 @endsection

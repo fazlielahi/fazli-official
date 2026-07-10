@@ -10,27 +10,8 @@ body.page-home-tools {
     --home-muted: #6b7280;
     --home-line: #e5e7eb;
     --home-shadow: 0 16px 40px rgba(15, 23, 42, .10), 0 4px 12px rgba(15, 23, 42, .05);
-    --home-scroll-track: rgba(15, 23, 42, .08);
-    --home-scroll-thumb: rgba(15, 58, 109, .55);
-    --home-scroll-thumb-hover: rgba(15, 58, 109, .75);
     background: var(--home-bg) !important;
     color: var(--home-text);
-    scrollbar-width: thin;
-    scrollbar-color: var(--home-scroll-thumb) var(--home-scroll-track);
-}
-
-html:has(body.page-home-tools) {
-    --home-scroll-track: rgba(15, 23, 42, .08);
-    --home-scroll-thumb: rgba(15, 58, 109, .55);
-    --home-scroll-thumb-hover: rgba(15, 58, 109, .75);
-    scrollbar-width: thin;
-    scrollbar-color: var(--home-scroll-thumb) var(--home-scroll-track);
-}
-
-html:has(body.page-home-tools[data-theme="dark"]) {
-    --home-scroll-track: rgba(255, 255, 255, .08);
-    --home-scroll-thumb: rgba(244, 163, 44, .55);
-    --home-scroll-thumb-hover: rgba(244, 163, 44, .75);
 }
 
 body.page-home-tools[data-theme="dark"] {
@@ -40,33 +21,6 @@ body.page-home-tools[data-theme="dark"] {
     --home-muted: #9aa0a8;
     --home-line: #3a424d;
     --home-shadow: 0 16px 40px rgba(0, 0, 0, .38), 0 4px 12px rgba(0, 0, 0, .22);
-    --home-scroll-track: rgba(255, 255, 255, .08);
-    --home-scroll-thumb: rgba(244, 163, 44, .55);
-    --home-scroll-thumb-hover: rgba(244, 163, 44, .75);
-}
-
-html:has(body.page-home-tools)::-webkit-scrollbar,
-body.page-home-tools::-webkit-scrollbar {
-    width: 10px;
-}
-
-html:has(body.page-home-tools)::-webkit-scrollbar-track,
-body.page-home-tools::-webkit-scrollbar-track {
-    background: var(--home-scroll-track);
-    border-radius: 999px;
-}
-
-html:has(body.page-home-tools)::-webkit-scrollbar-thumb,
-body.page-home-tools::-webkit-scrollbar-thumb {
-    background: var(--home-scroll-thumb);
-    border: 2px solid transparent;
-    border-radius: 999px;
-    background-clip: padding-box;
-}
-
-html:has(body.page-home-tools)::-webkit-scrollbar-thumb:hover,
-body.page-home-tools::-webkit-scrollbar-thumb:hover {
-    background: var(--home-scroll-thumb-hover);
 }
 
 body.page-home-tools .footer,

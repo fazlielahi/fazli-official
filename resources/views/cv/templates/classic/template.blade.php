@@ -2,15 +2,28 @@
 @php
     $name = $data['name'] ?? 'Your Name';
     $location = trim(($data['city'] ?? '') . ((isset($data['city'], $data['country']) && $data['city'] !== '' && $data['country'] !== '') ? ', ' : '') . ($data['country'] ?? ''));
-    $defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
+    $defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references'];
     $savedLayoutOrder = isset($data['section_layout']['main']) && is_array($data['section_layout']['main']) ? $data['section_layout']['main'] : [];
     $savedSectionOrder = !empty($savedLayoutOrder)
         ? $savedLayoutOrder
         : (isset($data['section_order']) && is_array($data['section_order']) ? $data['section_order'] : []);
+    $isCustomLayoutKey = fn ($key) => is_string($key) && str_starts_with($key, 'custom__');
     $sectionOrder = array_values(array_unique(array_merge(
-        array_values(array_filter($savedSectionOrder, fn ($key) => in_array($key, $defaultSectionOrder, true))),
+        array_values(array_filter($savedSectionOrder, fn ($key) => in_array($key, $defaultSectionOrder, true) || $isCustomLayoutKey($key))),
         $defaultSectionOrder
     )));
+    if (!empty($data['custom_sections']) && is_array($data['custom_sections'])) {
+        foreach ($data['custom_sections'] as $customSection) {
+            $layoutKey = 'custom__' . ($customSection['id'] ?? ('cs_' . md5(json_encode($customSection))));
+            if (!in_array($layoutKey, $sectionOrder, true)) {
+                $sectionOrder[] = $layoutKey;
+            }
+        }
+    } elseif (!empty($data['custom']) && is_array($data['custom'])) {
+        if (!in_array('custom__legacy', $sectionOrder, true)) {
+            $sectionOrder[] = 'custom__legacy';
+        }
+    }
     $sectionOrderMap = array_flip($sectionOrder);
     $sectionStyle = fn ($key) => 'order: ' . (($sectionOrderMap[$key] ?? 99) + 1) . ';';
     $fontOptions = [

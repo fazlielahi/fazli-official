@@ -37,6 +37,8 @@
 
     @yield('head')
 
+    <link rel="stylesheet" href="{{ asset('styles/scrollbars.css') }}">
+
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",

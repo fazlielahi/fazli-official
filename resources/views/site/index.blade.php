@@ -34,7 +34,7 @@
                     </ul>
 
                     <div class="home-tools__actions">
-                        <a class="home-tools__btn home-tools__btn--primary" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
+                        <a class="home-tools__btn home-tools__btn--primary" href="{{ route('localized.resume.gallery', ['lang' => app()->getLocale()]) }}">
                             {{ __('lang.Create Resume') }}
                         </a>
                     </div>
@@ -86,7 +86,7 @@
                         <a class="home-tools__btn home-tools__btn--primary" href="{{ route('localized.jobs', ['lang' => app()->getLocale()]) }}">
                             {{ __('lang.Get Started Free') }}
                         </a>
-                        <a class="home-tools__btn home-tools__btn--secondary" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
+                        <a class="home-tools__btn home-tools__btn--secondary" href="{{ route('localized.resume.gallery', ['lang' => app()->getLocale()]) }}">
                             <span class="home-tools__btn-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M8 5.75v12.5L18 12 8 5.75Z" />
@@ -106,7 +106,7 @@
 
             <section class="home-tools__grid" aria-label="{{ __('lang.Main TFC tools') }}">
                 <article class="home-tool-card">
-                    <a class="home-tool-card__media" href="{{ route('localized.cv.gallery', ['lang' => app()->getLocale()]) }}">
+                    <a class="home-tool-card__media" href="{{ route('localized.resume.gallery', ['lang' => app()->getLocale()]) }}">
                         <span class="home-tool-card__badge">{{ __('lang.New') }}</span>
                         <span class="home-tool-card__media-icon">
                             @include('cv.partials.svg-icon', ['name' => 'document'])
@@ -144,14 +144,14 @@
                 </article>
 
                 <article class="home-tool-card">
-                    <a class="home-tool-card__media" href="{{ route('localized.services', ['lang' => app()->getLocale()]) }}">
+                    <a class="home-tool-card__media" href="{{ route('localized.tools', ['lang' => app()->getLocale()]) }}">
                         <span class="home-tool-card__media-icon">
-                            @include('cv.partials.svg-icon', ['name' => 'user'])
+                            @include('cv.partials.svg-icon', ['name' => 'grid'])
                         </span>
                     </a>
                     <div class="home-tool-card__body">
-                        <h2>{{ __('lang.Get More Services') }}</h2>
-                        <p>{{ __('lang.Home services card description') }}</p>
+                        <h2>{{ __('lang.Tools') }}</h2>
+                        <p>{{ __('lang.Tools page intro') }}</p>
                     </div>
                 </article>
             </section>

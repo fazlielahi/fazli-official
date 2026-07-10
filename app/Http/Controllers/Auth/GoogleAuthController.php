@@ -52,9 +52,9 @@ class GoogleAuthController extends Controller
                 'google_id' => $googleId,
                 // Random password so password login is not accidentally enabled
                 'password' => bcrypt(Str::random(40)),
-                // In this app, "admin" users go to profile/published-blogs
+                // In this app, "admin" users go to profile dashboard
                 'type' => 'admin',
-                'photo' => $googleUser->getAvatar() ?: 'images/default.png',
+                'photo' => $googleUser->getAvatar() ?: 'default.svg',
             ]);
         } elseif ($googleId && empty($user->google_id)) {
             // Link google_id to an existing account found by email

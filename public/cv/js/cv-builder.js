@@ -66,11 +66,16 @@
         const $photoPreviewContainer = $('#photo-preview-container');
         const $removePhoto = $('#remove-photo');
         const $fontFamilySelect = $('#cv-font-family-select');
-        const $sectionLayoutTrigger = $('#cv-section-layout-trigger');
         const $sectionLayoutModal = $('#cv-section-layout-modal');
         const $sectionLayoutBody = $('#cv-section-layout-body');
         const $sectionLayoutApply = $('#cv-section-layout-apply');
         const $sectionLayoutReset = $('#cv-section-layout-reset');
+        const $customizeOpenOrder = $('#cv-customize-open-order');
+        const $customizeOpenTemplate = $('#cv-customize-open-template');
+        const $contentPanel = $('.builder-form-panel');
+        const $customizePanel = $('#builder-customize-panel');
+        const $sidebarTabContent = $('#cv-sidebar-tab-content');
+        const $sidebarTabCustomize = $('#cv-sidebar-tab-customize');
         let photoData = null;
 
         const fontFamilyOptions = {
@@ -204,17 +209,160 @@
 
         // Track which sections are already added
         const addedSections = new Set();
-        const defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
-        const layoutSectionOrder = ['summary', 'experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
-        const defaultSingleColumnLayout = ['summary', 'experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
+        const addedCustomSectionIds = new Set();
+        const CUSTOM_SECTION_PREFIX = 'custom__';
+        const defaultSectionOrder = ['experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references'];
+        const layoutSectionOrder = ['summary', 'experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references'];
+        const defaultSingleColumnLayout = ['summary', 'experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references'];
         const defaultTwoColumnLayout = {
             left: ['summary', 'experience', 'projects'],
-            right: ['awards', 'skills', 'education', 'certifications', 'languages', 'references', 'custom']
+            right: ['awards', 'skills', 'education', 'certifications', 'languages', 'references']
         };
         const defaultModernLayout = {
             left: ['education', 'references', 'languages'],
-            right: ['summary', 'experience', 'awards', 'projects', 'skills', 'certifications', 'custom']
+            right: ['summary', 'experience', 'awards', 'projects', 'skills', 'certifications']
         };
+
+        function createCustomSectionId() {
+            return 'cs_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+        }
+
+        function customLayoutKey(customId) {
+            return CUSTOM_SECTION_PREFIX + customId;
+        }
+
+        function isCustomLayoutKey(sectionKey) {
+            return String(sectionKey || '').startsWith(CUSTOM_SECTION_PREFIX);
+        }
+
+        function parseCustomSectionId(sectionKey) {
+            return isCustomLayoutKey(sectionKey) ? sectionKey.slice(CUSTOM_SECTION_PREFIX.length) : null;
+        }
+
+        function getCustomSectionDomId(customId) {
+            return 'section-custom-' + customId;
+        }
+
+        function getSectionDomSelector(sectionKey) {
+            if (isCustomLayoutKey(sectionKey)) {
+                return '#' + getCustomSectionDomId(parseCustomSectionId(sectionKey));
+            }
+            return '#section-' + sectionKey;
+        }
+
+        function getSectionKeyFromAddedSection($section) {
+            const layoutKey = String($section.attr('data-section-key') || '');
+            if (layoutKey) return layoutKey;
+            const id = String($section.attr('id') || '');
+            if (id.indexOf('section-custom-') === 0) {
+                return customLayoutKey(id.slice('section-custom-'.length));
+            }
+            return id.replace(/^section-/, '');
+        }
+
+        function usesListView(sectionKey) {
+            return listViewSections.has(sectionKey) || isCustomLayoutKey(sectionKey);
+        }
+
+        function isGenericListSectionKey(sectionKey) {
+            return usesListView(sectionKey);
+        }
+
+        function getEntryFieldName(sectionKey, entryIndex, fieldName, customId) {
+            if (customId || isCustomLayoutKey(sectionKey)) {
+                const id = customId || parseCustomSectionId(sectionKey);
+                return 'custom_sections[' + id + '][items][' + entryIndex + '][' + fieldName + ']';
+            }
+            return sectionKey + '[' + entryIndex + '][' + fieldName + ']';
+        }
+
+        function getCustomHeadingFieldName(customId) {
+            return 'custom_sections[' + customId + '][heading]';
+        }
+
+        function normalizeCustomSectionsData(data) {
+            data = data || {};
+            if (Array.isArray(data.custom_sections) && data.custom_sections.length) {
+                return data.custom_sections.map(function(cs) {
+                    return {
+                        id: String(cs.id || createCustomSectionId()),
+                        heading: String(cs.heading || '').trim(),
+                        items: Array.isArray(cs.items) ? cs.items : []
+                    };
+                });
+            }
+            if (Array.isArray(data.custom) && data.custom.length) {
+                return [{
+                    id: createCustomSectionId(),
+                    heading: String(data.custom_heading || '').trim(),
+                    items: data.custom
+                }];
+            }
+            return [];
+        }
+
+        function collectCustomSectionsFromForm() {
+            const sections = [];
+            addedCustomSectionIds.forEach(function(id) {
+                const heading = String($form.find('input[name="' + getCustomHeadingFieldName(id) + '"]').val() || '').trim();
+                const items = [];
+                const escapedId = String(id).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                $form.find('input[name^="custom_sections[' + id + '][items]["], textarea[name^="custom_sections[' + id + '][items]["], select[name^="custom_sections[' + id + '][items]["]').each(function() {
+                    const name = $(this).attr('name');
+                    const match = name.match(new RegExp('custom_sections\\[' + escapedId + '\\]\\[items\\]\\[(\\d+)\\]\\[(\\w+)\\]'));
+                    if (match) {
+                        const index = parseInt(match[1], 10);
+                        const field = match[2];
+                        if (!items[index]) items[index] = {};
+                        items[index][field] = $(this).val() || '';
+                    }
+                });
+                sections.push({ id: id, heading: heading, items: items.filter(Boolean) });
+            });
+            return sections;
+        }
+
+        function registerCustomSectionInLayout(customId) {
+            if (!sectionOrderingEnabled()) return;
+            currentSectionLayout = normalizeSectionLayout(
+                currentSectionLayout,
+                getActiveLayoutSectionKeys(),
+                getSectionLayoutMode(),
+                getFormSectionOrder()
+            );
+        }
+
+        function unregisterCustomSectionFromLayout(customId) {
+            const key = customLayoutKey(customId);
+            if (!currentSectionLayout) return;
+            ['left', 'right', 'main'].forEach(function(col) {
+                if (Array.isArray(currentSectionLayout[col])) {
+                    currentSectionLayout[col] = currentSectionLayout[col].filter(function(k) { return k !== key; });
+                }
+            });
+        }
+
+        function migrateLegacyCustomLayoutKeys(layout, customSections) {
+            if (!layout || typeof layout !== 'object' || !customSections.length) return layout;
+            const migrated = JSON.parse(JSON.stringify(layout));
+            const firstKey = customLayoutKey(customSections[0].id);
+            ['left', 'right', 'main'].forEach(function(col) {
+                if (!Array.isArray(migrated[col])) return;
+                migrated[col] = migrated[col].map(function(key) {
+                    return key === 'custom' ? firstKey : key;
+                });
+            });
+            customSections.slice(1).forEach(function(cs) {
+                const key = customLayoutKey(cs.id);
+                const alreadyPlaced = ['left', 'right', 'main'].some(function(col) {
+                    return Array.isArray(migrated[col]) && migrated[col].includes(key);
+                });
+                if (alreadyPlaced) return;
+                if (Array.isArray(migrated.right)) migrated.right.push(key);
+                else if (Array.isArray(migrated.main)) migrated.main.push(key);
+            });
+            return migrated;
+        }
         let currentSectionLayout = null;
         
         // Track entry counts for each section (how many entries per section)
@@ -233,6 +381,11 @@
 
         function getSectionLabel(sectionKey) {
             if (sectionKey === 'summary') return 'Summary';
+            if (isCustomLayoutKey(sectionKey)) {
+                const customId = parseCustomSectionId(sectionKey);
+                const heading = String($form.find('input[name="' + getCustomHeadingFieldName(customId) + '"]').val() || '').trim();
+                return heading || 'Custom Section';
+            }
             return availableSections[sectionKey] ? availableSections[sectionKey].name : sectionKey;
         }
 
@@ -244,6 +397,10 @@
                     active.push(key);
                 }
             });
+            addedCustomSectionIds.forEach(function(id) {
+                const key = customLayoutKey(id);
+                if (!active.includes(key)) active.push(key);
+            });
             return active;
         }
 
@@ -252,7 +409,7 @@
             const normalized = [];
             (Array.isArray(keys) ? keys : []).forEach(function(key) {
                 key = String(key || '');
-                if (activeSet.has(key) && layoutSectionOrder.includes(key) && !normalized.includes(key)) {
+                if (activeSet.has(key) && (layoutSectionOrder.includes(key) || isCustomLayoutKey(key)) && !normalized.includes(key)) {
                     normalized.push(key);
                 }
             });
@@ -265,24 +422,42 @@
             return isModern ? defaultModernLayout : defaultTwoColumnLayout;
         }
 
+        function dedupeTwoColumnLayout(left, right) {
+            left = Array.isArray(left) ? left.slice() : [];
+            right = Array.isArray(right) ? right.slice() : [];
+            const rightSet = new Set(right);
+            left = left.filter(function(key) {
+                if (!rightSet.has(key)) return true;
+                return !isCustomLayoutKey(key);
+            });
+            const leftSet = new Set(left);
+            right = right.filter(function(key) {
+                return !leftSet.has(key);
+            });
+            return { left: left, right: right };
+        }
+
         function normalizeSectionLayout(layout, activeKeys, mode, fallbackOrder) {
             mode = mode || getSectionLayoutMode() || 'single-column';
             activeKeys = Array.isArray(activeKeys) ? activeKeys : getActiveLayoutSectionKeys();
 
             if (mode === 'two-column') {
                 const defaultLayout = getDefaultTwoColumnLayout();
-                const left = uniqueValidLayoutKeys(layout && layout.left, activeKeys);
-                const right = uniqueValidLayoutKeys(layout && layout.right, activeKeys);
+                const leftRaw = uniqueValidLayoutKeys(layout && layout.left, activeKeys);
+                const rightRaw = uniqueValidLayoutKeys(layout && layout.right, activeKeys);
+                const deduped = dedupeTwoColumnLayout(leftRaw, rightRaw);
+                const left = deduped.left;
+                const right = deduped.right;
                 const assigned = new Set(left.concat(right));
 
                 activeKeys.forEach(function(key) {
                     if (assigned.has(key)) return;
-                    const target = defaultLayout.right.includes(key) ? right : left;
+                    const target = (defaultLayout.right.includes(key) || isCustomLayoutKey(key)) ? right : left;
                     target.push(key);
                     assigned.add(key);
                 });
 
-                return { left: left, right: right };
+                return dedupeTwoColumnLayout(left, right);
             }
 
             let main = [];
@@ -318,7 +493,7 @@
             const order = [];
             $form.find('.added-section[data-section-key]').each(function() {
                 const key = String($(this).attr('data-section-key') || '');
-                if (key && availableSections[key] && !order.includes(key)) {
+                if (key && (availableSections[key] || isCustomLayoutKey(key)) && !order.includes(key)) {
                     order.push(key);
                 }
             });
@@ -342,7 +517,7 @@
             const normalized = [];
             raw.forEach(function(key) {
                 key = String(key || '');
-                if (availableSections[key] && !normalized.includes(key)) {
+                if ((availableSections[key] || isCustomLayoutKey(key)) && !normalized.includes(key)) {
                     normalized.push(key);
                 }
             });
@@ -351,6 +526,10 @@
                     normalized.push(key);
                 }
             });
+            addedCustomSectionIds.forEach(function(id) {
+                const key = customLayoutKey(id);
+                if (!normalized.includes(key)) normalized.push(key);
+            });
             return normalized;
         }
 
@@ -358,13 +537,26 @@
             const $sections = $form.find('.added-section[data-section-key]');
             const enabled = sectionOrderingEnabled();
             $sections.find('.btn-section-order').prop('hidden', true).attr('aria-hidden', 'true');
-            $sectionLayoutTrigger.prop('hidden', !enabled).attr('aria-hidden', enabled ? 'false' : 'true');
+            if ($customizeOpenOrder.length) {
+                $customizeOpenOrder.prop('disabled', !enabled).attr('aria-disabled', enabled ? 'false' : 'true');
+            }
             if (!enabled) return;
             $sections.each(function(index) {
                 const $section = $(this);
                 $section.find('.btn-section-order--up').prop('disabled', index === 0).attr('aria-disabled', index === 0 ? 'true' : 'false');
                 $section.find('.btn-section-order--down').prop('disabled', index === $sections.length - 1).attr('aria-disabled', index === $sections.length - 1 ? 'true' : 'false');
             });
+        }
+
+        function setSidebarMode(mode) {
+            const nextMode = mode === 'customize' ? 'customize' : 'content';
+            const isCustomize = nextMode === 'customize';
+
+            $sidebarTabContent.toggleClass('is-active', !isCustomize).attr('aria-pressed', !isCustomize ? 'true' : 'false');
+            $sidebarTabCustomize.toggleClass('is-active', isCustomize).attr('aria-pressed', isCustomize ? 'true' : 'false');
+
+            $contentPanel.prop('hidden', isCustomize).attr('aria-hidden', isCustomize ? 'true' : 'false');
+            $customizePanel.prop('hidden', !isCustomize).attr('aria-hidden', !isCustomize ? 'true' : 'false');
         }
 
         function getDefaultLayoutForMode(mode, activeKeys) {
@@ -471,13 +663,13 @@
         function openSectionLayoutModal() {
             renderSectionLayoutModal();
             $sectionLayoutModal.attr('aria-hidden', 'false');
-            $sectionLayoutTrigger.attr('aria-expanded', 'true');
+            if ($customizeOpenOrder.length) $customizeOpenOrder.attr('aria-expanded', 'true');
             $('body').addClass('cv-modal-open');
         }
 
         function closeSectionLayoutModal() {
             $sectionLayoutModal.attr('aria-hidden', 'true');
-            $sectionLayoutTrigger.attr('aria-expanded', 'false');
+            if ($customizeOpenOrder.length) $customizeOpenOrder.attr('aria-expanded', 'false');
             $('body').removeClass('cv-modal-open');
         }
 
@@ -799,9 +991,7 @@
                     });
                 });
 
-                if (addedSections.has('custom')) {
-                    data.custom_heading = String($('#custom-section-heading').val() || '').trim();
-                }
+                data.custom_sections = collectCustomSectionsFromForm();
 
                 // Compatibility mapping for preview/templates
                 // Experience preview currently renders `item.period`, so derive it from new fields when present.
@@ -1053,6 +1243,10 @@
         }
 
         function sectionKeyFromElement($section) {
+            const layoutKey = $section.attr('data-layout-key');
+            if (layoutKey) return String(layoutKey);
+            const customId = $section.attr('data-custom-id');
+            if (customId) return customLayoutKey(String(customId));
             let found = null;
             layoutSectionOrder.some(function(key) {
                 if ($section.hasClass(key)) {
@@ -1062,6 +1256,14 @@
                 return false;
             });
             return found;
+        }
+
+        function findPreviewSection($template, sectionKey) {
+            if (isCustomLayoutKey(sectionKey)) {
+                const customId = parseCustomSectionId(sectionKey);
+                return $template.find('section.custom[data-custom-id="' + customId + '"]').first();
+            }
+            return $template.find('section.' + sectionKey).first();
         }
 
         function applySectionLayoutToPreview($template, data) {
@@ -1088,10 +1290,11 @@
 
                 ['left', 'right'].forEach(function(column) {
                     (layout[column] || []).forEach(function(sectionKey, index) {
-                        const $section = $template.find('section.' + sectionKey).first();
+                        const $section = findPreviewSection($template, sectionKey);
                         if (!$section.length) return;
                         $section
                             .attr('data-layout-column', column)
+                            .attr('data-layout-key', sectionKey)
                             .css({
                                 'order': index + 1
                             });
@@ -1112,10 +1315,19 @@
             );
             currentSectionLayout = layout;
             (layout.main || []).forEach(function(sectionKey, index) {
-                const $section = $body.children('section.' + sectionKey).first();
+                const $section = findPreviewSection($template, sectionKey);
+                if (!$section.length && isCustomLayoutKey(sectionKey)) {
+                    return;
+                }
                 if ($section.length) {
-                    $section.css('order', index + 1);
+                    $section.attr('data-layout-key', sectionKey).css('order', index + 1);
                     $body.append($section);
+                } else {
+                    const $legacy = $body.children('section.' + sectionKey).first();
+                    if ($legacy.length) {
+                        $legacy.css('order', index + 1);
+                        $body.append($legacy);
+                    }
                 }
             });
         }
@@ -1182,8 +1394,8 @@
             return titles[sectionKey] || fallback;
         }
 
-        function getCustomSectionDisplayTitle(data, sectionConfig, $template) {
-            const customHeading = String((data && data.custom_heading) || '').trim() || (sectionConfig && sectionConfig.name) || 'Custom';
+        function getCustomSectionDisplayTitle(heading, sectionConfig, $template) {
+            const customHeading = String(heading || '').trim() || (sectionConfig && sectionConfig.name) || 'Custom';
             if ($template.hasClass('professional') || $template.hasClass('modern')) {
                 return customHeading.toUpperCase();
             }
@@ -1199,6 +1411,96 @@
             if (!$right.length || !$section || !$section.length) return false;
             $right.append($section);
             return true;
+        }
+
+        function renderOneCustomSectionInPreview($template, data, cs) {
+            const sectionConfig = availableSections.custom;
+            if (!sectionConfig || !cs) return;
+
+            const layoutKey = customLayoutKey(cs.id);
+            const validItems = (cs.items || []).filter(function(item) {
+                const isHidden = item && (String(item.is_hidden || '').trim() === '1');
+                if (isHidden) return false;
+                return Object.values(item).some(function(val) {
+                    return val && val.toString().trim() !== '';
+                });
+            });
+
+            let $activeSection = $template.find('section.custom[data-custom-id="' + cs.id + '"]');
+            const $cvBody = $template.find('.cv-body');
+            const $rightContent = $template.find('.right-content');
+            const $professionalContainer = getProfessionalSectionContainer($template, layoutKey);
+            const $sidebarDarkContainer = getSidebarDarkSectionContainer($template, layoutKey);
+
+            if (validItems.length > 0) {
+                let $sectionContent;
+
+                if ($activeSection.length === 0) {
+                    $activeSection = $('<section class="custom"></section>')
+                        .attr('data-custom-id', cs.id)
+                        .attr('data-layout-key', layoutKey);
+                    const sectionTitle = getCustomSectionDisplayTitle(cs.heading, sectionConfig, $template);
+                    $activeSection.append('<h2 class="section-title">' + escapeHtml(sectionTitle) + '</h2>');
+                    const $newSectionContent = $('<div class="section-content"></div>');
+                    const $customItems = $('<div class="custom-items"></div>');
+                    $newSectionContent.append($customItems);
+                    $sectionContent = $customItems;
+                    $activeSection.append($newSectionContent);
+
+                    const $targetContainer = $professionalContainer.length > 0 ? $professionalContainer : ($sidebarDarkContainer.length > 0 ? $sidebarDarkContainer : ($rightContent.length > 0 ? $rightContent : $cvBody));
+
+                    if ($template.hasClass('professional')) {
+                        placeProfessionalSection($template, layoutKey, $activeSection);
+                    } else if ($template.hasClass('sidebar-dark')) {
+                        placeSidebarDarkSection($template, layoutKey, $activeSection);
+                    } else if (isModernPreviewTemplate($template)) {
+                        placeModernCustomSection($template, $activeSection);
+                    } else {
+                        const $summary = $targetContainer.find('section.summary');
+                        if ($summary.length > 0) {
+                            $summary.after($activeSection);
+                        } else {
+                            $targetContainer.append($activeSection);
+                        }
+                    }
+                } else {
+                    if ($template.hasClass('professional')) {
+                        placeProfessionalSection($template, layoutKey, $activeSection);
+                    } else if ($template.hasClass('sidebar-dark')) {
+                        placeSidebarDarkSection($template, layoutKey, $activeSection);
+                    } else if (isModernPreviewTemplate($template)) {
+                        placeModernCustomSection($template, $activeSection);
+                    }
+
+                    let $sectionContentWrap = $activeSection.find('.section-content');
+                    if ($sectionContentWrap.length === 0) {
+                        $sectionContentWrap = $('<div class="section-content"></div>');
+                        $activeSection.append($sectionContentWrap);
+                    }
+
+                    let $customItems = $sectionContentWrap.find('.custom-items');
+                    if ($customItems.length === 0) {
+                        $customItems = $('<div class="custom-items"></div>');
+                        $sectionContentWrap.append($customItems);
+                    }
+                    $sectionContent = $customItems;
+                    $sectionContent.empty();
+                }
+
+                $activeSection.find('.section-title').first().text(
+                    getCustomSectionDisplayTitle(cs.heading, sectionConfig, $template)
+                );
+                if (isModernPreviewTemplate($template)) {
+                    placeModernCustomSection($template, $activeSection);
+                }
+
+                validItems.forEach(function(item) {
+                    const $item = generateSectionItem('custom', item);
+                    $sectionContent.append($item);
+                });
+            } else {
+                $activeSection.remove();
+            }
         }
 
         function rebuildProfessionalContactInfo($template, data) {
@@ -1669,9 +1971,15 @@
                 applySectionLayoutToPreview($template, data);
 
                 // Update or create dynamically added sections
+                const activeCustomIds = new Set(normalizeCustomSectionsData(data).map(function(cs) { return cs.id; }));
+                $template.find('section.custom[data-custom-id]').each(function() {
+                    const id = $(this).attr('data-custom-id');
+                    if (!activeCustomIds.has(id)) $(this).remove();
+                });
+
                 addedSections.forEach(function(sectionKey) {
                     // Skip experience and education as they're handled above (they can also be added via modal)
-                    if (sectionKey === 'experience' || sectionKey === 'education') return;
+                    if (sectionKey === 'experience' || sectionKey === 'education' || sectionKey === 'custom') return;
                     
                     const sectionConfig = availableSections[sectionKey];
                     if (!sectionConfig) return;
@@ -1876,6 +2184,10 @@
                     }
                 });
 
+                normalizeCustomSectionsData(data).forEach(function(cs) {
+                    renderOneCustomSectionInPreview($template, data, cs);
+                });
+
                 applySectionLayoutToPreview($template, data);
 
                 isUpdating = false;
@@ -1885,7 +2197,10 @@
                 setTimeout(function() {
                     wrapContentInPages();
                     // Re-check after a short delay
-                    setTimeout(checkAndCreatePages, 100);
+                    setTimeout(function() {
+                        checkAndCreatePages();
+                        syncPreviewScrollToFocusedField();
+                    }, 100);
                 }, 150);
                 
                 // Trigger page height recalculation after preview update
@@ -1902,7 +2217,10 @@
                 // Wrap content in pages even on error
                 setTimeout(function() {
                     wrapContentInPages();
-                    setTimeout(checkAndCreatePages, 100);
+                    setTimeout(function() {
+                        checkAndCreatePages();
+                        syncPreviewScrollToFocusedField();
+                    }, 100);
                 }, 150);
                 
                 // Trigger page height recalculation even on error
@@ -2258,10 +2576,14 @@
             const $section = $('#section-languages');
             if ($section.length) renderGenericList('languages', $section);
         });
-        $form.on('input change', 'input[name="custom_heading"], input[name^="custom["], textarea[name^="custom["]', function() {
-            const $section = $('#section-custom');
-            if ($section.length && $(this).attr('name') !== 'custom_heading') {
-                renderGenericList('custom', $section);
+        $form.on('input change', 'input[name^="custom_sections["], textarea[name^="custom_sections["]', function() {
+            const name = String($(this).attr('name') || '');
+            const match = name.match(/^custom_sections\[([^\]]+)\]/);
+            if (!match) return;
+            const customId = match[1];
+            const $section = $('#' + getCustomSectionDomId(customId));
+            if ($section.length && name.indexOf('[items]') !== -1) {
+                renderGenericList(customLayoutKey(customId), $section);
             }
             handleFormChange();
         });
@@ -2278,8 +2600,11 @@
             const sectionId = String($section.attr('id') || '');
             if (sectionId === 'section-education') closeEducationEntryEditor($section);
             else if (sectionId === 'section-skills') closeSkillsEntryEditor($section);
-            else if (sectionId === 'section-certifications' || sectionId === 'section-awards' || sectionId === 'section-projects' || sectionId === 'section-languages' || sectionId === 'section-references' || sectionId === 'section-custom') {
+            else if (sectionId === 'section-certifications' || sectionId === 'section-awards' || sectionId === 'section-projects' || sectionId === 'section-languages' || sectionId === 'section-references') {
                 closeGenericEntryEditor(sectionId.replace(/^section-/, ''), $section);
+            }
+            else if (sectionId.indexOf('section-custom-') === 0) {
+                closeGenericEntryEditor(getSectionKeyFromAddedSection($section), $section);
             }
             else closeExperienceEntryEditor($section);
         });
@@ -2290,6 +2615,20 @@
             if (!window.__cvBuilderHydrating) {
                 window.__cvBuilderDirty = true;
             }
+        });
+
+        $form.on('focusin', 'input:not([type="hidden"]), textarea, select, .cv-richtext .ql-editor', function() {
+            if (window.__cvBuilderHydrating) return;
+            const $field = $(this);
+            lastFocusedFormField = this;
+            window.requestAnimationFrame(function() {
+                scrollPreviewToFormField($field);
+            });
+        });
+
+        $form.on('input', 'input:not([type="hidden"]), textarea, select', function() {
+            if (window.__cvBuilderHydrating) return;
+            schedulePreviewScrollToField($(this));
         });
 
         $fontFamilySelect.on('change', function() {
@@ -2313,7 +2652,26 @@
             $(this).closest('.section-header').find('.added-section__toggle').trigger('click');
         });
 
-        $sectionLayoutTrigger.on('click', function(e) {
+        $sidebarTabContent.on('click', function(e) {
+            e.preventDefault();
+            setSidebarMode('content');
+        });
+
+        $sidebarTabCustomize.on('click', function(e) {
+            e.preventDefault();
+            setSidebarMode('customize');
+        });
+
+        $customizeOpenTemplate.on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeCreatePopover();
+            closeResumeDropdown();
+            $resumeList.find('.cv-resume-item__menu.is-open').removeClass('is-open').attr('aria-hidden', 'true');
+            openTemplateModal();
+        });
+
+        $customizeOpenOrder.on('click', function(e) {
             e.preventDefault();
             if (!sectionOrderingEnabled()) return;
             openSectionLayoutModal();
@@ -3273,7 +3631,8 @@
         function closeTemplateModal() {
             if (!$tplModal.length) return;
             $tplModal.removeClass('is-open').attr('aria-hidden', 'true');
-            $tplTrigger.attr('aria-expanded', 'false');
+            if ($tplTrigger.length) $tplTrigger.attr('aria-expanded', 'false');
+            if ($customizeOpenTemplate.length) $customizeOpenTemplate.attr('aria-expanded', 'false');
         }
 
         function openTemplateModal() {
@@ -3283,7 +3642,8 @@
             $tabBtns.filter('[data-tab="all"]').addClass('is-active').attr('aria-selected', 'true');
             applyTemplateModalFilter('all');
             $tplModal.addClass('is-open').attr('aria-hidden', 'false');
-            $tplTrigger.attr('aria-expanded', 'true');
+            if ($tplTrigger.length) $tplTrigger.attr('aria-expanded', 'true');
+            if ($customizeOpenTemplate.length) $customizeOpenTemplate.attr('aria-expanded', 'true');
             setTimeout(function() {
                 updateTemplateModalTabScrollNav();
             }, 0);
@@ -3955,6 +4315,8 @@
         $(window).on('resize', updateTemplateModalTabScrollNav);
         updateTemplateModalTabScrollNav();
 
+        setSidebarMode('content');
+
         // Navigate to another template — carry cv_id so the same resume loads on the new template page
         $(document).on('click', 'a.cv-template-modal__pick', function(e) {
             const rawHref = $(this).attr('href');
@@ -4518,9 +4880,13 @@
         function resetBuilderSectionsForCvLoad() {
             $form.find('.added-section').remove();
             addedSections.clear();
+            addedCustomSectionIds.clear();
             currentSectionLayout = null;
             Object.keys(availableSections).forEach(function(sectionKey) {
                 delete sectionEntryCounts[sectionKey];
+            });
+            Object.keys(sectionEntryCounts).forEach(function(key) {
+                if (isCustomLayoutKey(key)) delete sectionEntryCounts[key];
             });
         }
 
@@ -4582,14 +4948,29 @@
             }, 100);
 
             const activeLoadKeys = [];
+            cvData.custom_sections = normalizeCustomSectionsData(cvData);
             defaultSectionOrder.forEach(function(sectionKey) {
+                if (sectionKey === 'custom') return;
                 if (cvData[sectionKey] && cvData[sectionKey].length > 0) {
                     activeLoadKeys.push(sectionKey);
                 }
             });
+            cvData.custom_sections.forEach(function(cs) {
+                if (cs.items && cs.items.length > 0) {
+                    activeLoadKeys.push(customLayoutKey(cs.id));
+                }
+            });
             const summaryActive = cvData.summary && String(cvData.summary).trim() ? ['summary'] : [];
+            const migratedLayout = migrateLegacyCustomLayoutKeys(cvData.section_layout, cvData.custom_sections);
+            if (Array.isArray(cvData.section_order)) {
+                cvData.section_order = cvData.section_order.map(function(key) {
+                    return key === 'custom' && cvData.custom_sections.length
+                        ? customLayoutKey(cvData.custom_sections[0].id)
+                        : key;
+                });
+            }
             currentSectionLayout = normalizeSectionLayout(
-                cvData.section_layout,
+                migratedLayout,
                 summaryActive.concat(activeLoadKeys),
                 getSectionLayoutMode() || 'single-column',
                 cvData.section_order
@@ -4599,6 +4980,7 @@
             });
 
             loadSectionOrder.forEach(function(sectionKey) {
+                if (isCustomLayoutKey(sectionKey)) return;
                 if (cvData[sectionKey] && cvData[sectionKey].length > 0) {
                     const sectionConfig = availableSections[sectionKey];
                     
@@ -4655,15 +5037,11 @@
                     // Update entry count
                     sectionEntryCounts[sectionKey] = cvData[sectionKey].length;
 
-                    if (sectionKey === 'custom' && cvData.custom_heading) {
-                        $section.find('#custom-section-heading').val(cvData.custom_heading);
-                    }
-                    
                     // Experience/Education/Skills use list view; refresh it after loading data
                     if (sectionKey === 'experience') renderExperienceList($section);
                     if (sectionKey === 'education') renderEducationList($section);
                     if (sectionKey === 'skills') renderSkillsList($section);
-                    if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') {
+                    if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
                         renderGenericList(sectionKey, $section);
                     }
 
@@ -4673,6 +5051,53 @@
                     } else {
                         $entriesContainer.find('.btn-remove-entry').hide();
                     }
+                }
+            });
+
+            cvData.custom_sections.forEach(function(cs) {
+                if (!cs.items || !cs.items.length) return;
+                const layoutKey = customLayoutKey(cs.id);
+                const sectionConfig = availableSections.custom;
+                if (!addedCustomSectionIds.has(cs.id)) {
+                    const $sectionFields = generateSectionFields('custom', sectionConfig, cs.id);
+                    $('#btn-add-sections').before($sectionFields);
+                    addedCustomSectionIds.add(cs.id);
+                    registerCustomSectionInLayout(cs.id);
+                    const debouncedHandler = debounce(handleFormChange, 300);
+                    $sectionFields.find('input, textarea, select').on('input change', debouncedHandler);
+                }
+
+                const $section = $(getSectionDomSelector(layoutKey));
+                const $entriesContainer = $section.find('.entries-container');
+                $entriesContainer.find('.entry-container').remove();
+                sectionEntryCounts[layoutKey] = 0;
+
+                if (cs.heading) {
+                    $section.find('input[name="' + getCustomHeadingFieldName(cs.id) + '"]').val(cs.heading);
+                }
+
+                cs.items.forEach(function(item, index) {
+                    const $newEntry = generateEntryFields(layoutKey, sectionConfig, index);
+                    $entriesContainer.append($newEntry);
+                    Object.keys(item).forEach(function(field) {
+                        const fieldName = getEntryFieldName(layoutKey, index, field);
+                        const $field = $newEntry.find('input[name="' + fieldName + '"], textarea[name="' + fieldName + '"], select[name="' + fieldName + '"]');
+                        if ($field.length) {
+                            $field.val(item[field] || '');
+                            if ($field.is('select')) $field.trigger('change');
+                        }
+                    });
+                    initRichTextEditors($newEntry);
+                    const debouncedHandler = debounce(handleFormChange, 300);
+                    $newEntry.find('input, textarea, select').on('input change', debouncedHandler);
+                });
+
+                sectionEntryCounts[layoutKey] = cs.items.length;
+                renderGenericList(layoutKey, $section);
+                if (cs.items.length > 1) {
+                    $entriesContainer.find('.btn-remove-entry').show();
+                } else {
+                    $entriesContainer.find('.btn-remove-entry').hide();
                 }
             });
 
@@ -4891,7 +5316,7 @@
 
             Object.keys(availableSections).forEach(function(sectionKey) {
                 const section = availableSections[sectionKey];
-                const isAdded = addedSections.has(sectionKey);
+                const isAdded = sectionKey === 'custom' ? false : addedSections.has(sectionKey);
 
                 const $option = $('<div class="section-option">')
                     .attr('data-section-key', sectionKey)
@@ -4925,6 +5350,162 @@
         function closeModal() {
             $('#add-sections-modal').removeClass('active');
             // no multi-select; nothing to reset
+        }
+
+        function scrollFormPanelToSection($section) {
+            if (!$section || !$section.length) return;
+
+            $section.removeClass('is-collapsed');
+            $section.find('.added-section__toggle').first().attr('aria-expanded', 'true');
+
+            window.requestAnimationFrame(function() {
+                const scrollEl = document.querySelector('.builder-form-panel');
+                const sectionEl = $section[0];
+                if (!sectionEl) return;
+
+                if (!scrollEl) {
+                    sectionEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    return;
+                }
+
+                const padding = 16;
+                const containerRect = scrollEl.getBoundingClientRect();
+                const sectionRect = sectionEl.getBoundingClientRect();
+                const target = scrollEl.scrollTop + (sectionRect.top - containerRect.top) - padding;
+
+                scrollEl.scrollTo({
+                    top: Math.max(0, target),
+                    behavior: 'smooth',
+                });
+            });
+        }
+
+        let lastFocusedFormField = null;
+        let previewScrollSyncTimer = null;
+
+        function resolvePreviewTargetFromField($field) {
+            if (!$field || !$field.length) return $();
+
+            if ($field.hasClass('ql-editor')) {
+                $field = $field.closest('.cv-richtext').find('textarea[data-richtext]').first();
+                if (!$field.length) return $();
+            }
+
+            const $preview = $('#cv-preview');
+            const $addedSection = $field.closest('.added-section');
+            if ($addedSection.length) {
+                return findPreviewSectionInDom(getSectionKeyFromAddedSection($addedSection));
+            }
+
+            const $entry = $field.closest('.entry-container');
+            if ($entry.length) {
+                const sectionKey = String($entry.attr('data-section-key') || '');
+                if (sectionKey) {
+                    return findPreviewSectionInDom(sectionKey);
+                }
+            }
+
+            const name = String($field.attr('name') || '');
+            if (name === 'summary') {
+                return findPreviewSectionInDom('summary');
+            }
+            if (name.indexOf('custom_sections[') === 0) {
+                const match = name.match(/^custom_sections\[([^\]]+)\]/);
+                if (match) {
+                    return findPreviewSectionInDom(customLayoutKey(match[1]));
+                }
+            }
+
+            const headerFields = ['name', 'job_title', 'email', 'phone', 'city', 'linkedin'];
+            if (headerFields.indexOf(name) !== -1) {
+                return $preview.find('.cv-template .cv-header').first();
+            }
+
+            return $();
+        }
+
+        function findPreviewSectionInDom(layoutKey) {
+            const $preview = $('#cv-preview');
+            if (!layoutKey) return $();
+
+            let $target = $();
+            if (layoutKey === 'summary') {
+                $target = $preview.find('section.summary');
+            } else if (isCustomLayoutKey(layoutKey)) {
+                const customId = parseCustomSectionId(layoutKey);
+                $target = $preview.find('section.custom[data-custom-id="' + customId + '"]');
+            } else {
+                $target = $preview.find('section.' + layoutKey);
+            }
+
+            $target = $target.filter(function() {
+                const $el = $(this);
+                return $el.css('display') !== 'none' && $el.css('visibility') !== 'hidden';
+            });
+
+            if ($target.length) return $target.first();
+            return $();
+        }
+
+        function scrollPreviewPanelToElement($element) {
+            if (!$element || !$element.length) return;
+            const el = $element[0];
+            if (!el || !el.getBoundingClientRect) return;
+
+            const containers = [
+                document.querySelector('.builder-preview-panel'),
+                document.getElementById('cv-preview'),
+            ].filter(Boolean);
+
+            window.requestAnimationFrame(function() {
+                containers.forEach(function(container) {
+                    if (container.scrollHeight <= container.clientHeight + 1) return;
+
+                    const padding = 24;
+                    const containerRect = container.getBoundingClientRect();
+                    const targetRect = el.getBoundingClientRect();
+                    const visibleTop = containerRect.top + padding;
+                    const visibleBottom = containerRect.bottom - padding;
+
+                    if (targetRect.top >= visibleTop && targetRect.bottom <= visibleBottom) {
+                        return;
+                    }
+
+                    const nextScroll = container.scrollTop + (targetRect.top - containerRect.top) - padding;
+                    container.scrollTo({
+                        top: Math.max(0, nextScroll),
+                        behavior: 'smooth',
+                    });
+                });
+            });
+        }
+
+        function scrollPreviewToFormField($field) {
+            const $target = resolvePreviewTargetFromField($field);
+            if ($target.length) {
+                scrollPreviewPanelToElement($target);
+            }
+        }
+
+        function schedulePreviewScrollToField($field) {
+            if (!$field || !$field.length) return;
+            lastFocusedFormField = $field[0];
+            if (previewScrollSyncTimer) clearTimeout(previewScrollSyncTimer);
+            previewScrollSyncTimer = setTimeout(function() {
+                scrollPreviewToFormField($field);
+            }, 150);
+        }
+
+        function syncPreviewScrollToFocusedField() {
+            if (!lastFocusedFormField || !document.body.contains(lastFocusedFormField)) return;
+            scrollPreviewToFormField($(lastFocusedFormField));
+        }
+
+        function focusAddedSectionFromModal($sectionFields) {
+            closeModal();
+            setTimeout(function() {
+                scrollFormPanelToSection($sectionFields);
+            }, 100);
         }
 
         // Import Resume
@@ -5134,10 +5715,28 @@
             const $option = $(this);
             const sectionKey = String($option.attr('data-section-key') || '');
             if (!sectionKey) return;
-            if (addedSections.has(sectionKey)) return;
 
             const sectionConfig = availableSections[sectionKey];
             if (!sectionConfig) return;
+
+            if (sectionKey === 'custom') {
+                const customId = createCustomSectionId();
+                const $sectionFields = generateSectionFields('custom', sectionConfig, customId);
+                $('#btn-add-sections').before($sectionFields);
+                addedCustomSectionIds.add(customId);
+                registerCustomSectionInLayout(customId);
+                refreshSectionOrderControls();
+
+                const debouncedHandler = debounce(handleFormChange, 300);
+                $sectionFields.find('input, textarea').on('input change', debouncedHandler);
+                initRichTextEditors($sectionFields);
+                openGenericEntryEditor(customLayoutKey(customId), $sectionFields, 0);
+                handleFormChange();
+                focusAddedSectionFromModal($sectionFields);
+                return;
+            }
+
+            if (addedSections.has(sectionKey)) return;
 
             const $sectionFields = generateSectionFields(sectionKey, sectionConfig);
             $('#btn-add-sections').before($sectionFields);
@@ -5154,12 +5753,12 @@
             if (sectionKey === 'experience') openExperienceEntryEditor($sectionFields, 0);
             if (sectionKey === 'education') openEducationEntryEditor($sectionFields, 0);
             if (sectionKey === 'skills') openSkillsEntryEditor($sectionFields, 0);
-            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') {
+            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references') {
                 openGenericEntryEditor(sectionKey, $sectionFields, 0);
             }
 
             handleFormChange();
-            closeModal();
+            focusAddedSectionFromModal($sectionFields);
         });
 
         function closeEndDateMenus() {
@@ -5239,16 +5838,17 @@
 
         // Generate a single entry form for a section
         function generateEntryFields(sectionKey, sectionConfig, entryIndex) {
+            const customId = isCustomLayoutKey(sectionKey) ? parseCustomSectionId(sectionKey) : null;
             const $entryContainer = $('<div>')
                 .addClass('entry-container')
                 .attr('data-entry-index', entryIndex)
                 .attr('data-section-key', sectionKey);
 
             // Per-entry flags (used by Experience/Education/Skills list view)
-            if (listViewSections.has(sectionKey)) {
+            if (usesListView(sectionKey)) {
                 $entryContainer.append(
                     $('<input type="hidden">')
-                        .attr('name', sectionKey + '[' + entryIndex + '][is_hidden]')
+                        .attr('name', getEntryFieldName(sectionKey, entryIndex, 'is_hidden', customId))
                         .addClass('cv-entry-flag-hidden')
                         .val('')
                 );
@@ -5292,13 +5892,13 @@
 
                 if (field.type === 'textarea') {
                     const $input = $('<textarea>')
-                        .attr('name', sectionKey + '[' + entryIndex + '][' + field.name + ']')
+                        .attr('name', getEntryFieldName(sectionKey, entryIndex, field.name, customId))
                         .attr('placeholder', field.placeholder || '')
                         .addClass('form-control');
 
                     // Rich text editor for description field (Quill -> sync HTML into textarea)
                     if (field.name === 'description' || field.name === 'content') {
-                        const editorId = 'cv-rt-' + sectionKey + '-' + entryIndex + '-' + field.name + '-' + Date.now();
+                        const editorId = 'cv-rt-' + (customId || sectionKey) + '-' + entryIndex + '-' + field.name + '-' + Date.now();
                         const $wrap = $('<div class="cv-richtext">');
 
                         const $toolbar = $('<div class="cv-richtext__toolbar">')
@@ -5331,7 +5931,7 @@
                     }
                 } else if (field.type === 'select') {
                     const $select = $('<select>')
-                        .attr('name', sectionKey + '[' + entryIndex + '][' + field.name + ']')
+                        .attr('name', getEntryFieldName(sectionKey, entryIndex, field.name, customId))
                         .addClass('form-control');
                     
                     if (field.options && Array.isArray(field.options)) {
@@ -5493,7 +6093,7 @@
                     } else {
                         const $input = $('<input>')
                             .attr('type', field.type)
-                            .attr('name', sectionKey + '[' + entryIndex + '][' + field.name + ']')
+                            .attr('name', getEntryFieldName(sectionKey, entryIndex, field.name, customId))
                             .attr('placeholder', field.placeholder || '')
                             .addClass('form-control');
                         $formGroup.append($input);
@@ -5507,14 +6107,20 @@
         }
 
         // Generate section container with first entry
-        function generateSectionFields(sectionKey, sectionConfig) {
-            const sectionId = 'section-' + sectionKey;
+        function generateSectionFields(sectionKey, sectionConfig, customId) {
+            const isCustomInstance = !!customId;
+            const layoutKey = isCustomInstance ? customLayoutKey(customId) : sectionKey;
+            const sectionId = isCustomInstance ? getCustomSectionDomId(customId) : ('section-' + sectionKey);
             const collapseBodyId = sectionId + '-body';
+            const headingInputId = isCustomInstance ? ('custom-section-heading-' + customId) : 'custom-section-heading';
 
             const $sectionContainer = $('<div>')
                 .addClass('added-section')
                 .attr('id', sectionId)
-                .attr('data-section-key', sectionKey);
+                .attr('data-section-key', layoutKey);
+            if (isCustomInstance) {
+                $sectionContainer.attr('data-custom-id', customId);
+            }
 
             const $toggle = $('<button>')
                 .attr('type', 'button')
@@ -5567,21 +6173,29 @@
                                 .html('<i class="far fa-trash-can" aria-hidden="true"></i>')
                                 .on('click', function(ev) {
                                     ev.stopPropagation();
-                                    const sectionLabel = sectionKey === 'experience'
-                                        ? 'WORK EXPERIENCE'
-                                        : (sectionConfig && sectionConfig.name ? String(sectionConfig.name).toUpperCase() : 'SECTION');
-                                    openDeleteSectionModal(sectionKey, sectionLabel);
+                                    let sectionLabel;
+                                    if (isCustomInstance) {
+                                        const heading = String($sectionContainer.find('input[name="' + getCustomHeadingFieldName(customId) + '"]').val() || '').trim();
+                                        sectionLabel = (heading || sectionConfig.name || 'Custom Section').toUpperCase();
+                                    } else {
+                                        sectionLabel = sectionKey === 'experience'
+                                            ? 'WORK EXPERIENCE'
+                                            : (sectionConfig && sectionConfig.name ? String(sectionConfig.name).toUpperCase() : 'SECTION');
+                                    }
+                                    openDeleteSectionModal(layoutKey, sectionLabel);
                                 })
                         )
                 );
 
             $sectionContainer.append($sectionHeader);
 
-            if (sectionKey === 'custom') {
+            if (isCustomInstance) {
                 const $headingWrap = $('<div class="form-group cv-custom-heading-field">')
-                    .append($('<label for="custom-section-heading">').text('Section title (shown on resume)'))
+                    .append($('<label>').attr('for', headingInputId).text('Section title (shown on resume)'))
                     .append(
-                        $('<input type="text" class="form-control" id="custom-section-heading" name="custom_heading">')
+                        $('<input type="text" class="form-control">')
+                            .attr('id', headingInputId)
+                            .attr('name', getCustomHeadingFieldName(customId))
                             .attr('placeholder', 'e.g., Publications, Volunteering, Hobbies')
                     );
                 $sectionContainer.append($headingWrap);
@@ -5589,20 +6203,20 @@
 
             const $entriesContainer = $('<div>')
                 .addClass('entries-container')
-                .attr('data-section-key', sectionKey);
+                .attr('data-section-key', layoutKey);
 
             // Initialize entry count for this section
-            sectionEntryCounts[sectionKey] = 1;
+            sectionEntryCounts[layoutKey] = 1;
 
             // Add first entry
-            const $firstEntry = generateEntryFields(sectionKey, sectionConfig, 0);
+            const $firstEntry = generateEntryFields(layoutKey, sectionConfig, 0);
             $entriesContainer.append($firstEntry);
 
             // List-view sections: start in list view; others show full form by default
             let $addEntryBtn;
             let $listWrap = null;
             let $editorWrap = null;
-            if (listViewSections.has(sectionKey)) {
+            if (usesListView(layoutKey)) {
                 $listWrap = $('<div class="cv-section-list-view">')
                     .append('<div class="cv-section-list" role="list"></div>')
                     .append(
@@ -5626,12 +6240,11 @@
 
                 $addEntryBtn = $listWrap.find('.cv-section-list__add');
                 $addEntryBtn.on('click', function() {
-                    addEntryToSection(sectionKey, sectionConfig);
-                    // open the newest entry
-                    const newIndex = (sectionEntryCounts[sectionKey] || 1) - 1;
-                    if (sectionKey === 'education') openEducationEntryEditor($sectionContainer, newIndex);
-                    else if (sectionKey === 'skills') openSkillsEntryEditor($sectionContainer, newIndex);
-                    else if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') openGenericEntryEditor(sectionKey, $sectionContainer, newIndex);
+                    addEntryToSection(layoutKey, sectionConfig);
+                    const newIndex = (sectionEntryCounts[layoutKey] || 1) - 1;
+                    if (layoutKey === 'education') openEducationEntryEditor($sectionContainer, newIndex);
+                    else if (layoutKey === 'skills') openSkillsEntryEditor($sectionContainer, newIndex);
+                    else if (isGenericListSectionKey(layoutKey)) openGenericEntryEditor(layoutKey, $sectionContainer, newIndex);
                     else openExperienceEntryEditor($sectionContainer, newIndex);
                 });
             } else {
@@ -5641,15 +6254,15 @@
                     .attr('type', 'button')
                     .html('➕ Add Another ' + sectionConfig.name)
                     .on('click', function() {
-                        addEntryToSection(sectionKey, sectionConfig);
+                        addEntryToSection(layoutKey, sectionConfig);
                     });
             }
 
             const $body = $('<div>')
                 .addClass('added-section__body')
                 .attr('id', collapseBodyId)
-                .append(listViewSections.has(sectionKey) ? $listWrap : $entriesContainer)
-                .append(listViewSections.has(sectionKey) ? $editorWrap : $addEntryBtn);
+                .append(usesListView(layoutKey) ? $listWrap : $entriesContainer)
+                .append(usesListView(layoutKey) ? $editorWrap : $addEntryBtn);
 
             $sectionContainer.append($body);
 
@@ -5657,11 +6270,11 @@
             const debouncedHandler = debounce(handleFormChange, 300);
             $sectionContainer.find('input, textarea, select').on('input change', debouncedHandler);
 
-            if (sectionKey === 'experience') renderExperienceList($sectionContainer);
-            if (sectionKey === 'education') renderEducationList($sectionContainer);
-            if (sectionKey === 'skills') renderSkillsList($sectionContainer);
-            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') {
-                renderGenericList(sectionKey, $sectionContainer);
+            if (layoutKey === 'experience') renderExperienceList($sectionContainer);
+            if (layoutKey === 'education') renderEducationList($sectionContainer);
+            if (layoutKey === 'skills') renderSkillsList($sectionContainer);
+            if (isGenericListSectionKey(layoutKey)) {
+                renderGenericList(layoutKey, $sectionContainer);
             }
 
             return $sectionContainer;
@@ -5794,8 +6407,9 @@
         }
 
         function _getEntryFieldValue(sectionKey, idx, fieldName, $entry) {
-            const selectorBase = sectionKey + '[' + idx + '][' + fieldName + ']';
-            const $field = $entry.find('input[name^="' + selectorBase + '"], textarea[name^="' + selectorBase + '"], select[name^="' + selectorBase + '"]');
+            const customId = isCustomLayoutKey(sectionKey) ? parseCustomSectionId(sectionKey) : null;
+            const fieldNameAttr = getEntryFieldName(sectionKey, idx, fieldName, customId);
+            const $field = $entry.find('input[name="' + fieldNameAttr + '"], textarea[name="' + fieldNameAttr + '"], select[name="' + fieldNameAttr + '"]');
             if (!$field.length) return '';
             return String($field.val() || '').trim();
         }
@@ -5806,16 +6420,18 @@
             if (!$list.length) return;
             $list.empty();
 
-            const cfg = listViewSummaryFields[sectionKey] || {};
-            const primaryField = cfg.primary || (availableSections[sectionKey] && availableSections[sectionKey].fields && availableSections[sectionKey].fields[0] ? availableSections[sectionKey].fields[0].name : '');
+            const summaryKey = isCustomLayoutKey(sectionKey) ? 'custom' : sectionKey;
+            const cfg = listViewSummaryFields[summaryKey] || {};
+            const primaryField = cfg.primary || (availableSections[summaryKey] && availableSections[summaryKey].fields && availableSections[summaryKey].fields[0] ? availableSections[summaryKey].fields[0].name : '');
             const secondaryField = cfg.secondary || '';
+            const customId = isCustomLayoutKey(sectionKey) ? parseCustomSectionId(sectionKey) : null;
 
             $entries.each(function() {
                 const $entry = $(this);
                 const idx = Number($entry.attr('data-entry-index'));
                 const primary = _getEntryFieldValue(sectionKey, idx, primaryField, $entry) || (primaryField ? primaryField.replace(/_/g, ' ') : 'Entry');
                 const secondary = secondaryField ? _getEntryFieldValue(sectionKey, idx, secondaryField, $entry) : '';
-                const isHidden = String($entry.find('input[name^="' + sectionKey + '[' + idx + '][is_hidden]"]').val() || '').trim() === '1';
+                const isHidden = String($entry.find('input[name="' + getEntryFieldName(sectionKey, idx, 'is_hidden', customId) + '"]').val() || '').trim() === '1';
 
                 const $row = $('<div class="cv-section-list__row" role="listitem">')
                     .attr('draggable', 'true')
@@ -5835,7 +6451,7 @@
                             .html(isHidden ? '<i class="far fa-eye-slash" aria-hidden="true"></i>' : '<i class="far fa-eye" aria-hidden="true"></i>')
                             .on('click', function(e) {
                                 e.preventDefault();
-                                const $flag = $entry.find('input[name^="' + sectionKey + '[' + idx + '][is_hidden]"]');
+                                const $flag = $entry.find('input[name="' + getEntryFieldName(sectionKey, idx, 'is_hidden', customId) + '"]');
                                 const nowHidden = String($flag.val() || '').trim() !== '1';
                                 $flag.val(nowHidden ? '1' : '');
                                 renderGenericList(sectionKey, $section);
@@ -6013,28 +6629,26 @@
 
         // Drag & drop reorder for generic list sections
         const __genericDragFromIdx = {};
-        $form.on('dragstart', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, #section-custom .cv-section-list__row', function(e) {
+        $form.on('dragstart', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, .added-section[data-custom-id] .cv-section-list__row', function(e) {
             const $row = $(this);
             const $section = $row.closest('.added-section');
-            const sectionId = String($section.attr('id') || '');
-            const sectionKey = sectionId.replace(/^section-/, '');
+            const sectionKey = getSectionKeyFromAddedSection($section);
             __genericDragFromIdx[sectionKey] = $row.attr('data-entry-index');
             try { e.originalEvent.dataTransfer.effectAllowed = 'move'; } catch (_) {}
             $row.addClass('is-dragging');
         });
-        $form.on('dragend', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, #section-custom .cv-section-list__row', function() {
+        $form.on('dragend', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, .added-section[data-custom-id] .cv-section-list__row', function() {
             $(this).removeClass('is-dragging');
         });
-        $form.on('dragover', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, #section-custom .cv-section-list__row', function(e) {
+        $form.on('dragover', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, .added-section[data-custom-id] .cv-section-list__row', function(e) {
             e.preventDefault();
             try { e.originalEvent.dataTransfer.dropEffect = 'move'; } catch (_) {}
         });
-        $form.on('drop', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, #section-custom .cv-section-list__row', function(e) {
+        $form.on('drop', '#section-certifications .cv-section-list__row, #section-awards .cv-section-list__row, #section-projects .cv-section-list__row, #section-languages .cv-section-list__row, #section-references .cv-section-list__row, .added-section[data-custom-id] .cv-section-list__row', function(e) {
             e.preventDefault();
             const $targetRow = $(this);
             const $section = $targetRow.closest('.added-section');
-            const sectionId = String($section.attr('id') || '');
-            const sectionKey = sectionId.replace(/^section-/, '');
+            const sectionKey = getSectionKeyFromAddedSection($section);
             const toIdx = $targetRow.attr('data-entry-index');
             const fromIdx = __genericDragFromIdx[sectionKey];
             if (fromIdx === null || fromIdx === undefined) return;
@@ -6065,7 +6679,7 @@
 
         // Add a new entry to an existing section
         function addEntryToSection(sectionKey, sectionConfig) {
-            const $section = $('#section-' + sectionKey);
+            const $section = $(getSectionDomSelector(sectionKey));
             if ($section.length === 0) return;
 
             const $entriesContainer = $section.find('.entries-container');
@@ -6093,26 +6707,22 @@
             handleFormChange();
 
             if (sectionKey === 'experience') {
-                const $section = $('#section-' + sectionKey);
                 renderExperienceList($section);
             }
             if (sectionKey === 'education') {
-                const $section = $('#section-' + sectionKey);
                 renderEducationList($section);
             }
             if (sectionKey === 'skills') {
-                const $section = $('#section-' + sectionKey);
                 renderSkillsList($section);
             }
-            if (sectionKey === 'certifications' || sectionKey === 'awards' || sectionKey === 'projects' || sectionKey === 'languages' || sectionKey === 'references' || sectionKey === 'custom') {
-                const $section = $('#section-' + sectionKey);
+            if (isGenericListSectionKey(sectionKey)) {
                 renderGenericList(sectionKey, $section);
             }
         }
 
         // Remove a specific entry from a section
         function removeEntry(sectionKey, entryIndex) {
-            const $section = $('#section-' + sectionKey);
+            const $section = $(getSectionDomSelector(sectionKey));
             if ($section.length === 0) return;
 
             const $entriesContainer = $section.find('.entries-container');
@@ -6143,7 +6753,7 @@
 
         // Re-index entries after removal (to keep indices sequential)
         function reindexSectionEntries(sectionKey) {
-            const $section = $('#section-' + sectionKey);
+            const $section = $(getSectionDomSelector(sectionKey));
             if ($section.length === 0) return;
 
             const $entriesContainer = $section.find('.entries-container');
@@ -6175,16 +6785,26 @@
         // Multi-select add removed (sections are added on click)
 
         function removeSection(sectionKey) {
-            const $section = $('#section-' + sectionKey);
+            const $section = $(getSectionDomSelector(sectionKey));
             if ($section.length) {
                 $section.fadeOut(200, function() {
                     $(this).remove();
-                    addedSections.delete(sectionKey);
-                    // Clear entry count for this section
+                    if (isCustomLayoutKey(sectionKey)) {
+                        const customId = parseCustomSectionId(sectionKey);
+                        addedCustomSectionIds.delete(customId);
+                        unregisterCustomSectionFromLayout(customId);
+                    } else {
+                        addedSections.delete(sectionKey);
+                    }
                     delete sectionEntryCounts[sectionKey];
                     const $template = getPrimaryPreviewTemplate();
                     if ($template.length) {
-                        $template.find('section.' + sectionKey).remove();
+                        if (isCustomLayoutKey(sectionKey)) {
+                            const customId = parseCustomSectionId(sectionKey);
+                            $template.find('section.custom[data-custom-id="' + customId + '"]').remove();
+                        } else {
+                            $template.find('section.' + sectionKey).remove();
+                        }
                     }
                     refreshSectionOrderControls();
                     window.__cvBuilderDirty = true;

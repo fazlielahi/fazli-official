@@ -1,6 +1,6 @@
 @php
     $lang = app()->getLocale();
-    $openHref = route('localized.cv.builder', ['lang' => $lang, 'slug' => $cv->template_slug]) . '?cv_id=' . $cv->id;
+    $openHref = route('localized.resume.builder', ['lang' => $lang, 'slug' => $cv->template_slug]) . '?cv_id=' . $cv->id;
     $title = $cv->title ?? 'Untitled resume';
     $at = $cv->updated_at;
 @endphp
@@ -10,7 +10,7 @@
             class="cv-project-card__frame"
             title="Preview {{ $title }}"
             loading="lazy"
-            src="{{ route('localized.cv.preview', ['lang' => $lang, 'id' => $cv->id]) }}?scale=0.28&crop=0.30"
+            src="{{ route('localized.resume.preview', ['lang' => $lang, 'id' => $cv->id]) }}?scale=0.28&crop=0.30"
             scrolling="no"
         ></iframe>
         <a class="cv-project-card__preview-link" href="{{ $openHref }}" aria-label="Open {{ $title }}"></a>

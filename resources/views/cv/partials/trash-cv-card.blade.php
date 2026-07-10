@@ -11,7 +11,7 @@
             title="Preview {{ $title }}"
             loading="lazy"
             tabindex="-1"
-            src="{{ route('localized.cv.preview', ['lang' => $lang, 'id' => $cv->id]) }}?scale=0.28&crop=0.30"
+            src="{{ route('localized.resume.preview', ['lang' => $lang, 'id' => $cv->id]) }}?scale=0.28&crop=0.30"
             scrolling="no"
         ></iframe>
     </div>

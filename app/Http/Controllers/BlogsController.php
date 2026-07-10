@@ -2,60 +2,89 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Str; //to use its static method str::random() without typing the full namespace eachtime
 use App\Models\Blog;
-use App\Models\User;
+use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Likes;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cookie;
 
 class BlogsController extends Controller
 {
-    public function index(Request $request){
-        $categories = \App\Models\Category::all();
+    public function index(Request $request)
+    {
         $selectedCategory = $request->input('category_id');
-        $blogs = \App\Models\Blog::where('status', 'published');
-        if ($selectedCategory) {
-            $blogs = $blogs->where('category_id', $selectedCategory);
-        }
-        $blogs = $blogs->get();
-        $locale = app()->getLocale();
-        return view('site.blogs', compact('blogs', 'categories', 'selectedCategory', 'locale'));
+
+        return $this->renderBlogsPage($request, $selectedCategory ? (int) $selectedCategory : null);
     }
 
     public function rejectedBlogs(Request $request)
     {
-        // Get authenticated user using Laravel Auth
-        // Middleware ensures user is authenticated
         $user = Auth::user();
+        $categories = Category::all();
+        $selectedCategory = $request->input('category_id');
+        $categoryId = $selectedCategory ? (int) $selectedCategory : null;
 
-        // Only get rejected blogs for this user
-        $blogs = Blog::where('status', 'rejected')
+        $query = Blog::query()
+            ->where('status', 'rejected')
             ->where('created_by', $user->id)
-            ->get();
+            ->with(['creater', 'category', 'rejected_by_user'])
+            ->orderByDesc('rejected_at')
+            ->orderByDesc('updated_at');
 
-        return view('site.rejected_blogs', compact('blogs', 'user'));
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        $blogs = $query->paginate(12)->withQueryString();
+
+        return view('site.rejected_blogs', compact('blogs', 'user', 'categories', 'selectedCategory'));
     }
 
     public function category($locale, $slug)
     {
-        $categories = \App\Models\Category::all();
-        $selectedCategory = \App\Models\Category::where('slug', $slug)->firstOrFail();
-        $blogs = \App\Models\Blog::where('status', 'published')
-            ->where('category_id', $selectedCategory->id)
-            ->get();
+        $request = request();
+        $selectedCategory = Category::where('slug', $slug)->firstOrFail();
 
-        return view('site.blogs', [
-            'blogs' => $blogs,
-            'categories' => $categories,
-            'selectedCategory' => $selectedCategory->id,
-            'selectedCategorySlug' => $selectedCategory->slug,
-            'locale' => $locale,
+        return $this->renderBlogsPage(
+            $request,
+            $selectedCategory->id,
+            $selectedCategory->slug
+        );
+    }
+
+    public function searchPreview(Request $request, $locale): JsonResponse
+    {
+        $search = trim((string) $request->input('q', ''));
+        if (mb_strlen($search) < 2) {
+            return response()->json([
+                'total' => 0,
+                'items' => [],
+            ]);
+        }
+
+        $categoryId = $request->input('category_id');
+        $categoryId = $categoryId ? (int) $categoryId : null;
+
+        $query = $this->buildBlogQuery($request, $categoryId);
+        $total = $query->count();
+        $blogs = $this->buildBlogQuery($request, $categoryId)->limit(5)->get();
+
+        return response()->json([
+            'total' => $total,
+            'items' => $blogs->map(function (Blog $blog) use ($locale) {
+                $thumb = blogThumbMeta($blog);
+
+                return [
+                    'id' => $blog->id,
+                    'title' => Str::limit(html_entity_decode(strip_tags($blog->title)), 70),
+                    'thumb' => $thumb['url'],
+                    'url' => route('localized.blog-details', ['lang' => $locale, 'slug' => $blog->slug]),
+                ];
+            })->values(),
         ]);
     }
 
@@ -63,67 +92,48 @@ class BlogsController extends Controller
     {
         $blog = Blog::where('slug', $slug)->firstOrFail();
         $popular_blogs = Blog::where('id', '!=', $blog->id)->where('status', 'published')->latest()->take(10)->get();
-        $categories = \App\Models\Category::all();
+        $categories = Category::all();
         $selectedCategory = $blog->category_id;
+
         return view('site.blog-details', compact('blog', 'popular_blogs', 'categories', 'selectedCategory', 'locale'));
     }
 
-    //comment on blog post
     public function comment(Request $request, $locale, Blog $blog)
     {
-        // dd($request);
-
         $request->validate([
             'comment' => 'required',
-            'name' => 'nullable'
+            'name' => 'nullable',
         ]);
 
-        //get or create a visiter token
         $token = $request->cookie('visiter_token');
 
-        if(!$token)
-        {
-            $token = str::random(60); //generate a random string of 60-chtr
-            //store in cookie for one year 60min*24*hrs*365days
-            cookie::queue('visiter_token', $token, 60*24*365);
+        if (! $token) {
+            $token = Str::random(60);
+            Cookie::queue('visiter_token', $token, 60 * 24 * 365);
         }
-        // dd($token);
 
-        //check if the user is logged in (using Laravel Auth)
-        if(Auth::check())
-        {
+        if (Auth::check()) {
             $user = Auth::user();
-            $userId = $user->id;
-           
-            $name = $user->name;
-            $user_id = $user->id;
 
-             // Save the comment with authenticated user info
-             $comment = Comment::create([
-                    'name' => $name,
-                    'blog_id' => $blog->id,
-                    'comment' => $request->comment,
-                    'user_id' => $user_id,
-                    'visiter_token' => $token, 
-                ]);
+            $comment = Comment::create([
+                'name' => $user->name,
+                'blog_id' => $blog->id,
+                'comment' => $request->comment,
+                'user_id' => $user->id,
+                'visiter_token' => $token,
+            ]);
+        } else {
+            $existingComment = Comment::where('visiter_token', $token)->first();
+            $name = $existingComment ? $existingComment->name : $request->name;
 
-        }else{
+            $comment = Comment::create([
+                'name' => $name,
+                'blog_id' => $blog->id,
+                'comment' => $request->comment,
+                'visiter_token' => $token,
+            ]);
+        }
 
-
-        //if a comment already exists with the same name re use the name
-        $existingComment = Comment::where('visiter_token', $token)->first();
-        $name = $existingComment ? $existingComment->name : $request->name;
-
-        //save the comment
-        $comment = Comment::create([
-            'name' => $name,
-            'blog_id' => $blog->id,
-            'comment' => $request->comment,
-            'visiter_token' => $token,
-        ]);
-    }
-
-        // Check if it's an AJAX request
         if ($request->ajax() || $request->wantsJson() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             $user = $comment->user;
             $html = view('site.partials.comment', compact('comment', 'user'))->render();
@@ -131,68 +141,131 @@ class BlogsController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => __('lang.Comment submitted successfully!'),
-                'html' => $html
+                'html' => $html,
             ]);
         }
 
         return redirect()->back();
     }
 
-    // likes handle
     public function like(Request $request, $locale, Blog $blog)
     {
         $token = $request->cookie('visiter_token');
 
-        if(!$token)
-        {
+        if (! $token) {
             $token = Str::random(60);
-            cookie::queue('visiter_token', $token, 60*24*365);
+            Cookie::queue('visiter_token', $token, 60 * 24 * 365);
         }
 
-        // check for existing like for this visitor
         $existingLike = Likes::where('blog_id', $blog->id)
             ->where('visiter_token', $token)
             ->exists();
 
-        if(!$existingLike){
+        if (! $existingLike) {
             Likes::create([
                 'visiter_token' => $token,
                 'blog_id' => $blog->id,
             ]);
         }
 
-        if($request->ajax()){
-            // Refresh the blog instance to get the updated count
+        if ($request->ajax()) {
             $blog->refresh();
+
             return new JsonResponse([
-                'count' => $blog->likes()->count()
+                'count' => $blog->likes()->count(),
             ]);
         }
+
         return redirect()->back();
     }
 
-//  public function userBlogs($lang, $id)
-// {
-//     // Set locale based on URL parameter
-//     app()->setLocale($lang);
-    
-//     // Find the user or return 404
-//     $user = \App\Models\User::findOrFail($id);
-//     // info($lang);
-//     // Get all blogs by this user, ordered by newest first
-//     $blogs = \App\Blog::where('created_by', $id)
-//                     ->where('status', 'published')
-//                     ->orderBy('created_at', 'desc')
-//                     ->get();
+    private function renderBlogsPage(Request $request, ?int $categoryId = null, ?string $selectedCategorySlug = null)
+    {
+        $locale = app()->getLocale();
+        $search = trim((string) $request->input('q', ''));
+        $sort = (string) $request->input('sort', 'newest');
 
-//     $latestBlogs = \App\Blog::where('created_by', $id)
-//     ->where('status', 'published')
-//     ->orderBy('created_at', 'desc')
-//     ->take(10)
-//     ->get(); // For latest 10
-    
-//     // Return the view with user and their blogs
-//     return view('sections.user_blogs', compact('user', 'blogs', 'latestBlogs'));
-// }
-   
+        $categories = Category::query()
+            ->withCount([
+                'blog as published_count' => function ($query) {
+                    $query->where('status', 'published');
+                },
+            ])
+            ->orderBy('name')
+            ->get();
+
+        $totalPublishedCount = Blog::where('status', 'published')->count();
+
+        $blogs = $this->buildBlogQuery($request, $categoryId)
+            ->paginate(12)
+            ->withQueryString();
+
+        $visitorToken = $request->cookie('visiter_token');
+        $likedBlogIds = $visitorToken
+            ? Likes::where('visiter_token', $visitorToken)->pluck('blog_id')->all()
+            : [];
+
+        if ($request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return response()->json([
+                'html' => view('site.partials.blogs-results', [
+                    'blogs' => $blogs,
+                    'likedBlogIds' => $likedBlogIds,
+                    'search' => $search,
+                ])->render(),
+                'meta' => $blogs->total() > 0
+                    ? __('lang.Blogs showing results', ['count' => $blogs->count(), 'total' => $blogs->total()])
+                    : '',
+            ]);
+        }
+
+        return view('site.blogs', [
+            'blogs' => $blogs,
+            'categories' => $categories,
+            'selectedCategory' => $categoryId,
+            'selectedCategorySlug' => $selectedCategorySlug,
+            'locale' => $locale,
+            'search' => $search,
+            'sort' => $sort,
+            'totalPublishedCount' => $totalPublishedCount,
+            'likedBlogIds' => $likedBlogIds,
+        ]);
+    }
+
+    private function buildBlogQuery(Request $request, ?int $categoryId = null)
+    {
+        $query = Blog::query()
+            ->where('status', 'published')
+            ->with([
+                'creater',
+                'category',
+                'comments' => fn ($commentQuery) => $commentQuery->latest(),
+            ])
+            ->withCount(['likes', 'comments']);
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        $search = trim((string) $request->input('q', ''));
+        if ($search !== '') {
+            $query->where(function ($builder) use ($search) {
+                $builder->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('content', 'like', '%' . $search . '%');
+            });
+        }
+
+        switch ((string) $request->input('sort', 'newest')) {
+            case 'liked':
+                $query->orderByDesc('likes_count')->orderByDesc('created_at');
+                break;
+            case 'commented':
+                $query->orderByDesc('comments_count')->orderByDesc('created_at');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+
+        return $query;
+    }
 }

@@ -38,7 +38,7 @@
 }
 
 .navbar .nav-item {
-    margin: 0 10px;
+    margin: 0 6px;
 }
 
 .navbar .nav-item a {
@@ -84,7 +84,58 @@
 }
 
 .header-button{
-    margin: 0 30px;
+    margin: 0 20px;
+    gap: 8px;
+}
+
+.header-lang-toggle .header-svg-icon {
+    margin-inline-end: 0 !important;
+}
+
+@media (min-width: 992px) {
+    .header-lang-toggle.dropdown-toggle::after {
+        margin-inline-start: 0.2em;
+    }
+}
+
+.header-auth-dropdown .login-btn {
+    white-space: nowrap;
+    background: transparent !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 8px 10px;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: none !important;
+}
+
+.header-auth-dropdown .login-btn .header-svg-icon {
+    color: currentColor;
+}
+
+.header-auth-dropdown .login-btn.dropdown-toggle::after {
+    border-top-color: currentColor;
+}
+
+.header-auth-dropdown .login-btn:hover,
+.header-auth-dropdown .login-btn:focus,
+.header-auth-dropdown .login-btn.show {
+    background: transparent !important;
+    color: #F4A32C !important;
+}
+
+body[data-theme="light"] .header-auth-dropdown .login-btn {
+    color: #212224 !important;
+}
+
+body[data-theme="light"] .header-auth-dropdown .login-btn:hover,
+body[data-theme="light"] .header-auth-dropdown .login-btn:focus,
+body[data-theme="light"] .header-auth-dropdown .login-btn.show {
+    color: #F4A32C !important;
+}
+
+.theme-toggle-container {
+    margin-left: 0;
 }
 
 .header-button a{

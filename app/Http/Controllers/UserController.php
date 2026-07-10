@@ -75,7 +75,7 @@ class UserController extends Controller
             $photo->move(public_path('images'), $photoName);
             $user->photo = $photoName;
         } else {
-            $user->photo = 'images/default.png';
+            $user->photo = 'default.svg';
         }
 
         // save the user to the database

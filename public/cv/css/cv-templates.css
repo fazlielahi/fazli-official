@@ -249,13 +249,6 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
 }
-.cv-template-tabs-scroll::-webkit-scrollbar {
-    height: 5px;
-}
-.cv-template-tabs-scroll::-webkit-scrollbar-thumb {
-    background: rgba(26, 32, 44, 0.25);
-    border-radius: 999px;
-}
 .cv-template-tabs {
     display: flex;
     flex-wrap: wrap;

@@ -1,0 +1,52 @@
+/* Global scrollbars — match home page (home-tools) */
+:root {
+    --site-scroll-track: rgba(15, 23, 42, .08);
+    --site-scroll-thumb: rgba(15, 58, 109, .55);
+    --site-scroll-thumb-hover: rgba(15, 58, 109, .75);
+}
+
+body[data-theme="dark"] {
+    --site-scroll-track: rgba(255, 255, 255, .08);
+    --site-scroll-thumb: rgba(244, 163, 44, .55);
+    --site-scroll-thumb-hover: rgba(244, 163, 44, .75);
+}
+
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--site-scroll-thumb) var(--site-scroll-track);
+}
+
+body,
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--site-scroll-thumb) var(--site-scroll-track);
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+    background: var(--site-scroll-track);
+    border-radius: 999px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+    background: var(--site-scroll-thumb);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--site-scroll-thumb-hover);
+}

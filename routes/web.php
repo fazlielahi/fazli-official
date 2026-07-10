@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\CvTrashSettingsController;
 use App\Http\Controllers\Admin\SiteSettingsController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\AboutController;
 
@@ -46,35 +47,47 @@ Route::group([
     Route::get('/founder-profile', [FounderProfileController::class, 'index'])->name('founder-profile');
     Route::get('/jobs', [\App\Http\Controllers\JobsController::class, 'index'])->name('jobs');
 
-    // CV Builder Routes
-    Route::get('/cv', [\App\Http\Controllers\CvController::class, 'index'])->name('cv.gallery');
-    Route::get('/cv/create/{slug}', [\App\Http\Controllers\CvController::class, 'builder'])->name('cv.builder');
-    
-    // CV routes that require authentication
+    // Resume Builder Routes
+    Route::get('/resume', [\App\Http\Controllers\CvController::class, 'index'])->name('resume.gallery');
+    Route::get('/resume/create/{slug}', [\App\Http\Controllers\CvController::class, 'builder'])->name('resume.builder');
+
+    // Resume routes that require authentication
     Route::middleware('auth')->group(function () {
-    Route::get('/cv/projects', [\App\Http\Controllers\CvController::class, 'projects'])->name('cv.projects');
-    Route::get('/cv/trash', [\App\Http\Controllers\CvController::class, 'trash'])->name('cv.trash');
-    Route::post('/cv/trash/{id}/restore', [\App\Http\Controllers\CvController::class, 'restoreTrashedCv'])->name('cv.trash.restore');
-    Route::delete('/cv/trash/{id}', [\App\Http\Controllers\CvController::class, 'forceDeleteTrashedCv'])->name('cv.trash.force');
-    Route::post('/cv/save', [\App\Http\Controllers\CvController::class, 'save'])->name('cv.save');
-    Route::get('/cv/saved', [\App\Http\Controllers\CvController::class, 'getSavedCVs'])->name('cv.saved');
-    Route::get('/cv/load/{id}', [\App\Http\Controllers\CvController::class, 'loadCV'])->name('cv.load');
-    Route::post('/cv/import/upload', [\App\Http\Controllers\CvController::class, 'importUpload'])->name('cv.import.upload');
-    Route::post('/cv/import/{importId}/extract', [\App\Http\Controllers\CvController::class, 'importExtract'])->name('cv.import.extract');
-    Route::post('/cv/import/{importId}/parse', [\App\Http\Controllers\CvController::class, 'importParse'])->name('cv.import.parse');
-    Route::post('/cv/{id}/title', [\App\Http\Controllers\CvController::class, 'updateTitle'])->name('cv.updateTitle');
-    Route::post('/cv/{id}/duplicate', [\App\Http\Controllers\CvController::class, 'duplicateSaved'])->name('cv.duplicate');
-    Route::delete('/cv/{id}/permanent', [\App\Http\Controllers\CvController::class, 'permanentDeleteSaved'])->name('cv.permanent');
-    Route::delete('/cv/{id}', [\App\Http\Controllers\CvController::class, 'deleteSaved'])->name('cv.delete');
-    Route::get('/cv/preview/{id}', [\App\Http\Controllers\CvController::class, 'previewSaved'])->name('cv.preview');
-    Route::get('/cv/export/{id}/pdf', [\App\Http\Controllers\CvController::class, 'exportPDF'])->name('cv.export.pdf');
-    Route::post('/cv/export/{slug}/pdf', [\App\Http\Controllers\CvController::class, 'exportCurrentPDF'])->name('cv.export.current.pdf');
-    Route::get('/cv/export/{id}/png', [\App\Http\Controllers\CvController::class, 'exportPNG'])->name('cv.export.png');
-    Route::post('/cv/export/{slug}/png', [\App\Http\Controllers\CvController::class, 'exportCurrentPNG'])->name('cv.export.current.png');
+        Route::get('/resume/projects', [\App\Http\Controllers\CvController::class, 'projects'])->name('resume.projects');
+        Route::get('/resume/trash', [\App\Http\Controllers\CvController::class, 'trash'])->name('resume.trash');
+        Route::post('/resume/trash/{id}/restore', [\App\Http\Controllers\CvController::class, 'restoreTrashedCv'])->name('resume.trash.restore');
+        Route::delete('/resume/trash/{id}', [\App\Http\Controllers\CvController::class, 'forceDeleteTrashedCv'])->name('resume.trash.force');
+        Route::post('/resume/save', [\App\Http\Controllers\CvController::class, 'save'])->name('resume.save');
+        Route::get('/resume/saved', [\App\Http\Controllers\CvController::class, 'getSavedCVs'])->name('resume.saved');
+        Route::get('/resume/load/{id}', [\App\Http\Controllers\CvController::class, 'loadCV'])->name('resume.load');
+        Route::post('/resume/import/upload', [\App\Http\Controllers\CvController::class, 'importUpload'])->name('resume.import.upload');
+        Route::post('/resume/import/{importId}/extract', [\App\Http\Controllers\CvController::class, 'importExtract'])->name('resume.import.extract');
+        Route::post('/resume/import/{importId}/parse', [\App\Http\Controllers\CvController::class, 'importParse'])->name('resume.import.parse');
+        Route::post('/resume/{id}/title', [\App\Http\Controllers\CvController::class, 'updateTitle'])->name('resume.updateTitle');
+        Route::post('/resume/{id}/duplicate', [\App\Http\Controllers\CvController::class, 'duplicateSaved'])->name('resume.duplicate');
+        Route::delete('/resume/{id}/permanent', [\App\Http\Controllers\CvController::class, 'permanentDeleteSaved'])->name('resume.permanent');
+        Route::delete('/resume/{id}', [\App\Http\Controllers\CvController::class, 'deleteSaved'])->name('resume.delete');
+        Route::get('/resume/preview/{id}', [\App\Http\Controllers\CvController::class, 'previewSaved'])->name('resume.preview');
+        Route::get('/resume/export/{id}/pdf', [\App\Http\Controllers\CvController::class, 'exportPDF'])->name('resume.export.pdf');
+        Route::post('/resume/export/{slug}/pdf', [\App\Http\Controllers\CvController::class, 'exportCurrentPDF'])->name('resume.export.current.pdf');
+        Route::get('/resume/export/{id}/png', [\App\Http\Controllers\CvController::class, 'exportPNG'])->name('resume.export.png');
+        Route::post('/resume/export/{slug}/png', [\App\Http\Controllers\CvController::class, 'exportCurrentPNG'])->name('resume.export.current.png');
+    });
+
+    // Legacy /cv URL redirects (301)
+    Route::redirect('/cv', '/resume', 301);
+    Route::redirect('/cv/create/{slug}', '/resume/create/{slug}', 301);
+    Route::middleware('auth')->group(function () {
+        Route::redirect('/cv/projects', '/resume/projects', 301);
+        Route::redirect('/cv/trash', '/resume/trash', 301);
+        Route::redirect('/cv/preview/{id}', '/resume/preview/{id}', 301);
+        Route::redirect('/cv/export/{id}/pdf', '/resume/export/{id}/pdf', 301);
+        Route::redirect('/cv/export/{id}/png', '/resume/export/{id}/png', 301);
     });
 
     //Blogs
     Route::get('/blogs', [BlogsController::class, 'index'])->name('blogs');
+    Route::get('/blogs/search-preview', [BlogsController::class, 'searchPreview'])->name('blogs.search-preview');
     Route::get('/blogs/category/{slug}', [BlogsController::class, 'category'])->name('blogs.by-category');
     Route::get('/blog/{slug}', [BlogsController::class, 'blogDetails'])->name('blog-details');
     Route::get('/books', [\App\Http\Controllers\BooksController::class, 'index'])->name('books');
@@ -82,8 +95,9 @@ Route::group([
     //subscribe
     Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribe');
 
-    //services 
+    //services
     Route::get('/services', [ServiceController::class, 'index'])->name('services');
+    Route::get('/tools', [ToolsController::class, 'index'])->name('tools');
 
     // like and comment
     Route::post('/blog/{blog}/comments', [BlogsController::class, 'comment'])->name('blog.comment');
@@ -115,7 +129,11 @@ Route::group([
     
     //profile routes - protected with auth middleware
     Route::middleware('auth')->group(function () {
-    Route::get('/profile/published-blogs', [ProfileController::class, 'showPublicProfile'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'overview'])->name('profile');
+    Route::get('/profile/blogs/published', [ProfileController::class, 'showPublicProfile'])->name('profile-published-blogs');
+    Route::get('/profile/published-blogs', function (string $lang) {
+        return redirect()->route('localized.profile-published-blogs', ['lang' => $lang], 301);
+    });
     Route::get('/profile/edit', [ProfileController::class, 'editProfile'])->name('profile-edit');
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile-update');
     Route::get('/profile/request-blogs', [BlogController::class, 'requestBlogs'])->name('profile-request-blogs');

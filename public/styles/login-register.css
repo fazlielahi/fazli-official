@@ -37,9 +37,6 @@ body.page-register:not([data-theme]){
   --lr-switch-thumb: #ffffff;
   --lr-foot: #6b7280;
   --lr-card-shadow: 0 16px 40px rgba(15, 23, 42, .10), 0 4px 12px rgba(15, 23, 42, .05);
-  --lr-scroll-track: rgba(15, 23, 42, .08);
-  --lr-scroll-thumb: rgba(15, 58, 109, .55);
-  --lr-scroll-thumb-hover: rgba(15, 58, 109, .75);
 }
 
 body.page-login[data-theme="dark"],
@@ -59,9 +56,6 @@ body.page-register[data-theme="dark"]{
   --lr-switch-thumb: #e8eaed;
   --lr-foot: #9aa0a8;
   --lr-card-shadow: 0 16px 40px rgba(0, 0, 0, .38), 0 4px 12px rgba(0, 0, 0, .22);
-  --lr-scroll-track: rgba(255, 255, 255, .08);
-  --lr-scroll-thumb: rgba(244, 163, 44, .55);
-  --lr-scroll-thumb-hover: rgba(244, 163, 44, .75);
   --lr-label-muted: rgba(232, 234, 237, .72);
 }
 
@@ -186,33 +180,6 @@ body.page-register{
   gap: 12px;
   min-height: 0;
   overflow: auto;
-}
-
-/* Auth internal scrollbars (match theme) */
-body.page-login .auth-main,
-body.page-register .auth-main{
-  scrollbar-width: thin;
-  scrollbar-color: var(--lr-scroll-thumb) var(--lr-scroll-track);
-}
-body.page-login .auth-main::-webkit-scrollbar,
-body.page-register .auth-main::-webkit-scrollbar{
-  width: 10px;
-}
-body.page-login .auth-main::-webkit-scrollbar-track,
-body.page-register .auth-main::-webkit-scrollbar-track{
-  background: var(--lr-scroll-track);
-  border-radius: 999px;
-}
-body.page-login .auth-main::-webkit-scrollbar-thumb,
-body.page-register .auth-main::-webkit-scrollbar-thumb{
-  background: var(--lr-scroll-thumb);
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-body.page-login .auth-main::-webkit-scrollbar-thumb:hover,
-body.page-register .auth-main::-webkit-scrollbar-thumb:hover{
-  background: var(--lr-scroll-thumb-hover);
 }
 
 .auth-heading{

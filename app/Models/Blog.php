@@ -20,11 +20,17 @@ class Blog extends Model
         'rejected_by',
         'approval_message',
         'rejection_message',
+        'rejected_at',
         'category_id',
         'slug',
         'meta_title',
         'meta_description',
         'meta_keywords',
+    ];
+
+    protected $casts = [
+        'rejected_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     protected static function boot()

@@ -175,12 +175,12 @@
             // Card menus
             const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
             const locale = @json(app()->getLocale());
-            const duplicateUrlTpl = @json(route('localized.cv.duplicate', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
-            const updateTitleUrlTpl = @json(route('localized.cv.updateTitle', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
-            const previewUrlTpl = @json(route('localized.cv.preview', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
-            const pdfUrlTpl = @json(route('localized.cv.export.pdf', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
-            const pngUrlTpl = @json(route('localized.cv.export.png', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
-            const permanentDeleteUrlTpl = @json(route('localized.cv.permanent', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const duplicateUrlTpl = @json(route('localized.resume.duplicate', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const updateTitleUrlTpl = @json(route('localized.resume.updateTitle', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const previewUrlTpl = @json(route('localized.resume.preview', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const pdfUrlTpl = @json(route('localized.resume.export.pdf', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const pngUrlTpl = @json(route('localized.resume.export.png', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+            const permanentDeleteUrlTpl = @json(route('localized.resume.permanent', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
 
             const deleteChoiceModal = document.getElementById('cv-delete-choice-modal');
             const deletePermanentCheck = document.getElementById('cv-delete-permanent-confirm');
@@ -607,7 +607,7 @@
             async function deleteCv(cardEl) {
                 const id = cardEl?.getAttribute('data-cv-id');
                 if (!id) return false;
-                const urlTpl = @json(route('localized.cv.delete', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
+                const urlTpl = @json(route('localized.resume.delete', ['lang' => app()->getLocale(), 'id' => 'CV_ID']));
                 const url = String(urlTpl).replace('CV_ID', encodeURIComponent(String(id)));
 
                 const res = await fetch(url, {
@@ -714,7 +714,7 @@
                 const newId = String(cv.id);
                 const title = (cv.title != null && String(cv.title).trim() !== '') ? String(cv.title) : 'Untitled resume';
                 const slug = cv.template_slug;
-                const openHref = '/' + locale + '/cv/create/' + encodeURIComponent(slug) + '?cv_id=' + encodeURIComponent(newId);
+                const openHref = '/' + locale + '/resume/create/' + encodeURIComponent(slug) + '?cv_id=' + encodeURIComponent(newId);
                 const previewSrc = String(previewUrlTpl).replace('CV_ID', encodeURIComponent(newId)) + '?scale=0.28&crop=0.30';
                 const sub = clone.querySelector('.cv-project-card__sub');
 

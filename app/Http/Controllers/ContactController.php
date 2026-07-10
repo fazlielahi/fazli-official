@@ -8,11 +8,32 @@ use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
-    public function index()
+    private const QUOTE_SERVICES = [
+        'web-design-development' => 'Web Design & Development',
+        'corporate-identity' => 'Corporate Identity',
+        'digital-marketing' => 'Digital Marketing',
+        'ecommerce-development' => 'Ecommerce Development',
+        'social-media-marketing' => 'Social Media Marketing',
+        'wordpress-development' => 'WordPress Development',
+        'seo-training' => 'SEO Training',
+    ];
+
+    public function index(Request $request)
     {
         $locale = App::getLocale();
+        $quoteSubject = null;
+        $quoteMessage = null;
+        $selectedService = null;
 
-        return view('site.contact', compact('locale'));
+        $serviceSlug = $request->query('service');
+        if (is_string($serviceSlug) && isset(self::QUOTE_SERVICES[$serviceSlug])) {
+            $serviceName = __('lang.' . self::QUOTE_SERVICES[$serviceSlug]);
+            $selectedService = $serviceSlug;
+            $quoteSubject = __('lang.Quote request subject', ['service' => $serviceName]);
+            $quoteMessage = __('lang.Quote request message', ['service' => $serviceName]);
+        }
+
+        return view('site.contact', compact('locale', 'quoteSubject', 'quoteMessage', 'selectedService'));
     }
 
     public function sendEmail(Request $request)

@@ -18,17 +18,35 @@
         'left' => ['summary', 'experience', 'projects'],
         'right' => ['awards', 'skills', 'education', 'certifications', 'languages', 'references'],
     ];
-    $validLayoutSections = ['summary', 'experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references', 'custom'];
+    $isCustomLayoutKey = fn ($key) => is_string($key) && str_starts_with($key, 'custom__');
+    $validLayoutSections = ['summary', 'experience', 'education', 'awards', 'projects', 'skills', 'languages', 'certifications', 'references'];
+    $customSectionsList = [];
+    if (!empty($data['custom_sections']) && is_array($data['custom_sections'])) {
+        $customSectionsList = $data['custom_sections'];
+    } elseif (!empty($data['custom']) && is_array($data['custom'])) {
+        $customSectionsList = [[
+            'id' => 'legacy',
+            'heading' => trim($data['custom_heading'] ?? '') ?: 'Custom',
+            'items' => $data['custom'],
+        ]];
+    }
+    foreach ($customSectionsList as $customSection) {
+        $customId = $customSection['id'] ?? null;
+        if ($customId) {
+            $validLayoutSections[] = 'custom__' . $customId;
+        }
+    }
     $savedLayout = isset($data['section_layout']) && is_array($data['section_layout']) ? $data['section_layout'] : [];
-    $leftLayout = array_values(array_filter($savedLayout['left'] ?? [], fn ($key) => in_array($key, $validLayoutSections, true)));
-    $rightLayout = array_values(array_filter($savedLayout['right'] ?? [], fn ($key) => in_array($key, $validLayoutSections, true)));
+    $layoutKeyIsValid = fn ($key) => in_array($key, $validLayoutSections, true) || $isCustomLayoutKey($key);
+    $leftLayout = array_values(array_filter($savedLayout['left'] ?? [], $layoutKeyIsValid));
+    $rightLayout = array_values(array_filter($savedLayout['right'] ?? [], $layoutKeyIsValid));
     if (empty($leftLayout) && empty($rightLayout)) {
         $leftLayout = $defaultLayout['left'];
         $rightLayout = $defaultLayout['right'];
     }
     foreach ($validLayoutSections as $sectionKey) {
         if (!in_array($sectionKey, $leftLayout, true) && !in_array($sectionKey, $rightLayout, true)) {
-            if (in_array($sectionKey, $defaultLayout['right'], true)) {
+            if ($isCustomLayoutKey($sectionKey) || in_array($sectionKey, $defaultLayout['right'], true)) {
                 $rightLayout[] = $sectionKey;
             } else {
                 $leftLayout[] = $sectionKey;
@@ -269,7 +287,28 @@
                                 @break
 
                             @case('custom')
-                                @include('cv.templates.partials.custom-section', ['data' => $data, 'layoutColumn' => $layoutColumn])
+                                @break
+
+                            @default
+                                @if($isCustomLayoutKey($sectionKey))
+                                    @php
+                                        $customId = substr($sectionKey, strlen('custom__'));
+                                        $matchedCustomSection = null;
+                                        foreach ($customSectionsList as $cs) {
+                                            if (($cs['id'] ?? '') === $customId) {
+                                                $matchedCustomSection = $cs;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+                                    @if($matchedCustomSection)
+                                        @include('cv.templates.partials.custom-section', [
+                                            'data' => $data,
+                                            'customSection' => $matchedCustomSection,
+                                            'layoutColumn' => $layoutColumn,
+                                        ])
+                                    @endif
+                                @endif
                                 @break
                         @endswitch
                     @endforeach

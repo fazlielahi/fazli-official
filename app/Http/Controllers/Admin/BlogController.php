@@ -79,6 +79,7 @@ class BlogController extends Controller
         $blog->update([
             'status' => 'rejected',
             'rejected_by' => $user->id,
+            'rejected_at' => now(),
             'rejection_message' => $request->input('rejection_message')
         ]);
 
@@ -90,40 +91,57 @@ class BlogController extends Controller
 
     //function requestBlogs
     public function requestBlogs(Request $request) {
-        // Get authenticated user using Laravel Auth
-        // Middleware ensures user is authenticated
         $user = Auth::user();
         $categories = \App\Models\Category::all();
         $selectedCategory = $request->input('category_id');
+        $categoryId = $selectedCategory ? (int) $selectedCategory : null;
 
-        $blogs = \App\Models\Blog::query()->whereIn('status', ['request', 'draft']);
-        if ($selectedCategory) {
-            $blogs = $blogs->where('category_id', $selectedCategory);
-        }
-        $blogs = $blogs->get();
-
-            if($user->type === 'super_admin')
-            {
-                return view('admin.request-blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
-            }else{
-                return view('site.request-blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
+        if ($user->type === 'super_admin') {
+            $blogs = \App\Models\Blog::query()->whereIn('status', ['request', 'draft']);
+            if ($categoryId) {
+                $blogs = $blogs->where('category_id', $categoryId);
             }
-    } 
+            $blogs = $blogs->get();
+
+            return view('admin.request-blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
+        }
+
+        $query = \App\Models\Blog::query()
+            ->where('status', 'request')
+            ->where('created_by', $user->id)
+            ->with(['creater', 'category'])
+            ->orderByDesc('created_at');
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        $blogs = $query->paginate(12)->withQueryString();
+
+        return view('site.request-blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
+    }
 
     public function draftBlogs(Request $request)
     {
-        // Get authenticated user using Laravel Auth
-        // Middleware ensures user is authenticated
         $user = Auth::user();
         $categories = \App\Models\Category::all();
         $selectedCategory = $request->input('category_id');
-        $blogs = \App\Models\Blog::where('status', 'draft')->where('created_by', $user->id);
-        if ($selectedCategory) {
-            $blogs = $blogs->where('category_id', $selectedCategory);
+        $categoryId = $selectedCategory ? (int) $selectedCategory : null;
+
+        $query = \App\Models\Blog::query()
+            ->where('status', 'draft')
+            ->where('created_by', $user->id)
+            ->with(['creater', 'category'])
+            ->orderByDesc('created_at');
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
         }
-        $blogs = $blogs->get();
+
+        $blogs = $query->paginate(12)->withQueryString();
+
         return view('site.draft-blog', compact('blogs', 'user', 'categories', 'selectedCategory'));
-    }   
+    }
 
     public function create(Request $request)
     {
@@ -134,9 +152,11 @@ class BlogController extends Controller
         if($user->type === 'super_admin')
         {
             return view('admin.create-blog', compact('user', 'categories'));
-        }else{
-            return view('site.create-blog', compact('user', 'categories'));
         }
+
+        $returnUrl = profileBlogReturnUrl($request);
+
+        return view('site.create-blog', compact('user', 'categories', 'returnUrl'));
     }
     
     //form submission for new blog post
@@ -155,13 +175,16 @@ class BlogController extends Controller
             'meta_keywords' => 'nullable|string|max:255',
         ],
         [
-            'title.required' => "Please write a title",
-            'content.required' => "Please add some contents",
-            'image.image' => 'The uploaded file must be an image.',
-            'image.mimes' => 'The image must be a file of type: jpg, jpeg, png, gif.',
-            'image.max' => 'The image must not be larger than 2MB.',
-            'category_id.required' => 'Please select a category.',
-            'category_id.exists' => 'Selected category does not exist.',
+            'title.required' => __('lang.Blog validation title required'),
+            'content.required' => __('lang.Blog validation content required'),
+            'image.image' => __('lang.Blog validation image type'),
+            'image.mimes' => __('lang.Blog validation image mimes'),
+            'image.max' => __('lang.Blog validation image max'),
+            'thumb.image' => __('lang.Blog validation image type'),
+            'thumb.mimes' => __('lang.Blog validation image mimes'),
+            'thumb.max' => __('lang.Blog validation image max'),
+            'category_id.required' => __('lang.Blog validation category required'),
+            'category_id.exists' => __('lang.Blog validation category exists'),
             'meta_title.max' => 'The meta title must not be larger than 255 characters.',
             'meta_description.max' => 'The meta description must not be larger than 200 characters.',
             'meta_keywords.max' => 'The meta keywords must not be larger than 255 characters.',
@@ -233,17 +256,18 @@ class BlogController extends Controller
         $categories = \App\Models\Category::all();
 
         // check if user is allowed to edit this blog
-        if($blog->type === 'super_admin' && $blog->created_by !== $user->id)
-        {
+        if ($user->type !== 'super_admin' && (int) $blog->created_by !== (int) $user->id) {
             abort(403, 'Unauthorized action.');
         }
 
             if($user->type === 'super_admin')
             {
                 return view('admin.edit-blog', compact('blog', 'user', 'categories'));
-            }else{
-                return view('site.edit-blog', compact('blog', 'user', 'categories'));
-            }            
+            }
+
+            $returnUrl = profileBlogReturnUrl($request, $blog);
+
+            return view('site.edit-blog', compact('blog', 'user', 'categories', 'returnUrl'));
     }
 
     // for submission for update blog post
@@ -328,7 +352,7 @@ class BlogController extends Controller
         }else{
             if($request->status === 'published')    
             {
-                return redirect()->route('localized.profile', ['lang' => app()->getLocale()]);
+                return redirect()->route('localized.profile-published-blogs', ['lang' => app()->getLocale()]);
 
             }else if($request->status === 'draft') {
 
@@ -349,6 +373,10 @@ class BlogController extends Controller
 
         //check if the user is allowed to delete this blog
         $blog = Blog::findOrFail($id);
+
+        if ($user->type !== 'super_admin' && (int) $blog->created_by !== (int) $user->id) {
+            abort(403, 'Unauthorized action.');
+        }
 
         $blog->delete();
 
