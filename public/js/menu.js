@@ -1,21 +1,17 @@
-if(window.innerWidth <= 1000)
-{
-    menu.classList.add("collapse");
-}else{
+const menu = document.getElementById('navbarNav');
 
-    menu.classList.remove("collapse");
+function add_collapse() {
+    if (!menu) {
+        return;
+    }
+
+    if (window.innerWidth <= 1000) {
+        menu.classList.add('collapse');
+    } else {
+        menu.classList.remove('collapse');
+    }
 }
 
-function add_collapse()
-{
-    if(window.innerWidth <= 1000)
-    {
-        menu.classList.add("collapse");
-
-    }else{
-
-        menu.classList.remove("collapse");
-   }
-   
+if (menu) {
+    add_collapse();
 }
-

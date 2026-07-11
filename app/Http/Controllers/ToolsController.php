@@ -53,9 +53,9 @@ class ToolsController extends Controller
                 'icon' => 'magnifying-glass',
                 'title' => 'Explore Jobs',
                 'description' => 'Tools explore jobs description',
-                'route' => 'localized.jobs',
-                'badge' => null,
-                'coming_soon' => false,
+                'route' => null,
+                'badge' => 'Coming soon',
+                'coming_soon' => true,
             ],
         ];
 

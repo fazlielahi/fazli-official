@@ -77,7 +77,7 @@
 
     event.preventDefault();
 
-    var next = trigger.getAttribute('data-auth-next') || trigger.getAttribute('href') || '';
+    var next = trigger.getAttribute('data-auth-next') || trigger.getAttribute('href') || window.location.href;
     showToast(next);
   });
 

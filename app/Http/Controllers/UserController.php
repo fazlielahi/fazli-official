@@ -20,7 +20,7 @@ class UserController extends Controller
 
      public function showRegisterForm(Request $request)
      {
-         $next = $this->sanitizeInternalNextUrl($request->query('next'));
+         $next = sanitizeAuthNextUrl($request->query('next'));
          return view('admin.register', [
              'next' => $next,
          ]);
@@ -84,7 +84,7 @@ class UserController extends Controller
         // Automatically log in the user after registration using Laravel Auth
         Auth::login($user);
 
-        $next = $this->sanitizeInternalNextUrl($request->input('next'));
+        $next = sanitizeAuthNextUrl($request->input('next'));
         if ($next) {
             return redirect()->to($next)
                 ->with('success', 'Account created successfully! You are now logged in.');
@@ -108,7 +108,18 @@ class UserController extends Controller
       */
      public function showLoginForm(Request $request)
      {
-        $next = $this->sanitizeInternalNextUrl($request->query('next'));
+        $next = sanitizeAuthNextUrl($request->query('next'));
+
+        if (! $next) {
+            $referer = $request->headers->get('Referer');
+            if (is_string($referer) && $referer !== '') {
+                $refererPath = parse_url($referer, PHP_URL_PATH) ?: '';
+                if (! preg_match('#/(login|register)(/|$)#', $refererPath)) {
+                    $next = sanitizeAuthNextUrl($referer);
+                }
+            }
+        }
+
         return view('admin.login', [
             'next' => $next,
         ]);
@@ -154,10 +165,10 @@ class UserController extends Controller
             // Get the authenticated user
             $user = Auth::user();
 
-            $next = $this->sanitizeInternalNextUrl($request->input('next'));
-            if (!$next) {
+            $next = sanitizeAuthNextUrl($request->input('next'));
+            if (! $next) {
                 $intended = session()->pull('url.intended');
-                $next = $this->sanitizeInternalNextUrl(is_string($intended) ? $intended : null);
+                $next = sanitizeAuthNextUrl(is_string($intended) ? $intended : null);
             }
             if ($next) {
                 return redirect()->to($next);
@@ -189,54 +200,6 @@ class UserController extends Controller
         }
         return back()->withErrors($errors)->withInput($request->only('email', 'next'));
       }
-
-    /**
-     * Prevent open redirects while allowing same-site absolute URLs and safe relative paths.
-     */
-    protected function sanitizeInternalNextUrl(?string $next): ?string
-    {
-        if (!$next) {
-            return null;
-        }
-
-        $next = trim($next);
-        if ($next === '') {
-            return null;
-        }
-
-        // Relative in-app paths are safest.
-        if (str_starts_with($next, '/') && !str_starts_with($next, '//')) {
-            return $next;
-        }
-
-        // Allow absolute URLs only when they target this application host.
-        $appUrl = (string) config('app.url', '');
-        if ($appUrl === '') {
-            return null;
-        }
-
-        $target = parse_url($next);
-        if (!is_array($target) || empty($target['host'])) {
-            return null;
-        }
-
-        $app = parse_url($appUrl);
-        if (!is_array($app) || empty($app['host'])) {
-            return null;
-        }
-
-        $targetHost = strtolower($target['host']);
-        $appHost = strtolower($app['host']);
-        if ($targetHost !== $appHost) {
-            return null;
-        }
-
-        $path = $target['path'] ?? '/';
-        $query = isset($target['query']) && $target['query'] !== '' ? ('?' . $target['query']) : '';
-        $fragment = isset($target['fragment']) && $target['fragment'] !== '' ? ('#' . $target['fragment']) : '';
-
-        return $path . $query . $fragment;
-    }
 
         /**
        * log the user out (destroy session)

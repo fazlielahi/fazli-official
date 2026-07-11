@@ -1,0 +1,823 @@
+/* About page — TFC brand palette (matches home + login) */
+body.page-about {
+    --about-primary: #0F3A6D;
+    --about-primary-dark: #0a2a50;
+    --about-accent: #F4A32C;
+    --about-accent-dark: #e09220;
+    --about-radius: 16px;
+    --about-bg: #e9eef5;
+    --about-surface: #ffffff;
+    --about-text: #0f172a;
+    --about-muted: #6b7280;
+    --about-line: #e5e7eb;
+    --about-shadow: 0 16px 40px rgba(15, 23, 42, .10), 0 4px 12px rgba(15, 23, 42, .05);
+    --fistudy-base: #0F3A6D;
+    --fistudy-black: #0f172a;
+    --fistudy-primary: #0a2a50;
+    --about-section-pad-y: 72px;
+    --about-section-pad-bottom-lg: 96px;
+    --about-title-gap: 32px;
+    --about-title-size: 34px;
+    --about-title-two-size: 30px;
+    background: var(--about-bg) !important;
+    color: var(--about-text);
+}
+
+body.page-about[data-theme="dark"] {
+    --about-bg: #0c0f14;
+    --about-surface: #1a1f27;
+    --about-text: #e8eaed;
+    --about-muted: #9aa0a8;
+    --about-line: #3a424d;
+    --about-shadow: 0 16px 40px rgba(0, 0, 0, .38), 0 4px 12px rgba(0, 0, 0, .22);
+}
+
+body.page-about .page-wrapper,
+body.page-about main {
+    background: var(--about-bg) !important;
+}
+
+body.page-about .footer {
+    position: unset;
+}
+
+/* Compact section spacing (about page only) */
+body.page-about .about-one,
+body.page-about .why-choose-one,
+body.page-about .blog-two.one-page-two-blog {
+    padding: var(--about-section-pad-y) 0 !important;
+}
+
+body.page-about .blogs-one {
+    padding: var(--about-section-pad-y) 0 var(--about-section-pad-bottom-lg) !important;
+}
+
+body.page-about .blog-one {
+    padding: 48px 0 var(--about-section-pad-bottom-lg) !important;
+}
+
+body.page-about .cv-templates-section {
+    padding: var(--about-section-pad-y) 0 !important;
+}
+
+body.page-about .faq-section {
+    padding-top: var(--about-section-pad-y) !important;
+    padding-bottom: var(--about-section-pad-y) !important;
+    background: var(--about-bg) !important;
+}
+
+body.page-about .section-title,
+body.page-about .about-one__right .section-title {
+    margin-bottom: var(--about-title-gap) !important;
+}
+
+body.page-about .section-title-two {
+    margin-bottom: var(--about-title-gap) !important;
+}
+
+body.page-about .section-title__title {
+    font-size: var(--about-title-size) !important;
+    line-height: 1.25 !important;
+}
+
+body.page-about .section-title-two__title {
+    font-size: var(--about-title-two-size) !important;
+    line-height: 1.3 !important;
+    margin-top: 10px !important;
+}
+
+body.page-about .section-title__tagline,
+body.page-about .section-title-two__tagline {
+    font-size: 14px !important;
+}
+
+body.page-about .about-one__mission-and-vision {
+    gap: 28px !important;
+    margin-top: 24px !important;
+    margin-bottom: 24px !important;
+}
+
+body.page-about .about-one__icon-and-title {
+    margin-bottom: 10px !important;
+}
+
+body.page-about .about-one__icon-and-title h3 {
+    font-size: 20px !important;
+    line-height: 1.3 !important;
+}
+
+body.page-about .about-one__text {
+    margin-bottom: 0 !important;
+}
+
+body.page-about .why-choose-one__text {
+    margin-bottom: 20px !important;
+}
+
+body.page-about .why-choose-one__points-list li {
+    margin-bottom: 18px !important;
+}
+
+body.page-about .why-choose-one__btn-and-client-box {
+    margin-top: 24px !important;
+}
+
+body.page-about .blogs-one__single {
+    padding: 14px 14px 16px !important;
+}
+
+body.page-about .blogs-one__carousel {
+    margin-top: 8px !important;
+}
+
+body.page-about .cv-templates-section__subtitle {
+    margin-top: 12px !important;
+    font-size: 16px !important;
+}
+
+body.page-about .about-cv-showcase {
+    margin-top: 36px;
+}
+
+body.page-about .about-cv-templates-grid {
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+
+body.page-about .about-cv-templates-grid .template-card {
+    flex: 0 1 calc(33.333% - 20px);
+    max-width: 340px;
+}
+
+body.page-about .cv-templates-section__cta {
+    margin-top: 32px !important;
+}
+
+body.page-about .blog-two__single {
+    margin-bottom: 16px !important;
+}
+
+body.page-about .blog-two__title {
+    margin-bottom: 14px !important;
+}
+
+body.page-about .faq-section h2 {
+    color: var(--about-text);
+    margin-bottom: 1.25rem !important;
+    font-size: var(--about-title-size) !important;
+}
+
+body.page-about .faq-section .accordion-button {
+    padding: 0.85rem 1.1rem !important;
+    font-size: 0.95rem !important;
+}
+
+body.page-about .faq-section .accordion-body {
+    padding: 0.85rem 1.1rem !important;
+    font-size: 0.95rem !important;
+}
+
+@media (max-width: 991px) {
+    body.page-about {
+        --about-section-pad-y: 56px;
+        --about-section-pad-bottom-lg: 72px;
+        --about-title-gap: 24px;
+        --about-title-size: 28px;
+        --about-title-two-size: 26px;
+    }
+
+    body.page-about .about-cv-templates-grid .template-card {
+        flex: 0 1 calc(50% - 14px);
+    }
+}
+
+@media (max-width: 575px) {
+    body.page-about {
+        --about-section-pad-y: 44px;
+        --about-section-pad-bottom-lg: 56px;
+        --about-title-size: 24px;
+        --about-title-two-size: 22px;
+    }
+
+    body.page-about .about-one__mission-and-vision {
+        flex-direction: column;
+        gap: 20px !important;
+    }
+
+    body.page-about .about-cv-templates-grid .template-card {
+        flex: 1 1 100%;
+        max-width: min(340px, 100%);
+    }
+}
+
+/* Banner */
+body.page-about .banner-one {
+    padding-top: 0 !important;
+    background: transparent !important;
+}
+
+body.page-about .banner-one__title-clr-1,
+body.page-about .banner-one__title-clr-2 {
+    font-family: mainheading_font_banner, 'Rowdies', 'Outfit', sans-serif !important;
+    font-weight: 600 !important;
+    color: var(--about-primary) !important;
+}
+
+body.page-about[data-theme="dark"] .banner-one__title-clr-1,
+body.page-about[data-theme="dark"] .banner-one__title-clr-2 {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .slogan-3,
+body.page-about .banner-one__text {
+    color: var(--about-text) !important;
+}
+
+body.page-about .banner-one__udemy-review-star .icon-star:before {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .banner-one__tags a {
+    border-color: var(--about-line) !important;
+    color: var(--about-text) !important;
+    background: var(--about-surface);
+}
+
+body.page-about .banner-one__tags a:hover {
+    background: var(--about-primary) !important;
+    border-color: var(--about-primary) !important;
+    color: #fff !important;
+}
+
+/* Section headings */
+body.page-about .section-title__tagline,
+body.page-about .section-title-two__tagline {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .section-title__tagline-shape {
+    background: var(--about-accent) !important;
+}
+
+body.page-about .section-title__title,
+body.page-about .section-title-two__title,
+body.page-about .section-title__title span,
+body.page-about .about-brand-prefix {
+    color: var(--about-text) !important;
+}
+
+body.page-about .solution,
+body.page-about .about-accent-text {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .about-one__text,
+body.page-about .about-one__mission-and-vision-text,
+body.page-about .why-choose-one__text,
+body.page-about .why-choose-one__points-content p,
+body.page-about .why-choose-one__client-content p,
+body.page-about .banner-one__text,
+body.page-about .blog-one__text,
+body.page-about .testimonial-one__text,
+body.page-about .testimonial-one__client-sub-title,
+body.page-about .about-one__experience-count > p,
+body.page-about .about-one__experience-count-box > p {
+    color: var(--about-muted) !important;
+}
+
+body.page-about .why-choose-one__points-content h3 {
+    color: var(--about-text) !important;
+}
+
+body.page-about .about-one__live-class {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .why-choose-one__client-box {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line);
+    box-shadow: var(--about-shadow);
+}
+
+body.page-about .blog-one__meta li a,
+body.page-about .blog-two__meta li a {
+    color: var(--about-primary) !important;
+}
+
+body.page-about .blog-one__meta li a:hover,
+body.page-about .blog-two__meta li a:hover {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .about-brand-name {
+    margin-inline: 8px;
+}
+
+/* Section surfaces */
+body.page-about .about-one,
+body.page-about .why-choose-one,
+body.page-about .testimonial-one,
+body.page-about .blog-two.one-page-two-blog {
+    background: var(--about-bg) !important;
+}
+
+body.page-about .about-one__awards-box,
+body.page-about .about-one__experience-box-inner {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line);
+    box-shadow: var(--about-shadow);
+}
+
+body.page-about .about-one__awards-count-box h3,
+body.page-about .about-one__experience-count h3,
+body.page-about .why-choose-one__count-box h3 {
+    color: var(--about-primary) !important;
+}
+
+body.page-about .about-one__awards-count-box span,
+body.page-about .about-one__experience-count span {
+    color: var(--about-primary) !important;
+}
+
+body.page-about .about-one__awards-box p {
+    color: var(--about-muted) !important;
+}
+
+body.page-about .about-one__icon-and-title h3,
+body.page-about .blogs-one__title a,
+body.page-about .blog-one__title a,
+body.page-about .blog-two__title a,
+body.page-about .testimonial-one__client-name {
+    color: var(--about-text) !important;
+}
+
+body.page-about .blogs-one__title a:hover,
+body.page-about .blog-one__title a:hover,
+body.page-about .blog-two__title a:hover {
+    color: var(--about-accent) !important;
+}
+
+/* Service cards */
+body.page-about .blogs-one {
+    background: var(--about-bg) !important;
+}
+
+body.page-about .blogs-one__single,
+body.page-about .service-card-home {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow) !important;
+}
+
+body.page-about .blogs-one__content {
+    background: var(--about-surface) !important;
+}
+
+body.page-about .blogs-one__ratting-text {
+    color: var(--about-muted) !important;
+}
+
+body.page-about .blogs-one__ratting li span,
+body.page-about .blogs-one__heart-btn .icon-heart {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .blogs-one__heart-btn {
+    background: rgba(244, 163, 44, .14);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    cursor: pointer;
+}
+
+body.page-about .blogs-one__heart-btn:focus {
+    outline: 2px solid var(--about-accent);
+    outline-offset: 2px;
+}
+
+/* Buttons */
+body.page-about .thm-btn,
+body.page-about .blogs-one__btn,
+body.page-about .cv-templates-section__btn,
+body.page-about .about-one__btn,
+body.page-about .why-choose-one__btn,
+body.page-about .blog-one__btn-box .thm-btn {
+    background: linear-gradient(180deg, var(--about-primary) 0%, var(--about-primary-dark) 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.page-about .thm-btn:hover,
+body.page-about .thm-btn:active,
+body.page-about .thm-btn:focus,
+body.page-about .thm-btn:focus-visible,
+body.page-about .blogs-one__btn:hover,
+body.page-about .blogs-one__btn:active,
+body.page-about .blogs-one__btn:focus,
+body.page-about .blogs-one__btn:focus-visible,
+body.page-about .cv-templates-section__btn:hover,
+body.page-about .cv-templates-section__btn:active,
+body.page-about .cv-templates-section__btn:focus,
+body.page-about .cv-templates-section__btn:focus-visible,
+body.page-about .about-one__btn:hover,
+body.page-about .about-one__btn:active,
+body.page-about .about-one__btn:focus,
+body.page-about .about-one__btn:focus-visible,
+body.page-about .why-choose-one__btn:hover,
+body.page-about .why-choose-one__btn:active,
+body.page-about .why-choose-one__btn:focus,
+body.page-about .why-choose-one__btn:focus-visible,
+body.page-about .blog-one__btn-box .thm-btn:hover,
+body.page-about .blog-one__btn-box .thm-btn:active,
+body.page-about .blog-one__btn-box .thm-btn:focus,
+body.page-about .blog-one__btn-box .thm-btn:focus-visible {
+    background: var(--about-accent) !important;
+    color: #fff !important;
+}
+
+body.page-about .thm-btn span,
+body.page-about .blogs-one__btn span,
+body.page-about .about-one__btn span,
+body.page-about .why-choose-one__btn span,
+body.page-about .cv-templates-section__btn span,
+body.page-about .blog-one__btn-box .thm-btn span,
+body.page-about .thm-btn:hover span,
+body.page-about .thm-btn:active span,
+body.page-about .thm-btn:focus span,
+body.page-about .blogs-one__btn:hover span,
+body.page-about .blogs-one__btn:active span,
+body.page-about .blogs-one__btn:focus span,
+body.page-about .about-one__btn:hover span,
+body.page-about .about-one__btn:active span,
+body.page-about .about-one__btn:focus span,
+body.page-about .why-choose-one__btn:hover span,
+body.page-about .why-choose-one__btn:active span,
+body.page-about .why-choose-one__btn:focus span,
+body.page-about .cv-templates-section__btn:hover span,
+body.page-about .cv-templates-section__btn:active span,
+body.page-about .cv-templates-section__btn:focus span {
+    color: #fff !important;
+}
+
+/* CV preview block */
+body.page-about .cv-templates-section {
+    background: linear-gradient(135deg, var(--about-primary-dark) 0%, var(--about-primary) 100%) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+body.page-about .cv-templates-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 100% 0%, rgba(244, 163, 44, 0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 0% 100%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+body.page-about .cv-templates-section > .container {
+    position: relative;
+    z-index: 1;
+}
+
+body.page-about .cv-templates-section__subtitle {
+    color: rgba(255, 255, 255, .88) !important;
+}
+
+body.page-about .cv-templates-section .section-title__tagline {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .cv-templates-section .section-title__title,
+body.page-about .cv-templates-section .section-title__title span {
+    color: #fff !important;
+}
+
+body.page-about .about-cv-showcase {
+    background: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+    padding: clamp(24px, 4vw, 40px);
+}
+
+body.page-about .about-cv-showcase .template-info__title {
+    color: #0f172a !important;
+}
+
+body.page-about .about-cv-showcase .btn-preview {
+    background: #fff;
+}
+
+body.page-about .cv-templates-section__empty {
+    margin-top: 36px;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+body.page-about[data-theme="dark"] .about-cv-showcase {
+    background: var(--about-surface);
+    border-color: var(--about-line);
+    box-shadow: var(--about-shadow);
+}
+
+body.page-about[data-theme="dark"] .about-cv-showcase .template-info__title {
+    color: var(--about-text) !important;
+}
+
+body.page-about[data-theme="dark"] .about-cv-showcase .btn-preview {
+    background: transparent;
+    color: var(--about-primary);
+    border-color: var(--about-line);
+}
+
+body.page-about[data-theme="dark"] .about-cv-showcase .btn-preview:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--about-accent);
+    color: var(--about-accent);
+}
+
+/* Portfolio + testimonial cards */
+body.page-about .blog-one__single,
+body.page-about .testimonial-one__single {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow) !important;
+}
+
+body.page-about .testimonial-one__icon {
+    background: var(--about-accent) !important;
+}
+
+body.page-about .testimonial-one__ratting li span {
+    color: var(--about-accent) !important;
+}
+
+/* Blog preview cards */
+body.page-about .blog-two__single {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow) !important;
+}
+
+body.page-about .blog-two .row {
+    justify-content: center;
+}
+
+body.page-about .blog-two__title {
+    margin-bottom: 20px !important;
+}
+
+body.page-about .blog-two__content {
+    padding-bottom: 1px !important;
+}
+
+body.page-about .post-interactions .like,
+body.page-about .post-interactions .comment,
+body.page-about .post-interactions .share,
+body.page-about .post-interactions i,
+body.page-about .comment-a {
+    color: var(--about-primary) !important;
+}
+
+body.page-about .heart-icon.fa-solid {
+    color: var(--about-accent) !important;
+}
+
+body.page-about .btn-outline-secondary {
+    border-color: var(--about-line) !important;
+    color: var(--about-text) !important;
+    background: var(--about-surface) !important;
+}
+
+body.page-about .btn-outline-secondary:hover {
+    border-color: var(--about-accent) !important;
+    color: var(--about-primary) !important;
+    background: rgba(244, 163, 44, .12) !important;
+}
+
+/* FAQ */
+body.page-about .why-choose-one__points-icon,
+body.page-about .why-choose-one__points-icon-inner {
+    background-color: var(--about-line) !important;
+}
+
+body.page-about .why-choose-one__points-icon {
+    background-color: var(--about-surface) !important;
+}
+
+body.page-about .faq-section .accordion-header {
+    margin-bottom: 0;
+}
+
+body.page-about .faq-section .accordion-item {
+    background: var(--about-surface);
+    border-color: var(--about-line) !important;
+}
+
+body.page-about .faq-section .accordion-button {
+    background: var(--about-surface);
+    color: var(--about-text);
+}
+
+body.page-about .faq-section .accordion-button:not(.collapsed) {
+    background: var(--about-primary) !important;
+    color: #fff !important;
+    box-shadow: none;
+}
+
+body.page-about .faq-section .accordion-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(15, 58, 109, .22);
+    border-color: var(--about-primary);
+}
+
+body.page-about .faq-section .accordion-body {
+    color: var(--about-muted);
+    background: var(--about-surface);
+}
+
+/* Owl carousel */
+body.page-about .owl-theme .owl-dots .owl-dot span {
+    background: var(--about-line) !important;
+}
+
+body.page-about .owl-theme .owl-dots .owl-dot.active span,
+body.page-about .owl-theme .owl-dots .owl-dot:hover span {
+    background: var(--about-accent) !important;
+}
+
+body.page-about .owl-carousel .owl-nav button {
+    color: var(--about-primary) !important;
+}
+
+/* Misc */
+body.page-about .fa-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--about-text);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+body.page-about .fa-close-btn:focus {
+    outline: 2px solid var(--about-accent);
+}
+
+@font-face {
+    font-family: mainheading_font_banner;
+    src: url('/fonts/Rowdies-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Light theme — override global theme.css green palette on about page */
+body.page-about[data-theme="light"] .banner-one__title-clr-1,
+body.page-about[data-theme="light"] .banner-one__title-clr-2 {
+    color: var(--about-primary) !important;
+}
+
+body.page-about[data-theme="light"] .blogs-one__btn,
+body.page-about[data-theme="light"] .thm-btn,
+body.page-about[data-theme="light"] .about-one__btn,
+body.page-about[data-theme="light"] .why-choose-one__btn {
+    background: linear-gradient(180deg, var(--about-primary) 0%, var(--about-primary-dark) 100%) !important;
+    color: #fff !important;
+}
+
+body.page-about[data-theme="light"] .blogs-one__btn:hover,
+body.page-about[data-theme="light"] .blogs-one__btn:active,
+body.page-about[data-theme="light"] .blogs-one__btn:focus,
+body.page-about[data-theme="light"] .thm-btn:hover,
+body.page-about[data-theme="light"] .thm-btn:active,
+body.page-about[data-theme="light"] .thm-btn:focus,
+body.page-about[data-theme="light"] .about-one__btn:hover,
+body.page-about[data-theme="light"] .about-one__btn:active,
+body.page-about[data-theme="light"] .about-one__btn:focus,
+body.page-about[data-theme="light"] .why-choose-one__btn:hover,
+body.page-about[data-theme="light"] .why-choose-one__btn:active,
+body.page-about[data-theme="light"] .why-choose-one__btn:focus {
+    background: var(--about-accent) !important;
+    color: #fff !important;
+}
+
+body.page-about[data-theme="light"] .blogs-one__title a,
+body.page-about[data-theme="light"] .blog-one__title a,
+body.page-about[data-theme="light"] .blog-two__title a {
+    color: var(--about-text) !important;
+}
+
+body.page-about[data-theme="light"] .blog-one__meta li a {
+    color: var(--about-primary) !important;
+}
+
+body.page-about[data-theme="light"] .banner-one__tags a {
+    color: var(--about-text) !important;
+    background: var(--about-surface) !important;
+}
+
+body.page-about[data-theme="light"] .about-one,
+body.page-about[data-theme="light"] .why-choose-one,
+body.page-about[data-theme="light"] .testimonial-one,
+body.page-about[data-theme="light"] .blogs-one {
+    background: var(--about-bg) !important;
+}
+
+body.page-about[data-theme="light"] .about-one__awards-box,
+body.page-about[data-theme="light"] .about-one__experience-box-inner,
+body.page-about[data-theme="light"] .why-choose-one__client-box {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line);
+}
+
+body.page-about[data-theme="light"] .blogs-one__img,
+body.page-about[data-theme="light"] .blog-one__img {
+    background: var(--about-surface) !important;
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="light"] .faq-section .accordion-item,
+body.page-about[data-theme="light"] .faq-section .accordion-button {
+    background: var(--about-surface) !important;
+    color: var(--about-text) !important;
+}
+
+body.page-about[data-theme="light"] .why-choose-one__text,
+body.page-about[data-theme="light"] .why-choose-one__points-box,
+body.page-about[data-theme="light"] .why-choose-one__points-content h3,
+body.page-about[data-theme="light"] .why-choose-one__points-content p,
+body.page-about[data-theme="light"] .why-choose-one__client-content p {
+    color: var(--about-muted) !important;
+}
+
+body.page-about[data-theme="light"] .why-choose-one__points-content h3 {
+    color: var(--about-text) !important;
+}
+
+body.page-about[data-theme="light"] .why-choose-one__count-box h3,
+body.page-about[data-theme="light"] .why-choose-one__count-box span {
+    color: var(--about-primary) !important;
+}
+
+/* Dark theme refinements */
+body.page-about[data-theme="dark"] .about-one__awards-count-box h3,
+body.page-about[data-theme="dark"] .about-one__awards-count-box span,
+body.page-about[data-theme="dark"] .about-one__experience-count h3,
+body.page-about[data-theme="dark"] .about-one__experience-count span {
+    color: var(--about-accent) !important;
+}
+
+body.page-about[data-theme="dark"] .about-one__awards-box p,
+body.page-about[data-theme="dark"] .about-one__experience-count > p,
+body.page-about[data-theme="dark"] .about-one__experience-count-box > p {
+    color: var(--about-text) !important;
+}
+
+body.page-about[data-theme="dark"] .about-one__experience-box-shape {
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="dark"] .blog-one__img,
+body.page-about[data-theme="dark"] .blogs-one__img {
+    background: var(--about-surface) !important;
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="dark"] .faq-section h2 {
+    color: var(--about-text);
+}
+
+body.page-about[data-theme="dark"] .testimonial-one__ratting {
+    background: var(--about-surface) !important;
+    border-color: var(--about-line) !important;
+}
+
+/* RTL / LTR */
+html[dir="rtl"] body.page-about .section-title.text-start,
+html[dir="rtl"] body.page-about .about-rtl .about-one__right,
+html[dir="rtl"] body.page-about .why-choose-one__right {
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-about .thm-btn .icon-angles-right,
+html[dir="rtl"] body.page-about .blogs-one__btn .icon-angles-right,
+html[dir="rtl"] body.page-about .about-one__btn .icon-angles-right {
+    display: inline-block;
+    transform: scaleX(-1);
+}
+
+html[dir="rtl"] body.page-about .about-one__icon-and-title {
+    justify-content: flex-end;
+}
+
+html[dir="rtl"] body.page-about .why-choose-one__points-list li {
+    flex-direction: row-reverse;
+    text-align: right;
+}

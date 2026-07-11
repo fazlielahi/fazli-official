@@ -1,34 +1,198 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-    <loc>https://thefazli.com/en</loc>
-            </url>
+        <loc>https://thefazli.com/en</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/about</loc>
-            </url>
+        <loc>https://thefazli.com/ar</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/services</loc>
-            </url>
+        <loc>https://thefazli.com/ur</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/blogs</loc>
-            </url>
+        <loc>https://thefazli.com/en/about-tfc</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/about-tfc"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/books</loc>
-            </url>
+        <loc>https://thefazli.com/ar/about-tfc</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/about-tfc"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/jobs</loc>
-            </url>
+        <loc>https://thefazli.com/ur/about-tfc</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/about-tfc"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/about-tfc"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/cv-create</loc>
-            </url>
+        <loc>https://thefazli.com/en/services</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/services"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/services"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/services"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/services"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/contact</loc>
-            </url>
+        <loc>https://thefazli.com/ar/services</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/services"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/services"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/services"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/services"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/blog/getting-started-with-laravel</loc>
-            </url>
+        <loc>https://thefazli.com/ur/services</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/services"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/services"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/services"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/services"/>
+    </url>
     <url>
-    <loc>https://thefazli.com/en/blog/php-82-features-overview</loc>
-            </url>
+        <loc>https://thefazli.com/en/tools</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/tools"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/tools"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/tools"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/tools"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ar/tools</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/tools"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/tools"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/tools"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/tools"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ur/tools</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/tools"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/tools"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/tools"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/tools"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/en/resume</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/resume"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/resume"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/resume"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/resume"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ar/resume</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/resume"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/resume"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/resume"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/resume"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ur/resume</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/resume"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/resume"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/resume"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/resume"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/en/blogs</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/blogs"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/blogs"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/blogs"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/blogs"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ar/blogs</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/blogs"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/blogs"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/blogs"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/blogs"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ur/blogs</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/blogs"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/blogs"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/blogs"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/blogs"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/en/books</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/books"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/books"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/books"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/books"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ar/books</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/books"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/books"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/books"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/books"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ur/books</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/books"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/books"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/books"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/books"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/en/jobs</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/jobs"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/jobs"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/jobs"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/jobs"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ar/jobs</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/jobs"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/jobs"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/jobs"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/jobs"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ur/jobs</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/jobs"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/jobs"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/jobs"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/jobs"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/en/contact</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/contact"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/contact"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/contact"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/contact"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ar/contact</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/contact"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/contact"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/contact"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/contact"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/ur/contact</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://thefazli.com/en/contact"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://thefazli.com/ar/contact"/>
+        <xhtml:link rel="alternate" hreflang="ur" href="https://thefazli.com/ur/contact"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://thefazli.com/en/contact"/>
+    </url>
+    <url>
+        <loc>https://thefazli.com/en/blog/getting-started-with-laravel</loc>
+    </url>
+    <url>
+        <loc>https://thefazli.com/en/blog/php-82-features-overview</loc>
+    </url>
 </urlset>
- 

@@ -2,6 +2,8 @@
 @php
     $locale = app()->getLocale();
     $pageDir = in_array($locale, ['ar', 'ur'], true) ? 'rtl' : 'ltr';
+    $isToolsHubPage = request()->routeIs('localized.home', 'localized.tools', 'localized.services', 'localized.contact');
+    $skipJqueryUi = $isToolsHubPage || request()->routeIs('localized.about-tfc');
 @endphp
 <html lang="{{ $locale }}" dir="{{ $pageDir }}">
 
@@ -11,6 +13,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @yield('meta')
+
+    @foreach (localizedHreflangUrls() as $hreflang => $url)
+        <link rel="alternate" hreflang="{{ $hreflang }}" href="{{ $url }}" />
+    @endforeach
 
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/theme.css') }}">
@@ -28,114 +34,22 @@
 
     <!-- responsive css -->
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-header.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-login-register.css')}}">
+    @unless($skipJqueryUi)
+        <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-login-register.css')}}">
+    @endunless
 
+    @unless($skipJqueryUi)
     <!-- jquery ui -->
     <link rel="stylesheet" href="{{ asset('lib/jquery-ui.css')}}">
     <script src="{{ asset('lib/jquery-3.6.0.js')}}"></script>
     <script src="{{ asset('lib/jquery-ui.js')}}"></script>
+    @endunless
 
     @yield('head')
 
     <link rel="stylesheet" href="{{ asset('styles/scrollbars.css') }}">
 
-    <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://thefazli.com/{{$locale}}"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Services",
-      "item": "https://thefazli.com/{{$locale}}/services"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Contact",
-      "item": "https://thefazli.com/{{$locale}}/contact"
-    },
-    {
-      "@type": "ListItem",
-      "position": 4,
-      "name": "Blogs",
-      "item": "https://thefazli.com/{{$locale}}/Blogs"
-    },
-    {
-      "@type": "ListItem",
-      "position": 5,
-      "name": "{{ isset($blog) ? '/' . $blog->title : '' }}",
-      "item": "https://thefazli.com/{{$locale}}{{ isset($blog) ? '/' . $blog->slug : '' }}"
-    }
-  ]
-}
-</script>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "{{ __('lang.faq_what_services') }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ __('lang.faq_what_services_ans') }}"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "{{ __('lang.faq_why_seo_important') }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ __('lang.faq_why_seo_important_ans') }}"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "{{ __('lang.faq_responsive_websites') }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ __('lang.faq_responsive_websites_ans') }}"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "{{ __('lang.faq_website_time') }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ __('lang.faq_website_time_ans') }}"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "{{ __('lang.faq_manage_content') }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ __('lang.faq_manage_content_ans') }}"
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "{{ __('lang.faq_maintenance') }}",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "{{ __('lang.faq_maintenance_ans') }}"
-      }
-    }
-  ]
-}
-</script>
-
+    @yield('structured_data')
 
 </head>
 
@@ -180,23 +94,25 @@
                 <h2 id="auth-required-title" class="auth-required-toast__title">{{ __('lang.AUTH_REQUIRED_TITLE') }}</h2>
                 <p class="auth-required-toast__text">{{ __('lang.AUTH_REQUIRED_FOR_FEATURE') }}</p>
                 <div class="auth-required-toast__actions">
-                    <a href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}" class="auth-required-toast__login" data-auth-login>{{ __('lang.Login') }}</a>
+                    <a href="{{ loginUrlWithNext() }}" class="auth-required-toast__login" data-auth-login>{{ __('lang.Login') }}</a>
                     <button type="button" class="auth-required-toast__dismiss" data-auth-dismiss>{{ __('lang.Close') }}</button>
                 </div>
             </div>
         </div>
         <script>
             window.TFC_AUTH_HINT = {
-                loginUrl: @json(route('localized.login', ['lang' => app()->getLocale()]))
+                loginUrl: @json(loginUrlWithNext())
             };
         </script>
         <script src="{{ asset('js/auth-hint.js') }}"></script>
     @endguest
 
     <script src="{{ asset('js/theme.js') }}"></script>
-    <script src="{{ asset('js/like.js') }}"></script>
-    <script src="{{ asset('js/comment.js') }}"></script>
-    <script src="{{ asset('js/share-blog.js') }}"></script>
-    <script src="{{ asset('js/confetti.js') }}"></script>
+    @unless($isToolsHubPage)
+        <script src="{{ asset('js/like.js') }}"></script>
+        <script src="{{ asset('js/comment.js') }}"></script>
+        <script src="{{ asset('js/share-blog.js') }}"></script>
+        <script src="{{ asset('js/confetti.js') }}"></script>
+    @endunless
 </body>
 </html>

@@ -1,0 +1,16 @@
+body.page-contact .about-btn {
+    display: none;
+}
+
+body.page-contact .footer {
+    position: unset !important;
+}
+
+body.page-contact .blog-image-container {
+    width: 30% !important;
+}
+
+body.page-contact .page-header .container {
+    justify-content: space-around;
+    align-items: center;
+}

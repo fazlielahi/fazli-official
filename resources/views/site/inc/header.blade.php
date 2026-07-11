@@ -138,9 +138,16 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="min-width: 200px;">
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.profile', ['lang' => app()->getLocale()]) }}">
-                                @include('cv.partials.svg-icon', ['name' => 'user-circle', 'class' => 'header-svg-icon me-2']){{ __('lang.My Dashboard') }}
+                                @include('cv.partials.svg-icon', ['name' => 'user-circle', 'class' => 'header-svg-icon me-2']){{ __('lang.My Profile') }}
                             </a>
                         </li>
+                        @if($user->type === 'super_admin')
+                            <li>
+                                <a class="dropdown-item" href="{{ route('localized.admin.dashboard', ['lang' => app()->getLocale()]) }}">
+                                    @include('cv.partials.svg-icon', ['name' => 'layers', 'class' => 'header-svg-icon me-2']){{ __('lang.Control Panel') }}
+                                </a>
+                            </li>
+                        @endif
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.resume.projects', ['lang' => app()->getLocale()]) }}">
                                 @include('cv.partials.svg-icon', ['name' => 'document', 'class' => 'header-svg-icon me-2']){{ __('lang.My Resumes') }}
@@ -154,11 +161,6 @@
                         <li>
                             <a class="dropdown-item" href="{{ route('localized.tools', ['lang' => app()->getLocale()]) }}">
                                 @include('cv.partials.svg-icon', ['name' => 'grid', 'class' => 'header-svg-icon me-2']){{ __('lang.All Tools') }}
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('localized.profile', ['lang' => app()->getLocale(), 'edit' => 'profile']) }}">
-                                @include('cv.partials.svg-icon', ['name' => 'pencil-square', 'class' => 'header-svg-icon me-2']){{ __('lang.Edit Profile') }}
                             </a>
                         </li>
                         <li>
@@ -185,12 +187,12 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
                         <li>
-                            <a class="dropdown-item" href="{{ route('localized.login', ['lang' => app()->getLocale()]) }}">
+                            <a class="dropdown-item" href="{{ loginUrlWithNext() }}">
                                 @include('cv.partials.svg-icon', ['name' => 'arrow-right', 'class' => 'header-svg-icon me-2']){{ __('lang.Login') }}
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('localized.register', ['lang' => app()->getLocale()]) }}">
+                            <a class="dropdown-item" href="{{ registerUrlWithNext() }}">
                                 @include('cv.partials.svg-icon', ['name' => 'user-plus', 'class' => 'header-svg-icon me-2']){{ __('lang.Sign Up') }}
                             </a>
                         </li>

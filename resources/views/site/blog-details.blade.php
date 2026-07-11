@@ -64,6 +64,35 @@
     
 @endsection
 
+@section('structured_data')
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Home',
+                'item' => 'https://thefazli.com/' . $locale,
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => 'Blogs',
+                'item' => 'https://thefazli.com/' . $locale . '/blogs',
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 3,
+                'name' => $blog->title,
+                'item' => 'https://thefazli.com/' . $locale . '/blog/' . $blog->slug,
+            ],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+@endsection
+
 @section('head')
     <!-- Preload critical CSS -->
     <link rel="preload" href="{{ asset('assets/css/style.css') }}" as="style" />

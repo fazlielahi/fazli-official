@@ -22,14 +22,18 @@ class RedirectIfAuthenticated
         // If user is authenticated, redirect them away from login/register pages
         if (Auth::check()) {
             $user = Auth::user();
-            $locale = app()->getLocale() ?: 'en'; // Fallback to 'en' if locale is not set
-            
-            // Redirect based on user type (same logic as login)
+            $locale = app()->getLocale() ?: 'en';
+
+            $next = sanitizeAuthNextUrl($request->query('next'));
+            if ($next) {
+                return redirect()->to($next);
+            }
+
             if ($user->type === 'admin') {
                 return redirect()->route('localized.profile', ['lang' => $locale]);
-            } else {
-                return redirect()->route('localized.admin.dashboard', ['lang' => $locale]);
             }
+
+            return redirect()->route('localized.admin.dashboard', ['lang' => $locale]);
         }
 
         // User is not authenticated, allow them to access login/register pages
