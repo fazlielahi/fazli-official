@@ -186,7 +186,7 @@ return [
     'of experience' => 'of experience',
     'About Us' => 'About Us',
     'IM' => 'I\'M: ',
-    'Helping You Grow' => 'Helping You Grow <span style="color:#fff">Digitally.</span>',
+    'Helping You Grow' => 'Helping You Grow <span class="about-accent-text">Digitally.</span>',
     'Our Mission' => 'Our Mission',
     'Our mission is to provide helpful tools, valuable resources, and reliable tech services that empower individuals and businesses to learn, grow, and succeed online' => 'Our mission is to provide helpful tools, valuable resources, and reliable tech services that empower individuals and businesses to learn, grow, and succeed online.',
     'Our Vision' => 'Our Vision',
@@ -221,7 +221,7 @@ return [
     // Why Choose Us section keys
     'Why Choose Us' => 'Why Choose Us',
     'Why Clients Choose Us:' => 'Why Clients Choose Us?',
-    'And Stay With Us.' => 'And Stay <span style="color: white !important">With Us.</span>',
+    'And Stay With Us.' => 'And Stay <span class="about-accent-text">With Us.</span>',
     'Because we care about your success. With the right mix of skills, dedication, and creativity, we turn your ideas into results — efficiently and professionally.' => 'Because we care about your success. With the right mix of skills, dedication, and creativity, we turn your ideas into results — efficiently and professionally.',
     'On-Time Delivery' => 'On-Time Delivery',
     'We respect deadlines and always aim to deliver before them.' => 'We respect deadlines and always aim to deliver before them.',
@@ -238,10 +238,10 @@ return [
     'We build smart, efficient, and future-ready solutions — no shortcuts.' => 'We build smart, efficient, and future-ready solutions — no shortcuts.',
     'we have Professional Engineers' => "Professional Engineers",
     'Why Clients Choose Us:' => 'Why Clients Choose Us?',
-    'And Stay With Us.' => 'And Stay <span style="color: white !important">With Us.</span>',
+    'And Stay With Us.' => 'And Stay <span class="about-accent-text">With Us.</span>',
     'Testimonial' => 'Testimonial',
     'Explore Genuine Feedback' => 'Explore Genuine Feedback',
-    'from Happy Clients' => 'from <span style="color:white !important">Happy Clients</span>',
+    'from Happy Clients' => 'from <span class="about-accent-text">Happy Clients</span>',
 
     // Testimonials 1 majid khan
     'testimonial_majid_name' => 'Mian Majid Khan',
@@ -251,8 +251,7 @@ return [
     // Testimonials 2 waleed zafar
     'testimonial_waleed_name' => 'Waleed Zafar',
     'testimonial_waleed_title' => 'Facade Quality Control inspector',
-    'testimonial_waleed_text' => 'Fazli Elahi is hardworking, reliable, and always focused on growth.
-    Even though we\'re in different fields, I\'ve seen his dedication and commitment firsthand. I\'m confident he\'ll be a great asset wherever he works.',
+    'testimonial_waleed_text' => 'Fazli Elahi is hardworking, reliable, and always focused on growth. Even though we\'re in different fields, I\'ve seen his dedication and commitment firsthand. I\'m confident he\'ll be a great asset wherever he works.',
 
        // Testimonials 2 Samad Khan
     'testimonial_samad_name' => 'Samad Khan',
@@ -262,7 +261,7 @@ return [
     'testimonial_hamza_title' => 'Autocad Draftsman at Samaa Engineering Consultation Co.',
     'testimonial_hamza_text' => 'Fazli has a great ability to break down technical concepts for non-developers like me. As a draftsman, I appreciated how clearly they communicated and how quickly they delivered results. Smart, adaptable, and very easy to work with.',
     'From Concepts to Live Projects' => 'From Concepts to Live Projects',
-    'See What I\'ve Built.' => 'See <span style="color: #fff"> What I\'ve Built. </span>',
+    'See What I\'ve Built.' => 'See <span class="about-accent-text">What I\'ve Built.</span>',
     'Completed!' => 'Completed!',
     'Ongoing!' => 'Ongoing!',
     'Read More' => 'Read More',
@@ -398,6 +397,7 @@ return [
     'Close' => 'Close',
     'Why Us?' => 'Why Us?',
     'Knowledge That Powers Growth -' => 'Knowledge That Powers Growth -',
+    'Our' => 'Our',
     'My' => 'My',
     'Blog Corner' => 'Blog Corner',
     'Like' => 'Like',

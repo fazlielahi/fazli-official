@@ -4,6 +4,10 @@
     box-shadow: 0px 0px 3px 0px #000000;
 }
 
+body > .navbar.fixed-top {
+    width: 100%;
+}
+
 .dropdown-menu {
     background-color: #000000 !important;
 }

@@ -5,7 +5,7 @@
         || request()->routeIs('localized.resume.gallery');
 @endphp
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
     <div class="container-fluid">
     <a href="{{ route('localized.home', ['lang' => app()->getLocale()]) }}" class="{{ request()->routeIs('localized.home') ? 'active' : '' }}">
             <img src="{{ asset('images/dark-tfc-header-logo.png') }}" alt="thefazli.com" class="main-logo logo-dark" alt="TFC - The Fazli Community Dark logo"/>

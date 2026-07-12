@@ -627,15 +627,18 @@ body.page-blogs .comment-modal {
 
 body.page-blogs .comment-modal__dialog {
     margin: 0 auto;
-    height: 100vh;
+    height: auto;
+    max-width: 420px;
+    width: calc(100% - 32px);
 }
 
 body.page-blogs .comment-modal__content {
-    height: 100vh;
+    height: auto;
+    max-height: min(82vh, 560px);
     display: flex;
     flex-direction: column;
     border: none;
-    border-radius: 0;
+    border-radius: 14px;
     background: #121820 !important;
     color: #e2e8f0;
     overflow: hidden;
@@ -1199,9 +1202,10 @@ body.page-blogs:not([data-theme]) .comment-modal__close {
     }
 
     body.page-blogs .comment-modal__content {
-        display: block !important;
+        display: flex !important;
         height: auto;
-        min-height: 100vh;
+        min-height: 0;
+        max-height: 92vh;
     }
 
     body.page-blogs .comment-modal__layout {

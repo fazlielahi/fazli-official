@@ -3,6 +3,11 @@ body,
     font-family: "Noto Kufi Arabic" !important;
 }
 
+html[lang="ur"] body,
+html[lang="ur"] .section-title__title span {
+    font-family: "Noto Nastaliq Urdu", "Noto Sans Arabic", sans-serif !important;
+}
+
 .main-header, .navbar,
 .share-modal,
 .modal-header,

@@ -18,6 +18,7 @@ class AboutController extends Controller
             ->where('status', 'published')
             ->with([
                 'creater',
+                'category',
                 'comments' => fn ($commentQuery) => $commentQuery->latest(),
             ])
             ->withCount(['likes', 'comments'])
@@ -32,6 +33,7 @@ class AboutController extends Controller
 
         $services = app(ServiceController::class)->serviceItems($locale);
         $portfolioItems = $this->portfolioItems();
+        $testimonialItems = $this->testimonialItems();
         
         // Preview a few CV templates; full gallery lives on /resume
         $dbTemplates = CvTemplate::where('is_active', true)->orderByDesc('id')->take(3)->get();
@@ -64,7 +66,41 @@ class AboutController extends Controller
             ];
         }
         
-        return view('site.about-tfc', compact('locale', 'blogs', 'cvTemplates', 'likedBlogIds', 'services', 'portfolioItems'));
+        return view('site.about-tfc', compact('locale', 'blogs', 'cvTemplates', 'likedBlogIds', 'services', 'portfolioItems', 'testimonialItems'));
+    }
+
+    private function testimonialItems(): array
+    {
+        return [
+            [
+                'name_key' => 'testimonial_majid_name',
+                'title_key' => 'testimonial_majid_title',
+                'text_key' => 'testimonial_majid_text',
+                'image' => 'images/testimonial/majid-khan.jpg',
+                'linkedin' => 'https://www.linkedin.com/in/mian-majid-khan-7a8b9c5d/',
+            ],
+            [
+                'name_key' => 'testimonial_samad_name',
+                'title_key' => 'testimonial_samad_title',
+                'text_key' => 'testimonial_samad_text',
+                'image' => 'images/testimonial/samad-khan.jpg',
+                'linkedin' => 'https://www.linkedin.com/in/samad-khan-488a13232/',
+            ],
+            [
+                'name_key' => 'testimonial_waleed_name',
+                'title_key' => 'testimonial_waleed_title',
+                'text_key' => 'testimonial_waleed_text',
+                'image' => 'images/testimonial/waleed-zafar.jpg',
+                'linkedin' => 'https://www.linkedin.com/in/samad-khan-488a13232/',
+            ],
+            [
+                'name_key' => 'testimonial_hamza_name',
+                'title_key' => 'testimonial_hamza_title',
+                'text_key' => 'testimonial_hamza_text',
+                'image' => 'images/default.svg',
+                'linkedin' => 'https://www.linkedin.com/in/ameer-hamza-74648a366/',
+            ],
+        ];
     }
 
     private function portfolioItems(): array

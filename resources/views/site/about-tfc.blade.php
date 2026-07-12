@@ -1,6 +1,6 @@
 @extends('site.layout')
 
-@section('body_class', 'page-about')
+@section('body_class', 'page-about page-blogs')
 @section('title', __('lang.About page meta title'))
 
 @section('meta')
@@ -98,7 +98,6 @@
 @section('head')
     <link rel="preload" href="{{ asset('assets/css/module-css/banner.css') }}" as="style" />
     <link rel="stylesheet" href="{{ asset('styles/header.css') }}" />
-    <link rel="stylesheet" href="{{ asset('styles/index.css') }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -108,7 +107,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/animate.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/custom-animate.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome-all.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/flaticon.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/odometer.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}" />
@@ -119,15 +117,16 @@
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/services.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/why-choose.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/blog.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/counter.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/testimonial.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/faq.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-blog.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/module-css/responsive-home.css') }}" />
     <link rel="stylesheet" href="{{ asset('cv/css/cv-templates.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" media="all" />
+    <link rel="stylesheet" href="{{ asset('styles/blogs.css') }}" />
+    <link rel="stylesheet" href="{{ asset('styles/blogs-comment-modal.css') }}" />
     <link rel="stylesheet" href="{{ asset('styles/about-page.css') }}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 @endsection
 
 
@@ -247,7 +246,7 @@
             <!--Banner One End -->
 
             <!-- About One Start -->
-            <section class="about-one" id="about-section">
+            <section class="about-one about-ltr-lock" id="about-section" dir="ltr">
                 <div class="about-one__shape-1">
                     <img src="{{ asset('assets/images/shapes/about-one-shape-1.png') }}" alt="" aria-hidden="true">
                 </div>
@@ -255,8 +254,8 @@
                     <img src="{{ asset('assets/images/shapes/about-one-shape-2.png') }}" alt="" aria-hidden="true">
                 </div>
                 <div class="container">
-                    <div class="row about-rtl">
-                        <div class="col-xl-6 wow {{ $slideAnim }}" data-wow-delay="100ms" data-wow-duration="2500ms">
+                    <div class="row about-one__row">
+                        <div class="col-xl-6 wow slideInLeft" data-wow-delay="100ms" data-wow-duration="2500ms">
                             <div class="about-one__left">
                                 <div class="about-one__left-shape-1 rotate-me"></div>
                                 <div class="row">
@@ -378,7 +377,7 @@
             @include('site.partials.about-cv-templates-section')
 
             <!-- Why Choose One Start -->
-            <section class="why-choose-one" id="why-choose-me">
+            <section class="why-choose-one about-ltr-lock" id="why-choose-me" dir="ltr">
                 <div class="why-choose-one__shape-6 float-bob-x">
                     <img src="{{ asset('assets/images/shapes/why-choose-one-shape-6.png') }}" alt="" role="presentation" aria-hidden="true">
                 </div>
@@ -388,7 +387,7 @@
                 <div class="container">
                     <div class="row why-choose-us">
                         <div class="col-xl-6">
-                            <div class="why-choose-one__left wow {{ $slideAnim }}" data-wow-delay="100ms" data-wow-duration="2500ms">
+                            <div class="why-choose-one__left wow slideInLeft" data-wow-delay="100ms" data-wow-duration="2500ms">
                                 <div class="why-choose-one__img-box">
                                     <div class="why-choose-one__img">
                                     <img src="{{ asset('assets/images/resources/tfc-team-why-choose-us.jpg') }}" alt="TFC team group photo at LEAP 2025 event with Autosoft company team">
@@ -516,203 +515,9 @@
             </section>
             <!-- Why Choose One End -->
 
-                <!-- Testimonial One Start-->
-                <section class="testimonial-one">
-            <div class="testimonial-one__shape-1 float-bob-x">
-                <img src="{{ asset('assets/images/shapes/testimonial-one-shape-1.png') }}" alt="" role="presentation" aria-hidden="true">
-            </div>
-            <div class="testimonial-one__shape-2">
-                <img src="{{ asset('assets/images/shapes/testimonial-one-shape-2.png') }}" alt="" role="presentation" aria-hidden="true">
-            </div>
-            <div class="container">
-                <div class="section-title text-start sec-title-animation animation-style2">
-                    <div class="section-title__tagline-box">
-                        <div class="section-title__tagline-shape"></div>
-                        <span class="section-title__tagline">{{ __('lang.Testimonial') }}</span>
-                    </div>
-                    <h2 class="section-title__title">{{ __('lang.Explore Genuine Feedback') }} <br>
-                        {!! __('lang.from Happy Clients') !!} 
-                    </h2>
-                </div>
-                <div class="testimonial-one__inner">
-                    <div class="testimonial-one__carousel owl-theme owl-carousel">
-                        <!--Testimonial One Single Start-->
-                        <div class="item">
-                            <div class="testimonial-one__single">
-                                <div class="testimonial-one__img-inner">
-                                    <div class="testimonial-one__img">
-                                    <img src="{{ asset('images/testimonial/majid-khan.jpg') }}" alt="Testimonial by Majid Khan, Architectural Designer" title="Majid Khan - Architectural Designer">
-                                        <div class="testimonial-one__icon">
-                                            <span class="icon-graduation-cap"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial-one__content">
-                                    <div class="testimonial-one__client-info">
-                                        <h3 class="testimonial-one__client-name">{{ __('lang.testimonial_majid_name') }}</h3>
-                                        <p class="testimonial-one__client-sub-title">{{ __('lang.testimonial_majid_title') }}</p>
-                                    </div>
-                                    <p class="testimonial-one__text">{{ __('lang.testimonial_majid_text') }}</p>
-                                    <div class="testimonial-one__ratting-and-social">
-                                        <ul class="testimonial-one__ratting list-unstyled">
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                        </ul>
-                                        <div class="testimonial-one__social">
-                                            <a href="https://www.linkedin.com/in/mian-majid-khan-7a8b9c5d/"><span class="fab fa-linkedin-in"></span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Testimonial One Single End-->
-                        <!--Testimonial One Single Start-->
-                        <div class="item">
-                            <div class="testimonial-one__single">
-                                <div class="testimonial-one__img-inner">
-                                    <div class="testimonial-one__img">
-                                    <img src="{{ asset('images/testimonial/samad-khan.jpg') }}" alt="Testimonial by Samad Khan, Environmental Health & Safety (EHS) Supervisor" title="Samad Khan - EHS Supervisor">
-                                        <div class="testimonial-one__icon">
-                                            <span class="icon-graduation-cap"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial-one__content">
-                                    <div class="testimonial-one__client-info">
-                                        <h3 class="testimonial-one__client-name">{{ __('lang.testimonial_samad_name') }}</h3>
-                                        <p class="testimonial-one__client-sub-title">{{ __('lang.testimonial_samad_title') }}</p>
-                                    </div>
-                                    <p class="testimonial-one__text">{{ __('lang.testimonial_samad_text') }}</p>
-                                    <div class="testimonial-one__ratting-and-social">
-                                        <ul class="testimonial-one__ratting list-unstyled">
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                        </ul>
-                                        <div class="testimonial-one__social">
-                                            <a href="https://www.linkedin.com/in/samad-khan-488a13232/"><span class="fab fa-linkedin-in"></span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Testimonial One Single End-->
-                        <!--Testimonial One Single Start-->
-                        <div class="item">
-                            <div class="testimonial-one__single">
-                                <div class="testimonial-one__img-inner">
-                                    <div class="testimonial-one__img">
-                                    <img src="{{ asset('images/testimonial/waleed-zafar.jpg') }}" alt="Testimonial by Waleed Zafar, Facade Quality Control Inspector" title="Waleed Zafar - Facade Quality Control Inspector">
-                                        <div class="testimonial-one__icon">
-                                            <span class="icon-graduation-cap"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial-one__content">
-                                    <div class="testimonial-one__client-info">
-                                        <h3 class="testimonial-one__client-name">{{ __('lang.testimonial_waleed_name') }}</h3>
-                                        <p class="testimonial-one__client-sub-title">{{ __('lang.testimonial_waleed_title') }}</p>
-                                    </div>
-                                    <p class="testimonial-one__text">{{ __('lang.testimonial_waleed_text') }}</p>
-                                    <div class="testimonial-one__ratting-and-social">
-                                        <ul class="testimonial-one__ratting list-unstyled">
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                        </ul>
-                                        <div class="testimonial-one__social">
-                                            <a href="https://www.linkedin.com/in/samad-khan-488a13232/"><span class="fab fa-linkedin-in"></span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Testimonial One Single End-->
-                        <!--Testimonial One Single Start-->
-                        <div class="item">
-                            <div class="testimonial-one__single">
-                                <div class="testimonial-one__img-inner">
-                                    <div class="testimonial-one__img">
-                                    <img src="{{ asset('images/default.png') }}" alt="Default client image" title="Client image not available">
-                                        <div class="testimonial-one__icon">
-                                            <span class="icon-graduation-cap"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="testimonial-one__content">
-                                    <div class="testimonial-one__client-info">
-                                        <h3 class="testimonial-one__client-name">{{ __('lang.testimonial_hamza_name') }}</h3>
-                                        <p class="testimonial-one__client-sub-title">{{ __('lang.testimonial_hamza_title') }}</p>
-                                    </div>
-                                    <p class="testimonial-one__text">{{ __('lang.testimonial_hamza_text') }}</p>
-                                    <div class="testimonial-one__ratting-and-social">
-                                        <ul class="testimonial-one__ratting list-unstyled">
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                            <li>
-                                                <span class="icon-star"></span>
-                                            </li>
-                                        </ul>
-                                        <div class="testimonial-one__social">
-                                            <a href="https://www.linkedin.com/in/ameer-hamza-74648a366/"><span class="fab fa-linkedin-in"></span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Testimonial One Single End-->
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Testimonial One End -->
+            @include('site.partials.about-testimonial-section', [
+                'testimonialDefaultImage' => asset('images/default.svg'),
+            ])
 
         @include('site.partials.about-portfolio')
  

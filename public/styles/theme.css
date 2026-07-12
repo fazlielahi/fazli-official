@@ -279,6 +279,18 @@ body[data-theme="light"] .sidebar__newsletter {
   opacity: 0;
 }
 
+:root {
+  --site-header-height: 64px;
+}
+
+body > .navbar.fixed-top {
+  z-index: 1030;
+}
+
+body:not(.page-user-profile) {
+  padding-top: var(--site-header-height);
+}
+
 .navbar-brand {
   padding-top: 0 !important;
 }

@@ -30,6 +30,7 @@ body.page-about[data-theme="dark"] {
     --about-muted: #9aa0a8;
     --about-line: #3a424d;
     --about-shadow: 0 16px 40px rgba(0, 0, 0, .38), 0 4px 12px rgba(0, 0, 0, .22);
+    --about-nav-icon: var(--about-text);
 }
 
 body.page-about .page-wrapper,
@@ -49,7 +50,8 @@ body.page-about .blog-two.one-page-two-blog {
 }
 
 body.page-about .blogs-one {
-    padding: var(--about-section-pad-y) 0 var(--about-section-pad-bottom-lg) !important;
+    padding: var(--about-section-pad-y) 0 72px !important;
+    background: var(--about-bg) !important;
 }
 
 body.page-about .blog-one {
@@ -122,12 +124,88 @@ body.page-about .why-choose-one__btn-and-client-box {
     margin-top: 24px !important;
 }
 
-body.page-about .blogs-one__single {
-    padding: 14px 14px 16px !important;
+body.page-about .blogs-one__single,
+body.page-about .service-card-home {
+    max-width: 260px !important;
+    margin: 0 auto !important;
+    padding: 12px 12px 14px !important;
+    border-radius: 12px !important;
+}
+
+body.page-about .blogs-one__img-box,
+body.page-about .blogs-one__img {
+    height: 140px !important;
+}
+
+body.page-about .blogs-one__img {
+    border-radius: 10px !important;
+}
+
+body.page-about .blogs-one__img img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+}
+
+body.page-about .blogs-one__title {
+    margin-top: 8px !important;
+    margin-bottom: 0 !important;
+}
+
+body.page-about .blogs-one__title a {
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+}
+
+body.page-about .blogs-one__ratting-and-heart-box {
+    padding-bottom: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+body.page-about .blogs-one__ratting li span {
+    font-size: 12px !important;
+}
+
+body.page-about .blogs-one__ratting-text {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+}
+
+body.page-about .blogs-one__heart-btn {
+    width: 26px !important;
+    height: 26px !important;
+}
+
+body.page-about .blogs-one__btn.thm-btn {
+    min-height: 34px !important;
+    padding: 7px 12px !important;
+    font-size: 12px !important;
+    border-radius: 18px !important;
 }
 
 body.page-about .blogs-one__carousel {
     margin-top: 8px !important;
+}
+
+/* RTL / Urdu — keep carousel cards visible */
+body.page-about .blogs-one,
+body.page-about .blog-one,
+body.page-about .about-testimonial.testimonial-one {
+    overflow: visible !important;
+}
+
+body.page-about .blogs-one__carousel.owl-carousel .owl-item,
+body.page-about .blog-one__carousel.owl-carousel .owl-item,
+body.page-about .testimonial-one__carousel.owl-carousel .owl-item {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+html[dir="rtl"] body.page-about .about-testimonial-card,
+html[dir="rtl"] body.page-about .testimonial-one__single.about-testimonial-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
 }
 
 body.page-about .cv-templates-section__subtitle {
@@ -154,12 +232,12 @@ body.page-about .cv-templates-section__cta {
     margin-top: 32px !important;
 }
 
-body.page-about .blog-two__single {
-    margin-bottom: 16px !important;
+body.page-about .about-blogs-preview__grid.blogs-results {
+    margin-top: 8px;
 }
 
-body.page-about .blog-two__title {
-    margin-bottom: 14px !important;
+body.page-about .about-blogs-preview__cta {
+    margin: 32px 0 8px;
 }
 
 body.page-about .faq-section h2 {
@@ -268,7 +346,9 @@ body.page-about .about-brand-prefix {
 }
 
 body.page-about .solution,
-body.page-about .about-accent-text {
+body.page-about .about-accent-text,
+body.page-about .section-title__title .about-accent-text,
+body.page-about .section-title-two__title .about-accent-text {
     color: var(--about-accent) !important;
 }
 
@@ -300,18 +380,71 @@ body.page-about .why-choose-one__client-box {
     box-shadow: var(--about-shadow);
 }
 
-body.page-about .blog-one__meta li a,
-body.page-about .blog-two__meta li a {
+body.page-about .blog-one__meta li a {
     color: var(--about-primary) !important;
 }
 
-body.page-about .blog-one__meta li a:hover,
-body.page-about .blog-two__meta li a:hover {
+body.page-about .blog-one__meta li a:hover {
     color: var(--about-accent) !important;
 }
 
 body.page-about .about-brand-name {
     margin-inline: 8px;
+}
+
+/* About + Why Choose Us stay LTR on ar/ur pages */
+body.page-about .about-ltr-lock {
+    direction: ltr;
+    text-align: left;
+}
+
+body.page-about .about-one__row {
+    width: 90%;
+    margin: 0 auto;
+}
+
+html[dir="rtl"] body.page-about .about-ltr-lock,
+html[dir="rtl"] body.page-about .about-ltr-lock .about-one__row,
+html[dir="rtl"] body.page-about .about-ltr-lock .why-choose-us {
+    direction: ltr;
+    text-align: left;
+}
+
+html[dir="rtl"] body.page-about .about-ltr-lock .im,
+html[dir="rtl"] body.page-about .about-ltr-lock .about-one__icon-and-title,
+html[dir="rtl"] body.page-about .about-ltr-lock .about-one__experience-box-inner,
+html[dir="rtl"] body.page-about .about-ltr-lock .about-one__awards-count-box,
+html[dir="rtl"] body.page-about .about-ltr-lock .about-one__btn-and-live-class,
+html[dir="rtl"] body.page-about .about-ltr-lock .why-choose-one__points-list li,
+html[dir="rtl"] body.page-about .about-ltr-lock .why-choose-one__points-icon-inner,
+html[dir="rtl"] body.page-about .about-ltr-lock .why-choose-one__btn-and-client-box,
+html[dir="rtl"] body.page-about .about-ltr-lock .why-choose-one__client-box {
+    flex-direction: row;
+    text-align: left;
+}
+
+html[dir="rtl"] body.page-about .about-ltr-lock ul.list-unstyled {
+    display: block;
+    flex-direction: unset;
+    text-align: left;
+}
+
+html[dir="rtl"] body.page-about .about-ltr-lock .about-one__icon-and-title {
+    justify-content: flex-start;
+}
+
+html[dir="rtl"] body.page-about .about-ltr-lock .section-title,
+html[dir="rtl"] body.page-about .about-ltr-lock .section-title.text-start,
+html[dir="rtl"] body.page-about .about-ltr-lock .about-one__right .section-title,
+html[dir="rtl"] body.page-about .about-ltr-lock .why-choose-one__right .section-title {
+    text-align: left !important;
+    margin-right: auto !important;
+    margin-left: 0 !important;
+}
+
+html[dir="rtl"] body.page-about .about-ltr-lock .section-title__title span img {
+    left: auto;
+    right: 6px;
 }
 
 /* Section surfaces */
@@ -336,7 +469,8 @@ body.page-about .why-choose-one__count-box h3 {
 }
 
 body.page-about .about-one__awards-count-box span,
-body.page-about .about-one__experience-count span {
+body.page-about .about-one__experience-count span,
+body.page-about .why-choose-one__count-box span {
     color: var(--about-primary) !important;
 }
 
@@ -347,22 +481,16 @@ body.page-about .about-one__awards-box p {
 body.page-about .about-one__icon-and-title h3,
 body.page-about .blogs-one__title a,
 body.page-about .blog-one__title a,
-body.page-about .blog-two__title a,
 body.page-about .testimonial-one__client-name {
     color: var(--about-text) !important;
 }
 
 body.page-about .blogs-one__title a:hover,
-body.page-about .blog-one__title a:hover,
-body.page-about .blog-two__title a:hover {
+body.page-about .blog-one__title a:hover {
     color: var(--about-accent) !important;
 }
 
 /* Service cards */
-body.page-about .blogs-one {
-    background: var(--about-bg) !important;
-}
-
 body.page-about .blogs-one__single,
 body.page-about .service-card-home {
     background: var(--about-surface) !important;
@@ -463,30 +591,13 @@ body.page-about .cv-templates-section__btn:focus span {
     color: #fff !important;
 }
 
-/* CV preview block */
+/* CV preview block — same surface as other about sections */
 body.page-about .cv-templates-section {
-    background: linear-gradient(135deg, var(--about-primary-dark) 0%, var(--about-primary) 100%) !important;
-    position: relative;
-    overflow: hidden;
-}
-
-body.page-about .cv-templates-section::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(ellipse 80% 60% at 100% 0%, rgba(244, 163, 44, 0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 50% at 0% 100%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
-    pointer-events: none;
-}
-
-body.page-about .cv-templates-section > .container {
-    position: relative;
-    z-index: 1;
+    background: var(--about-bg) !important;
 }
 
 body.page-about .cv-templates-section__subtitle {
-    color: rgba(255, 255, 255, .88) !important;
+    color: var(--about-muted) !important;
 }
 
 body.page-about .cv-templates-section .section-title__tagline {
@@ -495,109 +606,278 @@ body.page-about .cv-templates-section .section-title__tagline {
 
 body.page-about .cv-templates-section .section-title__title,
 body.page-about .cv-templates-section .section-title__title span {
-    color: #fff !important;
+    color: var(--about-text) !important;
+}
+
+body.page-about .cv-templates-section .section-title__title .solution,
+body.page-about .cv-templates-section .section-title__title span.solution {
+    color: var(--about-accent) !important;
 }
 
 body.page-about .about-cv-showcase {
-    background: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
-    padding: clamp(24px, 4vw, 40px);
+    background: var(--about-surface);
+    border: 1px solid var(--about-line);
+    border-radius: 16px;
+    box-shadow: var(--about-shadow);
+    padding: clamp(20px, 3vw, 32px);
 }
 
 body.page-about .about-cv-showcase .template-info__title {
-    color: #0f172a !important;
-}
-
-body.page-about .about-cv-showcase .btn-preview {
-    background: #fff;
+    color: var(--about-text) !important;
 }
 
 body.page-about .cv-templates-section__empty {
     margin-top: 36px;
-    color: rgba(255, 255, 255, 0.88);
+    color: var(--about-muted);
 }
 
-body.page-about[data-theme="dark"] .about-cv-showcase {
-    background: var(--about-surface);
-    border-color: var(--about-line);
-    box-shadow: var(--about-shadow);
+/* Portfolio carousel — uniform card sizes */
+body.page-about .blog-one__carousel.owl-carousel .owl-stage {
+    display: flex !important;
+    align-items: stretch !important;
 }
 
-body.page-about[data-theme="dark"] .about-cv-showcase .template-info__title {
-    color: var(--about-text) !important;
+body.page-about .blog-one__carousel.owl-carousel .owl-item {
+    display: flex !important;
+    height: auto !important;
 }
 
-body.page-about[data-theme="dark"] .about-cv-showcase .btn-preview {
-    background: transparent;
-    color: var(--about-primary);
-    border-color: var(--about-line);
+body.page-about .blog-one__carousel .item {
+    display: flex;
+    width: 100%;
+    height: 100%;
 }
 
-body.page-about[data-theme="dark"] .about-cv-showcase .btn-preview:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--about-accent);
+body.page-about .blog-one__single {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 16px !important;
+    border-radius: var(--about-radius) !important;
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow) !important;
+}
+
+body.page-about .blog-one__img {
+    flex-shrink: 0;
+    height: 180px;
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+body.page-about .blog-one__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px !important;
+}
+
+body.page-about .blog-one__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-top: 12px !important;
+    min-height: 0;
+}
+
+body.page-about .blog-one__meta {
+    flex-shrink: 0;
+    margin-bottom: 10px !important;
+    padding-bottom: 8px !important;
+}
+
+body.page-about .blog-one__title {
+    flex-shrink: 0;
+    font-size: 17px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 0 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1.35em * 2);
+}
+
+body.page-about .blog-one__text {
+    flex: 1;
+    margin-top: 10px !important;
+    margin-bottom: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.45 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1.45em * 4);
+}
+
+/* Testimonial section — modern quote cards */
+body.page-about .about-testimonial .testimonial-one__inner {
+    margin: 0 auto !important;
+    max-width: 760px;
+}
+
+body.page-about .about-testimonial .section-title {
+    text-align: center !important;
+    margin-bottom: var(--about-title-gap) !important;
+}
+
+body.page-about .about-testimonial-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    padding: 28px 28px 22px !important;
+    border-radius: var(--about-radius) !important;
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+body.page-about .about-testimonial-card::before {
+    content: "\201C";
+    position: absolute;
+    top: 8px;
+    inset-inline-start: 18px;
+    font-size: 4.5rem;
+    line-height: 1;
     color: var(--about-accent);
+    opacity: 0.22;
+    font-family: Georgia, "Times New Roman", serif;
+    pointer-events: none;
 }
 
-/* Portfolio + testimonial cards */
-body.page-about .blog-one__single,
-body.page-about .testimonial-one__single {
-    background: var(--about-surface) !important;
-    border: 1px solid var(--about-line) !important;
-    box-shadow: var(--about-shadow) !important;
+body.page-about .about-testimonial-card__quote {
+    margin: 0 0 20px;
+    padding: 0;
+    border: none;
 }
 
-body.page-about .testimonial-one__icon {
-    background: var(--about-accent) !important;
-}
-
-body.page-about .testimonial-one__ratting li span {
-    color: var(--about-accent) !important;
-}
-
-/* Blog preview cards */
-body.page-about .blog-two__single {
-    background: var(--about-surface) !important;
-    border: 1px solid var(--about-line) !important;
-    box-shadow: var(--about-shadow) !important;
-}
-
-body.page-about .blog-two .row {
-    justify-content: center;
-}
-
-body.page-about .blog-two__title {
-    margin-bottom: 20px !important;
-}
-
-body.page-about .blog-two__content {
-    padding-bottom: 1px !important;
-}
-
-body.page-about .post-interactions .like,
-body.page-about .post-interactions .comment,
-body.page-about .post-interactions .share,
-body.page-about .post-interactions i,
-body.page-about .comment-a {
-    color: var(--about-primary) !important;
-}
-
-body.page-about .heart-icon.fa-solid {
-    color: var(--about-accent) !important;
-}
-
-body.page-about .btn-outline-secondary {
-    border-color: var(--about-line) !important;
+body.page-about .about-testimonial .testimonial-one__text {
+    font-size: 1.05rem !important;
+    line-height: 1.7 !important;
+    font-style: normal !important;
+    font-family: inherit !important;
+    margin: 0 !important;
+    padding-top: 6px;
     color: var(--about-text) !important;
-    background: var(--about-surface) !important;
 }
 
-body.page-about .btn-outline-secondary:hover {
-    border-color: var(--about-accent) !important;
+body.page-about .about-testimonial-card__author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 18px;
+    border-top: 1px solid var(--about-line);
+}
+
+body.page-about .about-testimonial-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--about-accent);
+    flex-shrink: 0;
+    background: var(--about-bg);
+}
+
+body.page-about .about-testimonial-card__meta {
+    min-width: 0;
+}
+
+body.page-about .about-testimonial .testimonial-one__client-name {
+    font-size: 1.05rem !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+    color: var(--about-text) !important;
+}
+
+body.page-about .about-testimonial .testimonial-one__client-sub-title {
+    font-size: 0.78rem !important;
+    line-height: 1.4 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 4px 0 0 !important;
+    color: var(--about-muted) !important;
+}
+
+body.page-about .about-testimonial .testimonial-one__ratting-and-social {
+    margin-top: 18px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+body.page-about .about-testimonial .testimonial-one__ratting {
+    background: rgba(244, 163, 44, 0.1) !important;
+    border-color: rgba(244, 163, 44, 0.22) !important;
+    padding: 8px 14px !important;
+    border-radius: 999px !important;
+}
+
+body.page-about .about-testimonial .testimonial-one__ratting li span {
+    color: var(--about-accent) !important;
+    font-size: 13px !important;
+}
+
+body.page-about .about-testimonial .testimonial-one__social a {
+    width: 38px;
+    height: 38px;
     color: var(--about-primary) !important;
-    background: rgba(244, 163, 44, .12) !important;
+    background: var(--about-bg) !important;
+    border-color: var(--about-line) !important;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+body.page-about .about-testimonial .testimonial-one__social a:hover {
+    color: #fff !important;
+    background: var(--about-primary) !important;
+    border-color: var(--about-primary) !important;
+}
+
+body.page-about .about-testimonial .testimonial-one__carousel .owl-nav {
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center;
+    align-items: center;
+    gap: 12px !important;
+    margin-top: 24px;
+    transform: none !important;
+}
+
+body.page-about .about-testimonial .testimonial-one__carousel .owl-nav button {
+    position: static !important;
+    width: 42px;
+    height: 42px;
+    border-radius: 50% !important;
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow);
+    color: var(--about-nav-icon, var(--about-primary)) !important;
+    margin: 0 !important;
+}
+
+body.page-about .about-testimonial .testimonial-one__carousel .owl-nav button:hover {
+    background: var(--about-primary) !important;
+    color: #fff !important;
+    border-color: var(--about-primary) !important;
+}
+
+body.page-about .about-testimonial .owl-theme .owl-dots {
+    margin-top: 16px;
+}
+
+html[dir="rtl"] body.page-about .about-testimonial-card__author {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-about .about-testimonial .testimonial-one__ratting-and-social {
+    flex-direction: row-reverse;
 }
 
 /* FAQ */
@@ -651,7 +931,7 @@ body.page-about .owl-theme .owl-dots .owl-dot:hover span {
 }
 
 body.page-about .owl-carousel .owl-nav button {
-    color: var(--about-primary) !important;
+    color: var(--about-nav-icon, var(--about-primary)) !important;
 }
 
 /* Misc */
@@ -679,6 +959,10 @@ body.page-about .fa-close-btn:focus {
 }
 
 /* Light theme — override global theme.css green palette on about page */
+body.page-about[data-theme="light"] {
+    --about-nav-icon: var(--about-primary);
+}
+
 body.page-about[data-theme="light"] .banner-one__title-clr-1,
 body.page-about[data-theme="light"] .banner-one__title-clr-2 {
     color: var(--about-primary) !important;
@@ -687,7 +971,8 @@ body.page-about[data-theme="light"] .banner-one__title-clr-2 {
 body.page-about[data-theme="light"] .blogs-one__btn,
 body.page-about[data-theme="light"] .thm-btn,
 body.page-about[data-theme="light"] .about-one__btn,
-body.page-about[data-theme="light"] .why-choose-one__btn {
+body.page-about[data-theme="light"] .why-choose-one__btn,
+body.page-about[data-theme="light"] .cv-templates-section__btn {
     background: linear-gradient(180deg, var(--about-primary) 0%, var(--about-primary-dark) 100%) !important;
     color: #fff !important;
 }
@@ -703,14 +988,31 @@ body.page-about[data-theme="light"] .about-one__btn:active,
 body.page-about[data-theme="light"] .about-one__btn:focus,
 body.page-about[data-theme="light"] .why-choose-one__btn:hover,
 body.page-about[data-theme="light"] .why-choose-one__btn:active,
-body.page-about[data-theme="light"] .why-choose-one__btn:focus {
+body.page-about[data-theme="light"] .why-choose-one__btn:focus,
+body.page-about[data-theme="light"] .cv-templates-section__btn:hover,
+body.page-about[data-theme="light"] .cv-templates-section__btn:active,
+body.page-about[data-theme="light"] .cv-templates-section__btn:focus {
     background: var(--about-accent) !important;
+    color: #fff !important;
+}
+
+body.page-about[data-theme="light"] .thm-btn [class^="icon-"]:before,
+body.page-about[data-theme="light"] .thm-btn [class*=" icon-"]:before,
+body.page-about[data-theme="light"] .blogs-one__btn [class^="icon-"]:before,
+body.page-about[data-theme="light"] .blogs-one__btn [class*=" icon-"]:before,
+body.page-about[data-theme="light"] .about-one__btn [class^="icon-"]:before,
+body.page-about[data-theme="light"] .about-one__btn [class*=" icon-"]:before,
+body.page-about[data-theme="light"] .why-choose-one__btn [class^="icon-"]:before,
+body.page-about[data-theme="light"] .why-choose-one__btn [class*=" icon-"]:before,
+body.page-about[data-theme="light"] .cv-templates-section__btn [class^="icon-"]:before,
+body.page-about[data-theme="light"] .cv-templates-section__btn [class*=" icon-"]:before {
     color: #fff !important;
 }
 
 body.page-about[data-theme="light"] .blogs-one__title a,
 body.page-about[data-theme="light"] .blog-one__title a,
-body.page-about[data-theme="light"] .blog-two__title a {
+body.page-about[data-theme="light"] .blog-two__title a,
+body.page-about[data-theme="light"] .blog-two__content h4 a {
     color: var(--about-text) !important;
 }
 
@@ -726,7 +1028,12 @@ body.page-about[data-theme="light"] .banner-one__tags a {
 body.page-about[data-theme="light"] .about-one,
 body.page-about[data-theme="light"] .why-choose-one,
 body.page-about[data-theme="light"] .testimonial-one,
-body.page-about[data-theme="light"] .blogs-one {
+body.page-about[data-theme="light"] .blogs-one,
+body.page-about[data-theme="light"] .blog-one,
+body.page-about[data-theme="light"] .blog-two.one-page-two-blog,
+body.page-about[data-theme="light"] .cv-templates-section,
+body.page-about[data-theme="light"] .faq-section,
+body.page-about[data-theme="light"] .about-testimonial {
     background: var(--about-bg) !important;
 }
 
@@ -737,21 +1044,86 @@ body.page-about[data-theme="light"] .why-choose-one__client-box {
     border: 1px solid var(--about-line);
 }
 
+body.page-about[data-theme="light"] .blogs-one__single,
+body.page-about[data-theme="light"] .service-card-home {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow) !important;
+}
+
 body.page-about[data-theme="light"] .blogs-one__img,
 body.page-about[data-theme="light"] .blog-one__img {
     background: var(--about-surface) !important;
     border-color: var(--about-line) !important;
 }
 
+body.page-about[data-theme="light"] .blogs-one__ratting li span,
+body.page-about[data-theme="light"] .blogs-one__heart-btn .icon-heart {
+    color: var(--about-accent) !important;
+}
+
+body.page-about[data-theme="light"] .blogs-one__ratting-text {
+    color: var(--about-muted) !important;
+}
+
+body.page-about[data-theme="light"] .blog-two__single {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow) !important;
+}
+
+body.page-about[data-theme="light"] .profile-container .username a,
+body.page-about[data-theme="light"] .username a {
+    color: var(--about-text) !important;
+}
+
+body.page-about[data-theme="light"] .profile-container .username a:hover {
+    color: var(--about-primary) !important;
+}
+
+body.page-about[data-theme="light"] .blog-time,
+body.page-about[data-theme="light"] .blog-card__read-time,
+body.page-about[data-theme="light"] .blog-card__excerpt {
+    color: var(--about-muted) !important;
+}
+
+body.page-about[data-theme="light"] .blog-two__meta-box.comment-sec {
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="light"] .blog-one__single {
+    background: var(--about-surface) !important;
+    border: 1px solid var(--about-line) !important;
+    box-shadow: var(--about-shadow) !important;
+}
+
+body.page-about[data-theme="light"] .blog-one__text {
+    color: var(--about-muted) !important;
+}
+
+body.page-about[data-theme="light"] .about-cv-showcase {
+    background: var(--about-surface) !important;
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="light"] .faq-section h2 {
+    color: var(--about-text) !important;
+}
+
 body.page-about[data-theme="light"] .faq-section .accordion-item,
 body.page-about[data-theme="light"] .faq-section .accordion-button {
     background: var(--about-surface) !important;
     color: var(--about-text) !important;
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="light"] .faq-section .accordion-body {
+    color: var(--about-muted) !important;
+    background: var(--about-surface) !important;
 }
 
 body.page-about[data-theme="light"] .why-choose-one__text,
 body.page-about[data-theme="light"] .why-choose-one__points-box,
-body.page-about[data-theme="light"] .why-choose-one__points-content h3,
 body.page-about[data-theme="light"] .why-choose-one__points-content p,
 body.page-about[data-theme="light"] .why-choose-one__client-content p {
     color: var(--about-muted) !important;
@@ -762,8 +1134,69 @@ body.page-about[data-theme="light"] .why-choose-one__points-content h3 {
 }
 
 body.page-about[data-theme="light"] .why-choose-one__count-box h3,
-body.page-about[data-theme="light"] .why-choose-one__count-box span {
+body.page-about[data-theme="light"] .why-choose-one__count-box span,
+body.page-about[data-theme="light"] .about-one__awards-count-box h3,
+body.page-about[data-theme="light"] .about-one__awards-count-box span,
+body.page-about[data-theme="light"] .about-one__experience-count h3,
+body.page-about[data-theme="light"] .about-one__experience-count span {
     color: var(--about-primary) !important;
+}
+
+body.page-about[data-theme="light"] .about-one__awards-box p,
+body.page-about[data-theme="light"] .about-one__experience-count > p,
+body.page-about[data-theme="light"] .about-one__experience-count-box > p {
+    color: var(--about-muted) !important;
+}
+
+body.page-about[data-theme="light"] .about-testimonial-card {
+    background: var(--about-surface) !important;
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="light"] .about-testimonial .testimonial-one__social a {
+    color: var(--about-primary) !important;
+    background: var(--about-bg) !important;
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-prev,
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-next {
+    background: var(--about-surface) !important;
+    border-color: var(--about-line) !important;
+    color: var(--about-primary) !important;
+}
+
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-prev span,
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-next span,
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-prev [class^="icon-"],
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-next [class^="icon-"],
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-prev [class*=" icon-"],
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-next [class*=" icon-"] {
+    color: inherit !important;
+}
+
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-prev:hover,
+body.page-about[data-theme="light"] .owl-carousel .owl-nav button.owl-next:hover,
+body.page-about[data-theme="light"] .about-testimonial .testimonial-one__carousel .owl-nav button:hover {
+    background: var(--about-primary) !important;
+    border-color: var(--about-primary) !important;
+    color: #fff !important;
+}
+
+body.page-about[data-theme="light"] .about-testimonial .testimonial-one__carousel .owl-nav button {
+    color: var(--about-primary) !important;
+    background: var(--about-surface) !important;
+    border-color: var(--about-line) !important;
+}
+
+body.page-about[data-theme="light"] .scroll-to-target.scroll-to-top,
+body.page-about[data-theme="light"] .scroll-to-top__text {
+    color: var(--about-primary) !important;
+}
+
+body.page-about[data-theme="light"] .scroll-to-top__wrapper,
+body.page-about[data-theme="light"] .scroll-to-top__inner {
+    background: var(--about-primary) !important;
 }
 
 /* Dark theme refinements */
@@ -797,6 +1230,47 @@ body.page-about[data-theme="dark"] .faq-section h2 {
 body.page-about[data-theme="dark"] .testimonial-one__ratting {
     background: var(--about-surface) !important;
     border-color: var(--about-line) !important;
+}
+
+/* Dark theme — carousel nav & button arrow visibility */
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-prev,
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-next {
+    background: var(--about-surface) !important;
+    border-color: var(--about-line) !important;
+    color: var(--about-text) !important;
+}
+
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-prev span,
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-next span,
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-prev [class^="icon-"],
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-next [class^="icon-"],
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-prev [class*=" icon-"],
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-next [class*=" icon-"] {
+    color: inherit !important;
+}
+
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-prev:hover,
+body.page-about[data-theme="dark"] .owl-carousel .owl-nav button.owl-next:hover {
+    background: var(--about-primary) !important;
+    border-color: var(--about-primary) !important;
+    color: #fff !important;
+}
+
+body.page-about[data-theme="dark"] .about-testimonial .testimonial-one__carousel .owl-nav button {
+    color: var(--about-text) !important;
+}
+
+body.page-about[data-theme="dark"] .thm-btn [class^="icon-"]:before,
+body.page-about[data-theme="dark"] .thm-btn [class*=" icon-"]:before,
+body.page-about[data-theme="dark"] .blogs-one__btn [class^="icon-"]:before,
+body.page-about[data-theme="dark"] .blogs-one__btn [class*=" icon-"]:before,
+body.page-about[data-theme="dark"] .about-one__btn [class^="icon-"]:before,
+body.page-about[data-theme="dark"] .about-one__btn [class*=" icon-"]:before,
+body.page-about[data-theme="dark"] .why-choose-one__btn [class^="icon-"]:before,
+body.page-about[data-theme="dark"] .why-choose-one__btn [class*=" icon-"]:before,
+body.page-about[data-theme="dark"] .cv-templates-section__btn [class^="icon-"]:before,
+body.page-about[data-theme="dark"] .cv-templates-section__btn [class*=" icon-"]:before {
+    color: #fff !important;
 }
 
 /* RTL / LTR */

@@ -3,7 +3,8 @@
     $locale = app()->getLocale();
     $pageDir = in_array($locale, ['ar', 'ur'], true) ? 'rtl' : 'ltr';
     $isToolsHubPage = request()->routeIs('localized.home', 'localized.tools', 'localized.services', 'localized.contact');
-    $skipJqueryUi = $isToolsHubPage || request()->routeIs('localized.about-tfc');
+    $isAboutPage = request()->routeIs('localized.about-tfc');
+    $skipJqueryUi = $isToolsHubPage || $isAboutPage;
 @endphp
 <html lang="{{ $locale }}" dir="{{ $pageDir }}">
 
@@ -112,7 +113,9 @@
         <script src="{{ asset('js/like.js') }}"></script>
         <script src="{{ asset('js/comment.js') }}"></script>
         <script src="{{ asset('js/share-blog.js') }}"></script>
-        <script src="{{ asset('js/confetti.js') }}"></script>
+        @unless($isAboutPage)
+            <script src="{{ asset('js/confetti.js') }}"></script>
+        @endunless
     @endunless
 </body>
 </html>
