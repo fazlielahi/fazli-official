@@ -170,7 +170,7 @@
             text-align: right;
         }
     
-        .footer{
+        .site-footer{
             position: unset;
         }
         

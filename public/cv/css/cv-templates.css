@@ -31,7 +31,7 @@
     z-index: 1;
 }
 
-body.page-cv-templates .footer {
+body.page-cv-templates .site-footer {
     display: none;
 }
 
@@ -39,12 +39,16 @@ body.page-cv-templates .footer {
 html:has(body.page-cv-templates) {
     height: 100%;
     overflow: hidden;
+    overflow-x: clip;
+    max-width: 100%;
 }
 
 body.page-cv-templates {
     height: 100vh;
     max-height: 100vh;
     overflow: hidden;
+    overflow-x: clip;
+    max-width: 100%;
 }
 
 body.page-cv-templates .cv-gallery {
@@ -59,28 +63,36 @@ body.page-cv-templates .cv-gallery > .container {
     display: flex;
     flex-direction: column;
     min-height: 0;
+    min-width: 0;
     max-width: 100%;
     /* layout now provides side menu spacing */
     padding-left: 14px;
     padding-right: 14px;
+    overflow-x: clip;
+    box-sizing: border-box;
 }
 
 body.page-cv-templates .cv-gallery__layout {
     flex: 1 1 auto;
     min-height: 0;
+    min-width: 0;
+    max-width: 100%;
     height: 100%;
     display: flex;
     align-items: stretch;
     gap: 16px;
+    overflow-x: clip;
 }
 
 body.page-cv-templates .templates-showcase {
     flex: 1 1 auto;
     min-height: 0;
+    min-width: 0;
     overflow: auto;
+    overflow-x: clip;
     -webkit-overflow-scrolling: touch;
     width: 100%;
-    max-width: none;
+    max-width: 100%;
     margin: 0;
     border-radius: 18px;
     /* match the side menu softness */
@@ -152,13 +164,15 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
     body.page-cv-templates .templates-showcase {
         min-height: 0;
         max-height: none;
-        overflow: visible;
+        overflow-x: clip;
+        overflow-y: visible;
         border-radius: 14px;
     }
 
     body.page-cv-templates .templates-grid {
         height: auto;
-        overflow: visible;
+        overflow-x: clip;
+        overflow-y: visible;
         justify-content: center;
     }
 
@@ -170,8 +184,9 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 
 @media (min-width: 600px) and (max-width: 991px) {
     .templates-grid .template-card {
-        flex: 1 1 calc(50% - 14px);
-        max-width: none;
+        flex: 1 1 calc((100% - clamp(18px, 2.5vw, 28px)) / 2);
+        max-width: min(340px, 100%);
+        min-width: 0;
     }
 }
 
@@ -428,22 +443,26 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
     margin: 0;
     padding: 0;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+    box-sizing: border-box;
 }
 
 .template-card {
     background: transparent;
     border-radius: 0;
-    overflow: visible;
+    overflow: hidden;
     box-shadow: none;
     transition: transform 0.25s ease;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     box-sizing: border-box;
-    /* Two cards: ~50% each (capped) so they stay on one row in normal desktop/tablet widths */
-    flex: 1 1 calc(50% - 14px);
-    max-width: 340px;
-    min-width: min(220px, 100%);
+    /* Two cards per row when space allows; min-width: 0 lets cards shrink under browser zoom */
+    flex: 1 1 calc((100% - clamp(18px, 2.5vw, 28px)) / 2);
+    max-width: min(340px, 100%);
+    min-width: 0;
     width: auto;
     margin: 0;
 }
@@ -553,15 +572,18 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 /* A4-style document frame on light gray */
 .template-preview {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    box-sizing: border-box;
 }
 
 .template-preview__frame {
     width: 100%;
-    max-width: 280px;
+    max-width: min(280px, 100%);
     margin: 0 auto;
     aspect-ratio: 210 / 297;
     background: #fff;
@@ -614,6 +636,8 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 
 .template-preview__frame img {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     height: 100%;
     object-fit: contain;
     object-position: top center;
@@ -753,11 +777,14 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
 }
 /* Preview Modal Styles */
 .preview-modal .modal-dialog {
-    max-width: 90%;
+    max-width: min(90vw, 960px);
+    width: calc(100% - 2rem);
     margin: 3rem auto;
     max-height: calc(100vh - 6rem);
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    overflow-x: clip;
 }
 @media (max-width: 768px) {
     .preview-modal .modal-dialog {
@@ -771,6 +798,8 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
     display: flex;
     flex-direction: column;
     border-radius: 8px;
+    min-width: 0;
+    overflow-x: clip;
 }
 @media (max-width: 768px) {
     .preview-modal .modal-content {
@@ -785,18 +814,21 @@ body.page-cv-templates .templates-showcase > .cv-template-tabs-wrap {
     padding: 1.5rem;
     text-align: center;
     background: white;
+    overflow-x: clip;
     overflow-y: auto;
     flex: 1 1 auto;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 0;
+    min-width: 0;
 }
 .preview-modal .modal-body img {
     max-width: 100%;
     max-height: calc(100vh - 14rem);
     width: auto;
     height: auto;
+    min-width: 0;
     object-fit: contain;
 }
 @media (max-width: 768px) {

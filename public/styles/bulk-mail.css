@@ -1,0 +1,364 @@
+/* BulkMailer — layout aligned with CV builder (cv-gallery + cv-side-menu) */
+
+body.page-bulk-mail {
+    --cv-primary: #0F3A6D;
+    --cv-primary-dark: #0a2a50;
+    --cv-accent: #F4A32C;
+    --cv-accent-soft: rgba(244, 163, 44, 0.18);
+}
+
+body.page-bulk-mail .site-footer,
+body.page-bulk-mail .scroll-to-top {
+    display: none !important;
+}
+
+@media (min-width: 992px) {
+    html:has(body.page-bulk-mail) {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body.page-bulk-mail {
+        height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+    }
+
+    body.page-bulk-mail .cv-gallery {
+        height: calc(100vh - var(--cv-site-header-height, 52px));
+        max-height: calc(100vh - var(--cv-site-header-height, 52px));
+        padding-bottom: 12px;
+        overflow: hidden;
+    }
+
+    body.page-bulk-mail .cv-gallery > .container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        max-width: 100%;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    body.page-bulk-mail .cv-gallery__layout {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    body.page-bulk-mail .cv-gallery__layout > .bulk-mail-showcase {
+        position: relative;
+        z-index: 200;
+    }
+
+    body.page-bulk-mail .bulk-mail-showcase {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.52);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 10px 40px rgba(15, 23, 42, 0.10);
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+body.page-bulk-mail .cv-gallery > .container {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+body.page-bulk-mail .cv-gallery__layout {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+}
+
+body.page-bulk-mail .bulk-mail-showcase {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    width: 100%;
+}
+
+.bulk-mail-showcase__header {
+    flex: 0 0 auto;
+    padding: clamp(16px, 2.5vw, 24px) clamp(16px, 3vw, 28px) 0;
+}
+
+.bulk-mail-showcase__title {
+    margin: 0;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+    font-weight: 700;
+    color: var(--cv-primary, #0F3A6D);
+}
+
+.bulk-mail-showcase__subtitle {
+    margin: 8px 0 0;
+    max-width: 640px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #6b7280;
+}
+
+.bulk-mail-showcase__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: clamp(14px, 2.5vw, 24px) clamp(16px, 3vw, 28px) clamp(22px, 3.5vw, 36px);
+}
+
+/* Dashboard content */
+.bulk-mail-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bulk-mail-dashboard__welcome {
+    position: relative;
+    background: linear-gradient(135deg, rgba(15, 58, 109, 0.08), rgba(244, 163, 44, 0.12));
+    border: 1px solid rgba(15, 58, 109, 0.15);
+    border-radius: 16px;
+    padding: 28px 44px 28px 24px;
+    text-align: center;
+}
+
+.bulk-mail-dashboard__welcome-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.bulk-mail-dashboard__welcome-close:hover,
+.bulk-mail-dashboard__welcome-close:focus {
+    background: rgba(127, 127, 127, 0.14);
+    color: #0F3A6D;
+}
+
+.bulk-mail-dashboard__welcome-close .cv-svg-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.bulk-mail-dashboard__welcome-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    z-index: 1060;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    max-width: min(92vw, 420px);
+    padding: 10px 12px 10px 14px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.10);
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.bulk-mail-dashboard__welcome-toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.bulk-mail-dashboard__welcome-toast-text {
+    flex: 1 1 auto;
+    font-size: 0.875rem;
+    line-height: 1.35;
+}
+
+.bulk-mail-dashboard__welcome-toast-undo {
+    flex: 0 0 auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #0F3A6D;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.bulk-mail-dashboard__welcome-toast-undo:hover {
+    opacity: 0.85;
+}
+
+.bulk-mail-dashboard__welcome-toast-close {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.bulk-mail-dashboard__welcome-toast-close:hover,
+.bulk-mail-dashboard__welcome-toast-close:focus {
+    background: rgba(127, 127, 127, 0.14);
+    color: #0F3A6D;
+}
+
+.bulk-mail-dashboard__welcome-toast-close .cv-svg-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+@media (max-width: 991px) {
+    .bulk-mail-dashboard__welcome-toast {
+        bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+.bulk-mail-dashboard__welcome-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 12px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #0F3A6D 0%, #0a2a50 100%);
+    color: #fff;
+}
+
+.bulk-mail-dashboard__welcome-icon .cv-svg-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.bulk-mail-dashboard__welcome h2 {
+    margin: 0 0 8px;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0F3A6D;
+}
+
+.bulk-mail-dashboard__welcome p {
+    margin: 0 auto;
+    max-width: 520px;
+    color: #6b7280;
+    line-height: 1.55;
+}
+
+.bulk-mail-dashboard__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.bulk-mail-dashboard__card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 100%;
+    padding: 22px 20px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(26, 32, 44, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.bulk-mail-dashboard__card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(15, 58, 109, 0.10);
+    color: #0F3A6D;
+}
+
+.bulk-mail-dashboard__card-icon .cv-svg-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.bulk-mail-dashboard__card h3 {
+    margin: 0;
+    font-family: "Outfit", system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0F3A6D;
+}
+
+.bulk-mail-dashboard__card p {
+    margin: 0;
+    flex: 1;
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.bulk-mail-dashboard__card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0F3A6D !important;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.bulk-mail-dashboard__card-link:hover {
+    color: #F4A32C !important;
+    text-decoration: none;
+}
+
+.bulk-mail-dashboard__card-link .cv-svg-icon {
+    width: 0.85rem;
+    height: 0.85rem;
+    transition: transform 0.15s ease;
+}
+
+.bulk-mail-dashboard__card-link:hover .cv-svg-icon {
+    transform: translateX(3px);
+}
+
+@media (max-width: 991px) {
+    .bulk-mail-dashboard__grid {
+        grid-template-columns: 1fr;
+    }
+}

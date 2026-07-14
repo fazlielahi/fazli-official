@@ -1,0 +1,368 @@
+/* Profile pages — RTL for Arabic / Urdu (loads last to override page-specific CSS) */
+
+html[dir="rtl"] body.page-user-profile {
+    direction: rtl;
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-page-wrap,
+html[dir="rtl"] body.page-user-profile .profile-shell,
+html[dir="rtl"] body.page-user-profile .profile-shell__sidebar,
+html[dir="rtl"] body.page-user-profile .profile-shell__main,
+html[dir="rtl"] body.page-user-profile .profile-shell__body,
+html[dir="rtl"] body.page-user-profile .profile-overview,
+html[dir="rtl"] body.page-user-profile .profile-edit,
+html[dir="rtl"] body.page-user-profile .profile-blog-form,
+html[dir="rtl"] body.page-user-profile .blogs-section,
+html[dir="rtl"] body.page-user-profile .modal-content {
+    direction: rtl;
+    text-align: right;
+}
+
+/* rtl.css uses row-reverse for LTR html — undo on profile when dir=rtl is set */
+html[dir="rtl"] body.page-user-profile .profile-container,
+html[dir="rtl"] body.page-user-profile .comment-modal .comment-card,
+html[dir="rtl"] body.page-user-profile .comment-card {
+    flex-direction: row !important;
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile .dropdown-item {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+}
+
+/* Sidebar */
+html[dir="rtl"] body.page-user-profile .profile-shell__edit {
+    right: auto;
+    left: 14px;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-nav__link {
+    flex-direction: row;
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile button.profile-nav__link {
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-nav__badge {
+    margin-left: 0;
+    margin-inline-start: auto;
+}
+
+/* Page header — rely on direction:rtl, not row-reverse */
+html[dir="rtl"] body.page-user-profile .profile-page-header,
+html[dir="rtl"] body.page-user-profile .profile-page-header__tools,
+html[dir="rtl"] body.page-user-profile .profile-page-header__actions,
+html[dir="rtl"] body.page-user-profile .profile-new-post-btn {
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-category-select-wrap__icon {
+    left: auto;
+    right: 14px;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-category-select-wrap__caret {
+    right: auto;
+    left: 14px;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-category-select {
+    text-align: right;
+}
+
+/* Public profile header */
+html[dir="rtl"] body.page-user-profile .profile-public-header,
+html[dir="rtl"] body.page-user-profile .profile-public-header__user,
+html[dir="rtl"] body.page-user-profile .profile-main-toolbar,
+html[dir="rtl"] body.page-user-profile .profile-main-toolbar__actions {
+    direction: rtl;
+}
+
+/* Legacy blog cards (inline styles in profile layout) */
+html[dir="rtl"] body.page-user-profile .action {
+    right: auto;
+    left: 7px;
+}
+
+html[dir="rtl"] body.page-user-profile .blog-card {
+    margin-left: 0;
+    margin-right: 6px;
+    padding-right: unset;
+    padding-left: 0;
+}
+
+html[dir="rtl"] body.page-user-profile .end-0 {
+    right: auto !important;
+    left: -10px !important;
+}
+
+html[dir="rtl"] body.page-user-profile .edit-profile-icon {
+    right: auto !important;
+    left: 12px !important;
+}
+
+/* Overview */
+html[dir="rtl"] body.page-user-profile .profile-overview__welcome {
+    padding: 18px 20px 18px 44px;
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-overview__welcome-close {
+    right: auto;
+    left: 10px;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-overview__card-head,
+html[dir="rtl"] body.page-user-profile .profile-overview__view-all,
+html[dir="rtl"] body.page-user-profile .profile-overview__tool,
+html[dir="rtl"] body.page-user-profile .profile-overview__welcome-toast {
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-overview__view-all i.fa-arrow-right {
+    transform: scaleX(-1);
+}
+
+html[dir="rtl"] body.page-user-profile .profile-overview__view-all:hover i {
+    transform: scaleX(-1) translateX(-3px);
+}
+
+html[dir="rtl"] body.page-user-profile .profile-overview__stat {
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-resume-gallery__meta {
+    direction: rtl;
+}
+
+/* Site header on profile pages */
+html[dir="rtl"] body.page-user-profile > .navbar,
+html[dir="rtl"] body.page-user-profile > .navbar .navbar-nav,
+html[dir="rtl"] body.page-user-profile > .navbar .nav-item a,
+html[dir="rtl"] body.page-user-profile > .navbar .dropdown-menu,
+html[dir="rtl"] body.page-user-profile > .navbar .dropdown-item {
+    direction: rtl;
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile > .navbar .dropdown-item {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+}
+
+html[dir="rtl"] body.page-user-profile > .navbar .header-button,
+html[dir="rtl"] body.page-user-profile > .navbar .header-button .dropdown-toggle {
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile > .navbar .btn-create-cv {
+    margin-right: 0;
+    margin-left: 15px;
+}
+
+html[dir="rtl"] body.page-user-profile > .navbar .ms-2,
+html[dir="rtl"] body.page-user-profile > .navbar .ms-3 {
+    margin-left: 0 !important;
+    margin-right: 0.5rem !important;
+}
+
+html[dir="rtl"] body.page-user-profile > .navbar .me-1,
+html[dir="rtl"] body.page-user-profile > .navbar .me-2 {
+    margin-right: 0 !important;
+    margin-left: 0.25rem !important;
+}
+
+/* Profile blog lists (profile-blogs.css forces LTR flex) */
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blogs-page__intro {
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blogs-grid {
+    direction: rtl;
+    justify-content: start;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blogs-grid .blog-card__meta-row {
+    flex-direction: row;
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blogs-grid .profile-container {
+    flex-direction: row !important;
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blogs-grid .post-interactions {
+    flex-direction: row !important;
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blogs-grid .like-btn,
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blogs-grid .share-btn,
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blogs-grid .comment-a {
+    flex-direction: row !important;
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-blog-card__actions {
+    right: auto;
+    left: 10px;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-draft-card__badge,
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-request-card__badge,
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-rejected-card__badge {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .profile-rejected-card__reason-btn {
+    flex-direction: row;
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .blogs-pagination {
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .blogs-pagination .pagination {
+    flex-direction: row-reverse;
+}
+
+/* Comment / share modals on profile blog pages */
+html[dir="rtl"] body.page-user-profile.page-blogs .comment-modal__header,
+html[dir="rtl"] body.page-user-profile.page-blogs .comment-modal__context,
+html[dir="rtl"] body.page-user-profile.page-blogs .comment-modal__composer,
+html[dir="rtl"] body.page-user-profile.page-blogs .comment-modal .comment-card {
+    direction: rtl;
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .comment-modal__context-body,
+html[dir="rtl"] body.page-user-profile.page-blogs .comment-modal__header-text {
+    text-align: right;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .comment-modal .comment-textarea,
+html[dir="rtl"] body.page-user-profile.page-blogs .comment-modal textarea {
+    text-align: right;
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile.page-blogs .modal-header,
+html[dir="rtl"] body.page-user-profile.page-blogs .modal-footer {
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-rejected-modal__header {
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-rejected-modal__footer {
+    justify-content: flex-end;
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-rejected-modal__detail {
+    text-align: right;
+}
+
+/* Edit profile */
+html[dir="rtl"] body.page-user-profile .profile-edit__file-info i {
+    margin-right: 0;
+    margin-left: 6px;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-edit__message--error,
+html[dir="rtl"] body.page-user-profile .profile-edit__message--success {
+    border-left: none;
+    border-right: 3px solid;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-edit__message--error {
+    border-right-color: #dc2626;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-edit__message--success {
+    border-right-color: #22c55e;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-edit__preview-remove {
+    right: auto;
+    left: 8px;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-edit__input,
+html[dir="rtl"] body.page-user-profile .profile-edit__label,
+html[dir="rtl"] body.page-user-profile .profile-blog-form .form-control,
+html[dir="rtl"] body.page-user-profile .profile-blog-form textarea,
+html[dir="rtl"] body.page-user-profile .profile-blog-form select {
+    text-align: right;
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-edit-modal__header,
+html[dir="rtl"] body.page-user-profile .profile-edit-modal__footer {
+    direction: rtl;
+}
+
+html[dir="rtl"] body.page-user-profile .profile-edit-modal__footer {
+    justify-content: flex-end;
+}
+
+html[dir="rtl"] body.page-user-profile button.profile-nav__link,
+html[dir="rtl"] body.page-user-profile .profile-edit-modal__dialog {
+    text-align: right;
+}
+
+/* Toasts & flashes */
+html[dir="rtl"] body.page-user-profile .profile-toast__inner {
+    flex-direction: row;
+    direction: rtl;
+    padding: 4px 14px 4px 6px;
+}
+
+/* Directional icons */
+html[dir="rtl"] body.page-user-profile .fa-arrow-left {
+    transform: scaleX(-1);
+}
+
+html[dir="rtl"] body.page-user-profile .profile-blog-form .cke_chrome,
+html[dir="rtl"] body.page-user-profile .profile-blog-form .cke_contents,
+html[dir="rtl"] body.page-user-profile .profile-blog-form .cke_wysiwyg_frame,
+html[dir="rtl"] body.page-user-profile .profile-blog-form .cke_editable {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Urdu typography on profile */
+html[lang="ur"] body.page-user-profile,
+html[lang="ur"] body.page-user-profile .profile-shell,
+html[lang="ur"] body.page-user-profile .profile-edit-modal__dialog,
+html[lang="ur"] body.page-user-profile .profile-blogs-grid {
+    font-family: "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif !important;
+    line-height: 1.65;
+}
+
+html[lang="ur"] body.page-user-profile .profile-page-title,
+html[lang="ur"] body.page-user-profile .profile-shell__name,
+html[lang="ur"] body.page-user-profile .profile-public-header__name {
+    font-family: "Noto Nastaliq Urdu", "Noto Sans Arabic", serif !important;
+    line-height: 1.55;
+    letter-spacing: 0;
+}
+
+html[lang="ur"] body.page-user-profile h1,
+html[lang="ur"] body.page-user-profile h2,
+html[lang="ur"] body.page-user-profile h3,
+html[lang="ur"] body.page-user-profile h4,
+html[lang="ur"] body.page-user-profile p,
+html[lang="ur"] body.page-user-profile label,
+html[lang="ur"] body.page-user-profile button,
+html[lang="ur"] body.page-user-profile a {
+    letter-spacing: 0;
+}

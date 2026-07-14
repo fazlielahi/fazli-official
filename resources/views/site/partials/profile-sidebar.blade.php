@@ -47,10 +47,11 @@
             <i class="fa-solid fa-toolbox"></i>
             <span>{{ __('lang.All Tools') }}</span>
         </a>
-        <span class="profile-nav__link is-disabled">
+        <a href="{{ route('localized.bulk-mail.index', ['lang' => $locale]) }}"
+           class="profile-nav__link {{ request()->routeIs('localized.bulk-mail.*') ? 'is-active' : '' }}">
             <i class="fa-solid fa-envelope"></i>
             <span>{{ __('lang.Bulk Email Sender') }}</span>
-        </span>
+        </a>
 
         <span class="profile-nav__label">{{ __('lang.Content') }}</span>
         <a href="{{ route('localized.profile-published-blogs', ['lang' => $locale]) }}"

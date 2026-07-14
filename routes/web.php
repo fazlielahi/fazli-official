@@ -18,6 +18,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\BulkMail\DashboardController as BulkMailDashboardController;
 
 // 1) Root — redirect "/" to the current locale's home
 Route::get('/', [HomeController::class, 'index'])->name('root.redirect');
@@ -72,6 +73,15 @@ Route::group([
         Route::post('/resume/export/{slug}/pdf', [\App\Http\Controllers\CvController::class, 'exportCurrentPDF'])->name('resume.export.current.pdf');
         Route::get('/resume/export/{id}/png', [\App\Http\Controllers\CvController::class, 'exportPNG'])->name('resume.export.png');
         Route::post('/resume/export/{slug}/png', [\App\Http\Controllers\CvController::class, 'exportCurrentPNG'])->name('resume.export.current.png');
+    });
+
+    // BulkMailer routes (auth required)
+    Route::middleware('auth')->prefix('bulk-mail')->name('bulk-mail.')->group(function () {
+        Route::get('/', [BulkMailDashboardController::class, 'index'])->name('index');
+        Route::get('/senders', [BulkMailDashboardController::class, 'index'])->name('senders');
+        Route::get('/contacts', [BulkMailDashboardController::class, 'index'])->name('contacts');
+        Route::get('/templates', [BulkMailDashboardController::class, 'index'])->name('templates');
+        Route::get('/campaigns', [BulkMailDashboardController::class, 'index'])->name('campaigns');
     });
 
     // Legacy /cv URL redirects (301)

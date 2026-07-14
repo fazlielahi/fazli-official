@@ -38,7 +38,7 @@ body.page-about main {
     background: var(--about-bg) !important;
 }
 
-body.page-about .footer {
+body.page-about .site-footer {
     position: unset;
 }
 

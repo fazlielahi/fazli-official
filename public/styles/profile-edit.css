@@ -270,11 +270,12 @@ body.profile-edit-modal-open {
 .profile-edit-modal {
     position: fixed;
     inset: 0;
-    z-index: 1060;
+    z-index: 1100;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px 16px;
+    padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(16px, env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
 }
 
 .profile-edit-modal[hidden] {
@@ -296,7 +297,7 @@ body.page-user-profile[data-theme="dark"] .profile-edit-modal__backdrop {
     position: relative;
     z-index: 1;
     width: min(100%, 520px);
-    max-height: min(92vh, 720px);
+    max-height: min(calc(100dvh - 32px), 720px);
     display: flex;
     flex-direction: column;
     background: var(--pf-surface, #fff);
@@ -304,6 +305,8 @@ body.page-user-profile[data-theme="dark"] .profile-edit-modal__backdrop {
     border-radius: var(--pf-radius, 16px);
     box-shadow: var(--pf-shadow);
     overflow: hidden;
+    flex-shrink: 0;
+    margin: auto;
 }
 
 .profile-edit-modal__header {
@@ -343,6 +346,8 @@ body.page-user-profile[data-theme="dark"] .profile-edit-modal__backdrop {
 }
 
 .profile-edit-modal__body {
+    flex: 1 1 auto;
+    min-height: 0;
     padding: 20px;
     overflow-y: auto;
 }
@@ -396,11 +401,11 @@ button.profile-nav__link {
 @media (max-width: 576px) {
     .profile-edit-modal {
         padding: 12px;
-        align-items: flex-end;
+        align-items: center;
     }
 
     .profile-edit-modal__dialog {
-        max-height: 94vh;
+        max-height: calc(100dvh - 24px);
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }

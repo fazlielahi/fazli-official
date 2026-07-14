@@ -29,7 +29,7 @@
     @endif
     
     @if($locale == 'ur')
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif
 
@@ -49,6 +49,7 @@
     @yield('head')
 
     <link rel="stylesheet" href="{{ asset('styles/scrollbars.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/site-footer.css') }}">
 
     @yield('structured_data')
 

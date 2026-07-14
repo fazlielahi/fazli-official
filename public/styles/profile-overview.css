@@ -423,6 +423,17 @@ body.page-user-profile[data-theme="dark"] .profile-overview__welcome-toast-close
     opacity: 0.85;
 }
 
+a.profile-overview__tool--link {
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+a.profile-overview__tool--link:hover {
+    border-color: var(--pf-primary, #0F3A6D);
+    box-shadow: 0 4px 14px rgba(15, 58, 109, 0.08);
+}
+
 .profile-overview__tool-icon {
     width: 42px;
     height: 42px;

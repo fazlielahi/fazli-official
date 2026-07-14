@@ -72,7 +72,7 @@ body.page-cv-projects {
     --cv-accent-soft: rgba(244, 163, 44, 0.18);
 }
 
-body.page-cv-projects .footer {
+body.page-cv-projects .site-footer {
     display: none;
 }
 
@@ -748,7 +748,7 @@ body.page-cv-trash {
     --cv-primary-dark: #0a2a50;
 }
 
-body.page-cv-trash .footer {
+body.page-cv-trash .site-footer {
     display: none;
 }
 

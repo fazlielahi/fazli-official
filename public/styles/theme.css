@@ -120,8 +120,7 @@ body[data-theme="light"]  .main-heading span
   box-shadow: 0px 0px 4px 0px #e5e5e5;
 }
 
-body[data-theme="light"]  .social-profiles,
-body[data-theme="light"]  .footer
+body[data-theme="light"]  .social-profiles
 {
   background: #dfe1e4;
   color: #2b2a2a;

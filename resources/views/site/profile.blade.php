@@ -1,5 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+@php
+    $locale = app()->getLocale();
+    $pageDir = in_array($locale, ['ar', 'ur'], true) ? 'rtl' : 'ltr';
+    $isRtl = $pageDir === 'rtl';
+@endphp
+<html lang="{{ $locale }}" dir="{{ $pageDir }}">
 
 <head>
     <link rel="icon" href="{{ asset('images/favicon-tfc-the-fazli-community.png') }}">
@@ -12,10 +17,13 @@
 
     <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
 
-    @php $locale = app()->getLocale(); @endphp
-
     @if($locale == 'ar')
         <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
+    @endif
+
+    @if($locale == 'ur')
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('styles/rtl.css') }}">
     @endif
 
@@ -72,6 +80,10 @@
             .blog-card { width: 100% !important; }
         }
     </style>
+
+    @if($isRtl)
+        <link rel="stylesheet" href="{{ asset('styles/profile-rtl.css') }}">
+    @endif
 </head>
 
 @php
@@ -207,8 +219,6 @@
                     </div>
                 </div>
             </div>
-
-            @include('site.partials.profile-edit-modal')
         @else
             <div class="profile-public-header">
                 <div class="profile-public-header__user">
@@ -242,6 +252,10 @@
             @yield('content')
         @endif
     </div>
+
+    @if($showProfileShell)
+        @include('site.partials.profile-edit-modal')
+    @endif
 
     @if($showProfileShell && session('success'))
         <script>

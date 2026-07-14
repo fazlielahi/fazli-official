@@ -23,7 +23,6 @@ body.page-home-tools[data-theme="dark"] {
     --home-shadow: 0 16px 40px rgba(0, 0, 0, .38), 0 4px 12px rgba(0, 0, 0, .22);
 }
 
-body.page-home-tools .footer,
 body.page-home-tools .scroll-to-top {
     display: none !important;
 }
@@ -902,4 +901,50 @@ html[dir="rtl"] body.page-home-tools .home-tool-card__badge {
     left: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 10px;
+}
+
+/* Urdu typography — sans for UI, nastaliq for large display headings only */
+html[lang="ur"] body.page-home-tools,
+html[lang="ur"] body.page-home-tools .home-tools {
+    font-family: "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+    line-height: 1.7;
+}
+
+html[lang="ur"] body.page-home-tools .home-tools__intro h1,
+html[lang="ur"] body.page-home-tools .home-tools__intro-list li,
+html[lang="ur"] body.page-home-tools .home-tools__highlight p,
+html[lang="ur"] body.page-home-tools .home-tools__highlight-feature strong,
+html[lang="ur"] body.page-home-tools .home-tools__highlight-feature span,
+html[lang="ur"] body.page-home-tools .home-tools__highlight-checks span,
+html[lang="ur"] body.page-home-tools .home-tool-card h2,
+html[lang="ur"] body.page-home-tools .home-tool-card p,
+html[lang="ur"] body.page-home-tools .home-tools__btn {
+    font-family: "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+    letter-spacing: 0;
+}
+
+html[lang="ur"] body.page-home-tools .home-tools__intro h1 {
+    line-height: 1.75;
+    max-width: none;
+}
+
+html[lang="ur"] body.page-home-tools .home-tools__highlight h2 {
+    font-family: "Noto Nastaliq Urdu", "Noto Sans Arabic", serif;
+    line-height: 1.55;
+    letter-spacing: 0;
+    font-weight: 700;
+}
+
+html[lang="ur"] body.page-home-tools .home-tools__highlight h2 span {
+    display: inline;
+    color: var(--home-accent);
+}
+
+html[lang="ur"] body.page-home-tools .home-tools__highlight p,
+html[lang="ur"] body.page-home-tools .home-tool-card p {
+    line-height: 1.75;
+}
+
+html[lang="ur"] body.page-home-tools .home-tool-card h2 {
+    line-height: 1.5;
 }

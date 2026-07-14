@@ -29,9 +29,9 @@ class ToolsController extends Controller
                 'icon' => 'envelope',
                 'title' => 'Bulk Email Sender',
                 'description' => 'Home bulk email description',
-                'route' => null,
-                'badge' => 'Coming soon',
-                'coming_soon' => true,
+                'route' => 'localized.bulk-mail.index',
+                'badge' => null,
+                'coming_soon' => false,
             ],
             [
                 'icon' => 'briefcase',

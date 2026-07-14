@@ -4,8 +4,39 @@ body,
 }
 
 html[lang="ur"] body,
-html[lang="ur"] .section-title__title span {
-    font-family: "Noto Nastaliq Urdu", "Noto Sans Arabic", sans-serif !important;
+html[lang="ur"] .form,
+html[lang="ur"] .login-form,
+html[lang="ur"] .register,
+html[lang="ur"] .main-header,
+html[lang="ur"] .navbar {
+    font-family: "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif !important;
+    line-height: 1.65;
+}
+
+html[lang="ur"] .section-title__title span,
+html[lang="ur"] .banner-one__title-clr-1,
+html[lang="ur"] .banner-one__title-clr-2,
+html[lang="ur"] .heading-row2 {
+    font-family: "Noto Nastaliq Urdu", "Noto Sans Arabic", serif !important;
+    line-height: 1.55;
+    letter-spacing: 0;
+}
+
+html[lang="ur"] h1,
+html[lang="ur"] h2,
+html[lang="ur"] h3,
+html[lang="ur"] h4,
+html[lang="ur"] p,
+html[lang="ur"] li,
+html[lang="ur"] label,
+html[lang="ur"] button,
+html[lang="ur"] a {
+    letter-spacing: 0;
+}
+
+html[lang="ur"] p,
+html[lang="ur"] li {
+    line-height: 1.7;
 }
 
 .main-header, .navbar,
@@ -292,6 +323,8 @@ left: 17px !important;
 .site-footer__contact-info-icon,
 .site-footer__links-list li a,
 .site-footer__bottom-inner,
+.site-footer__contact-info-list li,
+.site-footer__lang-nav,
 .about-one__experience-box-inner,
 .about-one__awards-count-box,
 .page-header__inner,

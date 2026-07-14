@@ -2,7 +2,8 @@
     $locale = app()->getLocale();
     $toolsNavActive = request()->routeIs('localized.tools')
         || request()->routeIs('localized.jobs')
-        || request()->routeIs('localized.resume.gallery');
+        || request()->routeIs('localized.resume.gallery')
+        || request()->routeIs('localized.bulk-mail.*');
 @endphp
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">

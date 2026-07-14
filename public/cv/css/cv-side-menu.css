@@ -4,6 +4,7 @@
     left: auto;
     top: auto;
     transform: none;
+    flex: 0 0 auto;
     width: 92px;
     height: 100%;
     padding: 10px 8px;
@@ -72,7 +73,8 @@
 @media (max-width: 991px) {
     body.page-cv-templates .navbar,
     body.page-cv-projects .navbar,
-    body.page-cv-trash .navbar {
+    body.page-cv-trash .navbar,
+    body.page-bulk-mail .navbar {
         position: sticky;
         top: 0;
         z-index: 400;
@@ -80,7 +82,8 @@
 
     body.page-cv-templates .cv-gallery::before,
     body.page-cv-projects .cv-gallery::before,
-    body.page-cv-trash .cv-gallery::before {
+    body.page-cv-trash .cv-gallery::before,
+    body.page-bulk-mail .cv-gallery::before {
         inset: 0;
         transform: none;
         filter: none;
@@ -88,12 +91,15 @@
 
     body.page-cv-templates .cv-gallery > .container,
     body.page-cv-projects .cv-gallery > .container,
-    body.page-cv-trash .cv-gallery > .container {
+    body.page-cv-trash .cv-gallery > .container,
+    body.page-bulk-mail .cv-gallery > .container {
         z-index: auto;
     }
 
     body.page-cv-projects .cv-gallery__layout > .templates-showcase,
-    body.page-cv-trash .cv-gallery__layout > .templates-showcase {
+    body.page-cv-trash .cv-gallery__layout > .templates-showcase,
+    body.page-bulk-mail .cv-gallery__layout > .templates-showcase,
+    body.page-bulk-mail .cv-gallery__layout > .bulk-mail-showcase {
         z-index: auto;
     }
 
@@ -154,7 +160,8 @@
 
     body.page-cv-templates .cv-gallery,
     body.page-cv-projects .cv-gallery,
-    body.page-cv-trash .cv-gallery {
+    body.page-cv-trash .cv-gallery,
+    body.page-bulk-mail .cv-gallery {
         padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
     }
 }

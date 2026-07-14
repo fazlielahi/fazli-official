@@ -103,14 +103,13 @@
                 <h3>{{ __('lang.Tools') }}</h3>
             </div>
             <div class="profile-overview__tools">
-                <div class="profile-overview__tool profile-overview__tool--soon">
+                <a href="{{ route('localized.bulk-mail.index', ['lang' => $locale]) }}" class="profile-overview__tool profile-overview__tool--link">
                     <div class="profile-overview__tool-icon"><i class="fa-solid fa-envelope"></i></div>
                     <div class="profile-overview__tool-body">
                         <h5>{{ __('lang.Bulk Email Sender') }}</h5>
                         <p>{{ __('lang.Home bulk email description') }}</p>
-                        <span class="profile-overview__badge">{{ __('lang.Coming soon') }}</span>
                     </div>
-                </div>
+                </a>
                 <div class="profile-overview__tool profile-overview__tool--soon">
                     <div class="profile-overview__tool-icon"><i class="fa-solid fa-briefcase"></i></div>
                     <div class="profile-overview__tool-body">

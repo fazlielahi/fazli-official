@@ -205,6 +205,8 @@ body.page-cv-builder .entry-container .form-group > textarea:focus::placeholder 
 html:has(body.page-cv-builder) {
     height: 100%;
     overflow: hidden;
+    overflow-x: clip;
+    max-width: 100%;
     background-color: #eef2f7;
 }
 
@@ -215,9 +217,11 @@ body.page-cv-builder {
     height: 100vh;
     max-height: 100vh;
     overflow: hidden;
+    overflow-x: clip;
+    max-width: 100%;
 }
 
-body.page-cv-builder .footer {
+body.page-cv-builder .site-footer {
     display: none;
 }
 
@@ -1807,7 +1811,10 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     flex-direction: row;
     flex: 1 1 auto;
     min-height: 0;
-    overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
     gap: 12px;
     padding: 12px 16px;
     box-sizing: border-box;
@@ -1815,9 +1822,11 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
 
 .builder-form-panel,
 .builder-customize-panel {
-    flex: 0 0 auto;
-    width: min(520px, 100%);
-    max-width: 560px;
+    /* Shrinks when the viewport narrows (e.g. browser zoom); preview keeps A4 width */
+    flex: 1 1 380px;
+    width: auto;
+    min-width: 200px;
+    max-width: min(520px, 42vw);
     min-height: 0;
     align-self: stretch;
     background: transparent;
@@ -1828,6 +1837,7 @@ body.page-cv-builder .cv-template-modal .template-card--current .template-previe
     border-radius: 14px;
     border: none;
     box-shadow: none;
+    box-sizing: border-box;
 }
 
 .builder-customize-panel[hidden] {
@@ -2882,12 +2892,17 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
 }
 
 .builder-preview-panel {
-    flex: 1 1 auto;
-    min-width: 0;
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    /* +16px reserves room for the vertical scrollbar so A4 content does not overflow horizontally */
+    width: calc(210mm + 64px);
+    min-width: calc(210mm + 64px);
     min-height: 0;
     align-self: stretch;
     padding: 12px;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
     -webkit-overflow-scrolling: touch;
     background: rgba(255, 255, 255, 0.96);
     display: flex;
@@ -2898,6 +2913,7 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
     position: relative;
     z-index: 0;
+    box-sizing: border-box;
 }
 
 /* Legacy generic .form-group styles removed for builder consistency.
@@ -2907,10 +2923,13 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
     background: #e9ecef;
     padding: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    max-width: 100%;
     width: 100%;
+    max-width: 100%;
+    flex-shrink: 0;
+    box-sizing: border-box;
     transition: opacity 0.1s ease-in-out;
-    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-y: visible;
 }
 .cv-preview-container.updating {
     opacity: 0.7;
@@ -2935,29 +2954,36 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
 }
 /* Page wrapper - container for all pages */
 .cv-pages-wrapper {
-    width: 100%;
+    width: 210mm;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0;
+    box-sizing: border-box;
 }
 
 /* A4 Page Container - Visual page simulation for editor mode ONLY */
 /* These styles are for preview/editor mode and should NOT affect PDF export */
 .cv-page-container {
-    width: 210mm;
+    width: 100%;
+    max-width: 210mm;
+    min-width: 0;
     min-height: 297mm;
     max-height: 297mm;
     background: white;
     margin: 0 auto;
     padding: 0mm;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 
-                0 0 0 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22),
+                0 0 0 1px rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
     page-break-after: always;
     break-after: page;
     border-radius: 2px;
+    box-sizing: border-box;
 }
 
 /* Continuation pages (for overflow content) */
@@ -3092,8 +3118,18 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
 /* Handle templates that already have their own page structure (e.g., modern template) */
 .cv-page-container .cv-template .cv-page {
     width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
     box-shadow: none !important;
+    box-sizing: border-box;
+}
+
+.cv-page-container .cv-template.professional {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    background: transparent;
+    display: block;
 }
 
 /* Ensure nested page structures don't conflict */
@@ -4552,8 +4588,27 @@ body.page-cv-builder .cv-field:has(.cv-field__input:not(:placeholder-shown)) > .
 
     .builder-preview-panel {
         flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
         min-height: 0;
         border-radius: 14px;
+    }
+
+    .cv-preview-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .cv-pages-wrapper {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .cv-page-container {
+        width: 100%;
+        min-width: 0;
+        max-width: 210mm;
     }
 }
 

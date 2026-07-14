@@ -284,7 +284,7 @@
     </script>
 
     <style>
-        .footer{
+        .site-footer{
             position: unset;
         }
     </style>
