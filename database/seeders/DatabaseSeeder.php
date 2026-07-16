@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BlogSeeder::class);
         $this->call(CVTemplateSeeder::class);
         $this->call(SiteSettingsSeeder::class);
+        $this->call(BulkMailSubscriptionPlanSeeder::class);
     }
 }

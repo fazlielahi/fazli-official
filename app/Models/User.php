@@ -7,6 +7,11 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable; // Makes the User model "authenticatable"
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\CustomResetPasswordNotification;
+use App\Models\BulkMail\Campaign;
+use App\Models\BulkMail\ContactList;
+use App\Models\BulkMail\EmailTemplate;
+use App\Models\BulkMail\Sender;
+use App\Models\BulkMail\UserSubscription;
 
 class User extends Authenticatable
 {
@@ -54,6 +59,31 @@ class User extends Authenticatable
     public function cvs()
     {
         return $this->hasMany(UserCV::class);
+    }
+
+    public function bulkMailSubscription()
+    {
+        return $this->hasOne(UserSubscription::class);
+    }
+
+    public function bulkMailSenders()
+    {
+        return $this->hasMany(Sender::class);
+    }
+
+    public function bulkMailContactLists()
+    {
+        return $this->hasMany(ContactList::class);
+    }
+
+    public function bulkMailEmailTemplates()
+    {
+        return $this->hasMany(EmailTemplate::class);
+    }
+
+    public function bulkMailCampaigns()
+    {
+        return $this->hasMany(Campaign::class);
     }
 
     /**
